@@ -1,8 +1,15 @@
-var config = {
-  entry: "./app/main",
+var path = require('path');
 
+var PATHS = {
+  app: path.join(__dirname, 'app'),
+  build: path.join(__dirname, 'dist')
+};
+var config = {
+  entry: {
+    app: [PATHS.app + "/main.js"]
+  },
   output: {
-    path: __dirname + "/dist/js",
+    path: PATHS.build + "/js" ,
     filename: "bundle.js",
   },
 
@@ -20,9 +27,6 @@ var config = {
         query: {
           presets: ['es2015', 'react']
         }
-      }, {
-        test: /\.html$/,
-        loader: "file?name=[name].[ext]"
       }
     ]
   }
