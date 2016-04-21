@@ -1,5 +1,4 @@
 import React from "react";
-import ParkingOptions from "./parking-options.jsx";
 
 const FindParkingClass = React.createClass({
   displayName: "FindParking",
