@@ -5,7 +5,7 @@ const FindParkingClass = React.createClass({
   displayName: "FindParking",
 
   propTypes: {
-    
+
   },
 
   getDefaultProps() {
@@ -17,8 +17,10 @@ const FindParkingClass = React.createClass({
   render() {
 
     return (
-      <div className="app-page">
-          <ParkingOptions/>
+      <div className="container-fluid">
+        <div className="row map-container">
+
+        </div>
       </div>
     );
   }
