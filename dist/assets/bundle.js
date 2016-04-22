@@ -63,18 +63,18 @@
 
 	var _reactRouter = __webpack_require__(159);
 
-	var _findParkingRoot = __webpack_require__(218);
+	var _header = __webpack_require__(218);
 
-	var _findParkingRoot2 = _interopRequireDefault(_findParkingRoot);
+	var _header2 = _interopRequireDefault(_header);
 
-	__webpack_require__(219);
+	__webpack_require__(226);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	_reactDom2.default.render(_react2.default.createElement(
 	  _reactRouter.Router,
 	  { history: _reactRouter.browserHistory },
-	  _react2.default.createElement(_reactRouter.Route, { path: "/", component: _findParkingRoot2.default })
+	  _react2.default.createElement(_reactRouter.Route, { path: "/", component: _header2.default })
 	), document.getElementById('app'));
 
 /***/ },
@@ -25049,30 +25049,377 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _backButton = __webpack_require__(219);
+
+	var _backButton2 = _interopRequireDefault(_backButton);
+
+	var _logo = __webpack_require__(220);
+
+	var _logo2 = _interopRequireDefault(_logo);
+
+	var _menu = __webpack_require__(221);
+
+	var _menu2 = _interopRequireDefault(_menu);
+
+	var _menuData = __webpack_require__(225);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var FindParkingClass = _react2.default.createClass({
-	  displayName: "FindParking",
+	var Header = function Header() {
+	  return _react2.default.createElement(
+	    "nav",
+	    { className: "navbar navbar-static-top" },
+	    _react2.default.createElement(
+	      "div",
+	      { className: "container-fluid" },
+	      _react2.default.createElement(
+	        "div",
+	        { className: "row" },
+	        _react2.default.createElement(
+	          "div",
+	          { className: "col-xs-3" },
+	          _react2.default.createElement(_backButton2.default, null)
+	        ),
+	        _react2.default.createElement(
+	          "div",
+	          { className: "col-xs-6" },
+	          _react2.default.createElement(_logo2.default, null)
+	        ),
+	        _react2.default.createElement(
+	          "div",
+	          { className: "col-xs-3" },
+	          _react2.default.createElement(_menu2.default, { menuData: _menuData.MenuData })
+	        )
+	      )
+	    )
+	  );
+	};
 
-	  propTypes: {},
+	exports.default = Header;
 
-	  getDefaultProps: function getDefaultProps() {
-	    return {};
+/***/ },
+/* 219 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var imgUrl = "./images/back-arrow.png";
+	var backBtnStyle = {
+	  backgroundImage: 'url(' + imgUrl + ')'
+	};
+	var BackButton = function BackButton(_ref) {
+	  var className = _ref.className;
+	  var url = _ref.url;
+
+	  return _react2.default.createElement(
+	    "div",
+	    { className: className },
+	    _react2.default.createElement("a", { href: url, style: backBtnStyle })
+	  );
+	};
+
+	exports.default = BackButton;
+
+/***/ },
+/* 220 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Logo = function Logo(_ref) {
+	  var className = _ref.className;
+
+	  return _react2.default.createElement(
+	    "div",
+	    { className: className },
+	    _react2.default.createElement(
+	      "h1",
+	      { className: "app-logo" },
+	      "ParkEZly"
+	    )
+	  );
+	};
+
+	exports.default = Logo;
+
+/***/ },
+/* 221 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _classnames = __webpack_require__(222);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var _menuList = __webpack_require__(223);
+
+	var _menuList2 = _interopRequireDefault(_menuList);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var MenuClass = _react2.default.createClass({
+	  displayName: "Menu",
+
+	  propTypes: {
+	    className: _react2.default.PropTypes.string
+	  },
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      isOpen: false
+	    };
+	  },
+	  toggleMenu: function toggleMenu() {
+	    var isMenuOpen = this.state.isOpen;
+	    this.setState({
+	      isOpen: !isMenuOpen
+	    });
+	  },
+	  renderMenuButton: function renderMenuButton() {
+	    return _react2.default.createElement(
+	      "button",
+	      { type: "button", onClick: this.toggleMenu },
+	      _react2.default.createElement("span", { className: "icon-bar" }),
+	      _react2.default.createElement("span", { className: "icon-bar" }),
+	      _react2.default.createElement("span", { className: "icon-bar" })
+	    );
 	  },
 	  render: function render() {
+	    var className = this.props.className;
+
+	    var validClasses = (0, _classnames2.default)({
+	      "menu-btn-container": true
+	    }, className);
+	    var menuBtn = this.renderMenuButton();
 
 	    return _react2.default.createElement(
 	      "div",
-	      { className: "container-fluid" },
-	      _react2.default.createElement("div", { className: "row map-container" })
+	      { className: validClasses },
+	      menuBtn,
+	      _react2.default.createElement(_menuList2.default, {
+	        open: this.state.isOpen,
+	        className: "hamburger-menu-container" })
 	    );
 	  }
 	});
 
-	exports.default = FindParkingClass;
+	exports.default = MenuClass;
 
 /***/ },
-/* 219 */
+/* 222 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2016 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+	/* global define */
+
+	(function () {
+		'use strict';
+
+		var hasOwn = {}.hasOwnProperty;
+
+		function classNames () {
+			var classes = [];
+
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+
+				var argType = typeof arg;
+
+				if (argType === 'string' || argType === 'number') {
+					classes.push(arg);
+				} else if (Array.isArray(arg)) {
+					classes.push(classNames.apply(null, arg));
+				} else if (argType === 'object') {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				}
+			}
+
+			return classes.join(' ');
+		}
+
+		if (typeof module !== 'undefined' && module.exports) {
+			module.exports = classNames;
+		} else if (true) {
+			// register as 'classnames', consistent with npm package name
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return classNames;
+			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else {
+			window.classNames = classNames;
+		}
+	}());
+
+
+/***/ },
+/* 223 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _classnames = __webpack_require__(222);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var _menuItem = __webpack_require__(224);
+
+	var _menuItem2 = _interopRequireDefault(_menuItem);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var MenuListClass = _react2.default.createClass({
+	  displayName: "MenuList",
+
+	  propTypes: {
+	    open: _react2.default.PropTypes.bool,
+	    menuData: _react2.default.PropTypes.array,
+	    className: _react2.default.PropTypes.string
+	  },
+
+	  renderMenuItem: function renderMenuItem(menuLinkData) {
+	    return _react2.default.createElement(_menuItem2.default, { text: menuLinkData.text, link: menuLinkData.link });
+	  },
+	  renderMenu: function renderMenu() {
+	    var menuData = this.props.menuData;
+
+	    var menu = menuData.map(this.renderMenuItem);
+	    return _react2.default.createElement(
+	      "ul",
+	      { className: "hamburger-list" },
+	      menu
+	    );
+	  },
+	  render: function render() {
+	    var _props = this.props;
+	    var open = _props.open;
+	    var menuData = _props.menuData;
+	    var className = _props.className;
+	    var children = _props.children;
+
+	    var validClasses = (0, _classnames2.default)({
+	      "hamburger-menu": true,
+	      "hamburger-show": open
+	    }, className);
+	    var menu = this.renderMenu();
+
+	    return _react2.default.createElement(
+	      "div",
+	      { className: validClasses },
+	      menu
+	    );
+	  }
+	});
+
+	exports.default = MenuListClass;
+
+/***/ },
+/* 224 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var MenuItem = function MenuItem(_ref) {
+	  var text = _ref.text;
+	  var link = _ref.link;
+	  var className = _ref.className;
+
+	  return _react2.default.createElement(
+	    "li",
+	    { className: className },
+	    _react2.default.createElement(
+	      "a",
+	      { href: link },
+	      text
+	    )
+	  );
+	};
+
+	exports.default = MenuItem;
+
+/***/ },
+/* 225 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = MenuData = [{
+	  text: "Find Parking",
+	  link: "http://google.com",
+	  icon: ""
+	}, {
+	  text: "My Account",
+	  link: "http://google.com",
+	  icon: ""
+	}, {
+	  text: "Drive EZly",
+	  link: "http://google.com",
+	  icon: ""
+	}, {
+	  text: "Other Parking Options",
+	  link: "http://google.com",
+	  icon: ""
+	}];
+
+/***/ },
+/* 226 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin

@@ -1,26 +1,15 @@
 import React from "react";
+import Body from "../common/body/body.jsx"
 
 const FindParkingClass = React.createClass({
   displayName: "FindParking",
 
-  propTypes: {
-
-  },
-
-  getDefaultProps() {
-    return {
-
-    };
-  },
-
   render() {
 
     return (
-      <div className="container-fluid">
-        <div className="row map-container">
-
-        </div>
-      </div>
+      <Body
+        showHeader={true}
+        showFooter={true}/>
     );
   }
 });

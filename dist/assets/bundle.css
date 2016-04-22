@@ -6758,6 +6758,11 @@ button.close {
   }
 }
 /*# sourceMappingURL=bootstrap.css.map */
-/* Add any css libraries here */
+.app-logo {
+  font-family: Helvetica Neue Thin;
+  font-size: 20px;
+  color: #FFFFFF;
+  text-align: center;
+}/* Add any css libraries here */
 
 /* Add your component stylesheet below */

@@ -10,15 +10,12 @@ var config = {
     app: [PATHS.app + "/main.js"]
   },
   output: {
-    path: PATHS.app + "/assets/" ,
+    path: PATHS.build + "/assets" ,
     filename: "bundle.js",
   },
 
   devServer: {
-    historyApiFallback: true,
-    hot: true,
     inline: true,
-    progress: true,
     port: 2092
   },
 

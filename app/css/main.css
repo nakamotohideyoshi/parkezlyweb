@@ -1,5 +1,6 @@
 /* Add any css libraries here */
 @import "../../node_modules/bootstrap/dist/css/bootstrap.css";
 
+@import "./common.css";
 /* Add your component stylesheet below */
 @import "../components/find-parking/styles/find-parking.css";

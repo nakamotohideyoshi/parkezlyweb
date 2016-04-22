@@ -1,0 +1,102 @@
+/*Fonts*/
+
+
+
+/* Navbar */
+
+body {
+  font-family: Helvetica Neue Thin;
+  font-size: 14px;
+}
+.navbar {
+  height: 55px;
+  background: #2E2E2E;
+}
+.back-button {
+  display: block;
+  background-size: contain;
+  width: 16px;
+  height: 30px;
+  margin: 10px;
+  cursor: pointer;
+}
+.app-logo {
+  font-size: 26px;
+  line-height: 40px;
+  color: #FFFFFF;
+  padding: 7px 0;
+  margin:0;
+  text-align: center;
+}
+.menu-btn-container .navbar-toggle {
+  display: block;
+}
+.menu-btn-container .icon-bar {
+  background: #FFFFFF;
+}
+.hamburger-menu-container {
+  position: fixed;
+  width: 100%;
+  top: 55px;
+  right: 0;
+  padding: 30px 0 0;
+  background: #000000;
+  opacity: 0.9;
+  height: 100%;
+  display: none;
+}
+.hamburger-show {
+  display: block;
+}
+.hamburger-list {
+  list-style: none;
+}
+.hamburger-list li a{
+  display: block;
+  line-height: 50px;
+  font-size: 24px;
+  text-decoration: none;
+  color: #FFF;
+}
+
+/* Footer Icon Classes*/
+.free-parking {
+  background: url('../images/park@3x.png');
+}
+.paid-parking {
+  background: url('../images/paid_parking@3x.png');
+}
+.managed-parking {
+  background: url('../images/managed@3x.png');
+}
+
+/*Footer*/
+.footer {
+  height: 110px;
+  background: #2E2E2E;
+  color: #FFFFFF;
+  padding: 10px 0;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}
+.footer-row {
+  margin:0px;
+}
+.img-checkbox-icon {
+  width: 60px;
+  height: 60px;
+  background-size: contain;
+  margin:0 auto;
+}
+.img-checkbox-checked .img-checkbox-icon {
+  opacity: 0.7;
+}
+.img-checkbox-label {
+  font-size: 16px;
+  margin:5px 0;
+}
+.footer-item {
+  text-align: center;
+  cursor: pointer;
+}

@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack",
-    "start": "webpack-dev-server --hot --content-base dist/"
+    "start": "webpack-dev-server --content-base app --hot",
+    "dev": "npm run build && npm start"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
   "dependencies": {
     "babel-plugin-transform-object-rest-spread": "^6.6.5",
     "bootstrap": "^3.3.6",
+    "classnames": "^2.2.3",
     "extract-text-webpack-plugin": "^1.0.1",
     "fbjs": "^0.2.1",
     "material-ui": "^0.14.4",
