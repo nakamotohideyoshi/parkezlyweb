@@ -1,15 +1,13 @@
-import React from "react";
+import React, { Component, PropTypes } from "react";
 import classNames from "classnames";
 import ImageCheckbox from "./utils/image-checkbox.jsx";
 import * as footerData from "./utils/footer-data.js"
 
-const FooterClass = React.createClass({
-  displayName: "Footer",
+class Footer extends Component {
 
-  propTypes: {
-    show: React.PropTypes.bool,
-    className: React.PropTypes.string
-  },
+  constructor(props) {
+    super(props);
+  }
 
   renderFooterTab(footerDataItem, index) {
     return (
@@ -19,7 +17,7 @@ const FooterClass = React.createClass({
           iconClass={footerDataItem.iconClass}/>
       </div>
     );
-  },
+  }
 
   render() {
     const { show } = this.props;
@@ -34,6 +32,11 @@ const FooterClass = React.createClass({
       </div>
     ) : null;
   }
-});
+}
 
-export default FooterClass;
+Footer.PropTypes = {
+  show: PropTypes.bool,
+  className: PropTypes.string
+};
+
+export default Footer;

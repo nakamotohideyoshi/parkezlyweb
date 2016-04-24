@@ -1,15 +1,12 @@
-import React from "react";
+import React, { Component, PropTypes } from "react";
 import classNames from "classnames";
 import MenuItem from "./menu-item.jsx";
 
-const MenuListClass = React.createClass({
-  displayName: "MenuList",
+class MenuList extends Component {
 
-  propTypes: {
-    open: React.PropTypes.bool,
-    menuData: React.PropTypes.array,
-    className: React.PropTypes.string
-  },
+  constructor(props) {
+    super(props);
+  }
 
   renderMenuItem(menuLinkData, index) {
     return (
@@ -18,7 +15,7 @@ const MenuListClass = React.createClass({
         link={menuLinkData.link}
         key={index}/>
     );
-  },
+  }
 
   renderMenu() {
     const { menuData } = this.props;
@@ -28,7 +25,7 @@ const MenuListClass = React.createClass({
         {menu}
       </ul>
     );
-  },
+  }
 
   render() {
     const { open, menuData, className, children } = this.props;
@@ -46,6 +43,12 @@ const MenuListClass = React.createClass({
       </div>
     );
   }
-});
+}
 
-export default MenuListClass;
+MenuList.PropTypes = {
+  open: React.PropTypes.bool,
+  menuData: React.PropTypes.array,
+  className: React.PropTypes.string
+};
+
+export default MenuList;

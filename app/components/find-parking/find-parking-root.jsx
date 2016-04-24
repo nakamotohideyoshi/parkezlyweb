@@ -1,17 +1,18 @@
-import React from "react";
+import React, { Component, PropTypes } from "react";
 import Body from "../common/body/body.jsx"
 
-const FindParkingClass = React.createClass({
-  displayName: "FindParking",
+class FindParking extends Component {
+  constructor(props) {
+    super(props);
+  }
 
   render() {
-
     return (
       <Body
         showHeader={true}
         showFooter={true}/>
     );
   }
-});
+}
 
-export default FindParkingClass;
+export default FindParking;

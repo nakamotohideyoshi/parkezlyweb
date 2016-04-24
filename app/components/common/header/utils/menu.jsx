@@ -1,27 +1,27 @@
-import React from "react";
+import React, { Component, PropTypes } from "react";
 import classNames from "classnames";
 import MenuList from "./menu-list.jsx";
 
-const MenuClass = React.createClass({
-  displayName: "Menu",
+const getState = () => {
+  return {
+    isOpen: false
+  };
+};
 
-  propTypes: {
-    menuData: React.PropTypes.array,
-    className: React.PropTypes.string
-  },
+class Menu extends Component {
+  constructor(props) {
+    super(props);
+    this.state = getState();
 
-  getInitialState() {
-    return {
-      isOpen: false
-    };
-  },
+    this.toggleMenu = this.toggleMenu.bind(this);
+  }
 
   toggleMenu() {
     const isMenuOpen =  this.state.isOpen;
     this.setState({
       isOpen: !isMenuOpen
     });
-  },
+  }
 
   renderMenuButton() {
     return (
@@ -31,7 +31,7 @@ const MenuClass = React.createClass({
         <span className="icon-bar"></span>
       </button>
     );
-  },
+  }
 
   render() {
     const { menuData, className } = this.props;
@@ -52,6 +52,11 @@ const MenuClass = React.createClass({
       </div>
     );
   }
-});
+}
 
-export default MenuClass;
+Menu.PropTypes = {
+  menuData: PropTypes.array,
+  className: PropTypes.string
+}
+
+export default Menu;

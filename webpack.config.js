@@ -19,6 +19,7 @@ var config = {
     hot: true,
     inline: true,
     progress: true,
+    contentBase: PATHS.app,
     port: 2092
   },
 
@@ -34,6 +35,10 @@ var config = {
       }, {
         test: /\.css$/,
         loader: ExtractTextPlugin.extract("style-loader", "css-loader"),
+        include: PATHS.app
+      }, {
+        test: /\.scss$/,
+        loader: ExtractTextPlugin.extract("style-loader", "css-loader", "sass-loader"),
         include: PATHS.app
       }, {
         test: /\.woff(2)?$/,

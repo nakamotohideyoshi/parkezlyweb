@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack",
-    "start": "webpack-dev-server --content-base app --hot",
-    "dev": "npm run build && npm start"
+    "start": "webpack-dev-server --hot"
   },
   "repository": {
     "type": "git",
@@ -22,6 +21,9 @@
     "babel-preset-react": "^6.5.0",
     "css-loader": "^0.23.1",
     "file-loader": "^0.8.5",
+    "node-sass": "^3.5.3",
+    "sass": "^0.5.0",
+    "sass-loader": "^3.2.0",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.0",
@@ -33,7 +35,6 @@
     "classnames": "^2.2.3",
     "extract-text-webpack-plugin": "^1.0.1",
     "fbjs": "^0.2.1",
-    "material-ui": "^0.14.4",
     "normalize.css": "^4.1.1",
     "react": "^0.14.0",
     "react-dom": "^0.14.0",

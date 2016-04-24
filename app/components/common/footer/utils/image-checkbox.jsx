@@ -1,27 +1,27 @@
-import React from "react";
+import React, { Component, PropTypes } from "react";
 import classNames from "classnames";
 
-const ImageCheckboxClass = React.createClass({
-  displayName: "ImageCheckbox",
+const getState = () => {
+  return {
+    checked: false
+  };
+};
 
-  propTypes: {
-    iconClass: React.PropTypes.string,
-    label: React.PropTypes.string,
-    className: React.PropTypes.string
-  },
+class ImageCheckbox extends Component {
 
-  getInitialState() {
-    return {
-      checked: false
-    };
-  },
+  constructor(props) {
+    super(props);
+    this.state = getState();
+
+    this.toggleCheckIcon = this.toggleCheckIcon.bind(this);
+  }
 
   toggleCheckIcon() {
-    const currentState = this.state.checked;
+    const { checked } = this.state;
     this.setState({
-      checked: !currentState
+      checked: !checked
     });
-  },
+  }
 
   render() {
     const { iconClass, label, className } = this.props;
@@ -46,6 +46,12 @@ const ImageCheckboxClass = React.createClass({
       </div>
     );
   }
-});
+}
 
-export default ImageCheckboxClass;
+ImageCheckbox.PropTypes = {
+  iconClass: PropTypes.string,
+  label: PropTypes.string,
+  className: PropTypes.string
+}
+
+export default ImageCheckbox;
