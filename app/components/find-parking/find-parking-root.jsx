@@ -10,7 +10,8 @@ class FindParking extends Component {
     return (
       <Body
         showHeader={true}
-        showFooter={true}/>
+        showFooter={true}
+        footerType="parking"/>
     );
   }
 }

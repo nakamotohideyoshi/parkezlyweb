@@ -20,8 +20,14 @@ class Footer extends Component {
   }
 
   render() {
-    const { show } = this.props;
-    const data = footerData.footerTabs;
+    const { show, footerType } = this.props;
+    let data = {};
+
+    if (footerType === "parking") {
+      data = footerData.footerParking;
+    } else if (footerType === "validity") {
+      data = footerData.footerValidity;
+    }
     const footerTabs = data.map(this.renderFooterTab);
 
     return show ? (
@@ -36,6 +42,7 @@ class Footer extends Component {
 
 Footer.PropTypes = {
   show: PropTypes.bool,
+  footerType: PropTypes.oneOf(['parking', 'validity']),
   className: PropTypes.string
 };
 
