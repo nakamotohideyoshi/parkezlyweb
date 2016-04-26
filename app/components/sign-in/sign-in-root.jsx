@@ -8,7 +8,7 @@ class SignIn extends Component {
 
   renderForgotPasswordLink() {
     return (
-      <div>
+      <div className="forgot-password">
         <a href="#">Forgot Your Password?</a>
       </div>
     );
@@ -16,18 +16,29 @@ class SignIn extends Component {
 
   renderButtons() {
     return (
-      <div>
-        <a href="#" className="btn">REGISTER</a>
-        <a href="#" className="btn">LOGIN</a>
+      <div className="row sign-in-actions">
+        <div className="col-xs-6">
+          <a href="#" className="btn">REGISTER</a>
+        </div>
+        <div className="col-xs-6">
+          <a href="#" className="btn">LOGIN</a>
+        </div>
+      </div>
+    );
+  }
+
+  renderSkipLink() {
+    return (
+      <div className="skip-link">
+        <a href="#">SKIP THIS</a>
       </div>
     );
   }
 
   renderSignInForm() {
-    const forgotLink = this.renderForgotPasswordLink();
-    const btns = this.renderButtons();
     return (
-      <div className="sign-in-form">
+      <div>
+        <h1 className="welcome">Welcome</h1>
         <form className="form-signin">
           <div>
             <input
@@ -44,17 +55,32 @@ class SignIn extends Component {
               placeholder="PASSWORD"/>
           </div>
         </form>
+      </div>
+    );
+  }
+
+  renderSignInContent() {
+    const signInForm = this.renderSignInForm();
+    const forgotLink = this.renderForgotPasswordLink();
+    const btns = this.renderButtons();
+    const skipLink = this.renderSkipLink();
+    return (
+      <div className="sign-in-content">
+        {signInForm}
         {forgotLink}
         {btns}
+        {skipLink}
       </div>
     );
   }
 
   render() {
-    const signInForm = this.renderSignInForm();
+    const signInForm = this.renderSignInContent();
     return (
       <Body showHeader={true}>
-        {signInForm}
+        <div className="sign-in-root">
+          {signInForm}
+        </div>
       </Body>
     );
   }

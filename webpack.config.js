@@ -1,5 +1,4 @@
 var path = require('path');
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 var PATHS = {
   app: path.join(__dirname, 'app'),
@@ -34,11 +33,11 @@ var config = {
         }
       }, {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract("style-loader", "css-loader"),
+        loaders: ['style', 'css'],
         include: PATHS.app
       }, {
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract("style-loader", "css-loader", "sass-loader"),
+        loaders: ['style', 'css', 'sass'],
         include: PATHS.app
       }, {
         test: /\.woff(2)?$/,
@@ -48,10 +47,7 @@ var config = {
         loader: "file-loader?name=/images/[sha512:hash:base64:10].[ext]"
       }
     ]
-  },
-  plugins: [
-    new ExtractTextPlugin("bundle.css")
-  ]
+  }
 }
 
 module.exports = config;
