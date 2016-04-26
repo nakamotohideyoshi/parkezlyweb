@@ -4,9 +4,9 @@ import Logo from "./utils/logo.jsx";
 import Menu from "./utils/menu.jsx";
 import * as MenuData from "./utils/menu-data.js"
 
-const Header = ({show}) => {
+const Header = () => {
 
-  return show ? (
+  return (
     <nav className="navbar navbar-static-top">
       <div className="container-fluid">
         <div className="row navbar">
@@ -22,7 +22,7 @@ const Header = ({show}) => {
         </div>
       </div>
     </nav>
-  ) : <div></div>;
+  );
 }
 
 export default Header;

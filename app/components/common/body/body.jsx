@@ -5,13 +5,22 @@ import Footer from "../footer/footer.jsx";
 
 const Body = (props) => {
   const { showHeader, showFooter, footerType, children } = props;
+
+  const header = showHeader ? (
+    <Header/>
+  ) : <div/>;
+
+  const footer = showFooter ? (
+    <Footer footerType={footerType}/>
+  ) : <div/>;
+
   return (
     <div>
-      <Header show={showHeader}/>
+      {header}
       <div className="container-fluid">
         {children}
       </div>
-      <Footer show={showFooter} footerType={footerType}/>
+      {footer}
     </div>
   );
 };
