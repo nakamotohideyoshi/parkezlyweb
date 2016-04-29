@@ -1,5 +1,5 @@
 import React from 'react';
-import Body from "../../../client/common/components/body/body.jsx";
+import Body from "../../../common/components/body/body.jsx";
 
 export default class AdminLogin extends React.Component {
   constructor(props) {
