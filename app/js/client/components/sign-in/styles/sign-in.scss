@@ -1,0 +1,60 @@
+.sign-in-content {
+  width : 100%;
+  margin: 0 auto;
+
+  @media (min-width: $screen-sm-min) {
+    width: 500px;
+  }
+
+  .welcome {
+    text-align: center;
+    margin: 0 0 20px;
+  }
+
+  .form-signin {
+    .form-control {
+      padding: 15px 5px 15px 15px;
+      line-height: 26px;
+      font-size: 18px;
+      height: 50px;
+      opacity: 0.7;
+    }
+    input[type="email"] {
+      margin-bottom: -1px;
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+      border-bottom: 0;
+    }
+    input[type="password"] {
+      border-top-right-radius: 0;
+      border-top-left-radius: 0;
+    }
+  }
+
+  .forgot-password {
+    text-align: right;
+    font-size: 16px;
+    margin: 15px 0 20px;
+  }
+
+  .skip-link {
+    margin: 30px 0 0;
+    text-align: center;
+  }
+
+  .sign-in-actions {
+    &>div {
+      text-align: center;
+    }
+    a {
+      background: #6D6E6E;
+      color: $white;
+      font-size: 20px;
+      font-weight: 900;
+      width: 100%;
+      padding: 15px;
+      border: 3px solid #B2BABB;
+      border-radius: 10px;
+    }
+  }
+}
