@@ -11,7 +11,7 @@
     "type": "git",
     "url": "git+https://iamplugged@bitbucket.org/parkezlyweb/parkezlyweb.git"
   },
-  "author": "Devan Thakur",
+  "author": "Devan Thakur, Troy Edwards",
   "license": "ISC",
   "homepage": "https://bitbucket.org/parkezlyweb/parkezlyweb#readme",
   "devDependencies": {

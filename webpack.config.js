@@ -6,7 +6,11 @@ var PATHS = {
 };
 var config = {
   entry: {
+<<<<<<< HEAD
     app: [PATHS.app + "/main.js"]
+=======
+    app: [PATHS.app + "/js/main.js"]
+>>>>>>> remotes/origin/develop-troy
   },
   output: {
     path: PATHS.app + "/assets/" ,
