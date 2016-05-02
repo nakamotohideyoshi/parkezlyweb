@@ -12,12 +12,25 @@ import ReduxPromise from 'redux-promise';
 import reducers from './reducers'; 
 
 const createStoreWithMiddleware = applyMiddleware(ReduxPromise)(createStore);
+const store = createStoreWithMiddleware(reducers);
+
+class AdminRouteList extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <Provider store={store}>
+        <TownshipList/>
+      </Provider>
+    );
+  }
+}
 
 export default function AdminIndex() {
-  console.log("test");
   return (
-    <Provider store={createStoreWithMiddleware(reducers)}>
-      <Route path="/admin" component={TownshipList}/>
-    </Provider>
+      <Route path="/admin" component={AdminRouteList}/>
   );
 }
+
