@@ -14,6 +14,7 @@ import reducers from './reducers';
 const createStoreWithMiddleware = applyMiddleware(ReduxPromise)(createStore);
 
 export default function AdminIndex() {
+  console.log("test");
   return (
     <Provider store={createStoreWithMiddleware(reducers)}>
       <Route path="/admin" component={TownshipList}/>
