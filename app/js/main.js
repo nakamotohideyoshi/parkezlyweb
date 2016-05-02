@@ -12,9 +12,10 @@ require('script-loader!hammerjs/hammer.js');
 require('script-loader!materialize-css/dist/js/materialize.js');
 
 ReactDOM.render((
-    <Router history={hashHistory}>
-      {ClientIndex()}
+    <Router history={browserHistory}>
       {AdminIndex()}
+      {ClientIndex()}
+      
     </Router>
   ), document.getElementById('app')
 );

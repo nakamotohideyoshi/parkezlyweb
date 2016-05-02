@@ -1,9 +1,10 @@
 import React from "react";
+import { Link } from 'react-router'
 
 const MenuItem = ({text, link, className}) => {
   return (
     <li className={className}>
-      <a href={link}>{text}</a>
+      <Link to={link}>{text}</Link>
     </li>
   );
 };

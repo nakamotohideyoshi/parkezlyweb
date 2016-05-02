@@ -8,8 +8,8 @@ export const menuLinks = [
     link: "http://google.com",
     icon: ""
   }, {
-    text: "Admin Login",
-    link: "/admin",
+    text: "Admin Panel",
+    link: "admin",
     icon: ""
   }, {
     text: "Drive EZly",
