@@ -48,22 +48,24 @@ export default class TownshipList extends React.Component {
     let townshipDetails = this.state.townshipDetails;
     return (
       <Body showHeader={true} className="admin-body">
-        <div className="row">
-          <div className="col-xs-6">
-            <nav>
-              <div className="nav-wrapper nav-admin z-depth-2">
-                <a className="brand-logo center" onClick={() => this.handleFetch()}>Township List</a>
+        <div className="content-container">
+          <div className="row">
+            <div className="col-xs-6">
+              <nav>
+                <div className="nav-wrapper nav-admin z-depth-2">
+                  <a className="brand-logo center" onClick={() => this.handleFetch()}>Township List</a>
+                </div>
+              </nav>
+              <div className="township-list-container">
+              <ul className="collection z-depth-2">
+                {this.props.townshipListFetched.map(this.renderTownshipList)}
+              </ul>
               </div>
-            </nav>
-            <div className="township-list-container">
-            <ul className="collection z-depth-2">
-              {this.props.townshipListFetched.map(this.renderTownshipList)}
-            </ul>
             </div>
-          </div>
-          <TownshipDetails townshipData={townshipDetails}/>
-        </div>  
-        <TownshipTiles />
+            <TownshipDetails townshipData={townshipDetails}/>
+          </div>  
+          <TownshipTiles />
+        </div>
       </Body>
     );
   }

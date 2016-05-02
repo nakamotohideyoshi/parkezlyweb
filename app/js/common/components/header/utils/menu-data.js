@@ -1,11 +1,11 @@
 export const menuLinks = [
   {
     text: "Find Parking",
-    link: "http://google.com",
+    link: "admin",
     icon: ""
   }, {
     text: "My Account",
-    link: "http://google.com",
+    link: "admin",
     icon: ""
   }, {
     text: "Admin Panel",
@@ -13,11 +13,11 @@ export const menuLinks = [
     icon: ""
   }, {
     text: "Drive EZly",
-    link: "http://google.com",
+    link: "admin",
     icon: ""
   }, {
     text: "Other Parking Options",
-    link: "http://google.com",
+    link: "admin",
     icon: ""
   }
 ];
