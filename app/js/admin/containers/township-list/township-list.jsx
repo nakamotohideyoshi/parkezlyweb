@@ -1,7 +1,7 @@
 import React from 'react';
 import Body from "../../../common/components/body/body.jsx";
-import TownshipDetails from './township-details.jsx';
-import TownshipTiles from './township-tiles.jsx';
+import TownshipDetails from './utils/township-details.jsx';
+import TownshipTiles from './utils/township-tiles.jsx';
 
 // Redux
 import {connect} from 'react-redux';
@@ -47,7 +47,7 @@ export default class TownshipList extends React.Component {
   render() {
     let townshipDetails = this.state.townshipDetails;
     return (
-      <Body showHeader={true} className="admin-body">
+      <Body showHeader={true}>
         <div className="content-container">
           <div className="row">
             <div className="col-xs-6">
@@ -64,7 +64,7 @@ export default class TownshipList extends React.Component {
             </div>
             <TownshipDetails townshipData={townshipDetails}/>
           </div>  
-          <TownshipTiles />
+          <TownshipTiles townshipData={townshipDetails}/>
         </div>
       </Body>
     );

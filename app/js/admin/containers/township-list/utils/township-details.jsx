@@ -22,73 +22,67 @@ export default class TownshipDetails extends React.Component {
               <div className="col-md-6">
                 <div className="form-group">
                   <label>Manager Id</label>
-                  <input placeholder="Manager ID" value={townshipData.manager_id} onChange={() => this.setState({townshipData: townshipData})}/>
+                  <input value={townshipData.manager_id} onChange={() => this.setState({townshipData: townshipData})}/>
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label>Manager Type</label>
+                  <input value={townshipData.manager_type} onChange={() => this.setState({townshipData: townshipData})}/>
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label>Lot Manager</label>
+                  <input value={townshipData.lot_manager} onChange={() => this.setState({townshipData: townshipData})}/>
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label>Address</label>
+                  <input value={townshipData.address} onChange={() => this.setState({townshipData: townshipData})}/>
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label>State</label>
+                  <input value={townshipData.state} onChange={() => this.setState({townshipData: townshipData})}/>
                 </div>
               </div>
               <div className="col-md-6">
                 <div className="form-group">
                   <label>City</label>
-                  <input placeholder="New York" value={townshipData.city} onChange={() => this.setState({townshipData: townshipData})}/>
+                  <input value={townshipData.city} onChange={() => this.setState({townshipData: townshipData})}/>
                 </div>
               </div>
               <div className="col-md-6">
                 <div className="form-group">
-                  <label>City</label>
-                  <input placeholder="New York" value={townshipData.city} onChange={() => this.setState({townshipData: townshipData})}/>
+                  <label>Country</label>
+                  <input value={townshipData.country} onChange={() => this.setState({townshipData: townshipData})}/>
                 </div>
               </div>
               <div className="col-md-6">
                 <div className="form-group">
-                  <label>City</label>
-                  <input placeholder="New York" value={townshipData.city} onChange={() => this.setState({townshipData: townshipData})}/>
+                  <label>Zip</label>
+                  <input value={townshipData.zip} onChange={() => this.setState({townshipData: townshipData})}/>
                 </div>
               </div>
               <div className="col-md-6">
                 <div className="form-group">
-                  <label>City</label>
-                  <input placeholder="New York" value={townshipData.city} onChange={() => this.setState({townshipData: townshipData})}/>
+                  <label>Contact Person</label>
+                  <input value={townshipData.contact_person} onChange={() => this.setState({townshipData: townshipData})}/>
                 </div>
               </div>
               <div className="col-md-6">
                 <div className="form-group">
-                  <label>City</label>
-                  <input placeholder="New York" value={townshipData.city} onChange={() => this.setState({townshipData: townshipData})}/>
+                  <label>Contact Title</label>
+                  <input value={townshipData.contact_title} onChange={() => this.setState({townshipData: townshipData})}/>
                 </div>
               </div>
               <div className="col-md-6">
                 <div className="form-group">
-                  <label>City</label>
-                  <input placeholder="New York" value={townshipData.city} onChange={() => this.setState({townshipData: townshipData})}/>
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label>City</label>
-                  <input placeholder="New York" value={townshipData.city} onChange={() => this.setState({townshipData: townshipData})}/>
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label>City</label>
-                  <input placeholder="New York" value={townshipData.city} onChange={() => this.setState({townshipData: townshipData})}/>
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label>City</label>
-                  <input placeholder="New York" value={townshipData.city} onChange={() => this.setState({townshipData: townshipData})}/>
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label>City</label>
-                  <input placeholder="New York" value={townshipData.city} onChange={() => this.setState({townshipData: townshipData})}/>
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label>City</label>
-                  <input placeholder="New York" value={townshipData.city} onChange={() => this.setState({townshipData: townshipData})}/>
+                  <label>Contact Email</label>
+                  <input value={townshipData.contact_email} onChange={() => this.setState({townshipData: townshipData})}/>
                 </div>
               </div>
             </div>
