@@ -10,7 +10,7 @@ const initialState = {
 	subErrorMessage: null
 };
 
-const User = (state = initialState, action) => {
+const User = (state = {}, action) => {
 	console.log(action);
 	switch(action.type) {
 		case "AUTH_INITIATE":

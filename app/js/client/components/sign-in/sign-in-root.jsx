@@ -54,6 +54,7 @@ class SignIn extends Component {
   }
 
   renderNotice() {
+    console.log(this.props.user);
     const {
       mode,
       userId,

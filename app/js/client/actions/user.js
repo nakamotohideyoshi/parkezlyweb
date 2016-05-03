@@ -31,10 +31,11 @@ export const getUser = (userInfo) => {
 		dispatch(initiateSignIn());
 		return AuthAPI.authenticateUser(userInfo)
 			.then((response) => {
+				const data = response.data;
 				dispatch(userAuthenticated({
-					userId: response.id,
-					sessionId: response.session_id,
-					sessionToken: response.session_token
+					userId: data.id,
+					sessionId: data.session_id,
+					sessionToken: data.session_token
 				}));
 	  	})
 	  	.catch((response) => {
@@ -91,10 +92,13 @@ export const checkUser = (userInfo) => {
 	  	})
 	  	.catch((response) => {
 	  		const { error } = response.data;
+	  		let subErrorMessage = "";
+	  		subErrorMessage += error.context.email ?  error.context.email[0] : "";
+	  		subErrorMessage += error.context.password ? error.context.password[0] : "";
 	  		dispatch(registrationFailed({
 	  			errorCode: error.code,
 	  			errorMessage: error.message,
-	  			subErrorMessage: error.context.email[0]
+	  			subErrorMessage: subErrorMessage
 	  		}));
 	  	});
 	}
