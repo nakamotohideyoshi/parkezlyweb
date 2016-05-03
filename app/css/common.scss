@@ -71,7 +71,20 @@ a {
   color: $white;
 }
 
-/* Footer Icon Classes*/
+/* Buttons */
+.gray-btn {
+  background: #6D6E6E;
+  color: $white;
+  font-size: 20px;
+  font-weight: 900;
+  display: block;
+  padding: 15px;
+  border: 3px solid #B2BABB;
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* Footer Icon Classes */
 .free-parking {
   background: url('../images/park@3x.png');
 }
@@ -111,4 +124,16 @@ a {
 .footer-item {
   text-align: center;
   cursor: pointer;
+}
+
+/* Field Errors */
+.error-msg {
+  display: none;
+}
+
+.has-danger {
+  .error-msg {
+    display: block;
+    color: $red;
+  }
 }

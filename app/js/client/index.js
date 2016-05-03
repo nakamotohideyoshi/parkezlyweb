@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { Router, Route, Link, browserHistory } from "react-router";
 
 import FindParking from "./components/find-parking/find-parking-root.jsx";
-import SignIn from "./components/sign-in/sign-in-root.jsx";
+import SignIn from "./components/sign-in/sign-in-controller.jsx";
 
 class ClientIndex extends React.Component {
 
