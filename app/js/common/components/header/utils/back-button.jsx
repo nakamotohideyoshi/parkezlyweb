@@ -1,5 +1,5 @@
 import React from "react";
-import { Router} from "react-router";
+import { Router } from "react-router";
 
 export default class BackButton extends React.Component {
   constructor(props, context) {

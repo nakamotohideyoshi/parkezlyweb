@@ -1,7 +1,7 @@
 export const menuLinks = [
   {
     text: "Find Parking",
-    link: "admin",
+    link: "/",
     icon: ""
   }, {
     text: "My Account",
