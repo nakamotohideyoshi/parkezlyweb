@@ -1,12 +1,21 @@
 import React from "react";
+import { Router} from "react-router";
 
-const BackButton = ({className, url}) => {
-  return (
-    <div className={className}>
-      <a href={url} className="back-button">
-      </a>
-    </div>
-  );
-};
+export default class BackButton extends React.Component {
+  constructor(props, context) {
+    super(props);
+  }
 
-export default BackButton;
+  render() {
+    return (
+      <div>
+        <a className="back-button" onClick={() => this.context.router.goBack()} />
+      </div>
+    );
+  }
+}
+
+BackButton.contextTypes = {
+  router: React.PropTypes.object,
+}
+
