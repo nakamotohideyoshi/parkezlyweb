@@ -2,12 +2,11 @@
 
 var path = require('path');
 var webpack = require('webpack');
+var StatsPlugin = require('stats-webpack-plugin');
 
 module.exports = {
-  devtool: 'eval-source-map',
   entry: [
     'babel-polyfill',
-    'webpack-hot-middleware/client?reload=true',
     './app/js/main.js'
   ],
   output: {
@@ -17,14 +16,20 @@ module.exports = {
   },
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
-    new webpack.DefinePlugin({'process.env.NODE_ENV': JSON.stringify('development')
+    new webpack.optimize.UglifyJsPlugin({
+      compressor: {
+        warnings: false,
+        screw_ie8: true
+      }
+    }),
+    new StatsPlugin('webpack.stats.json', {
+      source: false,
+      modules: false
+    }),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
     })
   ],
-  resolve: {
-    extensions: ['', '.js', '.jsx']
-  },
   module: {
     loaders: [
     {

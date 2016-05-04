@@ -7,7 +7,7 @@ import * as MenuData from "./utils/menu-data.js"
 const Header = () => {
 
   return (
-    <nav className="navbar navbar-static-top">
+    <nav className="navbar navbar-fixed-top">
       <div className="container-fluid">
         <div className="row navbar">
           <div className="col-xs-3">

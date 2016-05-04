@@ -1,7 +1,15 @@
 /* Add any css libraries here */
 @import "~bootstrap/dist/css/bootstrap.css";
+@import "~materialize-css/dist/css/materialize.css";
+@import url(https://fonts.googleapis.com/icon?family=Material+Icons);
+@import "~animate.css/animate.css";
+@import "./materialize.scss";
+
 @import "./variables.scss";
 @import "./common.scss";
+
 /* Add your component stylesheet below */
 @import "../js/client/components/find-parking/styles/find-parking.scss";
 @import "../js/client/components/sign-in/styles/sign-in.scss";
+@import "../js/admin/common/styles/common.scss";
+@import "../js/admin/containers/township-list/styles/township-list.scss";

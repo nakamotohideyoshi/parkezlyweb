@@ -1,14 +1,46 @@
-# ParkEzly WebApp
+### Install and Run the Dev Server (Linux/OSX)
 
-Application uses webpack for configuration purpose. The application has been divided into an app and a dist folder. The "app" folder is where we do all our development task. Each app page is served as a component. The "dist" folder contains the distribution files for the build.
+```
+npm install
+npm run dev
+```
+Then open http://localhost:3000
 
-### Version
-## 1.0.0
+### Build and Run the Production Server (Linux/OSX)
 
-To start the app use:
-### npm start
+```
+npm run build
+npm start
+```
+Then open http://localhost
+(Note the production port is set to 80 in package.json)
 
-To build the app use:
-### npm run build
+### Install and Run the Dev Server (Windows)
 
-The app is currently being served at port 2092. So it can be tested at localhost:2092
+```
+npm install
+npm run dev-win
+```
+Then open http://localhost:3000
+
+### Build and Run the Production Server (Windows)
+
+```
+npm run build-win
+npm run start-win
+```
+Then open http://localhost
+(Note the production port is set to 80 in package.json)
+
+### Dependencies
+
+* React
+* Redux
+* React Router
+* JSON Web Tokens (JWT)
+* Fixed-Data-Table
+* style-loader
+* Bootstrap
+* Express
+* Babel
+* Webpack
