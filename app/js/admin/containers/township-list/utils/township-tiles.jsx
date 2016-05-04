@@ -9,7 +9,7 @@ export default class TownshipTiles extends React.Component {
   renderTiles(dataValid) {
     if(dataValid) {
       return(
-        <div className="animated fadeInDown">
+        <div className="animated fadeInUp">
           <div className="row center-align">
             <div className="col-md-1"/>
             <div className="col-md-4">
@@ -52,14 +52,17 @@ export default class TownshipTiles extends React.Component {
   }
 
   render() {
+
     let townshipData = this.props.townshipData;
     let dataValid;
+
     if (townshipData !== null && townshipData !== undefined)
     {
       dataValid = true;
     } else {
       dataValid = false;
     }
+
     return (
       <div>
       {this.renderTiles(dataValid, townshipData)}

@@ -4,7 +4,8 @@ export default class TownshipDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      townshipData: null
+      townshipData: null,
+      editMode: false
     }
   }
 
@@ -87,8 +88,18 @@ export default class TownshipDetails extends React.Component {
               </div>
             </div>
           </div>
-          <div className="card-action center-align">
-            <a className="waves-effect waves-light btn">Go To Township</a>
+          <div className="card-action">
+            <div className="row marginless-row">
+              <div className="col-lg-1"/>
+              <div className="col-lg-4 center-align">
+                <a className="waves-effect waves-light btn">Go To Township</a>
+              </div>
+              <div className="col-lg-2"/>
+              <div className="col-lg-4 center-align">
+                <a className="waves-effect waves-light btn btn-green">Edit Township</a>
+              </div>
+              <div className="col-lg-1"/>
+            </div>
           </div>
         </div>
       );

@@ -2,41 +2,52 @@ import React from 'react';
 import Body from "../../../common/components/body/body.jsx";
 import TownshipDetails from './utils/township-details.jsx';
 import TownshipTiles from './utils/township-tiles.jsx';
+import SearchInput, {createFilter} from 'react-search-input'
+
 
 // Redux
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {fetchTownshipList} from '../../actions/index';
 
+const KEYS_TO_FILTERS = ['city']
+
 export default class TownshipList extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      townshipDetails: null
+      townshipDetails: null,
+      searchTerm: ''
     }
 
     this.handeClick = this.handleFetch.bind(this);
     this.renderTownshipList = this.renderTownshipList.bind(this);
   }
 
+  componentWillMount() {
+    this.props.fetchTownshipList();
+  };
+
   handleFetch(townshipData) {
     this.props.fetchTownshipList();
     this.forceUpdate();
   }
 
-  componentWillMount() {
-    this.props.fetchTownshipList();
-  };
-
   renderTownshipList(townshipData) {
-    return townshipData.resource.map((township) => {
+
+    let townshipObjects = townshipData.resource;
+    const filteredTownships = townshipObjects.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS));
+
+    return filteredTownships.map((township) => {
         return(   
           <a 
           className="collection-item waves-effect waves-dark avatar" 
           key={township.id} 
           onClick={() => this.setState({townshipDetails: township})}>
-              <img src="https://media-cdn.tripadvisor.com/media/photo-s/03/9b/2d/f2/new-york-city.jpg" alt="" className="circle"/>
+              <img 
+              src="https://media-cdn.tripadvisor.com/media/photo-s/03/9b/2d/f2/new-york-city.jpg" 
+              alt="" className="circle"/>
               <span className="title">{township.city}</span>
               <p>{township.city} - {township.manager_type}</p>
           </a>
@@ -45,7 +56,9 @@ export default class TownshipList extends React.Component {
   }
 
   render() {
+
     let townshipDetails = this.state.townshipDetails;
+
     return (
       <Body showHeader={true}>
         <div className="content-container">
@@ -53,13 +66,33 @@ export default class TownshipList extends React.Component {
             <div className="col-xs-6">
               <nav>
                 <div className="nav-wrapper nav-admin z-depth-2">
-                  <a className="brand-logo center" onClick={() => this.handleFetch()}>Township List</a>
+                  <a 
+                  className="brand-logo center" 
+                  onClick={() => this.handleFetch()}>Township List</a>
                 </div>
               </nav>
+              <div className="card">
+                <div className="row marginless-row valign-wrapper">
+                  <div className="col-xs-1"/>
+                  <div className="col-xs-3">
+                    <a className="waves-effect waves-light btn valign">Create</a>
+                  </div>
+                  <div className="search-wrapper card col-xs-7" style={{marginBottom:10, marginTop: 10}}>
+                    <div className="row marginless-row valign-wrapper">
+                      <SearchInput 
+                      className="search search-input col-xs-11" 
+                      style={{border: 0, margin: 0}}
+                      onChange={(term) => this.setState({searchTerm: term})} />
+                      <i className="material-icons col-xs-1 valign clickable">search</i>
+                    </div>
+                  </div>
+                  <div className="col-xs-1"/>
+                </div>
+              </div>
               <div className="township-list-container">
-              <ul className="collection z-depth-2">
-                {this.props.townshipListFetched.map(this.renderTownshipList)}
-              </ul>
+                <ul className="collection z-depth-2">
+                  {this.props.townshipListFetched.map(this.renderTownshipList)}
+                </ul>
               </div>
             </div>
             <TownshipDetails townshipData={townshipDetails}/>
