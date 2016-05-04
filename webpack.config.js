@@ -50,11 +50,11 @@ module.exports = {
       { test: /\.(jpe?g|png|gif|svg)$/, 
         loader: 'url', 
         query: {limit: 10240} 
-      },{
+      }, {
         test: /\.woff(2)?$/,
         loader: "url-loader?name=/fonts/['name'].[ext]&limit=10000&minetype=application/font-woff"
       }, {
-        test: /\.(ttf|eot|svg|png|gif)$/,
+        test: /\.(ttf|eot)$/,
         loader: "file-loader?name=/images/[sha512:hash:base64:10].[ext]"
       }
     ]
