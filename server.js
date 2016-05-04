@@ -53,7 +53,7 @@ const port = isProduction ? (process.env.PORT || 80) : 3000;
 
 // this is necessary to handle URL correctly since client uses Browser History
 app.get('*', function (request, response){
-  response.sendFile(path.resolve(__dirname, '', 'index.html'))
+  response.sendFile(path.resolve('./dist/index.html'))
 })
 
 app.post('/api/login', function(req, res) {
