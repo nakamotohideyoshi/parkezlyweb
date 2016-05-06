@@ -63,7 +63,7 @@ export default class TownshipList extends React.Component {
       <Body showHeader={true}>
         <div className="content-container">
           <div className="row">
-            <div className="col-xs-6">
+            <div className="col s6">
               <nav>
                 <div className="nav-wrapper nav-admin z-depth-2">
                   <a 
@@ -73,17 +73,17 @@ export default class TownshipList extends React.Component {
               </nav>
               <div className="card">
                 <div className="row marginless-row valign-wrapper">
-                  <div className="col-xs-1"/>
-                  <div className="col-xs-3">
+                  <div className="col s1"/>
+                  <div className="col s3">
                     <a className="waves-effect waves-light btn valign">Create</a>
                   </div>
-                  <div className="search-wrapper card col-xs-7" style={{marginBottom:10, marginTop: 10}}>
+                  <div className="search-wrapper card col s7" style={{marginBottom:10, marginTop: 10}}>
                     <div className="row marginless-row valign-wrapper">
                       <SearchInput 
-                      className="search search-input col-xs-11" 
+                      className="search search-input col s11" 
                       style={{border: 0, margin: 0}}
                       onChange={(term) => this.setState({searchTerm: term})} />
-                      <i className="material-icons col-xs-1 valign clickable">search</i>
+                      <i className="material-icons col s1 valign clickable">search</i>
                     </div>
                   </div>
                   <div className="col-xs-1"/>
