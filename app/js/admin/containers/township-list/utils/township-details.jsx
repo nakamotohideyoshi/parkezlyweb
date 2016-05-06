@@ -171,15 +171,13 @@ export default class TownshipDetails extends React.Component {
             </div>
             <div className="card-action">
               <div className="row marginless-row">
-                <div className="col-lg-1"/>
-                <div className="col-lg-4 center-align">
+                <div className="col s4 offset-s1 center-align">
                   <a className="waves-effect waves-light btn">Go To Township</a>
                 </div>
-                <div className="col-lg-2"/>
-                <div className="col-lg-4 center-align">
+                <div className="col s4 offset-s2 right-align">
                   <a className="waves-effect waves-light btn btn-green" onClick={() => this.setState({editMode: true})}>Edit Township</a>
                 </div>
-                <div className="col-lg-1"/>
+                <div className="col s1"/>
               </div>
             </div>
           </div>
@@ -278,13 +276,13 @@ export default class TownshipDetails extends React.Component {
 
               <div className="card-action">
                 <div className="row marginless-row">
-                  <div className="col-lg-5 center-align">
+                  <div className="col s5 center-align">
                     <a className="waves-effect waves-light btn">Go To Township</a>
                   </div>
-                  <div className="col-lg-3 right-align">
+                  <div className="col s3 right-align">
                     <a className="waves-effect waves-light btn btn-yellow" onClick={() => this.setState({editMode: false})}>Cancel</a>
                   </div>
-                  <div className="col-lg-4 left-align">
+                  <div className="col s4 left-align">
                     <button 
                     type="submit" 
                     disabled={submitting} 
@@ -319,7 +317,7 @@ export default class TownshipDetails extends React.Component {
 
 
     return (
-      <div className="col-xs-6">
+      <div className="col s6">
         <nav>
           <div className="nav-wrapper nav-admin z-depth-2">
             <a className="brand-logo center" onClick={() => this.handleFetch()}>Township Details</a>
