@@ -45,7 +45,7 @@ if (isDeveloping) {
 }
 
 //  RESTful API
-const publicPath = path.resolve(__dirname);
+const publicPath = path.resolve('./dist/');
 app.use(bodyParser.json({ type: 'application/json' }))
 app.use(express.static(publicPath));
 
