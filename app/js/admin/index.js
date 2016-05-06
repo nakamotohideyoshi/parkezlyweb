@@ -34,4 +34,3 @@ export default function AdminIndex() {
       <Route path="/admin" component={AdminRouteList}/>
   );
 }
-

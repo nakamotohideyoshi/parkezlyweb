@@ -15,9 +15,9 @@ const Body = (props) => {
   ) : <div/>;
 
   return (
-    <div className="body-container">
+    <div>
       {header}
-      <div className="container-fluid">
+      <div className="content-wrapper">
         {children}
       </div>
       {footer}

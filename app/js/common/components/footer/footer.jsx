@@ -11,7 +11,7 @@ class Footer extends Component {
 
   renderFooterTab(footerDataItem, index) {
     return (
-      <div className="col-xs-4 footer-item" key={index}>
+      <div className="col s4 footer-item" key={index}>
         <ImageCheckbox
           label={footerDataItem.label}
           iconClass={footerDataItem.iconClass}/>
@@ -31,7 +31,7 @@ class Footer extends Component {
     const footerTabs = data.map(this.renderFooterTab);
 
     return (
-      <div className="container-fluid footer">
+      <div className="footer">
         <div className="row footer-row">
           {footerTabs} 
         </div>
