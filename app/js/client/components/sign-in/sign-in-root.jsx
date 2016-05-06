@@ -98,12 +98,12 @@ class SignIn extends Component {
   renderButtons() {
     return (
       <div className="row sign-in-actions">
-        <div className="col-xs-6">
+        <div className="col s6">
           <GrayButton onClick={this.registerUser}>
             REGISTER
           </GrayButton>
         </div>
-        <div className="col-xs-6">
+        <div className="col s6">
           <GrayButton onClick={this.loginUser}>
             LOGIN
           </GrayButton>

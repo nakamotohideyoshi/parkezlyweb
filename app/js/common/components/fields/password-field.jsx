@@ -13,7 +13,6 @@ class PasswordField extends Component {
   }
 
   getValue() {
-    console.log(this.refs.password.value);
     return this.refs.password.value;
   }
 
@@ -24,6 +23,14 @@ class PasswordField extends Component {
       this.setState({
         hasError: true,
         errorType: "EMPTY"
+      });
+      return;
+    }
+
+    if(password.length < 6) {
+      this.setState({
+        hasError: true,
+        errorType: "SHORT"
       });
       return;
     }
@@ -41,13 +48,14 @@ class PasswordField extends Component {
     const { placeholder, className, ...otherProps } = this.props;
     const { hasError, errorType } = this.state;
     const parentClassNames = classNames({
-      "has-danger" : this.state.hasError
+        "has-error": hasError,
+        "input-field": true
       },
       className
     );
     let errorText = "";
     if(hasError) {
-      errorText = Texts.EmptyPassword;
+      errorText = errorType === "EMPTY" ? Texts.EmptyPassword : Texts.ShortPassword;
     }
 
     return (
@@ -55,11 +63,12 @@ class PasswordField extends Component {
         <input
           type="password"
           ref="password"
-          className="form-control"
-          placeholder={placeholder}
           {...otherProps}/>
+        <label>
+          {placeholder}
+        </label>
         <div className="error-msg">
-          {errorText}
+          <i className="material-icons tiny">error</i> {errorText}
         </div>
        </div>
     );

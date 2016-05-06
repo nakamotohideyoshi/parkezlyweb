@@ -51,7 +51,8 @@ class EmailField extends Component {
 		const { placeholder, className, ...otherProps } = this.props;
 		const { hasError, errorType } = this.state;
 		const parentClassNames = classNames({
-			"has-danger" : this.state.hasError
+				"has-error": hasError,
+				"input-field": true,
 			},
 			className
 		);
@@ -59,17 +60,18 @@ class EmailField extends Component {
 		if(hasError) {
 			errorText = errorType === "EMPTY" ? Texts.EmptyEmail : Texts.InvalidEmail;
 		}
-
+console.log(errorText);
 		return (
 			<div className={parentClassNames}>
 				<input
 	        type="email"
 	        ref="email"
-	        className="form-control"
-	        placeholder={placeholder}
 	        {...otherProps}/>
-        <div className="error-msg">
-        	{errorText}
+	       <label data-error={errorText}>
+	       	{placeholder}
+	       </label>
+        <div className="error-msg row">
+        	<i className="material-icons tiny">error</i> {errorText}
         </div>
        </div>
 		);

@@ -1,3 +1,4 @@
 export const EmptyEmail = "Email cannot be empty";
 export const InvalidEmail = "Please enter a valid email";
 export const EmptyPassword = "Password cannot be empty";
+export const ShortPassword = "Password should be atleast 6 characters";
