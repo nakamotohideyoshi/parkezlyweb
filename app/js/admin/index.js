@@ -9,9 +9,10 @@ import TownshipList from "./containers/township-list/township-list.jsx";
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import ReduxPromise from 'redux-promise';
+import ReduxThunk from 'redux-thunk';
 import reducers from './reducers'; 
 
-const createStoreWithMiddleware = applyMiddleware(ReduxPromise)(createStore);
+const createStoreWithMiddleware = applyMiddleware(ReduxThunk, ReduxPromise)(createStore);
 const store = createStoreWithMiddleware(reducers);
 
 class AdminRouteList extends React.Component {
