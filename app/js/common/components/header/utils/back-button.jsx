@@ -18,4 +18,3 @@ export default class BackButton extends React.Component {
 BackButton.contextTypes = {
   router: React.PropTypes.object,
 }
-

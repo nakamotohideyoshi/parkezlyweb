@@ -7,21 +7,23 @@ import * as MenuData from "./utils/menu-data.js"
 const Header = () => {
 
   return (
-    <nav className="navbar navbar-fixed-top">
-      <div className="container-fluid">
-        <div className="row navbar">
-          <div className="col-xs-3">
-            <BackButton/>
-          </div>
-          <div className="col-xs-6">
-            <Logo/>
-          </div>
-          <div className="col-xs-3">
-            <Menu menuData={MenuData.menuLinks}/>
+    <div className="navbar-fixed">
+      <nav>
+        <div className="nav-wrapper">
+          <div className="row">
+            <div className="col s3">
+              <BackButton/>
+            </div>
+            <div className="col s6">
+              <Logo/>
+            </div>
+            <div className="col s3">
+              <Menu menuData={MenuData.menuLinks}/>
+            </div>
           </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
 }
 

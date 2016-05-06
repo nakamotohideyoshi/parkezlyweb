@@ -25,11 +25,9 @@ class Menu extends Component {
 
   renderMenuButton() {
     return (
-      <button type="button" className="navbar-toggle" onClick={this.toggleMenu}>
-        <span className="icon-bar"></span>
-        <span className="icon-bar"></span>
-        <span className="icon-bar"></span>
-      </button>
+      <a onClick={this.toggleMenu} className="hamburger-trigger">
+        <i className="material-icons large">toc</i>
+      </a>
     );
   }
 
