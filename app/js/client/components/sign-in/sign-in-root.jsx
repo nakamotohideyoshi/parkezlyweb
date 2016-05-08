@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 import classNames from "classnames";
+import cookie from 'react-cookie';
 
 import Body from "../../../common/components/body/body.jsx";
 import GrayButton from "../../../common/components/button/gray-button.jsx";
@@ -15,6 +16,17 @@ class SignIn extends Component {
 
     this.loginUser = this.loginUser.bind(this);
     this.registerUser = this.registerUser.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+
+    const { userId, sessionId, sessionToken } = nextProps.user;
+
+    if(userId) {
+      cookie.save('userId', userId, { path: '/' });
+      cookie.save('sessionId', sessionId, { path: '/' });
+      cookie.save('sessionToken', sessionToken, { path: '/' });
+    }
   }
 
   validateUser() {
@@ -54,7 +66,6 @@ class SignIn extends Component {
   }
 
   renderNotice() {
-    console.log(this.props.user);
     const {
       mode,
       userId,
@@ -80,11 +91,11 @@ class SignIn extends Component {
       subErrorMessage ? displayMsg += " : " + subErrorMessage : null;
     }
 
-    return (
+    return displayMsg ? (
       <div className={validClassNames}>
         {displayMsg}
       </div>
-    );
+    ) : null;
   }
 
   renderForgotPasswordLink() {
@@ -150,11 +161,15 @@ class SignIn extends Component {
   }
 
   render() {
+    const { loading } = this.props.user;
     const signInForm = this.renderSignInContent();
     return (
-      <Body showHeader={true}>
+      <Body showHeader={true} loading={loading}>
         <div className="sign-in-root">
           {signInForm}
+        </div>
+        <div className="blur">
+          <img src="//c5.staticflickr.com/6/5590/15029804212_0d5c15bc16_z.jpg" className="bg"/>
         </div>
       </Body>
     );
