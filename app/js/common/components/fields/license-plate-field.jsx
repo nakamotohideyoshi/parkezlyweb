@@ -3,7 +3,7 @@ import classNames from "classnames";
 
 import * as Texts from "../../constants/texts.js"
 
-class PasswordField extends Component {
+class LicensePlateField extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -13,24 +13,17 @@ class PasswordField extends Component {
   }
 
   getValue() {
-    return this.refs.password.value;
+    console.log(this.refs["license-plate"].value);
+    return this.refs["license-plate"].value;
   }
 
   validate() {
-    const password = this.getValue();
+    const licenseNumber = this.getValue();
 
-    if(!password) {
+    if(!licenseNumber) {
       this.setState({
         hasError: true,
         errorType: "EMPTY"
-      });
-      return;
-    }
-
-    if(password.length < 6) {
-      this.setState({
-        hasError: true,
-        errorType: "SHORT"
       });
       return;
     }
@@ -48,24 +41,24 @@ class PasswordField extends Component {
     const { placeholder, className, ...otherProps } = this.props;
     const { hasError, errorType } = this.state;
     const parentClassNames = classNames({
-        "has-error": hasError,
-        "input-field": true
+      "has-error" : this.state.hasError
       },
       className
     );
     let errorText = "";
     if(hasError) {
-      errorText = errorType === "EMPTY" ? Texts.EmptyPassword : Texts.ShortPassword;
+      errorText =  Texts.EmptyLicensePlate;
     }
 
     return (
       <div className={parentClassNames}>
         <input
-          type="password"
-          ref="password"
+          type="text"
+          ref="license-plate"
+          className="form-control"
           placeholder={placeholder}
           {...otherProps}/>
-        <div className="error-msg">
+        <div className="error-msg row">
           <i className="material-icons tiny">error</i> {errorText}
         </div>
        </div>
@@ -73,9 +66,9 @@ class PasswordField extends Component {
   }
 }
 
-PasswordField.PropTypes = {
+LicensePlateField.PropTypes = {
   placeholder: PropTypes.string,
   className: PropTypes.string
 };
 
-export default PasswordField;
+export default LicensePlateField;

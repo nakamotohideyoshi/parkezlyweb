@@ -95,11 +95,11 @@ a {
     background: #6D6E6E;
     color: $white;
     font-size: 18px;
-    font-weight: 900;
+    font-weight: 300;
     display: block;
-    padding: 15px;
-    border: 3px solid #B2BABB;
-    border-radius: 10px;
+    padding: 7px;
+    border: 1px solid #B2BABB;
+    border-radius: 5px;
     text-align: center;
     height: auto;
   }
@@ -190,4 +190,17 @@ a {
   color: #a94442;
   background-color: #f2dede;
   border-color: #ebccd1;
+}
+
+/* Spinner */
+.spinner {
+  z-index: 999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: url('../images/spinner.gif');
+  background-repeat: no-repeat;
+  background-position: center center;
 }
