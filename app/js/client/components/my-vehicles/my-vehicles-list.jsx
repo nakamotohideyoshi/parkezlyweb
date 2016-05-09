@@ -41,15 +41,8 @@ class VehicleList extends Component {
   }
 
   renderPlates() {
-    const platesData = [
-      {
-        plate_no: "AK-0009",
-        registered_state: "AK"
-      },{
-        plate_no: "NY-0009",
-        registered_state: "NY"
-      }
-    ];
+    const { vehicleList } = this.props.vehicles;
+    const platesData = vehicleList ? vehicleList.vehicles : [];
     const notice = this.renderNotice();
     const platesList = platesData.map(this.renderPlate);
     return (
@@ -64,6 +57,7 @@ class VehicleList extends Component {
   }
 
   render() {
+    console.log(this.props);
     const { loading } = this.props.vehicles;
     const content = this.renderPlates();
     return (
