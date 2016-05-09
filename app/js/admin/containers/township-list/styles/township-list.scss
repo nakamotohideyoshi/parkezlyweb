@@ -1,6 +1,15 @@
 .blue-body {
   background-color: #3C4E5A;
+  min-height: 100%;
 }
+
+
+.township-content-width {
+  min-width: 300px;
+  max-width: 1400px;
+  margin-top: 10px;
+}
+
 
 .township-list-container {
   min-height: 0px;
@@ -8,6 +17,7 @@
   overflow-y: auto;
   cursor: pointer;
   background-color: #FFF;
+
 }
 
 .township-details-container {

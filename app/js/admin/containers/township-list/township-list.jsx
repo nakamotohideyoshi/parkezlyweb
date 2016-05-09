@@ -9,7 +9,7 @@ import Spinner from '../../common/components/spinner.jsx';
 // Redux
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {fetchTownshipList, updateTownshipDetails} from '../../actions/index';
+import {fetchTownshipList, updateTownshipDetails} from '../../actions/actions-township';
 
 const KEYS_TO_FILTERS = ['city']
 
@@ -64,46 +64,48 @@ export default class TownshipList extends React.Component {
     let isLoading = true;
 
     return (
-      <Body showHeader={true}>
-        <div className="content-container">
-          <div className="row">
-            <div className="col s6">
-              <nav>
-                <div className="nav-wrapper nav-admin z-depth-2">
-                  <a 
-                  className="brand-logo center" 
-                  onClick={() => this.handleFetch()}>Township List</a>
-                </div>
-              </nav>
-              <div className="card">
-                <div className="row marginless-row valign-wrapper">
-                  <div className="col s1"/>
-                  <div className="col s3">
-                    <TownshipCreate />
+      <div className="blue-body">
+        <Body showHeader={true}>
+          <div className="content-container">
+            <div className="row">
+              <div className="col s12 m12 l6 township-content-width">
+                <nav>
+                  <div className="nav-wrapper nav-admin z-depth-2">
+                    <a 
+                    className="brand-logo center" 
+                    onClick={() => this.handleFetch()}>Township List</a>
                   </div>
-                  <div className="search-wrapper card col s7" style={{marginBottom:10, marginTop: 10}}>
-                    <div className="row marginless-row valign-wrapper">
-                      <SearchInput 
-                      className="search search-input col s11" 
-                      style={{border: 0, margin: 0}}
-                      onChange={(term) => this.setState({searchTerm: term})} />
-                      <i className="material-icons col s1 valign clickable">search</i>
+                </nav>
+                <div className="card">
+                  <div className="row marginless-row valign-wrapper">
+                    <div className="col s1"/>
+                    <div className="col s3">
+                      <TownshipCreate />
                     </div>
+                    <div className="search-wrapper card col s7" style={{marginBottom:10, marginTop: 10}}>
+                      <div className="row marginless-row valign-wrapper">
+                        <SearchInput 
+                        className="search search-input col s11" 
+                        style={{border: 0, margin: 0}}
+                        onChange={(term) => this.setState({searchTerm: term})} />
+                        <i className="material-icons col s1 valign clickable">search</i>
+                      </div>
+                    </div>
+                    <div className="col s1"/>
                   </div>
-                  <div className="col s1"/>
+                </div>
+                <div className="township-list-container center-align">
+                  <ul className="collection z-depth-2">
+                    {this.props.townshipListFetched.isLoading ?  <Spinner /> : this.renderTownshipList(this.props.townshipListFetched.data)}
+                  </ul>
                 </div>
               </div>
-              <div className="township-list-container center-align">
-                <ul className="collection z-depth-2">
-                  {this.props.townshipListFetched.isLoading ?  <Spinner /> : this.renderTownshipList(this.props.townshipListFetched.data)}
-                </ul>
-              </div>
-            </div>
-            <TownshipDetails townshipData={townshipDetails}/>
-          </div>  
-          <TownshipTiles townshipData={townshipDetails}/>
-        </div>
-      </Body>
+              <TownshipDetails townshipData={townshipDetails}/>
+            </div>  
+            <TownshipTiles townshipData={townshipDetails} />
+          </div>
+        </Body>
+      </div>
     );
   }
 }

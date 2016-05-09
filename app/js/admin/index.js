@@ -18,13 +18,12 @@ const store = createStoreWithMiddleware(reducers);
 class AdminRouteList extends React.Component {
   constructor(props) {
     super(props);
-    console.log("test3");
   }
 
   render() {
     return (
       <Provider store={store}>
-        <TownshipList/>
+        <TownshipList />
       </Provider>
     );
   }

@@ -5,7 +5,12 @@ import {reduxForm} from 'redux-form'
 import {createFilter} from 'react-search-input';
 import _ from 'lodash';
 
-import {editTownship, fetchTownshipList, updateTownshipDetails} from '../../../actions/index';
+import {
+  editTownship, 
+  fetchTownshipList, 
+  updateTownshipDetails, 
+  resetLoading
+} from '../../../actions/actions-township';
 
 export const fields = [ 
   'manager_id', 
@@ -35,29 +40,37 @@ export default class TownshipDetails extends React.Component {
 
   }
 
-  componentWillMount() {
-    fetchTownshipList
+  componentWillReceiveProps() {
+    if (this.props.townshipListEdited.isLoading) {
+      console.log("Loading...") 
+    } else {
+      this.handleSuccess();
+    }
+
   };
 
   handleSubmit(data) {
     this.props.editTownship(data, this.props.townshipData.id);
-
-    this.setState({editMode: false});
     $('#modal-success').openModal();
-
-    this.props.fetchTownshipList();
-    //this.props.updateTownshipDetails
   }
 
   handleSuccess(){
+    console.log("test");
+    
+    this.props.resetLoading();
+    this.props.fetchTownshipList();
+    this.setState({editMode: false});
+
     let townshipDataFetched = this.props.townshipListFetched.data.resource;
     let filteredTownships = _.filter(townshipDataFetched, { 'id': this.props.townshipData.id});
-    console.log(filteredTownships);
+    this.props.updateTownshipDetails(filteredTownships);
+    this.props.fetchTownshipList();
+    this.setState({townshipData: filteredTownships});
+    this.forceUpdate();
     
   }
 
   renderDetails(dataValid) {
-
     const {
       fields: {
         manager_id,
@@ -77,8 +90,15 @@ export default class TownshipDetails extends React.Component {
     } = this.props
 
     let editMode = this.state.editMode;
-
-    let townshipData = this.props.townshipData;
+    let townshipData
+    if(this.state.townshipData !== null) {
+      townshipData = this.state.townshipData;
+      console.log("state township data")
+      console.log(this.state.townshipData);
+    } else {
+      townshipData = this.props.townshipData;
+    }
+    
     if(dataValid) {
       if (editMode === false) {
         return (
@@ -171,13 +191,12 @@ export default class TownshipDetails extends React.Component {
             </div>
             <div className="card-action">
               <div className="row marginless-row">
-                <div className="col s4 offset-s1 center-align">
+                <div className="col s12 m12 l6">
                   <a className="waves-effect waves-light btn">Go To Township</a>
                 </div>
-                <div className="col s4 offset-s2 right-align">
+                <div className="col s12 m12 l6 offset-s2">
                   <a className="waves-effect waves-light btn btn-green" onClick={() => this.setState({editMode: true})}>Edit Township</a>
                 </div>
-                <div className="col s1"/>
               </div>
             </div>
           </div>
@@ -275,14 +294,14 @@ export default class TownshipDetails extends React.Component {
               </div>
 
               <div className="card-action">
-                <div className="row marginless-row">
-                  <div className="col s5 center-align">
+                <div className="row marginless-row" style={{minWidth: 500}}>
+                  <div className="col s12 m12 l4">
                     <a className="waves-effect waves-light btn">Go To Township</a>
                   </div>
-                  <div className="col s3 right-align">
+                  <div className="col s12 m12 l3 offset-l1">
                     <a className="waves-effect waves-light btn btn-yellow" onClick={() => this.setState({editMode: false})}>Cancel</a>
                   </div>
-                  <div className="col s4 left-align">
+                  <div className="col s12 m12 l3">
                     <button 
                     type="submit" 
                     disabled={submitting} 
@@ -306,9 +325,10 @@ export default class TownshipDetails extends React.Component {
   }
 
   render() {
+
     let townshipData = this.props.townshipData;
     let dataValid;
-    if (townshipData !== null && townshipData !== undefined)
+    if (townshipData !== null)
     {
       dataValid = true;
     } else {
@@ -317,7 +337,7 @@ export default class TownshipDetails extends React.Component {
 
 
     return (
-      <div className="col s6">
+      <div className="col s12 m12 l6 township-content-width">
         <nav>
           <div className="nav-wrapper nav-admin z-depth-2">
             <a className="brand-logo center" onClick={() => this.handleFetch()}>Township Details</a>
@@ -325,9 +345,6 @@ export default class TownshipDetails extends React.Component {
         </nav>
         <div className="card">
           {this.renderDetails(dataValid, townshipData)}
-           {this.props.townshipListEdited.isLoading ?  
-              console.log(this.props.townshipListEdited.data) 
-              : console.log(this.props.townshipListEdited.isLoading)}
         </div>
           <div id="modal-success" className="modal">
             <div className="modal-content">
@@ -364,7 +381,8 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     editTownship,
     fetchTownshipList,
-    updateTownshipDetails
+    updateTownshipDetails,
+    resetLoading
   }, dispatch);
 }
 
@@ -372,3 +390,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   form: 'township-details',
   fields
 })(TownshipDetails))
+
+/*
+ {this.props.townshipListEdited.isLoading ?  
+    console.log(this.props.townshipListEdited.data) 
+    : console.log(this.props.townshipListEdited.isLoading)}
+*/

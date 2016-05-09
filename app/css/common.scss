@@ -4,7 +4,9 @@
 }
 
 /*Fonts*/
-
+#app {
+  height: 100%;
+}
 
 
 /* Navbar */
@@ -12,6 +14,7 @@
 body {
   font-family: $font-family;
   font-size: $font-normal;
+  height: 100%;
 }
 
 nav {
@@ -26,8 +29,6 @@ nav {
 
 .content-container {
   margin: auto;
-  width: 100%;
-  height: 100%;
   padding-top: 20px; 
 }
 

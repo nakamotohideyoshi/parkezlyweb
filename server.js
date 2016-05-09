@@ -86,3 +86,56 @@ server.listen(port, function (err, result) {
   }
   console.log('Server running on port ' + port);
 }); 
+
+
+
+
+
+
+
+
+
+
+
+
+// Amazon Web Service S3 Test
+
+
+
+import uuid from 'node-uuid';
+
+var AWS = require('aws-sdk');
+
+/*
+import 'aws-sdk/dist/aws-sdk';
+const AWS = window.AWS;
+*/
+
+AWS.config.credentials = new AWS.Config({
+  accessKeyId: 'AKIAJNG22KFRVUAICSEA', secretAccessKey: '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'
+});
+
+AWS.config.update({
+    accessKeyId: "AKIAJNG22KFRVUAICSEA",
+    secretAccessKey: "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"
+});
+
+console.log(AWS.config.credentials);
+
+// Create an S3 client
+var s3 = new AWS.S3();
+
+// Create a bucket and upload something into it
+var bucketName = 'parkezly-images';
+var keyName = 'hello_world-'+ uuid.v4() + '.txt';
+
+s3.createBucket({Bucket: bucketName}, function() {
+  var params = {Bucket: bucketName, Key: keyName, Body: 'Hello World!'};
+  s3.putObject(params, function(err, data) {
+    if (err)
+      console.log(err)
+    else
+      console.log("Successfully uploaded data to " + bucketName + "/" + keyName);
+  });
+});
+

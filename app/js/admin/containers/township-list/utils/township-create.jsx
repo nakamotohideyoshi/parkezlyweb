@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import { reduxForm } from 'redux-form'
 
-import {submitNewTownship} from '../../../actions/index';
+import {submitNewTownship} from '../../../actions/actions-township.js';
 
 export const fields = [ 
   'manager_id', 
@@ -23,15 +23,30 @@ export const fields = [
 class TownshipCreate extends React.Component {
   constructor(props) {
     super(props);
-
+    
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSuccess = this.handleSuccess.bind(this);
+  }
+
+  componentDidUpdate() {
+    if (this.props.townshipCreate.isLoading) {
+    } else if (!this.props.townshipCreate.isLoading) {
+      this.handleSuccess();
+    }
+  };
+
+  handleSuccess(){
+    $('#modal-success').openModal();
+    console.log("Success!")
   }
 
   handleSubmit(data) {
     this.props.submitNewTownship(data);
+    $('#modal-township-create').openModal()
   }
 
   render() {
+    console.log(this.props.townshipCreate)
     const {
       fields: {
         manager_id,
@@ -175,7 +190,7 @@ TownshipCreate.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    townshipReducer: state.townshipReducer
+    townshipCreate: state.townshipCreate
   }
 }
 
