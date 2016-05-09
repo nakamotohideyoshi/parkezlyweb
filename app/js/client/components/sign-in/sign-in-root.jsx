@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 import classNames from "classnames";
-import cookie from 'react-cookie';
+import cookie from "react-cookie";
+import Auth from "../../utils/auth.js";
 
 import Body from "../../../common/components/body/body.jsx";
 import GrayButton from "../../../common/components/button/gray-button.jsx";
@@ -18,6 +19,12 @@ class SignIn extends Component {
     this.registerUser = this.registerUser.bind(this);
   }
 
+  componentWillMount() {
+    if(this.checkAuthStatus()) {
+      window.location = "/new-vehicle";
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
 
     const { userId, sessionId, sessionToken } = nextProps.user;
@@ -26,6 +33,17 @@ class SignIn extends Component {
       cookie.save('userId', userId, { path: '/' });
       cookie.save('sessionId', sessionId, { path: '/' });
       cookie.save('sessionToken', sessionToken, { path: '/' });
+
+      setTimeout(() => {
+        window.location = "/new-vehicle";
+      }, 2000);
+    }
+  }
+
+  checkAuthStatus() {
+    const userId = cookie.load('userId');
+    if(userId) {
+      return true;
     }
   }
 
@@ -161,9 +179,10 @@ class SignIn extends Component {
   }
 
   render() {
+    const authStatus = this.checkAuthStatus();
     const { loading } = this.props.user;
     const signInForm = this.renderSignInContent();
-    return (
+    return !authStatus ? (
       <Body showHeader={true} loading={loading}>
         <div className="sign-in-root">
           {signInForm}
@@ -172,7 +191,7 @@ class SignIn extends Component {
           <img src="//c5.staticflickr.com/6/5590/15029804212_0d5c15bc16_z.jpg" className="bg"/>
         </div>
       </Body>
-    );
+    ) : null;
   }
 }
 

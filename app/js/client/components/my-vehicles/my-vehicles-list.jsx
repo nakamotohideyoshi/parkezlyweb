@@ -10,16 +10,27 @@ import { getVehicles } from "../../actions/vehicle.js";
 class VehicleList extends Component {
   constructor(props) {
     super(props);
+    this.editPlate = this.editPlate.bind(this);
   }
 
   componentWillMount() {
-    const userId = cookie.load('userId');
-    if(!userId) {
+    if(!this.checkAuthStatus()) {
       window.location = "/";
-      return;
     }
+    const userId = cookie.load('userId');
     const { dispatch } = this.props;
     dispatch(getVehicles(userId));
+  }
+
+  checkAuthStatus() {
+    const userId = cookie.load('userId');
+    if(userId) {
+      return true;
+    }
+  }
+
+  editPlate(plateData) {
+    console.log(plateData);
   }
 
   renderNotice() {
@@ -35,7 +46,9 @@ class VehicleList extends Component {
     const { plate_no, registered_state } = plateData;
     return (
       <div className="col s12 m6" key={index}>
-        <Plate number={plate_no} state={registered_state}/>
+        <a href="#">
+          <Plate number={plate_no} state={registered_state}/>
+        </a>
       </div>
     )
   }
@@ -57,16 +70,16 @@ class VehicleList extends Component {
   }
 
   render() {
-    console.log(this.props);
+    const authStatus = this.checkAuthStatus();
     const { loading } = this.props.vehicles;
     const content = this.renderPlates();
-    return (
+    return authStatus ? (
       <Body showHeader={true} loading={loading}>
         <div className="vehicle-list-root">
           {content}
         </div>
       </Body>
-    );
+    ) : null;
   }
 }
 

@@ -1,5 +1,5 @@
 import axios from "axios";
-import * as Config from "../config/api.js";
+import * as Config from "../utils/api.js";
 
 export const addPlate = (plateInfo) => {
   const { plate_no, registered_state, user_id } = plateInfo;

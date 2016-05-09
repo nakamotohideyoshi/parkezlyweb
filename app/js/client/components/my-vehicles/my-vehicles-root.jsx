@@ -19,9 +19,24 @@ class NewVehicleForm extends Component {
   }
 
   componentWillMount() {
-    const userId = cookie.load('userId');
-    if(!userId) {
+    if(!this.checkAuthStatus()) {
       window.location = "/";
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { plateId } = nextProps.vehicle;
+    if(plateId) {
+      setTimeout(() =>  {
+        window.location = "/my-vehicles"
+      }, 2000);
+    }
+  }
+
+  checkAuthStatus() {
+    const userId = cookie.load('userId');
+    if(userId) {
+      return true;
     }
   }
 
@@ -79,7 +94,7 @@ class NewVehicleForm extends Component {
   renderSkipLink() {
     return (
       <div className="skip-link">
-        <a href="#">SKIP THIS</a>
+        <a href="/my-vehicles">SKIP THIS</a>
       </div>
     );
   }
@@ -114,16 +129,16 @@ class NewVehicleForm extends Component {
   }
 
   render() {
-    console.log(this.props);
+    const authStatus = this.checkAuthStatus();
     const { loading } = this.props.vehicle;
     const newVehicleContent = this.renderNewVehicleContent();
-    return (
+    return authStatus ? (
       <Body showHeader={true} loading={loading}>
         <div className="new-vehicle-root">
           {newVehicleContent}
         </div>
       </Body>
-    );
+    ) : null;
   }
 }
 
