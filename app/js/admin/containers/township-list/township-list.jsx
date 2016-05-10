@@ -97,7 +97,7 @@ export default class TownshipList extends React.Component {
                   </ul>
                 </div>
               </div>
-              <TownshipDetails townshipData={townshipDetails} initialValues={townshipDetails}/>
+              <TownshipDetails townshipData={townshipDetails} initialValues={townshipDetails.data}/>
             </div>  
             <TownshipTiles townshipData={townshipDetails} />
           </div>

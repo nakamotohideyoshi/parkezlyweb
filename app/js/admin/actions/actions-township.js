@@ -82,7 +82,14 @@ export function resetLoading() {
 export function updateTownshipDetails(data) {
   return {
     type: 'SEND_TOWNSHIP_DETAILS',
-    payload: data
+    data: data
+  };
+}
+
+export function resetTownshipDetails(data) {
+  return {
+    type: 'RESET_TOWNSHIP_DETAILS',
+    data: data
   };
 }
 

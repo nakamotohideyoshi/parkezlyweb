@@ -9,7 +9,8 @@ import {
   editTownship, 
   fetchTownshipList, 
   updateTownshipDetails, 
-  resetLoading
+  resetLoading,
+  resetTownshipDetails
 } from '../../../actions/actions-township';
 
 export const fields = [ 
@@ -26,6 +27,8 @@ export const fields = [
   'contact_number',
   'contact_email']
 
+export let townshipData;
+
 export default class TownshipDetails extends React.Component {
   constructor(props) {
     super(props);
@@ -40,31 +43,41 @@ export default class TownshipDetails extends React.Component {
 
   }
 
-  componentWillReceiveProps() {
+  componentWillUpdate() {
     if (this.props.townshipListEdited.isLoading) {
-      console.log("Loading...") 
+      console.log('loading...')
     } else {
       this.handleSuccess();
     }
+    /*
+    if(this.props.townshipListEdited.resetDetails) {
+      
+    } else {
+      townshipData = null;
+    }
+    */
   };
 
+  componentDidUpdate () {
+    townshipData = this.props.townshipData;
+  }
+
   handleSubmit(data) {
-    this.props.editTownship(data, this.props.townshipData.id);
+    this.props.editTownship(data, this.props.townshipData.data.id);
     $('#modal-success').openModal();
   }
 
   handleSuccess(){
-    console.log("test");
-
     // Reset loading status so it doesn't infinitely handleSuccess. 
     // Reload township list to represent new changes.
     // Go back to view mode.
     this.props.resetLoading();
     this.props.fetchTownshipList();
     this.setState({editMode: false});
+    this.props.resetTownshipDetails(townshipData.data);
   }
 
-  renderDetails(dataValid) {
+  renderDetails(dataValid, townshipData) {
     const {
       fields: {
         manager_id,
@@ -84,7 +97,6 @@ export default class TownshipDetails extends React.Component {
     } = this.props
 
     let editMode = this.state.editMode;
-    let townshipData = this.props.townshipData;
     
     if(dataValid) {
       if (editMode === false) {
@@ -313,16 +325,22 @@ export default class TownshipDetails extends React.Component {
 
   render() {
 
-    let townshipData = this.props.townshipData;
     let dataValid;
-    if (townshipData !== null)
-    {
-      dataValid = true;
-    } else {
+    townshipData = this.props.townshipData;
+    if (townshipData.resetDetails) {
+      console.log(dataValid);
       dataValid = false;
+    } 
+    else if (townshipData.resetDetails == false) {
+      if (townshipData.data !== null && townshipData.data !== undefined) {
+        dataValid = true;
+        console.log(townshipData);
+      } else {
+        dataValid = false;
+      }
     }
 
-
+    console.log("data valid:" + dataValid)
     return (
       <div className="col s12 m12 l6 township-content-width">
         <nav>
@@ -331,7 +349,7 @@ export default class TownshipDetails extends React.Component {
           </div>
         </nav>
         <div className="card">
-          {this.renderDetails(dataValid, townshipData)}
+          {this.renderDetails(dataValid, townshipData.data)}
         </div>
           <div id="modal-success" className="modal">
             <div className="modal-content">
@@ -361,6 +379,7 @@ function mapStateToProps(state) {
   return {
     townshipListEdited: state.townshipListEdited,
     townshipListFetched: state.townshipListFetched,
+    townshipDetails: state.townshipDetails
   }
 }
 
@@ -369,7 +388,8 @@ function mapDispatchToProps(dispatch) {
     editTownship,
     fetchTownshipList,
     updateTownshipDetails,
-    resetLoading
+    resetLoading,
+    resetTownshipDetails
   }, dispatch);
 }
 
