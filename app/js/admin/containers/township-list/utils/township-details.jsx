@@ -46,7 +46,6 @@ export default class TownshipDetails extends React.Component {
     } else {
       this.handleSuccess();
     }
-
   };
 
   handleSubmit(data) {
@@ -56,18 +55,13 @@ export default class TownshipDetails extends React.Component {
 
   handleSuccess(){
     console.log("test");
-    
+
+    // Reset loading status so it doesn't infinitely handleSuccess. 
+    // Reload township list to represent new changes.
+    // Go back to view mode.
     this.props.resetLoading();
     this.props.fetchTownshipList();
     this.setState({editMode: false});
-
-    let townshipDataFetched = this.props.townshipListFetched.data.resource;
-    let filteredTownships = _.filter(townshipDataFetched, { 'id': this.props.townshipData.id});
-    this.props.updateTownshipDetails(filteredTownships);
-    this.props.fetchTownshipList();
-    this.setState({townshipData: filteredTownships});
-    this.forceUpdate();
-    
   }
 
   renderDetails(dataValid) {
@@ -90,14 +84,7 @@ export default class TownshipDetails extends React.Component {
     } = this.props
 
     let editMode = this.state.editMode;
-    let townshipData
-    if(this.state.townshipData !== null) {
-      townshipData = this.state.townshipData;
-      console.log("state township data")
-      console.log(this.state.townshipData);
-    } else {
-      townshipData = this.props.townshipData;
-    }
+    let townshipData = this.props.townshipData;
     
     if(dataValid) {
       if (editMode === false) {
@@ -221,7 +208,7 @@ export default class TownshipDetails extends React.Component {
                   <div className="col s6">
                     <div className="form-group">
                       <label>Manager ID</label>
-                      <input type="number" placeholder="Manager ID" {...manager_id}/>
+                      <input type="text" placeholder="Manager ID" {...manager_id}/>
                     </div>
                   </div>
                   <div className="col s6">
@@ -395,4 +382,13 @@ export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
  {this.props.townshipListEdited.isLoading ?  
     console.log(this.props.townshipListEdited.data) 
     : console.log(this.props.townshipListEdited.isLoading)}
+*/
+
+/*
+  let townshipDataFetched = this.props.townshipListFetched.data.resource;
+  let filteredTownships = _.filter(townshipDataFetched, { 'id': this.props.townshipData.id});
+  this.props.updateTownshipDetails(filteredTownships);
+  this.props.fetchTownshipList();
+  this.setState({townshipData: filteredTownships});
+  this.forceUpdate();
 */

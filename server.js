@@ -97,7 +97,6 @@ server.listen(port, function (err, result) {
 
 
 
-
 // Amazon Web Service S3 Test
 
 
@@ -129,6 +128,7 @@ var s3 = new AWS.S3();
 var bucketName = 'parkezly-images';
 var keyName = 'hello_world-'+ uuid.v4() + '.txt';
 
+/*
 s3.createBucket({Bucket: bucketName}, function() {
   var params = {Bucket: bucketName, Key: keyName, Body: 'Hello World!'};
   s3.putObject(params, function(err, data) {
@@ -138,4 +138,10 @@ s3.createBucket({Bucket: bucketName}, function() {
       console.log("Successfully uploaded data to " + bucketName + "/" + keyName);
   });
 });
+*/
 
+/*
+use this in params to set file permissions:
+ACL:'public-read'
+
+*/

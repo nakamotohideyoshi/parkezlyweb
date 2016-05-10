@@ -31,8 +31,6 @@ export default class TownshipList extends React.Component {
 
   handleFetch(townshipData) {
     this.props.fetchTownshipList();
-    this.forceUpdate();
-    $('#modal-success').openModal();
   }
 
   renderTownshipList(townshipData) {
@@ -72,8 +70,7 @@ export default class TownshipList extends React.Component {
                 <nav>
                   <div className="nav-wrapper nav-admin z-depth-2">
                     <a 
-                    className="brand-logo center" 
-                    onClick={() => this.handleFetch()}>Township List</a>
+                    className="brand-logo center">Township List</a>
                   </div>
                 </nav>
                 <div className="card">
@@ -100,7 +97,7 @@ export default class TownshipList extends React.Component {
                   </ul>
                 </div>
               </div>
-              <TownshipDetails townshipData={townshipDetails}/>
+              <TownshipDetails townshipData={townshipDetails} initialValues={townshipDetails}/>
             </div>  
             <TownshipTiles townshipData={townshipDetails} />
           </div>

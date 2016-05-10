@@ -14,6 +14,8 @@ export default function townshipCreate(state = initialState, action) {
       return Object.assign({}, state, {isLoading: false, data: action.data, error: false });
     case types.TOWNSHIP_CREATE_POST_REQ:
       return Object.assign({}, state, {isLoading: true, error: false });
+    case types.RESET_LOADING:
+      return Object.assign({}, state, initialState);
     default:
       return state;
   }
