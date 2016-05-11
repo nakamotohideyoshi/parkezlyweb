@@ -4,6 +4,7 @@ import { Router, Route, Link, hashHistory, browserHistory } from "react-router";
 
 import AdminLogin from "./components/login/login-root.jsx";
 import TownshipList from "./containers/township-list/township-list.jsx";
+import TownshipPanelRoot from './containers/township-panel/township-panel-root.jsx';
 
 // Redux
 import { Provider } from 'react-redux';
@@ -31,6 +32,11 @@ class AdminRouteList extends React.Component {
 
 export default function AdminIndex() {
   return (
-      <Route path="/admin" component={AdminRouteList}/>
+      <div>
+        <Route path="admin" component={AdminRouteList}>
+          <Route path="township" component={TownshipPanelRoot}/>
+        </Route>
+        <Route path="admin/township/:townshipId" component={TownshipPanelRoot}/>
+      </div>
   );
 }

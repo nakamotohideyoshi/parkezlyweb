@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router'
 
 export default class TownshipTiles extends React.Component {
 
@@ -6,16 +7,16 @@ export default class TownshipTiles extends React.Component {
     super(props);
   }
 
-  renderTiles(dataValid) {
+  renderTiles(dataValid, townshipData) {
     if(dataValid) {
       return(
         <div className="animated fadeInUp">
           <div className="row center-align">
             <div className="col s12 m12 l6 offset-s1">
-              <a className="waves-effect waves-light btn-large admin-tile valign-wrapper">
-                <i className="material-icons valign">&#xE7F1;</i>
-                <h4> Township Panel </h4>
-              </a>
+              <Link to={{pathname: `/admin/township/${townshipData.id}`}} className="waves-effect waves-light btn-large admin-tile valign-wrapper">
+                  <i className="material-icons valign">&#xE7F1;</i>
+                  <h4> Township Panel </h4>
+              </Link>
             </div>
             <div className="col s12 m12 l6 offset-s1">
               <a className="waves-effect waves-light btn-large admin-tile valign-wrapper">
@@ -49,7 +50,7 @@ export default class TownshipTiles extends React.Component {
     let townshipData = this.props.townshipData;
     let dataValid;
 
-    if (townshipData !== null && townshipData !== undefined)
+    if (townshipData.data !== null && townshipData.data !== undefined)
     {
       dataValid = true;
     } else {
@@ -58,7 +59,7 @@ export default class TownshipTiles extends React.Component {
 
     return (
       <div>
-      {this.renderTiles(dataValid, townshipData)}
+        {this.renderTiles(dataValid, townshipData.data)}
       </div>
     );
   }
