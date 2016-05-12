@@ -11,6 +11,7 @@ import webpackConfig from './webpack.config';
 import jwt from 'jsonwebtoken';
 import jwtConfig from './jwt.config.json';
 
+var dataUriToBuffer = require('data-uri-to-buffer');
 
 const isProduction = process.env.NODE_ENV === 'production';
 const isDeveloping = !isProduction;
@@ -46,6 +47,7 @@ if (isDeveloping) {
 
 //  RESTful API
 const publicPath = path.resolve('./dist/');
+app.use(bodyParser({limit: '500mb'}));
 app.use(bodyParser.json({ type: 'application/json' }))
 app.use(express.static(publicPath));
 
@@ -76,18 +78,15 @@ app.post('/api/logout', function(req, res) {
     res.status(200).json({'message' : 'User logged out'});   
 });
 
-// We need to use basic HTTP service to proxy
-// websocket requests from webpack
-const server = http.createServer(app);
-
-server.listen(port, function (err, result) {
-  if(err){
-    console.log(err);
-  }
-  console.log('Server running on port ' + port);
-}); 
 
 
+
+var jsonParser       = bodyParser.json({limit:1024*1024*20, type:'application/json'});
+var urlencodedParser = bodyParser.urlencoded({ extended:true,limit:1024*1024*20,type:'application/x-www-form-urlencoding' })
+
+app.use(jsonParser);
+app.use(urlencodedParser);
+app.use(bodyParser.raw());
 
 
 
@@ -126,11 +125,13 @@ var s3 = new AWS.S3();
 
 // Create a bucket and upload something into it
 var bucketName = 'parkezly-images';
-var keyName = 'hello_world-'+ uuid.v4() + '.txt';
+var keyName = 'township_image-'+ uuid.v4() + '.png';
 
-/*
-s3.createBucket({Bucket: bucketName}, function() {
-  var params = {Bucket: bucketName, Key: keyName, Body: 'Hello World!'};
+app.post('/admin/s3', function (req, res) {
+ console.log("Testing Restful API");
+ let decoded = dataUriToBuffer(req.body.croppedImage);
+ s3.createBucket({Bucket: bucketName}, function() {
+  var params = {Bucket: bucketName, Key: keyName, Body: decoded, ACL: 'public-read'};
   s3.putObject(params, function(err, data) {
     if (err)
       console.log(err)
@@ -138,10 +139,48 @@ s3.createBucket({Bucket: bucketName}, function() {
       console.log("Successfully uploaded data to " + bucketName + "/" + keyName);
   });
 });
-*/
+
+});
+
+
+
 
 /*
 use this in params to set file permissions:
 ACL:'public-read'
 
 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+// We need to use basic HTTP service to proxy
+// websocket requests from webpack
+const server = http.createServer(app);
+
+server.listen(port, function (err, result) {
+  if(err){
+    console.log(err);
+  }
+  console.log('Server running on port ' + port);
+}); 
+
+
+
+
+
+
+
+
+
+
+

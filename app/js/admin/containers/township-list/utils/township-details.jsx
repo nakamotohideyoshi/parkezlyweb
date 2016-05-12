@@ -5,6 +5,8 @@ import {reduxForm} from 'redux-form'
 import {createFilter} from 'react-search-input';
 import _ from 'lodash';
 
+import TownshipImageUpload from './township-image-upload.jsx';
+
 import {
   editTownship, 
   fetchTownshipList, 
@@ -105,6 +107,14 @@ export default class TownshipDetails extends React.Component {
             <div className="card-image">
               <img src="https://media-cdn.tripadvisor.com/media/photo-s/03/9b/2d/f2/new-york-city.jpg"/>
               <span className="card-title">{townshipData.city}</span>
+              <div className="fixed-action-btn horizontal image-upload-button">
+                <a className="btn-floating btn-large btn-green waves-effect waves-light" onClick={() => $('#modal-upload').openModal()}>
+                  <i className="large material-icons">file_upload</i>
+                </a>
+                <ul>
+                  <li className="image-upload-text"> Upload </li>
+                </ul>
+              </div>
             </div>
             <div className="card-content township-details-container">
               <div className="row">
@@ -349,20 +359,25 @@ export default class TownshipDetails extends React.Component {
           </div>
         </nav>
         <div className="card">
+        <TownshipImageUpload />
           {this.renderDetails(dataValid, townshipData.data)}
         </div>
-          <div id="modal-success" className="modal">
-            <div className="modal-content">
-              <h4>Success!</h4>
-              <p>You've successfuly sent the request!</p>
-            </div>
-            <div className="modal-footer">
-              <button 
-              href="#" 
-              className=" modal-action modal-close waves-effect waves-green btn-flat"
-              onClick={() => this.forceUpdate()}>Close</button>
-            </div>
+
+        <div id="modal-success" className="modal">
+          <div className="modal-content">
+            <h4>Success!</h4>
+            <p>You've successfuly sent the request!</p>
           </div>
+          <div className="modal-footer">
+            <button 
+            href="#" 
+            className=" modal-action modal-close waves-effect waves-green btn-flat"
+            onClick={() => this.forceUpdate()}>Close</button>
+          </div>
+        </div>
+
+        
+
       </div>
     );
   }

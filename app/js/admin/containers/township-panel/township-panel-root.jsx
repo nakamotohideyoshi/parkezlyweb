@@ -14,23 +14,23 @@ export default class TownshipPanelRoot extends React.Component {
             <a href="#" data-activates="mobile-demo" className="button-collapse"><i className="material-icons">menu</i></a>
             <ul className="left hide-on-med-and-down">
               <li>
-                <a href="/admin/township/51" className="waves-effect waves-light" style={{height: 30}}>
+                <a href="/admin/township/51" className="waves-effect waves-light tab-bar-link">
                 <i className="material-icons left tab-bar-icons">home</i>Township Editor</a>
               </li>
               <li>
-                <a href="/admin/township/51" className="waves-effect waves-light" style={{height: 30}}>
+                <a href="/admin/township/51" className="waves-effect waves-light tab-bar-link">
                 <i className="material-icons left tab-bar-icons">person</i>Userlist</a>
               </li>
               <li>
-                <a href="/admin/township/51" className="waves-effect waves-light" style={{height: 30}}>
+                <a href="/admin/township/51" className="waves-effect waves-light tab-bar-link">
                 <i className="material-icons left tab-bar-icons">place</i>Facilities List</a>
               </li>
               <li>
-                <a href="/admin/township/51" className="waves-effect waves-light" style={{height: 30}}>
+                <a href="/admin/township/51" className="waves-effect waves-light tab-bar-link">
                 <i className="material-icons left tab-bar-icons">event_note</i>Permit List</a>
               </li>
               <li>
-                <a href="/admin/township/51" className="waves-effect waves-light" style={{height: 30}}>
+                <a href="/admin/township/51" className="waves-effect waves-light tab-bar-link">
                 <i className="material-icons left tab-bar-icons">event_available</i>Permit Request List</a>
               </li>
             </ul>
@@ -43,9 +43,16 @@ export default class TownshipPanelRoot extends React.Component {
             </ul>
           </div>
         </nav>
-        <Body showHeader={true} style={{marginBottom: 0}}>
-          <div className="content-container">
-            <div> ID: {this.props.params.townshipId}</div>
+        <Body showHeader={true}>
+          <div className="container content-container">
+            <nav style={{marginTop: 30}}>
+              <div className="nav-wrapper nav-admin z-depth-2">
+                <a className="brand-logo center" onClick={() => this.handleFetch()}>Township Details</a>
+              </div>
+            </nav>
+            <div className="card">
+              ID: {this.props.params.townshipId}
+            </div>
           </div>
         </Body>
       </div>
