@@ -1,7 +1,19 @@
 import React from 'react';
 import Body from "../../../common/components/body/body.jsx";
+import TownshipDetails from '../township-list/utils/township-details.jsx';
 
-export default class TownshipPanelRoot extends React.Component {
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
+import {
+  editTownship, 
+  fetchTownshipList, 
+  updateTownshipDetails, 
+  resetLoading,
+  resetTownshipDetails
+} from '../../actions/actions-township.js';
+
+class TownshipPanelRoot extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -45,17 +57,31 @@ export default class TownshipPanelRoot extends React.Component {
         </nav>
         <Body showHeader={true}>
           <div className="container content-container">
-            <nav style={{marginTop: 30}}>
-              <div className="nav-wrapper nav-admin z-depth-2">
-                <a className="brand-logo center" onClick={() => this.handleFetch()}>Township Details</a>
-              </div>
-            </nav>
-            <div className="card">
-              ID: {this.props.params.townshipId}
-            </div>
+            <TownshipDetails 
+              townshipData={this.props.townshipDetails} 
+              initialValues={this.props.townshipDetails.data} 
+              style={{marginTop: 30}} />
           </div>
         </Body>
       </div>
     );
   }
 }
+
+
+function mapStateToProps(state) {
+  return {
+    townshipListFetched: state.townshipListFetched,
+    townshipListEdited: state.townshipListEdited,
+    townshipDetails: state.townshipDetails
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    fetchTownshipList,
+    updateTownshipDetails
+  }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TownshipPanelRoot);

@@ -48,7 +48,6 @@ class TownshipCreate extends React.Component {
   }
 
   render() {
-    console.log(this.props.townshipCreate)
     const {
       fields: {
         manager_id,

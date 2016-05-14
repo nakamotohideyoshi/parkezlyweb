@@ -97,7 +97,9 @@ export default class TownshipList extends React.Component {
                   </ul>
                 </div>
               </div>
-              <TownshipDetails townshipData={townshipDetails} initialValues={townshipDetails.data}/>
+              <div className="col s12 m12 l6 township-content-width">
+                <TownshipDetails townshipData={townshipDetails} initialValues={townshipDetails.data}/>
+              </div>
             </div>  
             <TownshipTiles townshipData={townshipDetails} />
           </div>

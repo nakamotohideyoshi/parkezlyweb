@@ -39,7 +39,6 @@ export function submitNewTownship(data) {
   
   const URL = 'townships_manager';
   
-  console.log(data);
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.TOWNSHIP_CREATE_POST_REQ));
     return AXIOS_INSTANCE.post(URL, data)
@@ -49,14 +48,12 @@ export function submitNewTownship(data) {
     })
     .catch(function(response){
       dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_CREATE_POST_ERROR));
-      console.log(response);
     })
   }
 }
 
 
 export function editTownship(data, id) {
-  
   const URL = 'townships_manager?ids=' + id;
 
   return function(dispatch) {
@@ -93,3 +90,41 @@ export function resetTownshipDetails(data) {
   };
 }
 
+export function uploadImage(finalResult) {
+
+    return function(dispatch) {
+
+      dispatch(apiTownship.requestData(types.UPLOAD_TOWNSHIP_IMAGE_REQ));
+
+      return axios.post('/admin/s3', {croppedImage: finalResult})
+      .then(function(response) {
+        dispatch(apiTownship.receiveData(response, types.UPLOAD_TOWNSHIP_IMAGE_SUCCESS));
+        console.log("Success:")
+        console.log(response)
+      })
+      .catch(function(response){
+        dispatch(apiTownship.receiveError(response, types.UPLOAD_TOWNSHIP_IMAGE_ERROR));
+        dispatch(apiTownship.pushState(null,'/error'));
+      })
+    }
+}
+
+export function editTownship2(data, id) {
+  console.log("HELLO SIR");
+  const URL = 'townships_manager?ids=' + id;
+
+  return function(dispatch) {
+    dispatch(apiTownship.requestData(types.TOWNSHIP_EDIT_PUT_REQ));
+    return AXIOS_INSTANCE.put(URL, data)
+    .then(function(response) {
+      dispatch(apiTownship.receiveData(response.data, types.TOWNSHIP_EDIT_PUT_SUCCESS));
+      dispatch(reset('township-details'));
+      console.log(response)
+    })
+    .catch(function(response){
+      dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_EDIT_PUT_ERROR));
+      dispatch(apiTownship.pushState(null,'/error'));
+      console.log(response)
+    })
+  }
+}

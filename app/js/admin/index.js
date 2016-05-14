@@ -16,7 +16,7 @@ import reducers from './reducers';
 const createStoreWithMiddleware = applyMiddleware(ReduxThunk, ReduxPromise)(createStore);
 const store = createStoreWithMiddleware(reducers);
 
-class AdminRouteList extends React.Component {
+class TownshipListController extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -30,13 +30,27 @@ class AdminRouteList extends React.Component {
   }
 }
 
+class TownshipPanelController extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <Provider store={store}>
+        <TownshipPanelRoot />
+      </Provider>
+    );
+  }
+}
+
 export default function AdminIndex() {
   return (
       <div>
-        <Route path="admin" component={AdminRouteList}>
-          <Route path="township" component={TownshipPanelRoot}/>
+        <Route path="admin" component={TownshipListController}>
+          <Route path="township" component={TownshipPanelController}/>
         </Route>
-        <Route path="admin/township/:townshipId" component={TownshipPanelRoot}/>
+        <Route path="admin/township/:townshipId" component={TownshipPanelController}/>
       </div>
   );
 }

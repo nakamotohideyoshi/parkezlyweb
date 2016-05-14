@@ -3,7 +3,10 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {reduxForm} from 'redux-form'
 import {createFilter} from 'react-search-input';
+import {ModalContainer, ModalDialog} from 'react-modal-dialog';
 import _ from 'lodash';
+
+import { Link } from 'react-router'
 
 import TownshipImageUpload from './township-image-upload.jsx';
 
@@ -37,19 +40,23 @@ export default class TownshipDetails extends React.Component {
 
     this.state = {
       townshipData: null,
-      editMode: false
+      editMode: false,
+      isShowingModal: false
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.handleClick = this.handleClick.bind(this);
 
   }
 
   componentWillUpdate() {
     if (this.props.townshipListEdited.isLoading) {
-      console.log('loading...')
+
     } else {
       this.handleSuccess();
+      this.handleClose();
     }
     /*
     if(this.props.townshipListEdited.resetDetails) {
@@ -66,7 +73,6 @@ export default class TownshipDetails extends React.Component {
 
   handleSubmit(data) {
     this.props.editTownship(data, this.props.townshipData.data.id);
-    $('#modal-success').openModal();
   }
 
   handleSuccess(){
@@ -77,7 +83,15 @@ export default class TownshipDetails extends React.Component {
     this.props.fetchTownshipList();
     this.setState({editMode: false});
     this.props.resetTownshipDetails(townshipData.data);
+    $('#modal-success').openModal();
   }
+
+  handleClick() {
+    this.setState({isShowingModal: true})
+  } 
+  handleClose() {
+    this.setState({isShowingModal: false})
+  } 
 
   renderDetails(dataValid, townshipData) {
     const {
@@ -104,15 +118,16 @@ export default class TownshipDetails extends React.Component {
       if (editMode === false) {
         return (
           <div>
-            <div className="card-image">
-              <img src="https://media-cdn.tripadvisor.com/media/photo-s/03/9b/2d/f2/new-york-city.jpg"/>
+            <div className="card-image" style={{backgroundColor: "#2E2E2E"}}>
+              <img src={this.props.townshipDetails.data.township_logo} 
+              className="township-details-image circle responsive-img" />
               <span className="card-title">{townshipData.city}</span>
               <div className="fixed-action-btn horizontal image-upload-button">
-                <a className="btn-floating btn-large btn-green waves-effect waves-light" onClick={() => $('#modal-upload').openModal()}>
+                <a className="btn-floating btn-large btn-green waves-effect waves-light" onClick={() => this.handleClick()}>
                   <i className="large material-icons">file_upload</i>
                 </a>
                 <ul>
-                  <li className="image-upload-text"> Upload </li>
+                  <li className="image-upload-text"> Upload Image </li>
                 </ul>
               </div>
             </div>
@@ -150,14 +165,14 @@ export default class TownshipDetails extends React.Component {
                 </div>
                 <div className="col s6">
                   <div className="form-group">
-                    <label>State</label>
-                    <input value={townshipData.state} onChange={() => this.setState({townshipData: townshipData})}/>
+                    <label>City</label>
+                    <input value={townshipData.city} onChange={() => this.setState({townshipData: townshipData})}/>
                   </div>
                 </div>
                 <div className="col s6">
                   <div className="form-group">
-                    <label>City</label>
-                    <input value={townshipData.city} onChange={() => this.setState({townshipData: townshipData})}/>
+                    <label>State</label>
+                    <input value={townshipData.state} onChange={() => this.setState({townshipData: townshipData})}/>
                   </div>
                 </div>
                 <div className="col s6">
@@ -201,7 +216,7 @@ export default class TownshipDetails extends React.Component {
             <div className="card-action">
               <div className="row marginless-row">
                 <div className="col s12 m12 l6">
-                  <a className="waves-effect waves-light btn">Go To Township</a>
+                  <Link to={{pathname: `/admin/township/${townshipData.id}`}} className="waves-effect waves-light btn">Go To Township</Link>
                 </div>
                 <div className="col s12 m12 l6 offset-s2">
                   <a className="waves-effect waves-light btn btn-green" onClick={() => this.setState({editMode: true})}>Edit Township</a>
@@ -214,10 +229,19 @@ export default class TownshipDetails extends React.Component {
         return (
           <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
             <div>
-              <div className="card-image">
-                <img src="https://media-cdn.tripadvisor.com/media/photo-s/03/9b/2d/f2/new-york-city.jpg"/>
-                <span className="card-title">{townshipData.city}</span>
+              <div className="card-image" style={{backgroundColor: "#2E2E2E"}}>
+              <img src={this.props.townshipDetails.data.township_logo} 
+              className="township-details-image circle responsive-img" />
+              <span className="card-title">{townshipData.city}</span>
+              <div className="fixed-action-btn horizontal image-upload-button">
+                <a className="btn-floating btn-large btn-green waves-effect waves-light" onClick={() => this.handleClick()}>
+                  <i className="large material-icons">file_upload</i>
+                </a>
+                <ul>
+                  <li className="image-upload-text"> Upload Image </li>
+                </ul>
               </div>
+            </div>
               <div className="card-content township-edit-container">
                 <div className="row">
                   <div className="center-align">
@@ -305,7 +329,7 @@ export default class TownshipDetails extends React.Component {
               <div className="card-action">
                 <div className="row marginless-row" style={{minWidth: 500}}>
                   <div className="col s12 m12 l4">
-                    <a className="waves-effect waves-light btn">Go To Township</a>
+                    <Link to={{pathname: `/admin/township/${townshipData.id}`}} className="waves-effect waves-light btn">Go To Township</Link>
                   </div>
                   <div className="col s12 m12 l3 offset-l1">
                     <a className="waves-effect waves-light btn btn-yellow" onClick={() => this.setState({editMode: false})}>Cancel</a>
@@ -338,30 +362,38 @@ export default class TownshipDetails extends React.Component {
     let dataValid;
     townshipData = this.props.townshipData;
     if (townshipData.resetDetails) {
-      console.log(dataValid);
       dataValid = false;
     } 
     else if (townshipData.resetDetails == false) {
       if (townshipData.data !== null && townshipData.data !== undefined) {
         dataValid = true;
-        console.log(townshipData);
       } else {
         dataValid = false;
       }
     }
 
-    console.log("data valid:" + dataValid)
     return (
-      <div className="col s12 m12 l6 township-content-width">
+      <div>
         <nav>
           <div className="nav-wrapper nav-admin z-depth-2">
             <a className="brand-logo center" onClick={() => this.handleFetch()}>Township Details</a>
           </div>
         </nav>
         <div className="card">
-        <TownshipImageUpload />
+          { 
+
+          this.state.isShowingModal &&
+          <ModalContainer onClose={this.handleClose}>
+            <ModalDialog onClose={this.handleClose} style={{top: 90}}>
+              <TownshipImageUpload townshipId={this.props.townshipData.data.id}/>
+            </ModalDialog>
+          </ModalContainer>
+          }
+
           {this.renderDetails(dataValid, townshipData.data)}
         </div>
+
+
 
         <div id="modal-success" className="modal">
           <div className="modal-content">
@@ -375,8 +407,6 @@ export default class TownshipDetails extends React.Component {
             onClick={() => this.forceUpdate()}>Close</button>
           </div>
         </div>
-
-        
 
       </div>
     );

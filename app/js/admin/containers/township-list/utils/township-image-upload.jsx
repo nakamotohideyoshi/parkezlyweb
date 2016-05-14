@@ -1,18 +1,19 @@
 import React from 'react';
 import Cropper from 'react-cropper';
-import '../../../../../css/cropper.scss';
-import {ModalContainer, ModalDialog} from 'react-modal-dialog';
 import Dropzone from 'react-dropzone';
+import {ModalContainer, ModalDialog} from 'react-modal-dialog';
 
-//Testing HTTP remove later
-import axios from 'axios';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import {uploadImage, editTownship2} from '../../../actions/actions-township.js';
 
-export default class TownshipImageUpload extends React.Component {
+import '../../../../../css/cropper.scss';
+
+class TownshipImageUpload extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      isShowingModal: true,
       files: [],
       cropResult: null
     }
@@ -21,17 +22,27 @@ export default class TownshipImageUpload extends React.Component {
     this._cropImage = this._cropImage.bind(this);
   }
 
+  componentDidUpdate() {
+    if (this.props.uploadedImage.isLoading) {
+
+    } else {
+      console.log(this.props.uploadedImage.data.data.message)
+      let townshipLogo = this.props.uploadedImage.data.data.message;
+      this.props.editTownship2({"township_logo": townshipLogo}, this.props.townshipId);
+    }
+  };
+
   _cropImage() {
-    axios.post('/admin/s3', {croppedImage: this.refs.cropper.getCroppedCanvas().toDataURL()});
+    let finalResult = this.refs.cropper.getCroppedCanvas({height: 256, width: 256}).toDataURL();
+
+    this.props.uploadImage(finalResult);
+
     if (typeof this.refs.cropper.getCroppedCanvas() === 'undefined') {
       return;
     }
     this.setState({
-      cropResult: this.refs.cropper.getCroppedCanvas().toDataURL()
-    });
-    
-    //this.refs.cropper.getCroppedCanvas().toDataURL(),
-  }
+      cropResult: finalResult
+    });  }
 
   onDrop(files) {
     this.setState({
@@ -43,49 +54,56 @@ export default class TownshipImageUpload extends React.Component {
     let filePreview;
     return (
       <div>
-      {
-          this.state.isShowingModal &&
-          <ModalContainer onClose={this.handleClose}>
-            <ModalDialog onClose={this.handleClose}>
-              <div className="row">
-                <h1 className="center-align">Uploader</h1>
-                <div style={{marginLeft: 300}}>
-                  <Dropzone onDrop={this.onDrop}>
-                    <div>Try dropping some files here, or click to select files to upload.</div>
-                  </Dropzone>
-                </div>
-              </div>
-              
-              {this.state.files.map((file) => {filePreview = file.preview})}
-
-              <div className="row">
-                <div className="col s12 m12 l6">
-                  <p className="center-align">Uploaded File Preview</p>
-                  <img src={filePreview} style={{height: 256, width: 256}}/>
-                </div>
-                <div className="col s12 m12 l6">
-                  <p className="center-align">Crop Preview</p>
-                  <div className="cropper-wrap-box" style={{ height: 256, width: 256, position: "relative"}}>
-                    <div className="img-preview" style={{ width: '100%', float: 'left', height: 300 }} />
-                  </div>
-                </div>
-              </div>
+        {this.state.files.map((file) => {filePreview = file.preview})}
+        <div className="row">
+          <div className="col s12 m12 l4 offset-l1 center-align">
+            <p className="center-align">Uploader</p>
+            <Dropzone onDrop={this.onDrop}>
+              <div style={{padding: 20}}>Try dropping some files here, or click to select files to upload.</div>
+            </Dropzone>
+          </div>
+          <div className="col s12 m12 l7">
+            <p className="center-align">Crop Editor</p>
+            <div className="image-upload-crop">
               <Cropper
-              ref='cropper'
-              preview=".img-preview"
-              src={filePreview}
-              style={{height: 400, width: 800}}
-              // Cropper.js options
-              aspectRatio={1 / 1}
-              guides={false} />
-              <button 
-              className="waves-effect waves-light btn btn-green center-align" 
-              onClick={ this._cropImage }>Upload Cropped Image</button>
-              <p> Cropped Image </p>
-              <img style={{ width: '100%' }} src={this.state.cropResult} />
-            </ModalDialog>
-          </ModalContainer>
-        }
+                ref='cropper'
+                preview=".img-preview"
+                src={filePreview}
+                style={{height: 300, width: 450}}
+                // Cropper.js options
+                aspectRatio={1 / 1}
+                guides={false} />
+            </div>
+          </div>
+        </div>
+        
+        <div className="row">
+          <div className="col s12 m12 l4">
+            <p className="center-align">Uploaded File Preview</p>
+            <img src={filePreview} style={{height: 256, width: 256}}/>
+          </div>
+          <div className="col s12 m12 l4">
+            <p className="center-align">Crop Preview</p>
+            <div className="cropper-wrap-box image-upload-crop" style={{ height: 256, width: 256, position: "relative"}}>
+              <div className="img-preview" style={{ width: '100%', float: 'left', height: 300 }} />
+            </div>
+          </div>
+          <div className="col s12 m12 l4">
+            <p className="center-align"> Cropped Image </p>
+            <div className="cropper-wrap-box" style={{ height: 256, width: 256, position: "relative"}}>
+              <img style={{ height: 256, width: 256 }} src={this.state.cropResult} />
+            </div>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col s12 m12 l12 center-align">
+            <button 
+            className="waves-effect waves-light green btn btn-green" 
+            onClick={ this._cropImage }>Upload Cropped Image</button>
+          </div>
+        </div>
+        
         <div id="modal-upload" className="modal">
           <div className="modal-content">
             <h4 s>Upload File</h4>
@@ -102,5 +120,21 @@ export default class TownshipImageUpload extends React.Component {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    townshipListFetched: state.townshipListFetched,
+    uploadedImage: state.uploadedImage
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    uploadImage,
+    editTownship2
+  }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TownshipImageUpload);
 
 //<img src={file.preview} />
