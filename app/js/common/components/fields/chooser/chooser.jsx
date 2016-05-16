@@ -17,8 +17,12 @@ class Chooser extends Component {
     });
   }
 
+  setValue(val) {
+    this.refs["select"].value = val;
+    $('select').material_select();
+  }
+
   getValue() {
-    console.log(this.refs["select"].value);
     return this.refs["select"].value;
   }
 

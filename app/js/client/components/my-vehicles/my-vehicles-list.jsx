@@ -42,11 +42,20 @@ class VehicleList extends Component {
     ) : null;
   }
 
-  renderPlate(plateData, index) {
-    const { plate_no, registered_state } = plateData;
+  renderAddNewButton() {
     return (
-      <div className="col s12 m6" key={index}>
-        <a href="#">
+      <div className="add-new-plate">
+        <a className="waves-effect waves-light  btn-large" href="/new-vehicle">Add a Vehicle</a>
+      </div>
+    );
+  }
+
+  renderPlate(plateData, index) {
+    const { plate_no, registered_state, id } = plateData;
+    const url = "/edit-vehicle/" + id;
+    return (
+      <div className="col s12" key={index}>
+        <a href={url}>
           <Plate number={plate_no} state={registered_state}/>
         </a>
       </div>
@@ -73,11 +82,13 @@ class VehicleList extends Component {
     const authStatus = this.checkAuthStatus();
     const { loading } = this.props.vehicles;
     const content = this.renderPlates();
+    const addNewBtn = this.renderAddNewButton();
     return authStatus ? (
       <Body showHeader={true} loading={loading}>
         <div className="vehicle-list-root">
           {content}
         </div>
+        {addNewBtn}
       </Body>
     ) : null;
   }

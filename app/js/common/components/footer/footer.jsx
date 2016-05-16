@@ -9,39 +9,19 @@ class Footer extends Component {
     super(props);
   }
 
-  renderFooterTab(footerDataItem, index) {
-    return (
-      <div className="col s4 footer-item" key={index}>
-        <ImageCheckbox
-          label={footerDataItem.label}
-          iconClass={footerDataItem.iconClass}/>
-      </div>
-    );
-  }
-
   render() {
-    const { footerType } = this.props;
-    let data = {};
-
-    if (footerType === "parking") {
-      data = footerData.footerParking;
-    } else if (footerType === "validity") {
-      data = footerData.footerValidity;
-    }
-    const footerTabs = data.map(this.renderFooterTab);
+    const { children } = this.props;
 
     return (
       <div className="footer">
-        <div className="row footer-row">
-          {footerTabs} 
-        </div>
+        {children}
       </div>
     );
   }
 }
 
 Footer.PropTypes = {
-  footerType: PropTypes.oneOf(['parking', 'validity']),
+  children: PropTypes.node,
   className: PropTypes.string
 };
 
