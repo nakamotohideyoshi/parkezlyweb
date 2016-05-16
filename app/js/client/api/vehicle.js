@@ -2,18 +2,26 @@ import axios from "axios";
 import * as Config from "../utils/api.js";
 
 export const addPlate = (plateInfo) => {
-  const { plate_no, registered_state, user_id } = plateInfo;
+  const { plate_no, registered_state, user_id, id } = plateInfo;
+  const requestMethod = id ? "put" : "post";
+  const newPlatePayload = {
+    plate_no: plate_no,
+    registered_state: registered_state,
+    user_id: user_id,
+    date_time: ""
+  };
+  const updatePlatePayload = {
+    plate_no: plate_no,
+    registered_state: registered_state,
+    id: id,
+    date_time: ""
+  };
   return axios(
     Object.assign(
       {
-        method: "post",
+        method: requestMethod,
         url: "/pzly01live7/_table/user_vehicles",
-        data : {
-          plate_no: plate_no,
-          registered_state: registered_state,
-          user_id: user_id,
-          date_time: ""
-        }
+        data : id ? updatePlatePayload : newPlatePayload
       }, Config.APIConfig
     )
   );
@@ -26,6 +34,18 @@ export const getVehicles = (userId) => {
       {
         method: "get",
         url: "/pzly01live7/_table/user_vehicles?filter=user_id="+user_id
+      }, Config.APIConfig
+    )
+  );
+};
+
+export const getVehicle = (vehicleId) => {
+  const id = vehicleId;
+  return axios(
+    Object.assign(
+      {
+        method: "get",
+        url: "/pzly01live7/_table/user_vehicles?filter=id="+id
       }, Config.APIConfig
     )
   );

@@ -16,11 +16,17 @@ class ImageCheckbox extends Component {
     this.toggleCheckIcon = this.toggleCheckIcon.bind(this);
   }
 
+  getValue() {
+    return this.state.checked;
+  }
+
   toggleCheckIcon() {
+    const { onClick } = this.props;
     const { checked } = this.state;
     this.setState({
       checked: !checked
     });
+    onClick();
   }
 
   render() {
@@ -51,7 +57,8 @@ class ImageCheckbox extends Component {
 ImageCheckbox.PropTypes = {
   iconClass: PropTypes.string,
   label: PropTypes.string,
-  className: PropTypes.string
+  className: PropTypes.string,
+  onClick: PropTypes.func
 }
 
 export default ImageCheckbox;

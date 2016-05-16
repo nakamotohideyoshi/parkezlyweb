@@ -12,8 +12,11 @@ class LicensePlateField extends Component {
     };
   }
 
+  setValue(val) {
+    this.refs["license-plate"].value = val;
+  }
+
   getValue() {
-    console.log(this.refs["license-plate"].value);
     return this.refs["license-plate"].value;
   }
 

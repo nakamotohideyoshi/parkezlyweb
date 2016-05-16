@@ -84,8 +84,48 @@ export const getVehicles = (user_id) => {
         }));
       })
       .catch((response) => {
-        console.log(response);
         dispatch(retrievalFailure({
+          errorCode: "503",
+          errorMessage: GenericError
+        }));
+      });
+  }
+}
+
+const initiateFetchVehicle = () => {
+  return {
+    type: Actions.FETCH_VEHICLE_INITIATE
+  };
+};
+
+const retrievedVehicle = (data) => {
+  return {
+    type: Actions.FETCH_VEHICLE_SUCCESS,
+    data
+  }
+};
+
+const vehicleRetrievalFailure = (error) => {
+  return {
+    type: Actions.FETCH_VEHICLE_FAIL,
+    error
+  }
+}
+
+export const getVehicle = (vehicle_id) => {
+  return dispatch => {
+    dispatch(initiateFetchVehicle());
+    return VehicleAPI.getVehicle(vehicle_id)
+      .then((response) => {
+        console.log(response);
+        const { resource } = response.data;
+        dispatch(retrievedVehicle({
+          vehicle: resource[0]
+        }));
+      })
+      .catch((response) => {
+        console.log(response);
+        dispatch(vehicleRetrievalFailure({
           errorCode: "503",
           errorMessage: GenericError
         }));

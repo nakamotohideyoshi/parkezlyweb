@@ -1,30 +1,52 @@
-import React from "react";
+import React, { Component, PropTypes } from "react";
 import classNames from "classnames";
 import Header from "../header/header.jsx";
 import Footer from "../footer/footer.jsx";
 import Spinner from "../spinner/spinner.jsx";
 
-const Body = (props) => {
-  const { showHeader, showFooter, footerType, children, loading } = props;
+class Body extends Component {
+  constructor(props) {
+    super(props);
+  }
 
-  const header = showHeader ? (
-    <Header/>
-  ) : <div/>;
+  renderHeader() {
+    const { showHeader } = this.props;
+    return showHeader ? (
+      <Header/>
+    ) : null;
+  }
 
-  const footer = showFooter ? (
-    <Footer footerType={footerType}/>
-  ) : <div/>;
+  renderFooter() {
+    const { showFooter, footerContent } = this.props;
+    return showFooter ? (
+      <Footer ref="footer">{footerContent}</Footer>
+    ) : null;
+  }
 
-  return (
-    <div>
-      {header}
-      <div className="content-wrapper">
-        {children}
+  render() {
+    const { children, loading } = this.props;
+    const header = this.renderHeader();
+    const footer = this.renderFooter();
+
+    return (
+      <div>
+        {header}
+        <div className="content-wrapper">
+          {children}
+        </div>
+        {footer}
+        <Spinner loading={loading}/>
       </div>
-      {footer}
-      <Spinner loading={loading}/>
-    </div>
-  );
-};
+    );
+  }
+}
+
+Body.PropTypes = {
+  showHeader: PropTypes.bool,
+  showFooter: PropTypes.bool,
+  footerContent: PropTypes.node,
+  loading: PropTypes.bool,
+  children: PropTypes.node
+}
 
 export default Body;

@@ -7,8 +7,7 @@ import Body from "../../../common/components/body/body.jsx";
 import GrayButton from "../../../common/components/button/gray-button.jsx";
 import LicensePlateField from "../../../common/components/fields/license-plate-field.jsx";
 import Chooser from "../../../common/components/fields/chooser/chooser.jsx";
-import { addPlate } from "../../actions/vehicle.js";
-//import * as Texts from "./constants/texts.js";
+import { addPlate, getVehicle } from "../../actions/vehicle.js";
 import { states } from "./constants/states.js";
 
 class NewVehicleForm extends Component {
@@ -22,6 +21,10 @@ class NewVehicleForm extends Component {
     if(!this.checkAuthStatus()) {
       window.location = "/";
     }
+    const { dispatch } = this.props;
+    if (this.props.vehicleId) {
+      dispatch(getVehicle(this.props.vehicleId));
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -30,6 +33,14 @@ class NewVehicleForm extends Component {
       setTimeout(() =>  {
         window.location = "/my-vehicles"
       }, 2000);
+    }
+
+    if (this.props.vehicleId) {
+      let selectedPlate = nextProps.vehicle.selectedPlate || null;
+      let state = nextProps.vehicle.state || null;
+
+      this.refs["license-number"].setValue(selectedPlate);
+      this.refs["select-state"].setValue(state);
     }
   }
 
@@ -50,7 +61,7 @@ class NewVehicleForm extends Component {
   }
 
   addVehicle() {
-    const { dispatch } = this.props;
+    const { dispatch, vehicleId } = this.props;
     const isValid = this.validateVehicle();
     if(isValid) {
       const licenseNo = this.refs["license-number"].getValue();
@@ -58,7 +69,8 @@ class NewVehicleForm extends Component {
       const licenseDetails = {
         plate_no: licenseNo,
         registered_state: state,
-        user_id: cookie.load('userId')
+        user_id: cookie.load('userId'),
+        id: vehicleId
       };
       dispatch(addPlate(licenseDetails));
     }
@@ -73,10 +85,19 @@ class NewVehicleForm extends Component {
     ) : null;
   }
 
+  renderHeading() {
+    const headingText = !this.props.vehicleId ?
+      "Add a Vehicle" : "My Vehicle";
+    return (
+      <h1 className="my-vehicle-heading">{headingText}</h1>
+    );
+  }
+
   renderNewVehicleForm() {
+    const heading = this.renderHeading();
     return (
       <div>
-        <h1 className="my-vehicle-heading">Add a Vehicle</h1>
+        {heading}
         <form className="form-new-vehicle">
           <LicensePlateField
             ref="license-number"
