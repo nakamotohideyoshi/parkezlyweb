@@ -34,19 +34,16 @@
     "jwt-decode": "^2.0.1",
     "lodash": "^4.11.1",
     "materialize-css": "^0.97.6",
-<<<<<<< HEAD
     "node-uuid": "^1.4.7",
     "react": "^0.14.0",
     "react-cropper": "^0.8.0",
     "react-dom": "^0.14.0",
     "react-dropzone": "^3.4.0",
-=======
     "moment": "^2.13.0",
     "react": "^0.14.0",
     "react-cookie": "^0.4.5",
     "react-dom": "^0.14.0",
     "react-google-maps": "^4.10.1",
->>>>>>> remotes/origin/master
     "react-materialize": "^0.14.3",
     "react-modal-dialog": "^2.0.0",
     "react-redux": "^4.4.5",
