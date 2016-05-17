@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import classNames from "classnames";
-import Header from "../header/header.jsx";
+import HeaderController from "../header/header-controller.jsx";
 import Footer from "../footer/footer.jsx";
 import Spinner from "../spinner/spinner.jsx";
 
@@ -12,7 +12,7 @@ class Body extends Component {
   renderHeader() {
     const { showHeader } = this.props;
     return showHeader ? (
-      <Header/>
+      <HeaderController/>
     ) : null;
   }
 

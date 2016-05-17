@@ -87,10 +87,11 @@ a {
 }
 .hamburger-list li a{
   display: block;
-  line-height: 50px;
+  line-height: 30px;
   font-size: 24px;
   text-decoration: none;
   color: $white;
+  padding-left: 80px;
 }
 
 /* Buttons */
@@ -108,6 +109,78 @@ a {
     height: auto;
   }
 }
+
+/* Menu Icon Classes */
+.menu-icon {
+  background-repeat: no-repeat;
+  background-position: 30px center;
+  background-size: contain;
+}
+.login-icon {
+  background-image: url('../images/menu/pswd@3x.png');
+  @extend .menu-icon;
+}
+.find-parking-icon {
+  background-image: url('../images/menu/car_parking@3x.png');
+  @extend .menu-icon;
+}
+.drive-ezly-icon {
+  background-image: url('../images/menu/drive_ezly@3x.png');
+  @extend .menu-icon;
+}
+.other-parking-icon {
+  background-image: url('../images/menu/other_parking_options@3x.png');
+  @extend .menu-icon;
+}
+.my-account-icon {
+  background-image: url('../images/menu/my_account@3x.png');
+  @extend .menu-icon;
+}
+.logout-icon {
+  background-image: url('../images/menu/pswd@3x.png');
+  @extend .menu-icon;
+}
+.driver-view-icon {
+  background-image: url('../images/menu/view@3x.png');
+  @extend .menu-icon;
+}
+.street-parking-icon {
+  background-image: url('../images/menu/view@3x.png');
+  @extend .menu-icon;
+}
+.managed-lot-icon {
+  background-image: url('../images/menu/view@3x.png');
+  @extend .menu-icon;
+}
+.my-vehicles-icon {
+  background-image: url('../images/menu/my_vehicles@3x.png');
+  @extend .menu-icon;
+}
+.my-permits-icon {
+  background-image: url('../images/menu/my_permits@3x.png');
+  @extend .menu-icon;
+}
+.my-wallet-icon {
+  background-image: url('../images/menu/my_wallet@3x.png');
+  @extend .menu-icon;
+}
+.my-locations-icon {
+  background-image: url('../images/menu/car_parking@3x.png');
+  @extend .menu-icon;
+}
+.my-tickets-icon {
+  background-image: url('../images/menu/my_tickets@3x.png');
+  @extend .menu-icon;
+}
+.logout-icon {
+  background-image: url('../images/menu/login_register@3x.png');
+  @extend .menu-icon;
+}
+.back-icon {
+  background-image: url('../images/menu/back-icon@3x.png');
+  @extend .menu-icon;
+}
+
 
 /* Footer Icon Classes */
 .free-parking {
