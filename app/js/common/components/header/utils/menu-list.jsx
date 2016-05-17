@@ -13,6 +13,8 @@ class MenuList extends Component {
       <MenuItem
         text={menuLinkData.text}
         link={menuLinkData.link}
+        className={menuLinkData.icon}
+        subMenu={menuLinkData.subMenu}
         key={index}/>
     );
   }

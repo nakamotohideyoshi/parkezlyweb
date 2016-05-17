@@ -63,10 +63,8 @@ class PasswordField extends Component {
         <input
           type="password"
           ref="password"
+          placeholder={placeholder}
           {...otherProps}/>
-        <label>
-          {placeholder}
-        </label>
         <div className="error-msg">
           <i className="material-icons tiny">error</i> {errorText}
         </div>
