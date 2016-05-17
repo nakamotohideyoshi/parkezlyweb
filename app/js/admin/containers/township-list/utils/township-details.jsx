@@ -58,13 +58,6 @@ export default class TownshipDetails extends React.Component {
       this.handleSuccess();
       this.handleClose();
     }
-    /*
-    if(this.props.townshipListEdited.resetDetails) {
-      
-    } else {
-      townshipData = null;
-    }
-    */
   };
 
   componentDidUpdate () {
@@ -80,7 +73,7 @@ export default class TownshipDetails extends React.Component {
     // Reload township list to represent new changes.
     // Go back to view mode.
     this.props.resetLoading();
-    this.props.fetchTownshipList();
+    this.props.fetchTownshipList(9000);
     this.setState({editMode: false});
     this.props.resetTownshipDetails(townshipData.data);
     $('#modal-success').openModal();
@@ -361,16 +354,13 @@ export default class TownshipDetails extends React.Component {
 
     let dataValid;
     townshipData = this.props.townshipData;
-    if (townshipData.resetDetails) {
+
+    if (townshipData.data !== null && townshipData.data !== undefined) {
+      dataValid = true;
+    } else {
       dataValid = false;
-    } 
-    else if (townshipData.resetDetails == false) {
-      if (townshipData.data !== null && townshipData.data !== undefined) {
-        dataValid = true;
-      } else {
-        dataValid = false;
-      }
     }
+
 
     return (
       <div>
@@ -404,7 +394,7 @@ export default class TownshipDetails extends React.Component {
             <button 
             href="#" 
             className=" modal-action modal-close waves-effect waves-green btn-flat"
-            onClick={() => this.forceUpdate()}>Close</button>
+            onClick={() => this.props.fetchTownshipList()}>Close</button>
           </div>
         </div>
 

@@ -11,6 +11,8 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {fetchTownshipList, updateTownshipDetails} from '../../actions/actions-township';
 
+import _ from 'lodash';
+
 const KEYS_TO_FILTERS = ['city']
 
 export default class TownshipList extends React.Component {
@@ -18,12 +20,19 @@ export default class TownshipList extends React.Component {
     super(props);
 
     this.state = {
-      searchTerm: ''
+      searchTerm: '',
+      selectedId: null
     }
 
     this.handleFetch = this.handleFetch.bind(this);
     this.renderTownshipList = this.renderTownshipList.bind(this);
+    this.handleDetailsUpdate = this.handleDetailsUpdate.bind(this);
   }
+
+  componentDidUpdate() {
+    this.handleDetailsUpdate();
+    
+  };
 
   componentWillMount() {
     this.props.fetchTownshipList();
@@ -33,6 +42,16 @@ export default class TownshipList extends React.Component {
     this.props.fetchTownshipList();
   }
 
+  handleDetailsUpdate() {
+    if (this.state.selectedId !== null)
+    {
+      let townshipObjects = this.props.townshipListFetched.data.resource;
+      let filteredTownship = _.filter(this.props.townshipListFetched.data.resource, { 'id': this.state.selectedId})
+      console.log(filteredTownship[0]);
+      this.props.updateTownshipDetails(filteredTownship[0]);
+      this.setState({selectedId: null});
+    }
+  }
   renderTownshipList(townshipData) {
 
     let townshipObjects = townshipData.resource;
@@ -44,9 +63,9 @@ export default class TownshipList extends React.Component {
           <a 
           className="collection-item waves-effect waves-dark avatar" 
           key={township.id} 
-          onClick={() => this.props.updateTownshipDetails(township)}>
+          onClick={() => {this.props.updateTownshipDetails(township); console.log(township); this.setState({selectedId: township.id})}}>
               <img 
-              src="https://media-cdn.tripadvisor.com/media/photo-s/03/9b/2d/f2/new-york-city.jpg" 
+              src={township.township_logo} 
               alt="" className="circle"/>
               <span className="title">{township.city}</span>
               <p>{township.city} - {township.manager_type}</p>

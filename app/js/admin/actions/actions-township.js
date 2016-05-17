@@ -4,6 +4,8 @@ import {reset} from 'redux-form';
 import * as types from '../constants/actionTypes.js';
 import * as apiTownship from '../api/api-township.js';
 
+import _ from 'lodash';
+
 
 const BASE_URL = 'http://100.12.26.176:8006/api/v2/pzly02live7/_table/';
 const APP_NAME = 'parkezly';
@@ -18,7 +20,20 @@ const AXIOS_INSTANCE = axios.create({
   }
 });
 
-export function fetchTownshipList() {
+function forceUpdateDetails(response, id) {
+  if(id !== null && id !== undefined)
+  {
+    console.log(response.data.resource);
+    console.log(id);
+    console.log("Testing township update");
+    let townshipObjects = response.data.resource;
+    let filteredTownship = _.filter(townshipObjects, { 'id': id})
+    console.log(filteredTownship[0]);
+    dispatch(apiTownship.updateData(filteredTownship[0], 'TEST_TOWNSHIP_DETAILS'));
+  }
+}
+
+export function fetchTownshipList(id) {
 
   const URL = 'townships_manager'
 
@@ -27,10 +42,10 @@ export function fetchTownshipList() {
     return AXIOS_INSTANCE.get(URL)
     .then(function(response) {
       dispatch(apiTownship.receiveData(response.data, types.TOWNSHIP_FETCH_GET_SUCCESS));
+      forceUpdateDetails(response, id);
     })
     .catch(function(response){
       dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_FETCH_GET_ERROR));
-      dispatch(apiTownship.pushState(null,'/error'));
     })
   }
 }
@@ -65,7 +80,7 @@ export function editTownship(data, id) {
     })
     .catch(function(response){
       dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_EDIT_PUT_ERROR));
-      dispatch(apiTownship.pushState(null,'/error'));
+      console.log(response);
     })
   }
 }
@@ -104,13 +119,13 @@ export function uploadImage(finalResult) {
       })
       .catch(function(response){
         dispatch(apiTownship.receiveError(response, types.UPLOAD_TOWNSHIP_IMAGE_ERROR));
-        dispatch(apiTownship.pushState(null,'/error'));
+        console.log(response);
       })
     }
 }
 
+/*
 export function editTownship2(data, id) {
-  console.log("HELLO SIR");
   const URL = 'townships_manager?ids=' + id;
 
   return function(dispatch) {
@@ -128,3 +143,4 @@ export function editTownship2(data, id) {
     })
   }
 }
+*/

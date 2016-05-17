@@ -15,3 +15,10 @@ export function receiveError(json, type) {
     data: json
   }
 };
+
+export function updateData(json, type) {
+  return {
+    type: type,
+    data: json
+  }
+};

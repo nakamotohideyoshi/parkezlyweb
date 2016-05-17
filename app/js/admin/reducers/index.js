@@ -6,6 +6,7 @@ import townshipCreate from './reducer-township-create.js'
 import townshipListEdited from './reducer-township-edit.js';
 import townshipDetails from './reducer-township-details.js';
 import uploadedImage from './reducer-image-upload.js';
+import townshipTest from './reducer-township-test.js';
 
 const rootReducer = combineReducers({
   townshipListFetched: townshipListFetched,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   townshipListEdited: townshipListEdited,
   townshipDetails: townshipDetails,
   uploadedImage: uploadedImage,
+  townshipTest: townshipTest,
   form: formReducer
 });
 
