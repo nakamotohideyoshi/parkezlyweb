@@ -31,6 +31,7 @@ module.exports = {
     })
   ],
   module: {
+    noParse: [/aws-sdk.js/],
     loaders: [
     {
       test: /\.js(x|)?$/,

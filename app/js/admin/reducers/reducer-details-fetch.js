@@ -6,13 +6,15 @@ const initialState = {
   error: false
 };
 
-export default function townshipListEdited(state = initialState, action) {
+export default function townshipListFetched(state = initialState, action) {
   switch(action.type) {
-    case types.TOWNSHIP_EDIT_PUT_ERROR:
+    case types.DETAILS_FETCH_GET_ERROR:
       return Object.assign({}, state, {isLoading: false, data: action.data, error: true});
-    case types.TOWNSHIP_EDIT_PUT_SUCCESS:
+    case types.DETAILS_FETCH_GET_SUCCESS:
+      console.log("TEST");
       return Object.assign({}, state, {isLoading: false, data: action.data, error: false });
-    case types.TOWNSHIP_EDIT_PUT_REQ:
+    case types.DETAILS_FETCH_GET_REQ:
+      console.log("TEST");
       return Object.assign({}, state, {isLoading: true, error: false });
     case types.RESET_LOADING:
       return Object.assign({}, state, initialState);

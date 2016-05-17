@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import { reduxForm } from 'redux-form'
 
-import {submitNewTownship} from '../../../actions/index';
+import {submitNewTownship, fetchTownshipList, resetLoading} from '../../../actions/actions-township.js';
 
 export const fields = [ 
   'manager_id', 
@@ -23,12 +23,28 @@ export const fields = [
 class TownshipCreate extends React.Component {
   constructor(props) {
     super(props);
-
+    
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSuccess = this.handleSuccess.bind(this);
+  }
+
+  componentDidUpdate() {
+    if (this.props.townshipCreate.isLoading) {
+    } else if (!this.props.townshipCreate.isLoading) {
+      this.handleSuccess();
+    }
+  };
+
+  handleSuccess(){
+    this.props.resetLoading();
+    $('#modal-success').openModal();
+    $('#modal-township-create').closeModal();
+    this.props.fetchTownshipList();
   }
 
   handleSubmit(data) {
     this.props.submitNewTownship(data);
+    $('#modal-township-create').openModal()
   }
 
   render() {
@@ -70,7 +86,7 @@ class TownshipCreate extends React.Component {
                   <div className="col s6">
                     <div className="form-group">
                       <label>Manager ID</label>
-                      <input type="number" placeholder="Manager ID" {...manager_id}/>
+                      <input type="text" placeholder="Manager ID" {...manager_id}/>
                     </div>
                   </div>
                   <div className="col s6">
@@ -175,13 +191,15 @@ TownshipCreate.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    townshipReducer: state.townshipReducer
+    townshipCreate: state.townshipCreate
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    submitNewTownship
+    submitNewTownship,
+    fetchTownshipList,
+    resetLoading
   }, dispatch);
 }
 
