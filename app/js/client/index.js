@@ -18,6 +18,7 @@ export default function ClientIndex() {
       <Route path="login" component={SignInController}/>
       <Route path="find-parking" component={ParkingController}/>
       <Route path="new-vehicle" component={NewVehicleController}/>
+      <Route path="my-vehicles" component={VehicleListController}/>
       <Route path="edit-vehicle" component={EditVehicleController}/>
       <Route path="edit-vehicle/:vehicleId" component={EditVehicleController}/>
       <Route path="my-permits" component={MyPermitsController}/>
