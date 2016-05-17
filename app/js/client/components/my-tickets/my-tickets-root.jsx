@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 import classNames from "classnames";
 import cookie from "react-cookie";
-import moment from "moment"
+import moment from "moment";
 
 import Body from "../../../common/components/body/body.jsx";
 import Modal from "./modal.jsx";
