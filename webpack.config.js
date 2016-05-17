@@ -26,6 +26,7 @@ module.exports = {
     extensions: ['', '.js', '.jsx']
   },
   module: {
+    noParse: [/aws-sdk.js/],
     loaders: [
     {
       test: /\.js(x|)?$/,

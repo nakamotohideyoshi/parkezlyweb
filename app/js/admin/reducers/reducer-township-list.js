@@ -8,11 +8,11 @@ const initialState = {
 
 export default function townshipListFetched(state = initialState, action) {
   switch(action.type) {
-    case types.RECV_ERROR:
+    case types.TOWNSHIP_FETCH_GET_ERROR:
       return Object.assign({}, state, {isLoading: false, data: action.data, error: true});
-    case types.RECV_DATA:
+    case types.TOWNSHIP_FETCH_GET_SUCCESS:
       return Object.assign({}, state, {isLoading: false, data: action.data, error: false });
-    case types.REQ_DATA:
+    case types.TOWNSHIP_FETCH_GET_REQ:
       return Object.assign({}, state, {isLoading: true, error: false });
     default:
       return state;

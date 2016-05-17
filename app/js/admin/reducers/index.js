@@ -5,12 +5,16 @@ import townshipListFetched from './reducer-township-list.js'
 import townshipCreate from './reducer-township-create.js'
 import townshipListEdited from './reducer-township-edit.js';
 import townshipDetails from './reducer-township-details.js';
+import uploadedImage from './reducer-image-upload.js';
+import townshipDetailsFetched from './reducer-details-fetch.js'
 
 const rootReducer = combineReducers({
   townshipListFetched: townshipListFetched,
   townshipCreate: townshipCreate,
   townshipListEdited: townshipListEdited,
   townshipDetails: townshipDetails,
+  townshipDetailsFetched: townshipDetailsFetched,
+  uploadedImage: uploadedImage,
   form: formReducer
 });
 
