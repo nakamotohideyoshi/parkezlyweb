@@ -1,6 +1,6 @@
 import React from 'react';
 import Body from "../../../common/components/body/body.jsx";
-import TownshipDetails from '../township-list/utils/township-details.jsx';
+import TownshipDetails from './utils/township-panel-details.jsx';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -16,6 +16,9 @@ import {
 class TownshipPanelRoot extends React.Component {
   constructor(props) {
     super(props);
+  }
+  componentWillMount() {
+    this.props.fetchTownshipList()
   }
 
   render() {
@@ -57,10 +60,8 @@ class TownshipPanelRoot extends React.Component {
         </nav>
         <Body showHeader={true}>
           <div className="container content-container">
-            <TownshipDetails 
-              townshipData={this.props.townshipDetails} 
-              initialValues={this.props.townshipDetails.data} 
-              style={{marginTop: 30}} />
+            ID: {this.props.townshipId}
+            <TownshipDetails townshipId={this.props.townshipId} />
           </div>
         </Body>
       </div>

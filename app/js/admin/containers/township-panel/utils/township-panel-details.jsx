@@ -8,7 +8,7 @@ import _ from 'lodash';
 
 import { Link } from 'react-router'
 
-import TownshipImageUpload from './township-image-upload.jsx';
+import TownshipImageUpload from '../../township-list/utils/township-image-upload.jsx';
 
 import {
   editTownship, 
@@ -51,6 +51,11 @@ export default class TownshipDetails extends React.Component {
     this.handleClick = this.handleClick.bind(this);
 
   }
+
+  componentWillMount() {
+    this.props.fetchTownshipList();
+  }
+
   componentDidUpdate() {
     if (this.props.townshipData.data !== null && this.props.townshipData.data !== undefined) {
       this.props.fetchTownshipDetails(this.props.townshipData.data.id);
@@ -111,6 +116,139 @@ export default class TownshipDetails extends React.Component {
       resetForm,
       submitting
     } = this.props
+    let editMode = this.state.editMode;
+
+    return (
+          <div>
+            <div className="card-image" style={{backgroundColor: "#2E2E2E"}}>
+              <img src={townshipData.township_logo} 
+              className="township-details-image circle responsive-img" />
+              <span className="card-title">{townshipData.city}</span>
+              <div className="fixed-action-btn horizontal image-upload-button">
+                <a className="btn-floating btn-large btn-green waves-effect waves-light" onClick={() => this.handleClick()}>
+                  <i className="large material-icons">file_upload</i>
+                </a>
+                <ul>
+                  <li className="image-upload-text"> Upload Image </li>
+                </ul>
+              </div>
+            </div>
+            <div className="card-content township-details-container">
+              <div className="row">
+                <div className="center-align">
+                  <h4 style={{marginTop: 0}}>View Township</h4>
+                  <p className="center-align">Enter edit mode to edit fields.</p>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col s6">
+                  <div className="form-group">
+                    <label>Manager ID</label>
+                    <input value={townshipData.manager_id} onChange={() => this.setState({townshipData: townshipData})}/>
+                  </div>
+                </div>
+                <div className="col s6">
+                  <div className="form-group">
+                    <label>Manager Type</label>
+                    <input value={townshipData.manager_type} onChange={() => this.setState({townshipData: townshipData})}/>
+                  </div>
+                </div>
+                <div className="col s6">
+                  <div className="form-group">
+                    <label>Lot Manager</label>
+                    <input value={townshipData.lot_manager} onChange={() => this.setState({townshipData: townshipData})}/>
+                  </div>
+                </div>
+                <div className="col s6">
+                  <div className="form-group">
+                    <label>Address</label>
+                    <input value={townshipData.address} onChange={() => this.setState({townshipData: townshipData})}/>
+                  </div>
+                </div>
+                <div className="col s6">
+                  <div className="form-group">
+                    <label>City</label>
+                    <input value={townshipData.city} onChange={() => this.setState({townshipData: townshipData})}/>
+                  </div>
+                </div>
+                <div className="col s6">
+                  <div className="form-group">
+                    <label>State</label>
+                    <input value={townshipData.state} onChange={() => this.setState({townshipData: townshipData})}/>
+                  </div>
+                </div>
+                <div className="col s6">
+                  <div className="form-group">
+                    <label>Country</label>
+                    <input value={townshipData.country} onChange={() => this.setState({townshipData: townshipData})}/>
+                  </div>
+                </div>
+                <div className="col s6">
+                  <div className="form-group">
+                    <label>Zip</label>
+                    <input value={townshipData.zip} onChange={() => this.setState({townshipData: townshipData})}/>
+                  </div>
+                </div>
+                <div className="col s6">
+                  <div className="form-group">
+                    <label>Contact Person</label>
+                    <input value={townshipData.contact_person} onChange={() => this.setState({townshipData: townshipData})}/>
+                  </div>
+                </div>
+                <div className="col s6">
+                  <div className="form-group">
+                    <label>Contact Title</label>
+                    <input value={townshipData.contact_title} onChange={() => this.setState({townshipData: townshipData})}/>
+                  </div>
+                </div>
+                <div className="col s6">
+                  <div className="form-group">
+                    <label>Contact Number</label>
+                    <input value={townshipData.contact_number} onChange={() => this.setState({townshipData: townshipData})}/>
+                  </div>
+                </div>
+                <div className="col s6">
+                  <div className="form-group">
+                    <label>Contact Email</label>
+                    <input value={townshipData.contact_email} onChange={() => this.setState({townshipData: townshipData})}/>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="card-action">
+              <div className="row marginless-row">
+                <div className="col s12 m12 l6">
+                  <Link to={{pathname: `/admin/township/${townshipData.id}`}} className="waves-effect waves-light btn">Go To Township</Link>
+                </div>
+                <div className="col s12 m12 l6 offset-s2">
+                  <a className="waves-effect waves-light btn btn-green" onClick={() => this.setState({editMode: true})}>Edit Township</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+    console.log('HAHAAAA')
+    console.log(townshipData.address)
+  }
+
+  renderDetails2(dataValid, townshipData) {
+    const {
+      fields: {
+        manager_id,
+        manager_type,
+        lot_manager,
+        address,
+        state,
+        city,
+        country,
+        zip,
+        contact_person,
+        contact_title,
+        contact_number,
+        contact_email },
+      resetForm,
+      submitting
+    } = this.props
 
     let editMode = this.state.editMode;
     
@@ -119,7 +257,7 @@ export default class TownshipDetails extends React.Component {
         return (
           <div>
             <div className="card-image" style={{backgroundColor: "#2E2E2E"}}>
-              <img src={this.props.townshipDetails.data.township_logo} 
+              <img src={townshipData.township_logo} 
               className="township-details-image circle responsive-img" />
               <span className="card-title">{townshipData.city}</span>
               <div className="fixed-action-btn horizontal image-upload-button">
@@ -230,7 +368,7 @@ export default class TownshipDetails extends React.Component {
           <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
             <div>
               <div className="card-image" style={{backgroundColor: "#2E2E2E"}}>
-              <img src={this.props.townshipDetails.data.township_logo} 
+              <img src={townshipData.township_logo} 
               className="township-details-image circle responsive-img" />
               <span className="card-title">{townshipData.city}</span>
               <div className="fixed-action-btn horizontal image-upload-button">
@@ -358,16 +496,24 @@ export default class TownshipDetails extends React.Component {
   }
 
   render() {
-
     let dataValid;
-    townshipData = this.props.townshipData;
+    let townshipData;
 
-    if (townshipData.data !== null && townshipData.data !== undefined) {
+    if (!this.props.townshipListFetched.isLoading) {
+      let dataValid;
+      console.log(this.props.townshipListFetched.data.resource)
+      let townshipObjects = this.props.townshipListFetched.data.resource;
+      console.log(townshipObjects);
+      let filteredTownship = _.filter(townshipObjects, { 'id': 56});
+      console.log(filteredTownship[0]);
+      townshipData = filteredTownship[0];
+    }
+    console.log(townshipData);
+    if (townshipData !== null && townshipData !== undefined) {
       dataValid = true;
     } else {
       dataValid = false;
     }
-
 
     return (
       <div>
@@ -387,7 +533,9 @@ export default class TownshipDetails extends React.Component {
           </ModalContainer>
           }
 
-          {this.renderDetails(dataValid, townshipData.data)}
+          {this.props.townshipListFetched.isLoading ?  
+            console.log('ttest') 
+          : this.renderDetails(dataValid, townshipData)}
         </div>
 
 
@@ -438,21 +586,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-  form: 'township-details',
+  form: 'township-panel-details',
   fields
 })(TownshipDetails))
-
-/*
- {this.props.townshipListEdited.isLoading ?  
-    console.log(this.props.townshipListEdited.data) 
-    : console.log(this.props.townshipListEdited.isLoading)}
-*/
-
-/*
-  let townshipDataFetched = this.props.townshipListFetched.data.resource;
-  let filteredTownships = _.filter(townshipDataFetched, { 'id': this.props.townshipData.id});
-  this.props.updateTownshipDetails(filteredTownships);
-  this.props.fetchTownshipList();
-  this.setState({townshipData: filteredTownships});
-  this.forceUpdate();
-*/

@@ -20,19 +20,6 @@ const AXIOS_INSTANCE = axios.create({
   }
 });
 
-function forceUpdateDetails(response, id) {
-  if(id !== null && id !== undefined)
-  {
-    console.log(response.data.resource);
-    console.log(id);
-    console.log("Testing township update");
-    let townshipObjects = response.data.resource;
-    let filteredTownship = _.filter(townshipObjects, { 'id': id})
-    console.log(filteredTownship[0]);
-    dispatch(apiTownship.updateData(filteredTownship[0], 'TEST_TOWNSHIP_DETAILS'));
-  }
-}
-
 export function fetchTownshipList(id) {
 
   const URL = 'townships_manager'
@@ -42,10 +29,25 @@ export function fetchTownshipList(id) {
     return AXIOS_INSTANCE.get(URL)
     .then(function(response) {
       dispatch(apiTownship.receiveData(response.data, types.TOWNSHIP_FETCH_GET_SUCCESS));
-      forceUpdateDetails(response, id);
     })
     .catch(function(response){
       dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_FETCH_GET_ERROR));
+    })
+  }
+}
+
+export function fetchTownshipDetails(id) {
+
+  const URL = 'townships_manager'
+
+  return function(dispatch) {
+    dispatch(apiTownship.requestData(types.DETAILS_FETCH_GET_REQ));
+    return AXIOS_INSTANCE.get(URL)
+    .then(function(response) {
+      dispatch(apiTownship.receiveData(response.data, types.DETAILS_FETCH_GET_SUCCESS));
+    })
+    .catch(function(response){
+      dispatch(apiTownship.receiveError(response.data, types.DETAILS_FETCH_GET_ERROR));
     })
   }
 }
@@ -123,24 +125,3 @@ export function uploadImage(finalResult) {
       })
     }
 }
-
-/*
-export function editTownship2(data, id) {
-  const URL = 'townships_manager?ids=' + id;
-
-  return function(dispatch) {
-    dispatch(apiTownship.requestData(types.TOWNSHIP_EDIT_PUT_REQ));
-    return AXIOS_INSTANCE.put(URL, data)
-    .then(function(response) {
-      dispatch(apiTownship.receiveData(response.data, types.TOWNSHIP_EDIT_PUT_SUCCESS));
-      dispatch(reset('township-details'));
-      console.log(response)
-    })
-    .catch(function(response){
-      dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_EDIT_PUT_ERROR));
-      dispatch(apiTownship.pushState(null,'/error'));
-      console.log(response)
-    })
-  }
-}
-*/
