@@ -9,19 +9,22 @@ class MenuList extends Component {
   }
 
   renderMenuItem(menuLinkData, index) {
+    const { onSetMenu, onToggle } = this.props;
     return (
       <MenuItem
         text={menuLinkData.text}
         link={menuLinkData.link}
         className={menuLinkData.icon}
         subMenu={menuLinkData.subMenu}
+        onSetMenu={onSetMenu}
+        onToggle={onToggle}
         key={index}/>
     );
   }
 
   renderMenu() {
     const { menuData } = this.props;
-    const menu = menuData.map(this.renderMenuItem);
+    const menu = menuData.map(this.renderMenuItem, this);
     return (
       <ul className="hamburger-list">
         {menu}
@@ -50,7 +53,9 @@ class MenuList extends Component {
 MenuList.PropTypes = {
   open: React.PropTypes.bool,
   menuData: React.PropTypes.array,
-  className: React.PropTypes.string
+  className: React.PropTypes.string,
+  onSetMenu: React.PropTypes.func,
+  onToggle: React.PropTypes.func
 };
 
 export default MenuList;
