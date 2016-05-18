@@ -59,7 +59,7 @@ class TownshipPanelRoot extends React.Component {
           </div>
         </nav>
         <Body showHeader={true}>
-          <div className="container content-container">
+          <div className="container">
             ID: {this.props.townshipId}
             <TownshipDetails townshipId={this.props.townshipId} />
           </div>

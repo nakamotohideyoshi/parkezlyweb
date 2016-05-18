@@ -21,6 +21,7 @@
 
 .image-upload-text {
   background-color: rgba(45, 182, 61, 0.3);
+  padding: 5px;
 }
 
 .image-upload-crop {
@@ -125,6 +126,7 @@
   width: 440px;
   background-color: #6B99C2;
   margin-bottom: 30px;
+  border-radius: 50px !important;
 }
 
 .admin-tile:hover {
@@ -151,6 +153,7 @@
 
 .card-title {
   font-size: 50px !important;
+  width: calc(100% - 256px) !important;
   background-color: rgba(107, 153, 194, 0.3);
 }
 
