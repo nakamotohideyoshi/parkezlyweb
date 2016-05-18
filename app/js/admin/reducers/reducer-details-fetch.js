@@ -6,7 +6,7 @@ const initialState = {
   error: false
 };
 
-export default function townshipListFetched(state = initialState, action) {
+export default function townshipDetailsFetched(state = initialState, action) {
   switch(action.type) {
     case types.DETAILS_FETCH_GET_ERROR:
       return Object.assign({}, state, {isLoading: false, data: action.data, error: true});

@@ -5,7 +5,7 @@ import {ModalContainer, ModalDialog} from 'react-modal-dialog';
 
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {uploadImage, editTownship2} from '../../../actions/actions-township.js';
+import {uploadImage, editTownshipImage} from '../../../actions/actions-township.js';
 
 import '../../../../../css/cropper.scss';
 
@@ -28,7 +28,7 @@ class TownshipImageUpload extends React.Component {
     } else {
       console.log(this.props.uploadedImage.data.data.message)
       let townshipLogo = this.props.uploadedImage.data.data.message;
-      this.props.editTownship2({"township_logo": townshipLogo}, this.props.townshipId);
+      this.props.editTownshipImage({"township_logo": townshipLogo}, this.props.townshipId);
     }
   };
 
@@ -103,8 +103,8 @@ class TownshipImageUpload extends React.Component {
             onClick={ this._cropImage }>Upload Cropped Image</button>
           </div>
         </div>
-        
-        <div id="modal-upload" className="modal">
+
+        <div id="modal-upload-loading" className="modal">
           <div className="modal-content">
             <h4 s>Upload File</h4>
             <p>Placeholder to upload file.</p>
@@ -116,6 +116,7 @@ class TownshipImageUpload extends React.Component {
             onClick={() => this.forceUpdate()}>Close</button>
           </div>
         </div>
+        
       </div>
     );
   }
@@ -131,7 +132,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     uploadImage,
-    editTownship2
+    editTownshipImage
   }, dispatch);
 }
 

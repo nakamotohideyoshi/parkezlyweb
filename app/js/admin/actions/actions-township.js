@@ -3,25 +3,12 @@ import {reset} from 'redux-form';
 
 import * as types from '../constants/actionTypes.js';
 import * as apiTownship from '../api/api-township.js';
+import * as apiConfig from '../config/api.js'
 
-import _ from 'lodash';
+const AXIOS_INSTANCE = axios.create(apiConfig.API_CONFIG);
 
-
-const BASE_URL = 'http://100.12.26.176:8006/api/v2/pzly02live7/_table/';
-const APP_NAME = 'parkezly';
-const API_KEY = 'dbed451c5e4e1518d301c118ffe078ca16a2c287d5efff98515b938538abb5b5';
-
-const AXIOS_INSTANCE = axios.create({
-  baseURL: BASE_URL,
-  timeout: 20000,
-  headers: {
-    'X-DreamFactory-Application-Name': APP_NAME, 
-    'X-DreamFactory-Api-Key' : API_KEY 
-  }
-});
 
 export function fetchTownshipList(id) {
-
   const URL = 'townships_manager'
 
   return function(dispatch) {
@@ -100,13 +87,6 @@ export function updateTownshipDetails(data) {
   };
 }
 
-export function resetTownshipDetails(data) {
-  return {
-    type: 'RESET_TOWNSHIP_DETAILS',
-    data: data
-  };
-}
-
 export function uploadImage(finalResult) {
 
     return function(dispatch) {
@@ -126,8 +106,7 @@ export function uploadImage(finalResult) {
     }
 }
 
-export function editTownship2(data, id) {
-  console.log("HELLO SIR");
+export function editTownshipImage(data, id) {
   const URL = 'townships_manager?ids=' + id;
 
   return function(dispatch) {
