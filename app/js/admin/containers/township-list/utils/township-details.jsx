@@ -125,9 +125,13 @@ export default class TownshipDetails extends React.Component {
         return (
           <div>
             <div className="card-image" style={{backgroundColor: "#2E2E2E"}}>
-              <img src={this.props.townshipDetails.data.township_logo} 
+              <img src={townshipData.township_logo} 
               className="township-details-image circle responsive-img" />
-              <span className="card-title">{townshipData.city}</span>
+              <div className="row">
+                <div className="col s6">
+                  <span className="card-title truncate">{townshipData.city}</span>
+                </div>
+              </div>
               <div className="fixed-action-btn horizontal image-upload-button">
                 <a className="btn-floating btn-large btn-green waves-effect waves-light" onClick={() => this.handleClick()}>
                   <i className="large material-icons">file_upload</i>
@@ -236,7 +240,7 @@ export default class TownshipDetails extends React.Component {
           <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
             <div>
               <div className="card-image" style={{backgroundColor: "#2E2E2E"}}>
-              <img src={this.props.townshipDetails.data.township_logo} 
+              <img src={townshipData.township_logo} 
               className="township-details-image circle responsive-img" />
               <span className="card-title">{townshipData.city}</span>
               <div className="fixed-action-btn horizontal image-upload-button">
