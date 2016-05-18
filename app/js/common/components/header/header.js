@@ -7,8 +7,16 @@ export const setCurrentMenu = (menu) => {
   };
 };
 
+export const toggleMenu = (value) => {
+  return {
+    type: "TOGGLE_MENU",
+    value
+  };
+};
+
 const initialState = {
-  selectedMenu: null
+  selectedMenu: null,
+  menuStatus: false
 };
 
 const Menu = (state = initialState, action) => {
@@ -16,7 +24,13 @@ const Menu = (state = initialState, action) => {
   switch(action.type) {
     case "SET_CURRENT_MENU":
       return {
+        ...state,
         selectedMenu: action.menu
+      }
+    case "TOGGLE_MENU":
+      return {
+        ...state,
+        menuStatus: action.value
       }
     default:
       return state;

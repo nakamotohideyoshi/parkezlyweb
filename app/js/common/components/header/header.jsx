@@ -4,11 +4,14 @@ import cookie from "react-cookie";
 import BackButton from "./utils/back-button.jsx";
 import Logo from "./utils/logo.jsx";
 import Menu from "./utils/menu.jsx";
+import { setCurrentMenu, toggleMenu  } from "./header.js";
 import { mainGuestLinks, mainUserLinks, myAccountMenuLinks  } from "./utils/menu-data.js";
 
 class Header extends Component {
   constructor(props){
     super(props);
+    this.toggleMenuStatus = this.toggleMenuStatus.bind(this);
+    this.setMenu = this.setMenu.bind(this);
   }
 
   getMenu() {
@@ -30,8 +33,20 @@ class Header extends Component {
       : (userId ? mainUserLinks : mainGuestLinks );
   }
 
+  setMenu(menu) {
+    const { dispatch } = this.props;
+    dispatch(setCurrentMenu(menu));
+  }
+
+  toggleMenuStatus() {
+    const { dispatch } = this.props;
+    const { menuStatus } = this.props.header;
+    dispatch(toggleMenu(!menuStatus));
+  }
+
   renderNav() {
     const menuData = this.getMenu();
+    const { menuStatus, selectedMenu } = this.props.header;
     return (
       <nav>
         <div className="nav-wrapper">
@@ -43,7 +58,11 @@ class Header extends Component {
               <Logo/>
             </div>
             <div className="col s3">
-              <Menu menuData={menuData}/>
+              <Menu
+                menuData={menuData}
+                menuStatus={menuStatus}
+                onToggle={this.toggleMenuStatus}
+                onSetMenu={this.setMenu}/>
             </div>
           </div>
         </div>
