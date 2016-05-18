@@ -58,7 +58,13 @@ export default class TownshipDetails extends React.Component {
   };
 
   componentWillUpdate() {
+    if (this.props.townshipDetailsFetched.isLoading === false) {
+      let townshipObjects = this.props.townshipDetailsFetched.data.resource;
+      let filteredTownship = _.filter(townshipObjects, { 'id': this.props.townshipData.data.id})
 
+      this.props.updateTownshipDetails(filteredTownship[0]);
+      this.props.resetLoading();
+    }
     if (this.props.townshipListEdited.isLoading) {
 
     } else {
@@ -82,7 +88,7 @@ export default class TownshipDetails extends React.Component {
     this.props.resetLoading();
     this.props.fetchTownshipList();
     this.setState({editMode: false});
-    this.props.resetTownshipDetails(townshipData.data);
+    this.props.fetchTownshipDetails(this.props.townshipData.data.id);
     $('#modal-success').openModal();
   }
 

@@ -59,7 +59,6 @@ export default class TownshipList extends React.Component {
   render() {
 
     let townshipDetails = this.props.townshipDetails;
-    console.log(townshipDetails)
     let isLoading = true;
 
     return (
