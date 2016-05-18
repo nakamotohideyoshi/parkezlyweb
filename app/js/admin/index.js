@@ -4,27 +4,21 @@ import { Router, Route, Link, hashHistory, browserHistory } from "react-router";
 
 import AdminLogin from "./components/login/login-root.jsx";
 import TownshipList from "./containers/township-list/township-list.jsx";
+import TownshipPanelController from "./containers/township-panel/township-panel-controller.jsx"
 
 // Redux
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
-import ReduxPromise from 'redux-promise';
-import ReduxThunk from 'redux-thunk';
-import reducers from './reducers'; 
+import store from './store/store.js'
 
-const createStoreWithMiddleware = applyMiddleware(ReduxThunk, ReduxPromise)(createStore);
-const store = createStoreWithMiddleware(reducers);
-
-class AdminRouteList extends React.Component {
+class TownshipListController extends React.Component {
   constructor(props) {
     super(props);
-    console.log("test3");
   }
 
   render() {
     return (
       <Provider store={store}>
-        <TownshipList/>
+        <TownshipList />
       </Provider>
     );
   }
@@ -32,6 +26,11 @@ class AdminRouteList extends React.Component {
 
 export default function AdminIndex() {
   return (
-      <Route path="/admin" component={AdminRouteList}/>
+      <div>
+        <Route path="admin" component={TownshipListController}>
+          <Route path="township" component={TownshipPanelController}/>
+        </Route>
+        <Route path="admin/township/:townshipId" component={TownshipPanelController}/>
+      </div>
   );
 }

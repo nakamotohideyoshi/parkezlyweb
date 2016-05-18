@@ -6,13 +6,13 @@ const initialState = {
   error: false
 };
 
-export default function townshipListEdited(state = initialState, action) {
+export default function uploadedImage(state = initialState, action) {
   switch(action.type) {
-    case types.TOWNSHIP_EDIT_PUT_ERROR:
+    case types.UPLOAD_TOWNSHIP_IMAGE_ERROR:
       return Object.assign({}, state, {isLoading: false, data: action.data, error: true});
-    case types.TOWNSHIP_EDIT_PUT_SUCCESS:
+    case types.UPLOAD_TOWNSHIP_IMAGE_SUCCESS:
       return Object.assign({}, state, {isLoading: false, data: action.data, error: false });
-    case types.TOWNSHIP_EDIT_PUT_REQ:
+    case types.UPLOAD_TOWNSHIP_IMAGE_REQ:
       return Object.assign({}, state, {isLoading: true, error: false });
     case types.RESET_LOADING:
       return Object.assign({}, state, initialState);

@@ -1,7 +1,14 @@
-export default function townshipCreate(state = [], action) {
+const initialState = {
+  resetDetails: false,
+  data: null,
+  error: false
+};
+
+export default function townshipDetails(state = initialState, action) {
     switch(action.type) {
     case 'SEND_TOWNSHIP_DETAILS':
-      return action.payload;
+      return Object.assign({}, state, {resetDetails: false, data: action.data, error: false});
+    default:
+      return state;
     }
-    return state;
 }
