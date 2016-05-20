@@ -21,7 +21,7 @@ export default class TownshipTiles extends React.Component {
             <div className="col s12 m12 l6 offset-s1">
               <a className="waves-effect waves-light btn-large admin-tile valign-wrapper">
                 <i className="material-icons valign">&#xE90D;</i>
-                <h4> Bursar Panel </h4>
+                <h4> Inspector Panel </h4>
               </a>
             </div>
             <div className="col s12 m12 l6"/>
