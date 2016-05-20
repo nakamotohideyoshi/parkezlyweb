@@ -1,0 +1,7 @@
+{  
+  "uid": "app",
+  "append": true,
+  "watch": true,
+  "script": "NODE_ENV=production PORT=80 babel-node server.js",
+  "sourceDir": "./"
+}

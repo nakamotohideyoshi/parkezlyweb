@@ -1,6 +1,6 @@
 .blue-body {
   background-color: #3C4E5A;
-  min-height: 100%;
+  min-height: 120%;
 }
 
 .township-details-image {
@@ -17,6 +17,7 @@
     position: absolute;
     bottom: 20;
     right: 24;
+    z-index: 1 !important;
 }
 
 .image-upload-text {
@@ -33,7 +34,8 @@
 }
 
 .tab-bar {
-  position: absolute;
+  position: fixed;
+  z-index: 50;
   margin-top: 55px;
   height: 40px;
   line-height: 38px !important;
