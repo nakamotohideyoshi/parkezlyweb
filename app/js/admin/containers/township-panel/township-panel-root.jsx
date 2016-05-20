@@ -1,6 +1,7 @@
 import React from 'react';
 import Body from "../../../common/components/body/body.jsx";
 import TownshipDetails from './utils/township-panel-details.jsx';
+import TownshipPanelTiles from './utils/township-panel-tiles.jsx';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -94,6 +95,14 @@ class TownshipPanelRoot extends React.Component {
                 <a href="/admin/township/1" className="waves-effect waves-light tab-bar-link">
                 <i className="material-icons left tab-bar-icons">event_available</i>Permit Request List</a>
               </li>
+              <li>
+                <a href="/admin/township/1" className="waves-effect waves-light tab-bar-link">
+                <i className="material-icons left tab-bar-icons">&#xE90D;</i>Inspector Panel</a>
+              </li>
+              <li>
+                <a href="/admin/township/1" className="waves-effect waves-light tab-bar-link">
+                <i className="material-icons left tab-bar-icons">&#xE227;</i>Bursar Panel</a>
+              </li>
             </ul>
 
             <ul className="side-nav" id="mobile-demo">
@@ -109,6 +118,7 @@ class TownshipPanelRoot extends React.Component {
             ID: {this.props.townshipId}
             {this.renderDetailsFlag()}
           </div>
+
         </Body>
       </div>
     );

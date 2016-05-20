@@ -3,6 +3,14 @@
   min-height: 120%;
 }
 
+.content-wrapper {
+  background-color: #3C4E5A;
+}
+
+.form-required {
+  color: red;
+}
+
 .township-details-image {
   height: 256 !important; 
   width: 256 !important;
@@ -20,6 +28,7 @@
     z-index: 1 !important;
 }
 
+
 .image-upload-text {
   background-color: rgba(45, 182, 61, 0.3);
   padding: 5px;
@@ -36,7 +45,7 @@
 .tab-bar {
   position: fixed;
   z-index: 50;
-  margin-top: 55px;
+  margin-top: 52px;
   height: 40px;
   line-height: 38px !important;
   margin-right: 5px !important;

@@ -33,6 +33,16 @@ export const fields = [
   'contact_number',
   'contact_email']
 
+const validate = values => {
+  const errors = {}
+  if (!values.manager_id) {
+    errors.manager_id = 'Required'
+  } else if (values.manager_id.length > 15) {
+    errors.manager_id = 'Must be 15 characters or less'
+  }
+  return errors
+}
+
 export let townshipData;
 
 export default class TownshipDetails extends React.Component {
@@ -266,6 +276,7 @@ export default class TownshipDetails extends React.Component {
                       <label>Manager ID</label>
                       <input type="text" placeholder="Manager ID" {...manager_id}/>
                     </div>
+                    {manager_id.touched && manager_id.error && <div className="form-required">{manager_id.error}</div>}
                   </div>
                   <div className="col s6">
                     <div className="form-group">
@@ -342,7 +353,7 @@ export default class TownshipDetails extends React.Component {
                     <Link to={{pathname: `/admin/township/${townshipData.id}`}} className="waves-effect waves-light btn">Go To Township</Link>
                   </div>
                   <div className="col s12 m12 l3 offset-l1">
-                    <a className="waves-effect waves-light btn btn-yellow" onClick={() => this.setState({editMode: false})}>Cancel</a>
+                    <a className="waves-effect waves-light btn btn-yellow" onClick={() => {this.setState({editMode: false}); resetForm();}}>Cancel</a>
                   </div>
                   <div className="col s12 m12 l3">
                     <button 
@@ -449,7 +460,8 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   form: 'township-details',
-  fields
+  fields,
+  validate
 })(TownshipDetails))
 
 /*

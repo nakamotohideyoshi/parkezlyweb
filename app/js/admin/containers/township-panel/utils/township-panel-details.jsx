@@ -33,6 +33,16 @@ export const fields = [
   'contact_number',
   'contact_email']
 
+const validate = values => {
+  const errors = {}
+  if (!values.manager_id) {
+    errors.manager_id = 'Required'
+  } else if (values.manager_id.length > 15) {
+    errors.manager_id = 'Must be 15 characters or less'
+  }
+  return errors
+}
+
 export default class TownshipDetails extends React.Component {
   constructor(props) {
     super(props);
@@ -254,6 +264,7 @@ export default class TownshipDetails extends React.Component {
                       <label>Manager ID</label>
                       <input type="text" placeholder="Manager ID" {...manager_id}/>
                     </div>
+                    {manager_id.touched && manager_id.error && <div className="form-required">{manager_id.error}</div>}
                   </div>
                   <div className="col s6">
                     <div className="form-group">
@@ -327,7 +338,7 @@ export default class TownshipDetails extends React.Component {
               <div className="card-action">
                 <div className="row marginless-row" style={{minWidth: 500}}>
                   <div className="col s12 m12 l3 offset-l5">
-                    <a className="waves-effect waves-light btn btn-yellow" onClick={() => this.setState({editMode: false})}>Cancel</a>
+                    <a className="waves-effect waves-light btn btn-yellow" onClick={() => {this.setState({editMode: false}); resetForm()}}>Cancel</a>
                   </div>
                   <div className="col s12 m12 l3">
                     <button 
@@ -374,8 +385,8 @@ export default class TownshipDetails extends React.Component {
 
           this.state.isShowingModal &&
           <ModalContainer onClose={this.handleClose}>
-            <ModalDialog onClose={this.handleClose} style={{top: 90}}>
-              <TownshipImageUpload townshipId={this.props.townshipId}/>
+            <ModalDialog onClose={this.handleClose} style={{top: 120}}>
+              <TownshipImageUpload townshipId={this.props.townshipId} />
             </ModalDialog>
           </ModalContainer>
           }
@@ -384,8 +395,6 @@ export default class TownshipDetails extends React.Component {
             console.log('Township Panel Is Loading')
           : this.renderDetails(dataValid, townshipData)}
         </div>
-
-
 
         <div id="modal-success" className="modal">
           <div className="modal-content">
@@ -435,7 +444,8 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   form: 'township-panel-details',
-  fields
+  fields,
+  validate
 })(TownshipDetails))
 
 
