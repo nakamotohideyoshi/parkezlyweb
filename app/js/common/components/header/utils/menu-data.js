@@ -88,12 +88,12 @@ export const myAccountMenuLinks = [
   },
   {
     text: "My Wallet",
-    link: "",
+    link: "/my-wallet",
     icon: "my-wallet-icon"
   },
   {
     text: "My Locations",
-    link: "",
+    link: "/my-locations",
     icon: "my-locations-icon"
   },
   {
