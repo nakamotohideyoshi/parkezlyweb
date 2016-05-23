@@ -131,7 +131,7 @@ class MyTickets extends Component {
     const content = this.renderTickets();
 
     return authStatus ? (
-      <Body showHeader={true} loading={false}>
+      <Body showHeader={true} loading={loading}>
         <div className="my-tickets-root">
           {content}
         </div>

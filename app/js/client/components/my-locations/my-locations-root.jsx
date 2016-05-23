@@ -1,0 +1,89 @@
+import React, { Component, PropTypes } from "react";
+import { connect } from "react-redux";
+import classNames from "classnames";
+import cookie from "react-cookie";
+import moment from "moment"
+
+import Body from "../../../common/components/body/body.jsx";
+import { getLocations } from "../../actions/locations.js";
+
+class MyLocations extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  componentWillMount() {
+    if(!this.checkAuthStatus()) {
+      window.location = "/";
+    }
+    const userId = cookie.load('userId');
+    const { dispatch } = this.props;
+    dispatch(getLocations(228));
+  }
+
+  checkAuthStatus() {
+    const userId = cookie.load('userId');
+    if(userId) {
+      return true;
+    }
+  }
+
+  renderNotice() {
+    const { errorMessage } = this.props.locations;
+    return errorMessage ? (
+      <div className="alert alert-danger">
+        {errorMessage}
+      </div>
+    ) : null;
+  }
+
+  renderLocation(locationData, index) {
+    const { location_name, location_address } = locationData;
+    return (
+      <div className="col s12" key={index}>
+        <div>
+          <h5>Location: {location_name}</h5>
+          <p>{location_address}</p>
+        </div>
+      </div>
+    )
+  }
+
+  renderLocations() {
+    const { locationsList } = this.props.locations;
+    console.log(locationsList);
+    const notice = this.renderNotice();
+    const locations = locationsList.map(this.renderLocation);
+    return (
+      <div className="locations-list">
+        {notice}
+        <h4>My Locations</h4>
+        <div className="row">
+          {locations} 
+        </div>
+      </div>
+    );
+  }
+
+  render() {
+    console.log(this.props.locations);
+    const authStatus = this.checkAuthStatus();
+    const { loading } = this.props.locations;
+    const content = this.renderLocations();
+    return authStatus ? (
+      <Body showHeader={true} loading={loading}>
+        <div className="my-locations-root">
+          {content}
+        </div>
+      </Body>
+    ) : null;
+  }
+}
+
+const MapStateToProps = (state) => {
+  return {
+    locations: state.Locations
+  };
+};
+
+export default connect(MapStateToProps)(MyLocations);

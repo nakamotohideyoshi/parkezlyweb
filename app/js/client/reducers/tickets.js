@@ -18,11 +18,13 @@ const Tickets = (state = initialState, action) => {
     case "FETCH_TICKETS_SUCCESS":
       return {
         ...state,
+        loading: false,
         ticketList: action.data
       };
     case "FETCH_TICKETS_FAIL":
       return {
         ...state,
+        loading: false,
         errorMessage: action.data
       };
     case "SET_MODAL_DATA":

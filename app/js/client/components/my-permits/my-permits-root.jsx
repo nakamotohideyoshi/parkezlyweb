@@ -95,7 +95,7 @@ class MyPermits extends Component {
     const content = this.renderPermits();
     const okBtn = this.renderOkButton();
     return authStatus ? (
-      <Body showHeader={true} loading={false}>
+      <Body showHeader={true} loading={loading}>
         <div className="my-permits-root">
           {content}
         </div>
