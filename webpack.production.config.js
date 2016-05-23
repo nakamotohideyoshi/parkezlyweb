@@ -9,6 +9,10 @@ module.exports = {
     'babel-polyfill',
     './app/js/main.js'
   ],
+  devServer: {
+    hot: true,
+    inline: true
+  },
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'bundle.js',
