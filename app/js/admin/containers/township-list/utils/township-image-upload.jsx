@@ -5,7 +5,7 @@ import {ModalContainer, ModalDialog} from 'react-modal-dialog';
 
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {uploadImage, editTownshipImage} from '../../../actions/actions-township.js';
+import {uploadImage, editTownshipImage, resetLoading} from '../../../actions/actions-township.js';
 
 import '../../../../../css/cropper.scss';
 
@@ -15,7 +15,8 @@ class TownshipImageUpload extends React.Component {
 
     this.state = {
       files: [],
-      cropResult: null
+      cropResult: null,
+      showSpinner: false
     }
 
     this.onDrop = this.onDrop.bind(this);
@@ -26,13 +27,19 @@ class TownshipImageUpload extends React.Component {
     if (this.props.uploadedImage.isLoading) {
 
     } else {
-      console.log(this.props.uploadedImage.data.data.message)
       let townshipLogo = this.props.uploadedImage.data.data.message;
       this.props.editTownshipImage({"township_logo": townshipLogo}, this.props.townshipId);
+      this.setState({showerSpinner: false})
+      this.props.resetLoading();
     }
   };
 
   _cropImage() {
+    this.setState({
+      cropResult: finalResult,
+      showSpinner: true
+    });
+
     let finalResult = this.refs.cropper.getCroppedCanvas({height: 256, width: 256}).toDataURL();
 
     this.props.uploadImage(finalResult);
@@ -40,9 +47,7 @@ class TownshipImageUpload extends React.Component {
     if (typeof this.refs.cropper.getCroppedCanvas() === 'undefined') {
       return;
     }
-    this.setState({
-      cropResult: finalResult
-    });  }
+  }
 
   onDrop(files) {
     this.setState({
@@ -98,9 +103,25 @@ class TownshipImageUpload extends React.Component {
 
         <div className="row">
           <div className="col s12 m12 l12 center-align">
+          {this.state.showSpinner ?  
+            <div>
+              <div> Uploading: Please be patient... </div>
+              <div className="preloader-wrapper small active">
+                <div className="spinner-layer spinner-green-only">
+                  <div className="circle-clipper left">
+                    <div className="circle"></div>
+                  </div><div className="gap-patch">
+                    <div className="circle"></div>
+                  </div><div className="circle-clipper right">
+                    <div className="circle"></div>
+                  </div>
+                </div>
+              </div>
+            </div>: 
             <button 
             className="waves-effect waves-light green btn btn-green" 
-            onClick={ this._cropImage }>Upload Cropped Image</button>
+            onClick={ this._cropImage }>Upload Cropped Image</button>}
+            
           </div>
         </div>
 
@@ -132,7 +153,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     uploadImage,
-    editTownshipImage
+    editTownshipImage,
+    resetLoading
   }, dispatch);
 }
 

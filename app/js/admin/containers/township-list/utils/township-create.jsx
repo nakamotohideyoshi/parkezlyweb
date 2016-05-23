@@ -20,6 +20,16 @@ export const fields = [
   'contact_number',
   'contact_email']
 
+const validate = values => {
+  const errors = {}
+  if (!values.manager_id) {
+    errors.manager_id = 'Required'
+  } else if (values.manager_id.length > 15) {
+    errors.manager_id = 'Must be 15 characters or less'
+  }
+  return errors
+}
+
 class TownshipCreate extends React.Component {
   constructor(props) {
     super(props);
@@ -88,6 +98,7 @@ class TownshipCreate extends React.Component {
                       <label>Manager ID</label>
                       <input type="text" placeholder="Manager ID" {...manager_id}/>
                     </div>
+                    {manager_id.touched && manager_id.error && <div className="form-required">{manager_id.error}</div>}
                   </div>
                   <div className="col s6">
                     <div className="form-group">
@@ -161,7 +172,7 @@ class TownshipCreate extends React.Component {
               <div className="modal-footer">
                 <div className="row marginless-row">
                   <div className="col s3">
-                    <a className="modal-action modal-close waves-effect waves-light btn btn-yellow">Cancel</a>
+                    <a className="modal-action modal-close waves-effect waves-light btn btn-yellow" onClick={resetForm}>Cancel</a>
                   </div>
                   <div className="col s4 offset-s1">
                     <a className="waves-effect waves-light btn btn-green" disabled={submitting} onClick={resetForm}>Clear Values</a>
@@ -205,7 +216,8 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   form: 'township-create',
-  fields
+  fields,
+  validate
 })(TownshipCreate))
 
 
