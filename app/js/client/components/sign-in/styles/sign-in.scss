@@ -1,41 +1,12 @@
-.bg {
-  min-height: 100%;
-  width: 100%;
-  height: auto;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: -2;
-}
-
-.blur {
-  min-height: 100%;
-  width: 100%;
-  height: auto;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  filter: blur(10px);
-  -webkit-filter: blur(10px);
-  -moz-filter: blur(10px);
-  -o-filter: blur(10px);
-  -ms-filter: blur(10px);
-  filter: url(#blur);
-  overflow: hidden;
-}
-
-.blur:after {
-  content: '';
+.sign-in-root {
+  padding-top: 100px;
+  margin-top: -55px;
   height: 100%;
-  width: 100%;
-  background: rgba(255, 255, 255, .2);
-  position: absolute;
 }
 
 .sign-in-content {
   width : 100%;
-  margin: 35px auto 0 auto;
+  margin: 0 auto;
   padding: 20px 20px;
   background: rgba(255, 255, 255, 0.70);
   border-radius: 4px;
