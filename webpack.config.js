@@ -5,6 +5,10 @@ var webpack = require('webpack');
 
 module.exports = {
   devtool: 'eval-source-map',
+  devServer: {
+    hot: true,
+    inline: true
+  },
   entry: [
     'babel-polyfill',
     'webpack-hot-middleware/client?reload=true',

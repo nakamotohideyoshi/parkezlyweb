@@ -2,6 +2,7 @@
   "uid": "app",
   "append": true,
   "watch": true,
-  "script": "NODE_ENV=production PORT=80 babel-node server.js",
-  "sourceDir": "./"
+  "script": "server-wrapper.js",
+  "sourceDir": "./",
+  "args": ["NODE_ENV=production", "PORT=80"]
 }
