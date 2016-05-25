@@ -81,7 +81,7 @@ class TownshipPanelRoot extends React.Component {
               </li>
               <li>
                 <a href="/admin/township/1" className="waves-effect waves-light tab-bar-link">
-                <i className="material-icons left tab-bar-icons">person</i>Userlist</a>
+                <i className="material-icons left tab-bar-icons">person</i>User List</a>
               </li>
               <li>
                 <a href="/admin/township/1" className="waves-effect waves-light tab-bar-link">
@@ -117,6 +117,7 @@ class TownshipPanelRoot extends React.Component {
           <div className="container">
             ID: {this.props.townshipId}
             {this.renderDetailsFlag()}
+            <TownshipPanelTiles />
           </div>
 
         </Body>
