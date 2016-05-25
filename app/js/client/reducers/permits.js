@@ -18,11 +18,13 @@ const Permits = (state = initialState, action) => {
     case "FETCH_PERMITS_FAIL":
       return {
         ...state,
+        loading: false,
         errorMessage: action.data
       };
     case "FETCH_PERMITS_SUCCESS":
       return {
         ...state,
+        loading: false,
         permitList: action.data
       };
     case "FETCH_LOCATIONS_SUCCESS":

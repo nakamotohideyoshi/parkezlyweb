@@ -11,15 +11,14 @@ class MenuItem extends Component {
 
   changeMenu(evt) {
     evt.preventDefault();
-    const { dispatch, subMenu } = this.props;
-    console.log(subMenu);
-    dispatch(setCurrentMenu(subMenu));
+    const { subMenu, onSetMenu } = this.props;
+    onSetMenu(subMenu);
   }
 
   renderLink() {
-    const { text, link } = this.props;
+    const { text, link, onToggle } = this.props;
     return (
-      <Link to={link}>{text}</Link>
+      <Link to={link} onClick={onToggle}>{text}</Link>
     );
   }
 
@@ -34,7 +33,6 @@ class MenuItem extends Component {
 
   render() {
     const { subMenu, className } = this.props;
-    console.log(subMenu);
     const link = subMenu ? this.renderSubMenuParent() : this.renderLink();
     return (
       <div className="row">
@@ -49,7 +47,9 @@ MenuItem.PropTypes = {
   text: PropTypes.string,
   link: PropTypes.string,
   subMenu: PropTypes.string,
-  className: PropTypes.string
+  className: PropTypes.string,
+  onSetMenu: PropTypes.func,
+  onToggle: PropTypes.func
 };
 
-export default connect()(MenuItem);
+export default MenuItem;

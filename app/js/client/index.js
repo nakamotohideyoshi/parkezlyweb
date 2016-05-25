@@ -9,6 +9,8 @@ import EditVehicleController from "./components/my-vehicles/edit-vehicle-control
 import VehicleListController from "./components/my-vehicles/my-vehicles-list-controller.jsx";
 import MyPermitsController from "./components/my-permits/my-permits-controller.jsx";
 import MyTicketsController from "./components/my-tickets/my-tickets-controller.jsx";
+import MyLocationsController from "./components/my-locations/my-locations-controller.jsx";
+import MyWalletController from "./components/my-wallet/my-wallet-controller.jsx";
 
 
 export default function ClientIndex() {
@@ -23,6 +25,8 @@ export default function ClientIndex() {
       <Route path="edit-vehicle/:vehicleId" component={EditVehicleController}/>
       <Route path="my-permits" component={MyPermitsController}/>
       <Route path="my-tickets" component={MyTicketsController}/>
+      <Route path="my-locations" component={MyLocationsController}/>
+      <Route path="my-wallet" component={MyWalletController}/>
     </div>
   );
 }
