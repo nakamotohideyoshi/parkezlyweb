@@ -8,6 +8,8 @@ import townshipDetails from './reducer-township-details.js';
 import uploadedImage from './reducer-image-upload.js';
 import townshipDetailsFetched from './reducer-details-fetch.js'
 
+import {townshipUsersFetched, townshipUsersEdited, townshipUsersCreated} from './reducer-township-users.js';
+
 const rootReducer = combineReducers({
   townshipListFetched: townshipListFetched,
   townshipCreate: townshipCreate,
@@ -15,6 +17,11 @@ const rootReducer = combineReducers({
   townshipDetails: townshipDetails,
   townshipDetailsFetched: townshipDetailsFetched,
   uploadedImage: uploadedImage,
+
+  townshipUsersFetched: townshipUsersFetched,
+  townshipUsersEdited: townshipUsersEdited,
+  townshipUsersCreated: townshipUsersCreated,
+
   form: formReducer
 });
 

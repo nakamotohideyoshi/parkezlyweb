@@ -1,9 +1,10 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import TownshipPanelRoot from './township-panel-root.jsx';
+import TownshipPanelUsers from './utils/users/township-panel-users.jsx'
 import store from '../../store/store.js';
 
-export default class TownshipPanelController extends React.Component {
+export class TownshipPanelController extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -12,6 +13,20 @@ export default class TownshipPanelController extends React.Component {
     return (
       <Provider store={store}>
         <TownshipPanelRoot townshipId={this.props.params.townshipId} />
+      </Provider>
+    );
+  }
+}
+
+export class TownshipUsersController extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <Provider store={store}>
+        <TownshipPanelUsers townshipCode={this.props.params.townshipCode} />
       </Provider>
     );
   }

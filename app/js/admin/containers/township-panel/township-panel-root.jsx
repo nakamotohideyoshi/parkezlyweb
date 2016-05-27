@@ -6,6 +6,8 @@ import TownshipPanelTiles from './utils/township-panel-tiles.jsx';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
+import { Link } from 'react-router';
+
 import {
   editTownship, 
   fetchTownshipList, 
@@ -22,6 +24,8 @@ let filteredTownship;
 class TownshipPanelRoot extends React.Component {
   constructor(props) {
     super(props);
+    // Scroll to the top of the page on construct.
+    window.scrollTo(0, 0);
 
     this.renderDetailsFlag = this.renderDetailsFlag.bind(this);
   }
@@ -52,10 +56,13 @@ class TownshipPanelRoot extends React.Component {
     }
     else {
       return (
-          <TownshipDetails 
-          townshipId={this.props.townshipId} 
-          townshipData={filteredTownship[0]}
-          initialValues={filteredTownship[0]} />
+          <div>
+            <TownshipDetails 
+            townshipId={this.props.townshipId} 
+            townshipData={filteredTownship[0]}
+            initialValues={filteredTownship[0]} />
+            <TownshipPanelTiles townshipId={this.props.townshipId} townshipCode={filteredTownship[0].manager_id}/>
+          </div>
         );
     }
 
@@ -80,8 +87,8 @@ class TownshipPanelRoot extends React.Component {
                 <i className="material-icons left tab-bar-icons">home</i>Township Editor</a>
               </li>
               <li>
-                <a href="/admin/township/1" className="waves-effect waves-light tab-bar-link">
-                <i className="material-icons left tab-bar-icons">person</i>User List</a>
+                <Link to={{pathname: `/admin/township/users/${this.props.townshipId}`}} className="waves-effect waves-light tab-bar-link">
+                <i className="material-icons left tab-bar-icons">person</i>User List</Link>
               </li>
               <li>
                 <a href="/admin/township/1" className="waves-effect waves-light tab-bar-link">
@@ -117,7 +124,6 @@ class TownshipPanelRoot extends React.Component {
           <div className="container">
             ID: {this.props.townshipId}
             {this.renderDetailsFlag()}
-            <TownshipPanelTiles />
           </div>
 
         </Body>
