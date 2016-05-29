@@ -416,7 +416,7 @@ export default class TownshipDetails extends React.Component {
         <div id="modal-success" className="modal">
           <div className="modal-content">
             <h4>Success!</h4>
-            <p>You've successfuly sent the request!</p>
+            <p>You've successfully sent the request!</p>
           </div>
           <div className="modal-footer">
             <button 

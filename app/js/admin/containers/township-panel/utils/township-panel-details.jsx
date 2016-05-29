@@ -81,7 +81,6 @@ export default class TownshipDetails extends React.Component {
   }
 
   handleSubmit(data) {
-    console.log("HELLO WORLD");
     console.log(this.props.townshipData);
     this.props.editTownship(data, this.props.townshipId);
   }
@@ -377,7 +376,7 @@ export default class TownshipDetails extends React.Component {
       <div style={{marginTop: 40}}>
         <nav>
           <div className="nav-wrapper nav-admin z-depth-2">
-            <a className="brand-logo center" onClick={() => this.handleFetch()}>Township Details</a>
+            <a className="brand-logo center">Township Details</a>
           </div>
         </nav>
         <div className="card">

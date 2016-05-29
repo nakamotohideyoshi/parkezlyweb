@@ -6,6 +6,8 @@ import TownshipPanelTiles from './utils/township-panel-tiles.jsx';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
+import { Link } from 'react-router';
+
 import {
   editTownship, 
   fetchTownshipList, 
@@ -18,11 +20,14 @@ import {
 let townshipObjects;
 let filteredTownship;
 
-
 class TownshipPanelRoot extends React.Component {
   constructor(props) {
     super(props);
-
+    // Scroll to the top of the page on construct.
+    window.scrollTo(0, 0);
+    this.state = {
+      townshipCode: null
+    }
     this.renderDetailsFlag = this.renderDetailsFlag.bind(this);
   }
   componentWillMount() {
@@ -52,10 +57,13 @@ class TownshipPanelRoot extends React.Component {
     }
     else {
       return (
-          <TownshipDetails 
-          townshipId={this.props.townshipId} 
-          townshipData={filteredTownship[0]}
-          initialValues={filteredTownship[0]} />
+          <div>
+            <TownshipDetails 
+            townshipId={this.props.townshipId} 
+            townshipData={filteredTownship[0]}
+            initialValues={filteredTownship[0]} />
+            <TownshipPanelTiles townshipId={this.props.townshipId} townshipCode={filteredTownship[0].manager_id}/>
+          </div>
         );
     }
 
@@ -63,7 +71,7 @@ class TownshipPanelRoot extends React.Component {
   }
 
   render() {
-
+    console.log("Testing 123");
     if(!this.props.townshipListFetched.isLoading) {
       townshipObjects = this.props.townshipListFetched.data.resource;
       filteredTownship = _.filter(townshipObjects, { 'id':  parseInt(this.props.townshipId)})
@@ -72,6 +80,7 @@ class TownshipPanelRoot extends React.Component {
     return (
       <div className="blue-body marginless-row">
         <nav className="tab-bar">
+          {filteredTownship !== undefined ? 
           <div className="nav-wrapper">
             <a href="#" data-activates="mobile-demo" className="button-collapse"><i className="material-icons">menu</i></a>
             <ul className="left hide-on-med-and-down">
@@ -80,12 +89,12 @@ class TownshipPanelRoot extends React.Component {
                 <i className="material-icons left tab-bar-icons">home</i>Township Editor</a>
               </li>
               <li>
-                <a href="/admin/township/1" className="waves-effect waves-light tab-bar-link">
-                <i className="material-icons left tab-bar-icons">person</i>User List</a>
+                <Link to={{pathname: `/admin/township/users/${filteredTownship[0].manager_id}`}} className="waves-effect waves-light tab-bar-link">
+                <i className="material-icons left tab-bar-icons">person</i>User List</Link>
               </li>
               <li>
-                <a href="/admin/township/1" className="waves-effect waves-light tab-bar-link">
-                <i className="material-icons left tab-bar-icons">place</i>Facilities List</a>
+                <Link to={{pathname: `/admin/township/facilities/${filteredTownship[0].manager_id}`}} className="waves-effect waves-light tab-bar-link">
+                <i className="material-icons left tab-bar-icons">place</i>Facilities List</Link>
               </li>
               <li>
                 <a href="/admin/township/1" className="waves-effect waves-light tab-bar-link">
@@ -111,13 +120,12 @@ class TownshipPanelRoot extends React.Component {
               <li><a href="collapsible.html">Javascript</a></li>
               <li><a href="mobile.html">Mobile</a></li>
             </ul>
-          </div>
+          </div> : console.log("Loading Tabs...")}     
         </nav>
         <Body showHeader={true}>
           <div className="container">
             ID: {this.props.townshipId}
             {this.renderDetailsFlag()}
-            <TownshipPanelTiles />
           </div>
 
         </Body>
