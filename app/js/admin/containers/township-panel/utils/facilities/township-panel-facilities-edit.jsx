@@ -141,7 +141,7 @@ class TownshipPanelFacilitiesEdit extends React.Component {
             <a 
             className="modal-trigger waves-effect waves-light btn valign" 
             style={{margin: 10}}
-            onClick={() => this.props.editModeFalse()}>Go Back to User List</a>
+            onClick={() => this.props.editModeFalse()}>Go Back to Facilities List</a>
 
             <button 
             type="submit" 
