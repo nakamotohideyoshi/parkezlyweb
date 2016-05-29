@@ -5,16 +5,20 @@ import {bindActionCreators} from 'redux';
 import {reduxForm} from 'redux-form'
 import {reset} from 'redux-form';
 
-import {fetchTownshipUsers, createTownshipUsers, resetLoading} from '../../../../actions/actions-township-panel.jsx';
+import {fetchTownshipFacilities, createTownshipFacilities, resetLoading} from '../../../../actions/actions-township-panel.jsx';
 import SearchInput, {createFilter} from 'react-search-input';
 
 export const fields = [ 
-  'user_id',
-  'user_name',
   'township_code',
-  'township_name',
-  'profile_name',
-  'status']
+  'location_code',
+  'location_name',
+  'lot_row',
+  'lot_number',
+  'lot_id',
+  'occupied',
+  'plate_no',
+  'plate_state'
+]
 
 const validate = values => {
   const errors = {}
@@ -26,7 +30,7 @@ const validate = values => {
   return errors
 }
 
-class TownshipPanelUsersCreate extends React.Component {
+class TownshipPanelFacilitiesCreate extends React.Component {
 
   constructor(props) {
     super(props);
@@ -36,8 +40,8 @@ class TownshipPanelUsersCreate extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log(this.props.townshipUsersCreated)
-    if (!this.props.townshipUsersCreated.isLoading) {
+    console.log(this.props.townshipFacilitiesCreated)
+    if (!this.props.townshipFacilitiesCreated.isLoading) {
       this.handleSuccess();
     }
   };
@@ -52,18 +56,21 @@ class TownshipPanelUsersCreate extends React.Component {
 
   handleSubmit(data) {
     console.log(data)
-    this.props.createTownshipUsers(data);
+    this.props.createTownshipFacilities(data);
   }
 
   render() {
     const {
       fields: {
-        user_id,
-        user_name,
         township_code,
-        township_name,
-        profile_name,
-        status
+        location_code,
+        location_name,
+        lot_row,
+        lot_number,
+        lot_id,
+        occupied,
+        plate_no,
+        plate_state
       },
       resetForm,
       submitting
@@ -75,35 +82,58 @@ class TownshipPanelUsersCreate extends React.Component {
           <div className="row"/>
           <div className="row">
             <div className="center-align">
-              <h4 style={{marginTop: 0}}>Create Township User</h4>
-              <p className="center-align">Create a township user by changing the fields.</p>
+              <h4 style={{marginTop: 0}}>Create Township Facility</h4>
+              <p className="center-align">Create a township facility by changing the fields.</p>
             </div>
           </div>
           <div className="container">
             <div className="row">
               <div className="col s6">
                 <div className="form-group">
-                  <label>User ID</label>
-                  <input type="text" placeholder="User ID" {...user_id}/>
-                </div>    
-                {user_id.touched && user_id.error && <div className="form-required">{user_id.error}</div>}
-              </div>
-              <div className="col s6">
-                <div className="form-group">
-                  <label>Username</label>
-                  <input type="text" placeholder="Username" {...user_name}/>
+                  <label>Location Code</label>
+                  <input type="text" placeholder="Location Code" {...location_code}/>
                 </div>
               </div>
               <div className="col s6">
                 <div className="form-group">
-                  <label>Profile Name</label>
-                  <input type="text" placeholder="Profile Name" {...profile_name}/>
+                  <label>Location Name</label>
+                  <input type="text" placeholder="Location Name" {...location_name}/>
                 </div>
               </div>
               <div className="col s6">
                 <div className="form-group">
-                  <label>Status</label>
-                  <input type="text" placeholder="Status" {...status}/>
+                  <label>Lot Row</label>
+                  <input type="text" placeholder="Lot Row" {...lot_row}/>
+                </div>
+              </div>
+              <div className="col s6">
+                <div className="form-group">
+                  <label>Lot Number</label>
+                  <input type="text" placeholder="Lot Number" {...lot_number}/>
+                </div>
+              </div>
+              <div className="col s6">
+                <div className="form-group">
+                  <label>Lot ID</label>
+                  <input type="text" placeholder="Lot ID" {...lot_id}/>
+                </div>
+              </div>
+              <div className="col s6">
+                <div className="form-group">
+                  <label>Occupied</label>
+                  <input type="text" placeholder="Occupied" {...occupied}/>
+                </div>
+              </div>
+              <div className="col s6">
+                <div className="form-group">
+                  <label>Plate No.</label>
+                  <input type="text" placeholder="Plate No." {...plate_no}/>
+                </div>
+              </div>
+              <div className="col s6">
+                <div className="form-group">
+                  <label>Plate State</label>
+                  <input type="text" placeholder="Plate State" {...plate_state}/>
                 </div>
               </div>
             </div>
@@ -131,22 +161,21 @@ class TownshipPanelUsersCreate extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    townshipUsersFetched: state.townshipUsersFetched,
-    townshipUsersCreated: state.townshipUsersCreated
+    townshipFacilitiesFetched: state.townshipFacilitiesFetched,
+    townshipFacilitiesCreated: state.townshipFacilitiesCreated
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    fetchTownshipUsers,
-    createTownshipUsers,
+    fetchTownshipFacilities,
+    createTownshipFacilities,
     resetLoading
   }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-  form: 'township-panel-users-create',
+  form: 'township-panel-facilities-create',
   fields,
-  validate,
   overwriteOnInitialValuesChange : true
-})(TownshipPanelUsersCreate));
+})(TownshipPanelFacilitiesCreate));

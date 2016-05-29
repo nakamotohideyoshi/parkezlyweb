@@ -64,6 +64,15 @@
 }
 
 
+.township-userlist-container {
+  min-height: 0px;
+  max-height: 545px !important;
+  overflow-y: auto !important;
+  cursor: pointer;
+  background-color: #FFF;
+
+}
+
 .township-list-container {
   min-height: 0px;
   max-height: 545px;

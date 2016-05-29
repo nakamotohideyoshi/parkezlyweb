@@ -16,10 +16,12 @@ export default class TownshipPanelTiles extends React.Component {
               <i className="material-icons valign" >person</i>
               <h4> User List </h4>
             </Link>
-            <a className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l5 offset-l1">
+            <Link 
+            to={{pathname: `/admin/township/facilities/${this.props.townshipCode}`}} 
+            className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l5 offset-l1">
               <i className="material-icons valign">place</i>
               <h4> Facilities List </h4>
-            </a>
+            </Link>
         </div>
         <div className="row center-align marginless-row" style={{marginTop: 30}}>
             <a className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l5 offset-l1">
