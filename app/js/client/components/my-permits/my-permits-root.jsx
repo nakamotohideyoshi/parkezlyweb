@@ -89,7 +89,6 @@ class MyPermits extends Component {
   }
 
   render() {
-    console.log(this.props);
     const authStatus = this.checkAuthStatus();
     const { loading } = this.props.permits;
     const content = this.renderPermits();

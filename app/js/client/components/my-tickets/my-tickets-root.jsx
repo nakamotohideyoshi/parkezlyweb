@@ -124,7 +124,6 @@ class MyTickets extends Component {
   }
 
   render() {
-    console.log(this.props);
     const authStatus = this.checkAuthStatus();
     const { loading } = this.props.tickets;
     const modalData = this.renderModal();

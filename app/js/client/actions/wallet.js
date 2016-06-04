@@ -26,7 +26,6 @@ export const getWalletTransactions = (user_id) => {
     dispatch(initiateTransactionFetch());
     return WalletAPI.getWalletTransactions(user_id)
       .then((response) => {
-        console.log(response);
         dispatch(receivedTransactions(response.data.resource));
       })
       .catch((response) => {

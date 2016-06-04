@@ -20,7 +20,6 @@ const initialState = {
 };
 
 const Menu = (state = initialState, action) => {
-  console.log(action);
   switch(action.type) {
     case "SET_CURRENT_MENU":
       return {

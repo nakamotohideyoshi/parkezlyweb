@@ -81,7 +81,6 @@ const registerUser = (userInfo) => {
     return AuthAPI.registerUser(userInfo)
       .then((response) => {
         const userId = response.data.resource[0].id;
-        console.log(userId);
         dispatch(registrationSucceded(userId));
       })
       .catch((response) => {

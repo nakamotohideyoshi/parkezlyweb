@@ -14,7 +14,6 @@ class AmountField extends Component {
   }
 
   getValue() {
-    console.log(this.refs.amount.value);
     return this.refs.amount.value;
   }
 
