@@ -26,6 +26,11 @@ const Wallet = (state = initialState, action) => {
         loading : false,
         errorMessage: action.errorMessage
       }
+    case "SET_ADDING_FUNDS":
+      return {
+        ...state,
+        loading: action.status
+      }
     default:
       return state;
   }

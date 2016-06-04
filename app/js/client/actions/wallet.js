@@ -34,3 +34,10 @@ export const getWalletTransactions = (user_id) => {
       });
   };
 };
+
+export const setLoading = (status) => {
+  return {
+    type: Actions.SET_ADDING_FUNDS,
+    status
+  };
+};
