@@ -90,7 +90,7 @@ class TownshipPanelFacilities extends React.Component {
         <div>
           <div className="row marginless-row valign-wrapper">
             <div className="col s1"/>
-            <div className="search-wrapper card col s9" style={{marginBottom:10, marginTop: 10}}>
+            <div className="search-wrapper card col s10" style={{marginBottom:10, marginTop: 10}}>
               <div className="row marginless-row valign-wrapper">
                 <SearchInput 
                 className="search search-input col s11" 
@@ -135,7 +135,6 @@ class TownshipPanelFacilities extends React.Component {
         openModal={() => $('#modal-success').openModal()} />
       );
     }
-    
   }
 
   renderFacilityList() {

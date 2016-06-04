@@ -1,12 +1,13 @@
 import { combineReducers } from 'redux';
 import {reducer as formReducer} from 'redux-form';
 
-import townshipListFetched from './reducer-township-list.js'
-import townshipCreate from './reducer-township-create.js'
-import townshipListEdited from './reducer-township-edit.js';
-import townshipDetails from './reducer-township-details.js';
-import uploadedImage from './reducer-image-upload.js';
-import townshipDetailsFetched from './reducer-details-fetch.js'
+import {
+  townshipListFetched, 
+  townshipCreate, 
+  townshipListEdited,
+  townshipDetailsFetched, 
+  uploadedImage,
+  townshipDetails} from './reducer-township-list.js';
 
 import {
   townshipUsersFetched, 
@@ -15,7 +16,16 @@ import {
   townshipFacilitiesFetched,
   townshipFacilitiesEdited,
   townshipFacilitiesCreated,
-} from './reducer-township-users.js';
+  townshipPermitRequestsFetched,
+  townshipPermitTypesFetched,
+  townshipParkingPermitsFetched,
+
+  townshipPermitsListFetched,
+  townshipPermitsListCreated,
+
+  townshipLocationsRateFetched,
+  townshipPermitTypesCreated,
+} from './reducer-township-panel.js';
 
 const rootReducer = combineReducers({
   townshipListFetched: townshipListFetched,
@@ -28,9 +38,20 @@ const rootReducer = combineReducers({
   townshipUsersFetched: townshipUsersFetched,
   townshipUsersEdited: townshipUsersEdited,
   townshipUsersCreated: townshipUsersCreated,
+
   townshipFacilitiesFetched: townshipFacilitiesFetched,
   townshipFacilitiesEdited: townshipFacilitiesEdited,
   townshipFacilitiesCreated: townshipFacilitiesCreated,
+
+  townshipPermitRequestsFetched: townshipPermitRequestsFetched,
+  townshipPermitTypesFetched: townshipPermitTypesFetched,
+  townshipParkingPermitsFetched: townshipParkingPermitsFetched,
+
+  townshipPermitsListFetched: townshipPermitsListFetched,
+  townshipPermitsListCreated: townshipPermitsListCreated,
+
+  townshipLocationsRateFetched: townshipLocationsRateFetched,
+  townshipPermitTypesCreated: townshipPermitTypesCreated,
 
   form: formReducer
 });
