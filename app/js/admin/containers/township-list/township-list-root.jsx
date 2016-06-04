@@ -13,13 +13,16 @@ import {fetchTownshipList, updateTownshipDetails} from '../../actions/actions-to
 
 const KEYS_TO_FILTERS = ['city']
 
-export default class TownshipList extends React.Component {
+class TownshipListRoot extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       searchTerm: ''
     }
+
+    // Scroll to the top of the page on construct.
+    window.scrollTo(0, 0);
 
     this.handleFetch = this.handleFetch.bind(this);
     this.renderTownshipList = this.renderTownshipList.bind(this);
@@ -59,7 +62,7 @@ export default class TownshipList extends React.Component {
   render() {
 
     let townshipDetails = this.props.townshipDetails;
-    let isLoading = true;
+    // let isLoading = true;
 
     return (
       <div className="blue-body">
@@ -125,7 +128,7 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TownshipList);
+export default connect(mapStateToProps, mapDispatchToProps)(TownshipListRoot);
 
 
 /* 

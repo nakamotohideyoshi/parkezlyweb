@@ -66,7 +66,6 @@ export function editTownship(data, id) {
     .then(function(response) {
       dispatch(apiTownship.receiveData(response.data, types.TOWNSHIP_EDIT_PUT_SUCCESS));
       dispatch(reset('township-details'));
-      dispatch(reset('township-panel-details'));
     })
     .catch(function(response){
       dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_EDIT_PUT_ERROR));
