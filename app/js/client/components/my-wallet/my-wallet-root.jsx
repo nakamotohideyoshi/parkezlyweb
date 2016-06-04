@@ -42,7 +42,6 @@ class MyWallet extends Component {
   addPaypalFunds() {
     const { dispatch } = this.props;
     const isValid = this.refs["amount-field"].validate();
-    console.log("isValid" + isValid);
     if (isValid) {
       const amount = this.refs["amount-field"].getValue();
       dispatch(setLoading(true));

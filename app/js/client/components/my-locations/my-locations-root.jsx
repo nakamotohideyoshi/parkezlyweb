@@ -51,7 +51,6 @@ class MyLocations extends Component {
 
   renderLocations() {
     const { locationsList } = this.props.locations;
-    console.log(locationsList);
     const notice = this.renderNotice();
     const locations = locationsList.map(this.renderLocation);
     return (
@@ -66,7 +65,6 @@ class MyLocations extends Component {
   }
 
   render() {
-    console.log(this.props.locations);
     const authStatus = this.checkAuthStatus();
     const { loading } = this.props.locations;
     const content = this.renderLocations();

@@ -14,7 +14,6 @@ class EmailField extends Component {
   }
 
   getValue() {
-    console.log(this.refs.email.value);
     return this.refs.email.value;
   }
 
@@ -60,7 +59,7 @@ class EmailField extends Component {
     if(hasError) {
       errorText = errorType === "EMPTY" ? Texts.EmptyEmail : Texts.InvalidEmail;
     }
-console.log(errorText);
+
     return (
       <div className={parentClassNames}>
         <input

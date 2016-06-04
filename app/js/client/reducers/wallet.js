@@ -7,7 +7,6 @@ const initialState = {
 };
 
 const Wallet = (state = initialState, action) => {
-  console.log(action);
   switch(action.type) {
     case "FETCH_TRANSACTION_INITIATE":
       return {

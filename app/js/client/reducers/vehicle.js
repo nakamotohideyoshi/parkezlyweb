@@ -11,7 +11,6 @@ const initialState = {
 };
 
 const Vehicle = (state = {}, action) => {
-  console.log(action);
   switch(action.type) {
     case "PLATE_ADDITION_INITIATE":
       return {
