@@ -5,7 +5,8 @@ import cookie from "react-cookie";
 import moment from "moment";
 
 import Body from "../../../common/components/body/body.jsx";
-import { getWalletTransactions } from "../../actions/wallet.js";
+import AmountField from "../../../common/components/fields/amount-field.jsx";
+import { getWalletTransactions, setLoading } from "../../actions/wallet.js";
 
 class MyWallet extends Component {
   constructor(props) {
@@ -18,13 +19,34 @@ class MyWallet extends Component {
     }
     const userId = cookie.load('userId');
     const { dispatch } = this.props;
-    dispatch(getWalletTransactions(5));
+    dispatch(getWalletTransactions(userId));
   }
 
   checkAuthStatus() {
     const userId = cookie.load('userId');
     if(userId) {
       return true;
+    }
+  }
+
+  openModal(e) {
+    e.preventDefault();
+    $(this.refs["add-funds-modal"]).openModal();
+  }
+
+  closeModal(e) {
+    e.preventDefault();
+    $(this.refs["add-funds-modal"]).closeModal();
+  }
+
+  addPaypalFunds() {
+    const { dispatch } = this.props;
+    const isValid = this.refs["amount-field"].validate();
+    console.log("isValid" + isValid);
+    if (isValid) {
+      const amount = this.refs["amount-field"].getValue();
+      dispatch(setLoading(true));
+      this.refs["add-funds-form"].submit();
     }
   }
 
@@ -37,27 +59,72 @@ class MyWallet extends Component {
     ) : null;
   }
 
+  renderModal() {
+    const userId = cookie.load('userId');
+    const { transactionsList } = this.props.wallet;
+    let current_balance = 0;
+    if(transactionsList.length > 0) {
+      current_balance = transactionsList[0].current_balance;
+    }
+    return (
+      <div className="modal modal-fixed-footer add-funds-modal" ref="add-funds-modal">
+        <form method="post" action="/api/add-funds" ref="add-funds-form">
+          <div className="modal-content">
+            <div>
+              <AmountField
+                placeholder="Amount - e.g. 45.00"
+                ref="amount-field"/>
+            </div>
+            <input type="hidden" name="userId" value={userId}/>
+            <input type="hidden" name="currentBalance" value={current_balance}/>
+          </div>
+          <div className="modal-footer">
+            <a href="javascript:void(0)"
+              onClick={this.addPaypalFunds.bind(this)}
+              className="waves-effect waves-green btn btn-flat">
+                Add Funds
+            </a>
+
+            <a href="javascript:void(0)"
+              onClick={this.closeModal.bind(this)}
+              className="modal-action modal-close waves-effect waves-green btn-flat">
+                Cancel
+            </a>
+          </div>
+        </form>
+      </div>
+    );
+  }
+
   renderAddFundsButton() {
     return (
       <div className="add-funds">
-        <a className="waves-effect waves-light  btn-large" href="#">Add Funds</a>
+        <a
+          className="waves-effect waves-light  btn-large"
+          href=""
+          onClick={this.openModal.bind(this)}>
+            Add Funds
+        </a>
       </div>
     );
   }
 
   renderTransaction(transactionData, index) {
-    const { last_paid_amt, paid_date } = transactionData;
-    const paidDate = moment(paid_date).format("MM-DD-YYYY");
+    const { date_time, last_paid_amt, paid_date, add_amt } = transactionData;
+    const paymentDate = paid_date ? paid_date : date_time;
+    const paidDate = moment(paymentDate).format("MM-DD-YYYY");
+    const amt = last_paid_amt || add_amt;
+    const purpose = last_paid_amt ? "Parking Payment" : "Added Funds";
     return (
       <div className="row" key={index}>
         <div className="col s4">
           {paidDate}
         </div>
         <div className="col s5">
-          Parking Payment
+          {purpose}
         </div>
         <div className="col s3">
-          &#36; {last_paid_amt}
+          &#36; {amt}
         </div>
       </div>
     );
@@ -65,7 +132,6 @@ class MyWallet extends Component {
 
   renderTransactions() {
     const { transactionsList } = this.props.wallet;
-    console.log(transactionsList);
     let current_balance = 0;
     if(transactionsList.length > 0) {
       current_balance = transactionsList[0].current_balance;
@@ -94,19 +160,20 @@ class MyWallet extends Component {
     const { loading } = this.props.wallet;
     const content = this.renderTransactions();
     const addFundsBtn = this.renderAddFundsButton();
+    const modalData = this.renderModal();
     return authStatus ? (
       <Body showHeader={true} loading={loading}>
         <div className="my-wallet-root">
           {content}
         </div>
         {addFundsBtn}
+        {modalData}
       </Body>
     ) : null;
   }
 }
 
 const MapStateToProps = (state) => {
-  console.log(state);
   return {
     wallet: state.Wallet
   };

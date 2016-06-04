@@ -5,11 +5,15 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 import express from 'express';
 import path from 'path';
 import http from 'http';
+import fs from 'fs';
 import bodyParser from 'body-parser';
+import session from 'express-session';
 import webpackConfig from './webpack.config';
 
 import jwt from 'jsonwebtoken';
 import jwtConfig from './jwt.config.json';
+
+import paypalRoutes from './server/routes/paypal-routes.js';
 
 var dataUriToBuffer = require('data-uri-to-buffer');
 
@@ -45,11 +49,22 @@ if (isDeveloping) {
   });
 }
 
+//Paypal Configuration
+try {
+  var configJSON = fs.readFileSync(__dirname + "/server/config/config.json");
+  var config = JSON.parse(configJSON.toString());
+} catch(e) {
+  console.error("File config.json not found or is invalid: " + e.message);
+  process.exit(1);
+}
+paypalRoutes.init(config);
+
 //  RESTful API
 const publicPath = path.resolve('./dist/');
 app.use(bodyParser({limit: '500mb'}));
 app.use(bodyParser.json({ type: 'application/json' }))
 app.use(express.static(publicPath));
+app.use(session({secret: '876345'}));
 
 const port = isProduction ? (process.env.PORT || 80) : 3000;
 
@@ -59,24 +74,27 @@ app.get('*', function (request, response){
 })
 
 app.post('/api/login', function(req, res) {
-      const credentials = req.body;
-      if(credentials.user==='admin' && credentials.password==='password'){
+  const credentials = req.body;
+  if(credentials.user==='admin' && credentials.password==='password'){
 
-        const profile = {'user': credentials.user, 'role': 'ADMIN'};
-        const jwtToken = jwt.sign(profile, jwtConfig.secret, {'expiresIn' : 5*60});  // expires in 300 seconds (5 min)
-        res.status(200).json({
-          id_token: jwtToken
-        });
+    const profile = {'user': credentials.user, 'role': 'ADMIN'};
+    const jwtToken = jwt.sign(profile, jwtConfig.secret, {'expiresIn' : 5*60});  // expires in 300 seconds (5 min)
+    res.status(200).json({
+      id_token: jwtToken
+    });
 
-        //res.json({'user': credentials.user, 'role': 'ADMIN'});   
-      }else{
-        res.status(401).json({'message' : 'Invalid user/password'});
-      }
+    //res.json({'user': credentials.user, 'role': 'ADMIN'});   
+  }else{
+    res.status(401).json({'message' : 'Invalid user/password'});
+  }
 });
 
 app.post('/api/logout', function(req, res) {
-    res.status(200).json({'message' : 'User logged out'});   
+  res.status(200).json({'message' : 'User logged out'});   
 });
+
+app.post('/api/add-funds', paypalRoutes.addFunds);
+app.post('/api/save-transaction', paypalRoutes.saveTransaction);
 
 
 

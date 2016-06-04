@@ -67,3 +67,16 @@
     }
   }
 }
+.add-funds-modal {
+  &.modal {
+    height: 200px;
+    margin-top: 80px;
+    width: 500px;
+  }
+  a {
+    text-transform: capitalize;
+    &.btn {
+      color: $white;
+    }
+  }
+}

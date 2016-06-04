@@ -11,6 +11,8 @@ import MyPermitsController from "./components/my-permits/my-permits-controller.j
 import MyTicketsController from "./components/my-tickets/my-tickets-controller.jsx";
 import MyLocationsController from "./components/my-locations/my-locations-controller.jsx";
 import MyWalletController from "./components/my-wallet/my-wallet-controller.jsx";
+import PaymentSuccessful from "./components/payment/payment-successful.jsx";
+import PaymentFailure from "./components/payment/payment-failure.jsx";
 
 
 export default function ClientIndex() {
@@ -27,6 +29,8 @@ export default function ClientIndex() {
       <Route path="my-tickets" component={MyTicketsController}/>
       <Route path="my-locations" component={MyLocationsController}/>
       <Route path="my-wallet" component={MyWalletController}/>
+      <Route path="finalize-payment" component={PaymentSuccessful}/>
+      <Route path="payment-failure" component={PaymentFailure}/>
     </div>
   );
 }
