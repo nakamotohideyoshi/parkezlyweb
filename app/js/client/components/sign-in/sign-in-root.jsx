@@ -34,9 +34,7 @@ class SignIn extends Component {
       cookie.save('sessionId', sessionId, { path: '/' });
       cookie.save('sessionToken', sessionToken, { path: '/' });
 
-      setTimeout(() => {
-        window.location = "/new-vehicle";
-      }, 2000);
+      window.location = "/new-vehicle";
     }
   }
 
