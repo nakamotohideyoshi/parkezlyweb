@@ -168,6 +168,23 @@ export function fetchTownshipParkingPermits(townshipCode) {
   }
 }
 
+export function createTownshipParkingPermits(data) {
+  
+  const URL = 'parking_permits';
+  
+  return function(dispatch) {
+    dispatch(apiTownship.requestData(types.TOWNSHIP_PARKING_PERMITS_POST_REQ));
+    return AXIOS_INSTANCE.post(URL, data)
+    .then(function(response) {
+      dispatch(apiTownship.receiveData(response.data, types.TOWNSHIP_PARKING_PERMITS_POST_SUCCESS));
+      dispatch(reset('parking_permits'));
+    })
+    .catch(function(response){
+      dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_PARKING_PERMITS_POST_ERROR));
+    })
+  }
+}
+
 export function fetchTownshipPermitsList(townshipCode) {
   const URL = 'township_permits';
 

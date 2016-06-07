@@ -1,10 +1,25 @@
 import React from 'react';
-
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
+import { reduxForm, change } from 'redux-form'
 import {fetchLocationsRateList} from '../../../../../actions/actions-township-panel.jsx'
 
 import Spinner from '../../../../../common/components/spinner.jsx';
+
+export const fields = [ 
+'exact_address',
+'township_id',
+'township_code',
+'location_id',
+'location_code',
+'scheme',
+'rate',
+'location_name',
+'location_map',
+'max_period',
+'township_name',
+'scheme_type',
+'permit_type']
 
 class LocationsRate extends React.Component {
 
@@ -105,6 +120,9 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LocationsRate);
+export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
+  form: 'parking-permits',
+  fields
+})(LocationsRate));
 
 

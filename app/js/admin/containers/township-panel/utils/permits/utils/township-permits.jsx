@@ -9,6 +9,7 @@ import {SimpleSelect} from "react-selectize"
 import {
   fetchTownshipPermitsList, 
   createTownshipPermitsList, 
+  fetchTownshipUsers,
   resetLoading} from '../../../../../actions/actions-township-panel.jsx'
 
 import Spinner from '../../../../../common/components/spinner.jsx';
@@ -23,6 +24,7 @@ export const fields = [
 var options = ["apple", "mango", "grapes", "melon", "strawberry"].map(function(fruit){
     return {label: fruit, value: fruit}
 });
+
 class TownshipPermits extends React.Component {
 
   constructor(props) {
@@ -34,11 +36,12 @@ class TownshipPermits extends React.Component {
 
     var dt = datetime.create();
     var formattedDate = dt.format('m-d-Y H:M:S');
-    //this.props.dispatch(change('permit-types', 'date_time', formattedDate));
+    this.props.dispatch(change('permit-types', 'date_time', formattedDate));
   }
 
   componentWillMount() {
     this.props.fetchTownshipPermitsList();
+    this.props.fetchTownshipUsers(this.props.townshipCode);
   }
 
   componentDidUpdate() {
@@ -73,7 +76,7 @@ class TownshipPermits extends React.Component {
   }
 
   renderCreateModal() {
-    $('select').material_select();
+    
     const {
       fields: {
         user_id,
@@ -86,7 +89,17 @@ class TownshipPermits extends React.Component {
       dispatch
     } = this.props
 
-    console.log(this.props.fields.user_id.value)
+
+    var options = this.props.townshipUsersFetched.data.resource;
+
+    var optionsUserName = options.map(function(user){
+        return {label: user.user_name, value: user.user_name}
+    });
+
+    var optionsUserId = options.map(function(user){
+        return {label: user.user_id.toString(), value: user.user_id.toString()}
+    });
+
     return(
       <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
         <div id="modal-township-permit-create" className="modal modal-fixed-footer">
@@ -105,13 +118,12 @@ class TownshipPermits extends React.Component {
                   <label>User Id</label>
                   <div clasName="input-field col s12">
                     <SimpleSelect 
-                    options = {options} 
-                    placeholder = "Select a fruit" 
+                    options = {optionsUserId} 
+                    placeholder = "Select a User Id" 
                     theme = "material" 
-                    style={{marginTop: 6}}
+                    style={{marginTop: 5}}
                     onValueChange = {(value) => {
-                      dispatch(change('township-permits', 'permit_name', value.value));
-                      console.log(value.value)     
+                      dispatch(change('township-permits', 'user_id', value.value)); 
                     }}></SimpleSelect>
                   </div>
                 </div>
@@ -119,19 +131,26 @@ class TownshipPermits extends React.Component {
               <div className="col s6">
                 <div className="form-group">
                   <label>Township Code</label>
-                  <input type="text" placeholder="Township Code"/>
+                  <input type="text" placeholder="Township Code" {...township_code}/>
                 </div>
               </div>
               <div className="col s6">
                 <div className="form-group">
                   <label>Permit Name</label>
-                  <SimpleSelect options = {options} placeholder = "Select a fruit" theme = "material" {...permit_name}></SimpleSelect>
+                  <input type="text" placeholder="Permit Name" {...permit_name}/>
                 </div>
               </div>
               <div className="col s6">
                 <div className="form-group">
-                  <label>Name</label>
-                  <input type="text" placeholder="Name" {...name}/>
+                  <label>User Name</label>
+                  <SimpleSelect 
+                    options = {optionsUserName} 
+                    placeholder = "Select a User Name" 
+                    theme = "material" 
+                    style={{marginTop: 5}}
+                    onValueChange = {(value) => {
+                      dispatch(change('township-permits', 'name', value.value));     
+                    }}></SimpleSelect>
                 </div>
               </div>
             </div>
@@ -154,7 +173,6 @@ class TownshipPermits extends React.Component {
   }
 
   renderPermitsTable() {
-    console.log(this.props.townshipPermitsListFetched)
     return (
       <div className="township-userlist-container">
         <table className="highlight">
@@ -175,7 +193,6 @@ class TownshipPermits extends React.Component {
   }
 
   render() {
-    console.log(this.props.townshipPermitsListFetched)
     return (
       <div className="col s6">
         <nav>
@@ -195,7 +212,7 @@ class TownshipPermits extends React.Component {
               onClick={() => $('#modal-township-permit-create').openModal()}
               style={{margin: 10}}>Add New Township Permit</a>
           </div>
-          {this.renderCreateModal()}
+          {this.props.townshipUsersFetched.isLoading ? <div> </div> : this.renderCreateModal()}
         </div>
       </div>
     );
@@ -205,7 +222,8 @@ class TownshipPermits extends React.Component {
 function mapStateToProps(state) {
   return {
     townshipPermitsListFetched: state.townshipPermitsListFetched,
-    townshipPermitsListCreated: state.townshipPermitsListCreated
+    townshipPermitsListCreated: state.townshipPermitsListCreated,
+    townshipUsersFetched: state.townshipUsersFetched
   }
 }
 
@@ -213,7 +231,8 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     fetchTownshipPermitsList,
     createTownshipPermitsList,
-    resetLoading
+    resetLoading,
+    fetchTownshipUsers
   }, dispatch);
 }
 

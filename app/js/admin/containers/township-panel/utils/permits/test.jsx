@@ -10,13 +10,7 @@ import ParkingPermits from './utils/parking-permits.jsx'
 import TownshipPermits from './utils/township-permits.jsx'
 import LocationsRate from './utils/locations-rate.jsx'
 
-import {Tabbordion, Panel} from 'react-tabbordion'
-
-var classNames = {
-  content: 'traditional-tabs-content',
-  panel: 'traditional-tabs-panel',
-  title: 'traditional-tabs-title'
-}
+import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 
 export default class TownshipPanelPermits extends React.Component {
 
@@ -28,26 +22,29 @@ export default class TownshipPanelPermits extends React.Component {
     return (
       <div className="blue-body marginless-row">
         <Body showHeader={true}>
-          <div style={{marginTop: 40}}>
+          <div  style={{marginTop: 40}}>
             <div className="row marginless-row">
-              <Tabbordion className="traditional-tab col s12 z-depth-2" classNames={classNames} initialIndex={0} name="tabs">
-                <Panel title={<span>Township Permits</span>}>
-                  <div className="row marginless-row" style={{marginTop: 40}}>
+              <Tabs onSelect={this.handleSelect} selectedIndex={0} className="col s12">
+                <TabList>
+                  <Tab>Township</Tab>
+                  <Tab>Parking</Tab>
+                  <Tab>Location</Tab>
+                </TabList>
+                <TabPanel>
+                  <div className="row marginless-row">
                     <PermitTypes className="col s6" townshipCode={this.props.townshipCode} />
                     <TownshipPermits className="col s6" townshipCode={this.props.townshipCode} />
-                  </div>  
-                </Panel>
-                <Panel title={<span>Parking Permits</span>}>
+                  </div>            
+                </TabPanel>
+                <TabPanel>
                   <div className="row marginless-row">
-                    <ParkingPermits townshipCode={this.props.townshipCode} />   
+                    <ParkingPermits townshipCode={this.props.townshipCode} />
                   </div>
-                </Panel>
-                <Panel title={<span>Location Rate</span>}>
-                  <div className="row marginless-row">
-                    <LocationsRate townshipCode={this.props.townshipCode} />
-                  </div>
-                </Panel>
-              </Tabbordion>
+                </TabPanel>
+                <TabPanel>
+                  <LocationsRate townshipCode={this.props.townshipCode} />
+                </TabPanel>
+              </Tabs>          
             </div>
           </div>
         </Body>

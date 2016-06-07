@@ -18,7 +18,9 @@ import {
   townshipFacilitiesCreated,
   townshipPermitRequestsFetched,
   townshipPermitTypesFetched,
+
   townshipParkingPermitsFetched,
+  townshipParkingPermitsCreated,
 
   townshipPermitsListFetched,
   townshipPermitsListCreated,
@@ -27,14 +29,22 @@ import {
   townshipPermitTypesCreated,
 } from './reducer-township-panel.js';
 
-const rootReducer = combineReducers({
+import {townshipSchemeTypesFetched} from './reducer-township-common.js';
+
+// Super Admin Panel
+
+var townshipReducers = { 
   townshipListFetched: townshipListFetched,
   townshipCreate: townshipCreate,
   townshipListEdited: townshipListEdited,
   townshipDetails: townshipDetails,
   townshipDetailsFetched: townshipDetailsFetched,
   uploadedImage: uploadedImage,
+};
 
+// Township Panel
+
+var townshipPanelReducers = { 
   townshipUsersFetched: townshipUsersFetched,
   townshipUsersEdited: townshipUsersEdited,
   townshipUsersCreated: townshipUsersCreated,
@@ -45,15 +55,34 @@ const rootReducer = combineReducers({
 
   townshipPermitRequestsFetched: townshipPermitRequestsFetched,
   townshipPermitTypesFetched: townshipPermitTypesFetched,
+
   townshipParkingPermitsFetched: townshipParkingPermitsFetched,
+  townshipParkingPermitsCreated: townshipParkingPermitsCreated,
 
   townshipPermitsListFetched: townshipPermitsListFetched,
   townshipPermitsListCreated: townshipPermitsListCreated,
 
   townshipLocationsRateFetched: townshipLocationsRateFetched,
-  townshipPermitTypesCreated: townshipPermitTypesCreated,
+  townshipPermitTypesCreated: townshipPermitTypesCreated
+};
 
-  form: formReducer
-});
+// Common / Shared between township stuff.
+
+var townshipCommonReducers = { 
+  townshipSchemeTypesFetched: townshipSchemeTypesFetched
+};
+
+var reduxFormReducer = { 
+  form: formReducer 
+};
+
+var combinedReducerObjects = Object.assign(
+  townshipReducers, 
+  townshipPanelReducers, 
+  townshipCommonReducers,
+  reduxFormReducer
+);
+
+const rootReducer = combineReducers(combinedReducerObjects);
 
 export default rootReducer;

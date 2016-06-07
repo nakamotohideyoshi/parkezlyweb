@@ -12,6 +12,8 @@ import {
 
 import Spinner from '../../../../../common/components/spinner.jsx';
 
+const potentialColors = [ 'Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Indigo', 'Violet' ]
+
 export const fields = [ 
   'permit_type', 'date_time']
 
