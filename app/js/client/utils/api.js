@@ -9,4 +9,8 @@ export const APIConfig = {
 export const paypalAPIConfig = {
   //Replace this later with actual
   baseURL: "http://localhost:3000/api"
-}
+};
+
+export const weatherAPIConfig = {
+  baseURL: "http://api.openweathermap.org/data/2.5/weather"
+};
