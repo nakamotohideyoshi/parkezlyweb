@@ -1,23 +1,25 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from "redux";
+import { WeatherLocationError, GenericError } from "../constants/texts.js";
 
 const initialState = {
   loading: false,
-  weatherData: [],
+  weatherData: null,
   errorMessage: ""
 };
 
 const Weather = (state = initialState, action) => {
+  console.log(action);
   switch(action.type) {
-    case "FETCH_TRANSACTION_INITIATE":
+    case "FETCH_WEATHER_INITIATE":
       return {
         ...state,
         loading: true
       }
-    case "FETCH_TRANSACTION_SUCCESS":
+    case "FETCH_WEATHER_SUCCESS":
       return {
         ...state,
         loading : false,
-        transactionsList: action.data
+        weatherData: action.data
       };
     case "FETCH_TRANSACTION_FAIL":
       return {
@@ -25,10 +27,17 @@ const Weather = (state = initialState, action) => {
         loading : false,
         errorMessage: action.errorMessage
       }
-    case "SET_ADDING_FUNDS":
+    case "LOCATION_NOT_FOUND":
       return {
         ...state,
-        loading: action.status
+        loading: false,
+        errorMessage: WeatherLocationError
+      }
+    case "FETCH_WEATHER_FAIL":
+      return {
+        ...state,
+        loading: false,
+        errorMessage: GenericError
       }
     default:
       return state;

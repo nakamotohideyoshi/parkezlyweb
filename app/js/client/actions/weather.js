@@ -2,7 +2,8 @@ import * as WeatherAPI from "../api/weather.js";
 import {
   FETCH_WEATHER_INITIATE,
   FETCH_WEATHER_SUCCESS,
-  FETCH_WEATHER_FAIL
+  FETCH_WEATHER_FAIL,
+  LOCATION_NOT_FOUND
 } from "../constants/actions.js";
 
 const initiateWeatherFetch = () => {
@@ -18,10 +19,15 @@ const receivedWeather = (data) => {
   };
 };
 
-const fetchWeatherFailed = (error) => {
+const locationNotFound = () => {
   return {
-    type: FETCH_WEATHER_FAIL,
-    error
+    type: LOCATION_NOT_FOUND
+  };
+}
+
+const fetchWeatherFailed = () => {
+  return {
+    type: FETCH_WEATHER_FAIL
   };
 };
 
@@ -30,10 +36,16 @@ export const getWeather = (lat, lon) => {
     dispatch(initiateWeatherFetch());
     return WeatherAPI.getWeather(lat, lon)
       .then((response) => {
-        dispatch(receivedWeather(response.data.resource));
+        const { data } = response;
+        if(data && data.cod == "404") {
+          dispatch(locationNotFound());
+        } else {
+          dispatch(receivedWeather(data));
+        }
+        console.log(response);
       })
       .catch((response) => {
-        dispatch(fetchWeatherFailed(response));
+        dispatch(fetchWeatherFailed());
       });
   };
 };
