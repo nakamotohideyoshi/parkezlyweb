@@ -10,7 +10,6 @@ import { getVehicles } from "../../actions/vehicle.js";
 class VehicleList extends Component {
   constructor(props) {
     super(props);
-    this.editPlate = this.editPlate.bind(this);
   }
 
   componentWillMount() {
@@ -27,10 +26,6 @@ class VehicleList extends Component {
     if(userId) {
       return true;
     }
-  }
-
-  editPlate(plateData) {
-    console.log(plateData);
   }
 
   renderNotice() {

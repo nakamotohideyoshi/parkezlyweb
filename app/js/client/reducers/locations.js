@@ -7,7 +7,6 @@ const initialState = {
 };
 
 const Locations = (state = initialState, action) => {
-  console.log(action);
   switch(action.type) {
     case "FETCH_LOCATION_INITIATE":
       return {

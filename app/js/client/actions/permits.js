@@ -27,7 +27,6 @@ export const getPermits = (user_id) => {
     dispatch(initiateFetch());
     return PermitsAPI.getPermits(user_id)
       .then((response) => {
-        console.log(response);
         const { data } = response;
         dispatch(permitsRetrieved(data.resource));
       })
@@ -55,7 +54,6 @@ export const getLocations = () => {
   return dispatch => {
     return PermitsAPI.getLocations()
       .then((response) => {
-        console.log(response);
         const { data } = response;
         const { resource } = data;
         let locationObj = {};
@@ -67,7 +65,6 @@ export const getLocations = () => {
         }
       })
       .catch((response) => {
-        console.log(response);
         dispatch(locationRetrievalFailed());
       });
   }
