@@ -11,7 +11,6 @@ const initialState = {
 };
 
 const User = (state = {}, action) => {
-  console.log(action);
   switch(action.type) {
     case "AUTH_INITIATE":
       return {

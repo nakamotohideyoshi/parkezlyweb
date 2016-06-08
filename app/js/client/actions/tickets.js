@@ -27,7 +27,6 @@ export const getTickets = (user_id) => {
     dispatch(initiateFetch());
     return TicketsAPI.getTickets(user_id)
       .then((response) => {
-        console.log(response);
         const { data } = response;
         dispatch(ticketsRetrieved(data.resource));
       })

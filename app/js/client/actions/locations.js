@@ -26,11 +26,9 @@ export const getLocations = (position) => {
     dispatch(initiateLocationFetch());
     return LocationAPI.getLocations(position)
       .then((response) => {
-        console.log(response);
         dispatch(receivedLocations(response.data.resource));
       })
       .catch((response) => {
-        console.log(response);
         dispatch(fetchLocationsFailed(response));
       });
   };

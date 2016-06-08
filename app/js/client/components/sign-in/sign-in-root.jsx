@@ -34,9 +34,7 @@ class SignIn extends Component {
       cookie.save('sessionId', sessionId, { path: '/' });
       cookie.save('sessionToken', sessionToken, { path: '/' });
 
-      setTimeout(() => {
-        window.location = "/new-vehicle";
-      }, 2000);
+      window.location = "/new-vehicle";
     }
   }
 
@@ -186,9 +184,6 @@ class SignIn extends Component {
       <Body showHeader={true} loading={loading}>
         <div className="sign-in-root">
           {signInForm}
-        </div>
-        <div className="blur">
-          <img src="//c5.staticflickr.com/6/5590/15029804212_0d5c15bc16_z.jpg" className="bg"/>
         </div>
       </Body>
     ) : null;

@@ -8,7 +8,6 @@ const initialState = {
 };
 
 const Permits = (state = initialState, action) => {
-  console.log(action);
   switch(action.type) {
     case "FETCH_PERMITS_INITIATE":
       return {

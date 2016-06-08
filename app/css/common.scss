@@ -181,6 +181,26 @@ a {
   background-image: url('../images/menu/back-icon@3x.png');
   @extend .menu-icon;
 }
+.directions-icon {
+  background-image: url('../images/menu/directions@3x.png');
+  @extend .menu-icon;
+}
+.traffic-icon {
+  background-image: url('../images/menu/traffic@3x.png');
+  @extend .menu-icon;
+}
+.transit-icon {
+  background-image: url('../images/menu/transit@3x.png');
+  @extend .menu-icon;
+}
+.nearby-icon {
+  background-image: url('../images/menu/nearby@3x.png');
+  @extend .menu-icon;
+}
+.weather-icon {
+  background-image: url('../images/menu/weather@3x.png');
+  @extend .menu-icon;
+}
 
 
 /* Footer Icon Classes */
@@ -272,7 +292,7 @@ a {
 
 /* Spinner */
 .spinner {
-  z-index: 999;
+  z-index: 9999;
   position: fixed;
   top: 0;
   left: 0;

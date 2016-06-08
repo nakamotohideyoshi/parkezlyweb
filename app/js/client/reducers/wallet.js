@@ -7,7 +7,6 @@ const initialState = {
 };
 
 const Wallet = (state = initialState, action) => {
-  console.log(action);
   switch(action.type) {
     case "FETCH_TRANSACTION_INITIATE":
       return {
@@ -25,6 +24,11 @@ const Wallet = (state = initialState, action) => {
         ...state,
         loading : false,
         errorMessage: action.errorMessage
+      }
+    case "SET_ADDING_FUNDS":
+      return {
+        ...state,
+        loading: action.status
       }
     default:
       return state;
