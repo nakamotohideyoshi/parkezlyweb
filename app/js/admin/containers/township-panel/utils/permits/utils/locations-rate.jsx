@@ -5,10 +5,18 @@ import { reduxForm, change } from 'redux-form'
 
 import {SimpleSelect} from 'react-selectize'
 
-import {fetchLocationsRateList} from '../../../../../actions/actions-township-panel.jsx'
+import {
+        fetchLocationsRateList, 
+        fetchTownshipFacilities,
+        fetchTownshipPermitTypes,
+        createTownshipLocationsRate,
+        resetLoading
+      } from '../../../../../actions/actions-township-panel.jsx'
 import {fetchTownshipSchemeTypes} from '../../../../../actions/actions-township-common.jsx'
+import {fetchTownshipList} from '../../../../../actions/actions-township.js';
 
 import Spinner from '../../../../../common/components/spinner.jsx';
+import {optionsSelectize} from '../../../../../common/components/options-selectize.js';
 
 export const fields = [ 
 'exact_address',
@@ -29,17 +37,38 @@ class LocationsRate extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSuccess = this.handleSuccess.bind(this);
   }
 
   componentWillMount() {
     this.props.fetchLocationsRateList();
     this.props.fetchTownshipSchemeTypes();
+    this.props.fetchTownshipList();
+    this.props.fetchTownshipPermitTypes();
+    this.props.fetchTownshipFacilities(this.props.townshipCode);
+    this.props.dispatch(change('locations-rate', 'township_code', this.props.townshipCode));
   }
 
+
+  componentDidUpdate() {
+    if (this.props.townshipLocationsRateCreated.isLoading) {
+    } else if (!this.props.townshipLocationsRateCreated.isLoading) {
+      this.handleSuccess();
+    }
+  };
+
+  handleSuccess(){
+    this.props.resetLoading();
+    $('#modal-locations-rate-create').closeModal();
+    this.props.fetchLocationsRateList();
+  }
 
   handleSubmit(data) {
-
+    this.props.createTownshipLocationsRate(data);
   }
+
 
   renderCreateModal() {
      const {
@@ -63,9 +92,17 @@ class LocationsRate extends React.Component {
       dispatch
     } = this.props
 
-    var optionsSchemeTypes = this.props.townshipSchemeTypesFetched.data.resource.map(function(data){
-        return {id: data.id, label: data.scheme_type, value: data.scheme_type}
-    });
+    var optionsSchemeTypes = optionsSelectize(this.props.townshipSchemeTypesFetched.data.resource, 'scheme_type');
+
+    var optionsExactAddress = optionsSelectize(this.props.townshipListFetched.data.resource, 'address');
+
+    var optionsTownshipName = optionsSelectize(this.props.townshipListFetched.data.resource, 'lot_manager');
+
+    var optionsLocationCode = optionsSelectize(this.props.townshipFacilitiesFetched.data.resource, 'location_code');
+
+    var optionsLocationName = optionsSelectize(this.props.townshipFacilitiesFetched.data.resource, 'location_name');
+
+    var optionsPermitTypes = optionsSelectize(this.props.townshipPermitTypesFetched.data.resource, 'permit_type');
 
     return (
        <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
@@ -81,7 +118,7 @@ class LocationsRate extends React.Component {
 
             <div className="row">
 
-              <div className="col s6">
+              <div className="col s6 admin-form-input">
                 <div className="form-group">
                   <label>Scheme Type</label>
                   <div clasName="input-field col s12">
@@ -91,8 +128,132 @@ class LocationsRate extends React.Component {
                     theme = "material" 
                     style={{marginTop: 5}}
                     onValueChange = {(value) => {
-                      dispatch(change('parking-permits', 'scheme_type', value.value)); 
+                      dispatch(change('locations-rate', 'scheme_type', value.value)); 
                     }}></SimpleSelect>
+                  </div>
+                </div>
+              </div>
+
+              <div className="col s6 admin-form-input">
+                <div className="form-group">
+                  <label>Permit Type</label>
+                  <div clasName="input-field col s12">
+                    <SimpleSelect 
+                    options = {optionsPermitTypes} 
+                    placeholder = "Select Permit Type" 
+                    theme = "material" 
+                    style={{marginTop: 5}}
+                    onValueChange = {(value) => {
+                      dispatch(change('parking-permits', 'permit_type', value.value)); 
+                    }}></SimpleSelect>
+                  </div>
+                </div>
+              </div>
+
+              <div className="col s6 admin-form-input">
+                <div className="form-group">
+                  <label>Location Code</label>
+                  <div clasName="input-field col s12">
+                    <SimpleSelect 
+                    options = {optionsLocationCode} 
+                    placeholder = "Select Location Code" 
+                    theme = "material" 
+                    style={{marginTop: 5}}
+                    onValueChange = {(value) => {
+                      dispatch(change('locations-rate', 'location_code', value.value)); 
+                    }}></SimpleSelect>
+                  </div>
+                </div>
+              </div>
+
+              <div className="col s6 admin-form-input">
+                <div className="form-group">
+                  <label>Location Name</label>
+                  <div clasName="input-field col s12">
+                    <SimpleSelect 
+                    options = {optionsLocationName} 
+                    placeholder = "Select Name" 
+                    theme = "material" 
+                    style={{marginTop: 5}}
+                    onValueChange = {(value) => {
+                      dispatch(change('locations-rate', 'location_name', value.value)); 
+                    }}></SimpleSelect>
+                  </div>
+                </div>
+              </div>
+
+              <div className="col s6 admin-form-input">
+                <div className="form-group">
+                  <label>Exact Address</label>
+                  <div clasName="input-field col s12">
+                    <SimpleSelect 
+                    options = {optionsExactAddress} 
+                    placeholder = "Select Exact Address" 
+                    theme = "material" 
+                    style={{marginTop: 5}}
+                    onValueChange = {(value) => {
+                      dispatch(change('locations-rate', 'exact_address', value.value)); 
+                    }}></SimpleSelect>
+                  </div>
+                </div>
+              </div>
+
+              <div className="col s6 admin-form-input">
+                <div className="form-group">
+                  <label>Township Name</label>
+                  <div clasName="input-field col s12">
+                    <SimpleSelect 
+                    options = {optionsTownshipName} 
+                    placeholder = "Select Township Name" 
+                    theme = "material" 
+                    style={{marginTop: 5}}
+                    onValueChange = {(value) => {
+                      dispatch(change('locations-rate', 'township_name', value.value)); 
+                    }}></SimpleSelect>
+                  </div>
+                </div>
+              </div>
+
+              <div className="col s6 admin-form-input">
+                <div className="form-group">
+                  <label>Max Period</label>
+                  <input type="text" placeholder="Max Period" {...max_period}/>
+                </div>
+              </div>
+
+              <div className="col s6 admin-form-input">
+                <div className="form-group">
+                  <label>Location ID</label>
+                  <input type="text" placeholder="Location ID" {...location_id}/>
+                </div>
+              </div>
+
+              <div className="col s6 admin-form-input">
+                <div className="form-group">
+                  <label>Scheme</label>
+                  <input type="text" placeholder="Scheme" {...scheme}/>
+                </div>
+              </div>
+
+              <div className="col s6 admin-form-input">
+                <div className="form-group">
+                  <label>Location Map (lat / long)</label>
+                  <input type="text" placeholder="Location Map (lat / long)" {...location_map}/>
+                </div>
+              </div>
+
+              <div className="col s6 admin-form-input">
+                <div className="form-group">
+                  <label>Rate</label>
+                  <div className="row marginless-row">
+                    <div className="col s1 left-align">
+                      <p>$</p>
+                    </div>
+                    <div className="col s11">
+                      <input style={{maxWidth: 250, minWidth: 250}} 
+                      id="icon_telephone" type="number" step="any" placeholder="Cost" onChange={(value) => {
+                        dispatch(change('locations-rate', 'rate', '$' + value.target.value.toString())); }}/>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -106,7 +267,7 @@ class LocationsRate extends React.Component {
                 <button 
                 type="submit" 
                 disabled={submitting} 
-                className="waves-effect waves-light btn">Create Permit Type</button>
+                className="waves-effect waves-light btn">Create Location Rate</button>
               </div>
             </div>
           </div>
@@ -168,6 +329,8 @@ class LocationsRate extends React.Component {
   }
 
   render() {
+    console.log('test')
+    console.log(this.props.townshipLocationsRateCreated)
     return (
       <div style={{marginTop: 40, marginBottom: 40}} className="col s12">
         <nav>
@@ -188,7 +351,10 @@ class LocationsRate extends React.Component {
               style={{margin: 10}}>Add New Location Rate</a>
           </div>
         </div>
-        {this.props.townshipSchemeTypesFetched.isLoading ? 
+        { this.props.townshipSchemeTypesFetched.isLoading ||
+          this.props.townshipListFetched.isLoading ||
+          this.props.townshipPermitTypesFetched.isLoading ||
+          this.props.townshipFacilitiesFetched.isLoading ? 
             <div> </div> : this.renderCreateModal()}
       </div>
     );
@@ -199,18 +365,27 @@ function mapStateToProps(state) {
   return {
     townshipLocationsRateFetched: state.townshipLocationsRateFetched,
     townshipSchemeTypesFetched: state.townshipSchemeTypesFetched,
+    townshipListFetched: state.townshipListFetched,
+    townshipFacilitiesFetched: state.townshipFacilitiesFetched,
+    townshipPermitTypesFetched: state.townshipPermitTypesFetched,
+    townshipLocationsRateCreated: state.townshipLocationsRateCreated,
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     fetchLocationsRateList,
-    fetchTownshipSchemeTypes
+    fetchTownshipSchemeTypes,
+    fetchTownshipList,
+    fetchTownshipFacilities,
+    fetchTownshipPermitTypes,
+    createTownshipLocationsRate,
+    resetLoading
   }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-  form: 'parking-permits',
+  form: 'locations-rate',
   fields
 })(LocationsRate));
 

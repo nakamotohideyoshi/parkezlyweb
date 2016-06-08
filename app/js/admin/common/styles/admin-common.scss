@@ -66,7 +66,16 @@
 
 .township-userlist-container {
   min-height: 0px;
-  max-height: 300px !important;
+  max-height: 500px !important;
+  overflow-y: auto !important;
+  cursor: pointer;
+  background-color: #FFF;
+
+}
+
+.township-permitrequests-container {
+  min-height: 0px;
+  max-height: 600px !important;
   overflow-y: auto !important;
   cursor: pointer;
   background-color: #FFF;
@@ -132,9 +141,13 @@
   background-color: #EAB41C;
 }
 
-.btn-green:hover {
+.btn-red {
+  background-color: #D9534F;
+}
+
+.btn-red:hover {
   color: #FFF;
-  background-color: #2DB63D;
+  background-color: #D9534F;
 }
 
 .admin-tile {
@@ -291,8 +304,8 @@ input[type=tel],
 input[type=number], 
 input[type=search], 
 textarea.materialize-textarea {
-  max-width: 300px;
-  min-width: 300px;
+  max-width: 250px;
+  min-width: 250px;
   display: block;
 }
 

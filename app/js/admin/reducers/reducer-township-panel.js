@@ -105,6 +105,21 @@ export function townshipPermitRequestsFetched(state = initialState, action) {
   }
 };
 
+export function townshipPermitRequestsEdited(state = initialState, action) {
+  switch(action.type) {
+    case types.TOWNSHIP_PERMIT_REQUESTS_PUT_ERROR:
+      return Object.assign({}, state, {isLoading: false, data: action.data, error: true});
+    case types.TOWNSHIP_PERMIT_REQUESTS_PUT_SUCCESS:
+      return Object.assign({}, state, {isLoading: false, data: action.data, error: false });
+    case types.TOWNSHIP_PERMIT_REQUESTS_PUT_REQ:
+      return Object.assign({}, state, {isLoading: true, error: false });
+    case types.RESET_LOADING:
+      return Object.assign({}, state, initialState);
+    default:
+      return state;
+  }
+}
+
 export function townshipPermitTypesFetched(state = initialState, action) {
   switch(action.type) {
     case types.TOWNSHIP_PERMIT_TYPES_GET_ERROR:
@@ -197,6 +212,21 @@ export function townshipLocationsRateFetched(state = initialState, action) {
       return Object.assign({}, state, {isLoading: false, data: action.data, error: false });
     case types.TOWNSHIP_LOCATIONS_RATE_GET_REQ:
       return Object.assign({}, state, {isLoading: true, error: false });
+    default:
+      return state;
+  }
+};
+
+export function townshipLocationsRateCreated(state = initialState, action) {
+  switch(action.type) {
+    case types.TOWNSHIP_LOCATIONS_RATE_POST_ERROR:
+      return Object.assign({}, state, {isLoading: false, data: action.data, error: true});
+    case types.TOWNSHIP_LOCATIONS_RATE_POST_SUCCESS:
+      return Object.assign({}, state, {isLoading: false, data: action.data, error: false });
+    case types.TOWNSHIP_LOCATIONS_RATE_POST_REQ:
+      return Object.assign({}, state, {isLoading: true, error: false });
+    case types.RESET_LOADING:
+      return Object.assign({}, state, initialState);
     default:
       return state;
   }

@@ -3,7 +3,6 @@ import { reduxForm, change } from 'redux-form'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import datetime from 'node-datetime';
-import ObjectSelect from '../../../../../common/components/object-select.jsx'
 import {SimpleSelect} from "react-selectize"
 
 import {
@@ -13,6 +12,7 @@ import {
   resetLoading} from '../../../../../actions/actions-township-panel.jsx'
 
 import Spinner from '../../../../../common/components/spinner.jsx';
+import {optionsSelectize} from '../../../../../common/components/options-selectize.js';
 
 
 export const fields = [ 
@@ -42,6 +42,7 @@ class TownshipPermits extends React.Component {
   componentWillMount() {
     this.props.fetchTownshipPermitsList();
     this.props.fetchTownshipUsers(this.props.townshipCode);
+    this.props.dispatch(change('township-permits', 'township_code', this.props.townshipCode));
   }
 
   componentDidUpdate() {
@@ -89,16 +90,11 @@ class TownshipPermits extends React.Component {
       dispatch
     } = this.props
 
-    console.log(this.props.townshipUsersFetched.data.resource)
     var options = this.props.townshipUsersFetched.data.resource;
 
-    var optionsUserName = options.map(function(user){
-        return {label: user.user_name, value: user.user_name}
-    });
+    var optionsUserName = optionsSelectize(options, 'user_name');
 
-    var optionsUserId = options.map(function(user){
-        return {label: user.user_id.toString(), value: user.user_id.toString()}
-    });
+    var optionsUserId = optionsSelectize(options, 'user_id');
 
     return(
       <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
@@ -139,12 +135,6 @@ class TownshipPermits extends React.Component {
                     onValueChange = {(value) => {
                       dispatch(change('township-permits', 'name', value.value));     
                     }}></SimpleSelect>
-                </div>
-              </div>
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Township Code</label>
-                  <input type="text" placeholder="Township Code" {...township_code}/>
                 </div>
               </div>
               <div className="col s6 admin-form-input">

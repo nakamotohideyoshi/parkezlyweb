@@ -20,12 +20,16 @@ import {
   townshipPermitTypesFetched,
 
   townshipParkingPermitsFetched,
+  townshipPermitRequestsEdited,
+  
   townshipParkingPermitsCreated,
 
   townshipPermitsListFetched,
   townshipPermitsListCreated,
 
   townshipLocationsRateFetched,
+  townshipLocationsRateCreated,
+
   townshipPermitTypesCreated,
 } from './reducer-township-panel.js';
 
@@ -54,6 +58,8 @@ var townshipPanelReducers = {
   townshipFacilitiesCreated: townshipFacilitiesCreated,
 
   townshipPermitRequestsFetched: townshipPermitRequestsFetched,
+  townshipPermitRequestsEdited: townshipPermitRequestsEdited,
+
   townshipPermitTypesFetched: townshipPermitTypesFetched,
 
   townshipParkingPermitsFetched: townshipParkingPermitsFetched,
@@ -63,6 +69,8 @@ var townshipPanelReducers = {
   townshipPermitsListCreated: townshipPermitsListCreated,
 
   townshipLocationsRateFetched: townshipLocationsRateFetched,
+  townshipLocationsRateCreated: townshipLocationsRateCreated,
+  
   townshipPermitTypesCreated: townshipPermitTypesCreated
 };
 

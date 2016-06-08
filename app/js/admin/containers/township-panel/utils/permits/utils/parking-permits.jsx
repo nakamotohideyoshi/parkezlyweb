@@ -16,8 +16,11 @@ import {
   resetLoading} from '../../../../../actions/actions-township-panel.jsx'
 
 import {fetchTownshipSchemeTypes} from '../../../../../actions/actions-township-common.jsx'
+import {fetchTownshipList} from '../../../../../actions/actions-township.js';
 
 import Spinner from '../../../../../common/components/spinner.jsx'
+import {optionsSelectize} from '../../../../../common/components/options-selectize.js';
+
 
 export const fields = [ 
 'township_code',
@@ -47,6 +50,7 @@ class ParkingPermits extends React.Component {
     this.props.fetchTownshipSchemeTypes();
     this.props.fetchTownshipFacilities(this.props.townshipCode);
     this.props.fetchTownshipPermitsList();
+    this.props.fetchTownshipList();
     this.props.dispatch(change('parking-permits', 'township_code', this.props.townshipCode));
     this.props.dispatch(change('parking-permits', 'township_name', this.props.townshipCode));
 
@@ -92,21 +96,15 @@ class ParkingPermits extends React.Component {
       dispatch
     } = this.props
 
-    var optionsPermitTypes = this.props.townshipPermitTypesFetched.data.resource.map(function(data){
-        return {id: data.id, label: data.permit_type, value: data.permit_type}
-    });
+    var optionsPermitTypes = optionsSelectize(this.props.townshipPermitTypesFetched.data.resource, 'permit_type');
 
-    var optionsSchemeTypes = this.props.townshipSchemeTypesFetched.data.resource.map(function(data){
-        return {id: data.id, label: data.scheme_type, value: data.scheme_type}
-    });
+    var optionsSchemeTypes = optionsSelectize(this.props.townshipSchemeTypesFetched.data.resource, 'scheme_type');
 
-    var optionsPermitsList = this.props.townshipPermitsListFetched.data.resource.map(function(data){
-        return {id: data.id, label: data.permit_name, value: data.permit_name}
-    });
+    var optionsPermitsList = optionsSelectize(this.props.townshipPermitsListFetched.data.resource, 'permit_name');
 
-    var optionsLocationName = this.props.townshipFacilitiesFetched.data.resource.map(function(data){
-      return {id: data.id, label: data.location_name, value: data.location_name}
-    }); 
+    var optionsLocationName = optionsSelectize(this.props.townshipFacilitiesFetched.data.resource, 'location_name');
+
+    var optionsLocationAddress = optionsSelectize(this.props.townshipListFetched.data.resource, 'address');
 
     var optionsActive = [{label: 'YES', value: 'YES'}, {label: 'NO', value: 'NO'}];
 
@@ -183,7 +181,21 @@ class ParkingPermits extends React.Component {
                   </div>
                 </div>
               </div>
-
+              <div className="col s6 admin-form-input">
+                <div className="form-group">
+                  <label>Location Address</label>
+                  <div clasName="input-field col s12">
+                    <SimpleSelect 
+                    options = {optionsLocationAddress} 
+                    placeholder = "LocationAddress" 
+                    theme = "material" 
+                    style={{marginTop: 5}}
+                    onValueChange = {(value) => {
+                      dispatch(change('parking-permits', 'location_address', value.value)); 
+                    }}></SimpleSelect>
+                  </div>
+                </div>
+              </div>
               <div className="col s6 admin-form-input">
                 <div className="form-group">
                   <label>Active</label>
@@ -212,12 +224,6 @@ class ParkingPermits extends React.Component {
                         dispatch(change('parking-permits', 'cost', '$' + value.target.value.toString())); }}/>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Location Address</label>
-                  <input type="text" placeholder="Location Address" {...location_address}/>
                 </div>
               </div>
             </div>
@@ -307,7 +313,8 @@ class ParkingPermits extends React.Component {
            {this.props.townshipPermitTypesFetched.isLoading ||
             this.props.townshipSchemeTypesFetched.isLoading || 
             this.props.townshipFacilitiesFetched.isLoading ||
-            this.props.townshipPermitsListFetched.isLoading ? 
+            this.props.townshipPermitsListFetched.isLoading ||
+            this.props.townshipListFetched.isLoading ? 
             <div> </div> : this.renderCreateModal()}
         </div>
       </div>
@@ -324,6 +331,7 @@ function mapStateToProps(state) {
     townshipParkingPermitsCreated: state.townshipParkingPermitsCreated,
     townshipFacilitiesFetched: state.townshipFacilitiesFetched,
     townshipPermitsListFetched: state.townshipPermitsListFetched,
+    townshipListFetched: state.townshipListFetched
   }
 }
 
@@ -336,6 +344,7 @@ function mapDispatchToProps(dispatch) {
     fetchTownshipSchemeTypes,
     fetchTownshipFacilities,
     fetchTownshipPermitsList,
+    fetchTownshipList,
     resetLoading
   }, dispatch);
 }

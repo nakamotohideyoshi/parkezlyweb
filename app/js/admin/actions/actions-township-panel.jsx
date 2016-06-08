@@ -121,6 +121,23 @@ export function fetchTownshipPermitRequests(townshipCode) {
   }
 }
 
+export function editTownshipPermitRequests(data, id) {
+  const URL = 'permit_subscription?ids=' + id;
+
+  return function(dispatch) {
+    dispatch(apiTownship.requestData(types.TOWNSHIP_PERMIT_REQUESTS_PUT_REQ));
+    return AXIOS_INSTANCE.put(URL, data)
+    .then(function(response) {
+      dispatch(apiTownship.receiveData(response.data, types.TOWNSHIP_PERMIT_REQUESTS_PUT_SUCCESS));
+      dispatch(reset('permit-requests'));
+    })
+    .catch(function(response){
+      dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_PERMIT_REQUESTS_PUT_ERROR));
+      console.log(response);
+    })
+  }
+}
+
 export function fetchTownshipPermitTypes(townshipCode) {
   const URL = 'permit_type';
 
@@ -232,6 +249,24 @@ export function fetchLocationsRateList(townshipCode) {
     })
   }
 }
+
+export function createTownshipLocationsRate(data) {
+  
+  const URL = 'locations_rate';
+  
+  return function(dispatch) {
+    dispatch(apiTownship.requestData(types.TOWNSHIP_LOCATIONS_RATE_POST_REQ));
+    return AXIOS_INSTANCE.post(URL, data)
+    .then(function(response) {
+      dispatch(apiTownship.receiveData(response.data, types.TOWNSHIP_LOCATIONS_RATE_POST_SUCCESS));
+      dispatch(reset('locations-rate'));
+    })
+    .catch(function(response){
+      dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_LOCATIONS_RATE_POST_ERROR));
+    })
+  }
+}
+
 
 export function resetLoading() {
   return {
