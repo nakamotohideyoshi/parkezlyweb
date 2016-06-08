@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from "react";
 import classNames from "classnames";
 
-import { emailRegEx } from "../../constants/regex.js";
+import { amountRegEx } from "../../constants/regex.js";
 import * as Texts from "../../constants/texts.js"
 
-class EmailField extends Component {
+class AmountField extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,26 +14,26 @@ class EmailField extends Component {
   }
 
   getValue() {
-    return this.refs.email.value;
+    return this.refs.amount.value;
   }
 
   validate() {
-    const email = this.getValue();
+    const amount = this.getValue();
 
-    if(!email) {
+    if( !amount ) {
       this.setState({
         hasError: true,
         errorType: "EMPTY"
       });
-      return;
+      return false;
     }
 
-    if(!emailRegEx.test(email)) {
+    if(!amountRegEx.test(amount)) {
       this.setState({
         hasError: true,
         errorType: "INVALID"
       });
-      return;
+      return false;
     }
     
     return true;
@@ -55,18 +55,27 @@ class EmailField extends Component {
       },
       className
     );
+    const inputStyle = {
+      width: '70%'
+    };
     let errorText = "";
     if(hasError) {
-      errorText = errorType === "EMPTY" ? Texts.EmptyEmail : Texts.InvalidEmail;
+      errorText = errorType === "EMPTY" ? Texts.EmptyAmount : Texts.InvalidAmount;
     }
 
     return (
       <div className={parentClassNames}>
-        <input
-          type="email"
-          ref="email"
-          placeholder={placeholder}
-          {...otherProps}/>
+        <div>
+          <span>$ </span>
+          <input
+            type="text"
+            ref="amount"
+            name="amount"
+            autosuggest="false"
+            placeholder={placeholder}
+            style={inputStyle}
+            {...otherProps}/>
+        </div>
         <div className="error-msg row">
           <i className="material-icons tiny">error</i> {errorText}
         </div>
@@ -75,9 +84,9 @@ class EmailField extends Component {
   }
 }
 
-EmailField.PropTypes = {
+AmountField.PropTypes = {
   placeholder: PropTypes.string,
   className: PropTypes.string
 };
 
-export default EmailField;
+export default AmountField;

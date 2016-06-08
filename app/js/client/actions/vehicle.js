@@ -32,14 +32,12 @@ export const addPlate = (plateInfo) => {
     dispatch(initiateAddition());
     return VehicleAPI.addPlate(plateInfo)
       .then((response) => {
-        console.log(response);
         const data = response.data;
         dispatch(plateAdded({
           plateId: data.resource[0].id
         }));
       })
       .catch((response) => {
-        console.log(response);
         dispatch(plateAdditionFailed({
           errorCode: "503",
           errorMessage: GenericError

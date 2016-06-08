@@ -5,7 +5,12 @@ import BackButton from "./utils/back-button.jsx";
 import Logo from "./utils/logo.jsx";
 import Menu from "./utils/menu.jsx";
 import { setCurrentMenu, toggleMenu  } from "./header.js";
-import { mainGuestLinks, mainUserLinks, myAccountMenuLinks  } from "./utils/menu-data.js";
+import {
+  mainGuestLinks,
+  mainUserLinks,
+  myAccountMenuLinks,
+  driveEzlyMenuLinks
+} from "./utils/menu-data.js";
 
 class Header extends Component {
   constructor(props){
@@ -27,6 +32,8 @@ class Header extends Component {
         break;
       case "myAccountMenuLinks":
         currentMenu = myAccountMenuLinks;
+      case "driveEzlyMenuLinks":
+        currentMenu = driveEzlyMenuLinks;
         break;
     }
     return currentMenu ? currentMenu
@@ -71,7 +78,6 @@ class Header extends Component {
   }
 
   render() {
-    console.log(this.props);
     const nav = this.renderNav();
     return (
       <div className="navbar-fixed">

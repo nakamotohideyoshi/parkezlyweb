@@ -8,7 +8,6 @@ const initialState = {
 };
 
 const Tickets = (state = initialState, action) => {
-  console.log(action);
   switch(action.type) {
     case "FETCH_TICKETS_INITIATE":
       return {

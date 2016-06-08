@@ -5,7 +5,6 @@ import { Router, Route, Link, hashHistory, browserHistory } from "react-router";
 import ClientIndex from './client/index.js';
 import AdminIndex from './admin/index.js';
 
-
 import "../css/main.scss";
 
 require('script-loader!jquery/dist/jquery.js');

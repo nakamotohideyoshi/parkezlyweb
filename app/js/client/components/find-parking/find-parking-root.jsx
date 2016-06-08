@@ -51,7 +51,6 @@ class FindParking extends Component {
   }
 
   renderMarker(markerItem, index) {
-    console.log(this.props.parking);
     const { lat, lng, marker } = markerItem;
     const parkingType = marker.split("-")[1];
     const parkingTypeVal = this.props.parking[parkingType];

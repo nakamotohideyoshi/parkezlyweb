@@ -46,7 +46,8 @@ export const mainUserLinks = [
   {
     text: "Drive EZly",
     link: "",
-    icon: "drive-ezly-icon"
+    icon: "drive-ezly-icon",
+    subMenu: "driveEzlyMenuLinks"
   },
   {
     text: "Other Parking Options",
@@ -105,6 +106,40 @@ export const myAccountMenuLinks = [
     text: "Logout",
     link: "/logout",
     icon: "logout-icon"
+  },
+  {
+    text: "Back to ParkEZly",
+    link: "",
+    icon: "back-icon",
+    subMenu: "mainUserLinks"
+  }
+];
+
+export const driveEzlyMenuLinks = [
+  {
+    text: "Directions",
+    link: "/directions",
+    icon: "directions-icon"
+  },
+  {
+    text: "Traffic",
+    link: "/traffic",
+    icon: "traffic-icon"
+  },
+  {
+    text: "Transit",
+    link: "/transit",
+    icon: "transit-icon"
+  },
+  {
+    text: "Nearby",
+    link: "/nearby",
+    icon: "nearby-icon"
+  },
+  {
+    text: "Weather",
+    link: "/weather",
+    icon: "weather-icon"
   },
   {
     text: "Back to ParkEZly",
