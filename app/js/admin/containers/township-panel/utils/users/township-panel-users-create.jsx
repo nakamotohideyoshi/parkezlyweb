@@ -81,26 +81,26 @@ class TownshipPanelUsersCreate extends React.Component {
           </div>
           <div className="container">
             <div className="row">
-              <div className="col s6">
+              <div className="col s6 admin-form-input">
                 <div className="form-group">
                   <label>User ID</label>
                   <input type="text" placeholder="User ID" {...user_id}/>
                 </div>    
                 {user_id.touched && user_id.error && <div className="form-required">{user_id.error}</div>}
               </div>
-              <div className="col s6">
+              <div className="col s6 admin-form-input">
                 <div className="form-group">
                   <label>Username</label>
                   <input type="text" placeholder="Username" {...user_name}/>
                 </div>
               </div>
-              <div className="col s6">
+              <div className="col s6 admin-form-input">
                 <div className="form-group">
                   <label>Profile Name</label>
                   <input type="text" placeholder="Profile Name" {...profile_name}/>
                 </div>
               </div>
-              <div className="col s6">
+              <div className="col s6 admin-form-input">
                 <div className="form-group">
                   <label>Status</label>
                   <input type="text" placeholder="Status" {...status}/>

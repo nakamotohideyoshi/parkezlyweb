@@ -89,7 +89,7 @@ class TownshipPermits extends React.Component {
       dispatch
     } = this.props
 
-
+    console.log(this.props.townshipUsersFetched.data.resource)
     var options = this.props.townshipUsersFetched.data.resource;
 
     var optionsUserName = options.map(function(user){
