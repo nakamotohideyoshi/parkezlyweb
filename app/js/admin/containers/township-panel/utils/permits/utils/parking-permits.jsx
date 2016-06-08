@@ -123,7 +123,7 @@ class ParkingPermits extends React.Component {
             </div>
 
             <div className="row">
-              <div className="col s6">
+              <div className="col s6 admin-form-input">
                 <div className="form-group">
                   <label>Permit Type</label>
                   <div clasName="input-field col s12">
@@ -138,7 +138,7 @@ class ParkingPermits extends React.Component {
                   </div>
                 </div>
               </div>
-              <div className="col s6">
+              <div className="col s6 admin-form-input">
                 <div className="form-group">
                   <label>Permit Name</label>
                   <div clasName="input-field col s12">
@@ -153,7 +153,7 @@ class ParkingPermits extends React.Component {
                   </div>
                 </div>
               </div>
-              <div className="col s6">
+              <div className="col s6 admin-form-input">
                 <div className="form-group">
                   <label>Scheme Type</label>
                   <div clasName="input-field col s12">
@@ -168,7 +168,7 @@ class ParkingPermits extends React.Component {
                   </div>
                 </div>
               </div>
-              <div className="col s6">
+              <div className="col s6 admin-form-input">
                 <div className="form-group">
                   <label>Covered Locations</label>
                   <div clasName="input-field col s12">
@@ -184,7 +184,7 @@ class ParkingPermits extends React.Component {
                 </div>
               </div>
 
-              <div className="col s6">
+              <div className="col s6 admin-form-input">
                 <div className="form-group">
                   <label>Active</label>
                   <div clasName="input-field col s12">
@@ -199,7 +199,7 @@ class ParkingPermits extends React.Component {
                   </div>
                 </div>
               </div>
-              <div className="col s6">
+              <div className="col s6 admin-form-input">
                 <div className="form-group">
                   <label>Cost</label>
                   <div className="row marginless-row">
@@ -207,13 +207,14 @@ class ParkingPermits extends React.Component {
                       <p>$</p>
                     </div>
                     <div className="col s11">
-                      <input id="icon_telephone" type="number" step="any" placeholder="Cost" onChange={(value) => {
+                      <input style={{maxWidth: 250, minWidth: 250}} 
+                      id="icon_telephone" type="number" step="any" placeholder="Cost" onChange={(value) => {
                         dispatch(change('parking-permits', 'cost', '$' + value.target.value.toString())); }}/>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="col s6">
+              <div className="col s6 admin-form-input">
                 <div className="form-group">
                   <label>Location Address</label>
                   <input type="text" placeholder="Location Address" {...location_address}/>

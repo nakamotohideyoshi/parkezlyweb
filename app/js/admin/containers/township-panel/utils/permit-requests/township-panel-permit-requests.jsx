@@ -5,6 +5,14 @@ import {bindActionCreators} from 'redux'
 import Body from "../../../../../common/components/body/body.jsx";
 import {fetchTownshipPermitRequests} from '../../../../actions/actions-township-panel.jsx';
 
+import {Tabbordion, Panel} from 'react-tabbordion'
+
+var classNames = {
+  content: 'traditional-tabs-content',
+  panel: 'traditional-tabs-panel',
+  title: 'traditional-tabs-title'
+}
+
 export default class TownshipPanelPermitRequests extends React.Component {
 
   constructor(props) {
@@ -72,7 +80,7 @@ export default class TownshipPanelPermitRequests extends React.Component {
               <th data-field="price">Residency Proof</th>
               <th data-field="price">Approved</th>
               <th data-field="price">Date Action</th>
-              <th data-field="price">Statusn</th>
+              <th data-field="price">Status</th>
               <th data-field="price">Paid</th>
               <th data-field="price">User Comments</th>
               <th data-field="price">Town Comments</th>
@@ -94,8 +102,60 @@ export default class TownshipPanelPermitRequests extends React.Component {
 
   render() {
     console.log(this.props.townshipPermitRequestsFetched)
-    $('.collapsible').collapsible();
     return (
+      <div className="blue-body marginless-row">
+        <Body showHeader={true}>
+          <div style={{marginTop: 40}}>
+            <div className="row marginless-row">
+              <Tabbordion className="traditional-tab col s12 z-depth-2" classNames={classNames} initialIndex={0} name="tabs">
+                <Panel title={<span>Pending Permit Requests</span>}>
+                  <div className="row marginless-row" style={{marginTop: 40, marginBottom: 40}}>
+                   <nav style={{marginTop: 40}}>
+                      <div className="nav-wrapper nav-admin z-depth-2">
+                        <a className="brand-logo center">Pending Permit Requests</a>
+                      </div>
+                    </nav>
+                    <div className="card">
+                      {this.props.townshipPermitRequestsFetched.isLoading ? 
+                        <div>Loading...</div> : this.renderPendingTable() }
+                    </div>
+                  </div>  
+                </Panel>
+                <Panel title={<span>Approved Permit Requests</span>}>
+                  <div className="row marginless-row">
+                    test
+                  </div>
+                </Panel>
+                <Panel title={<span>Rejected Permit Requests</span>}>
+                  <div className="row marginless-row">
+                    test
+                  </div>
+                </Panel>
+              </Tabbordion>
+            </div>
+          </div>
+        </Body>
+      </div>
+    );
+  }
+}
+
+function mapStateToProps(state) {
+  return {
+    townshipPermitRequestsFetched: state.townshipPermitRequestsFetched
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    fetchTownshipPermitRequests
+  }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TownshipPanelPermitRequests);
+
+/*
+
       <div className="blue-body marginless-row">
         <Body showHeader={true}>
           <div className="container" style={{marginTop: 40}}>
@@ -130,20 +190,4 @@ export default class TownshipPanelPermitRequests extends React.Component {
           </div>
         </Body>
       </div>
-    );
-  }
-}
-
-function mapStateToProps(state) {
-  return {
-    townshipPermitRequestsFetched: state.townshipPermitRequestsFetched
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    fetchTownshipPermitRequests
-  }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(TownshipPanelPermitRequests);
+*/

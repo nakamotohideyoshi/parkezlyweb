@@ -66,7 +66,7 @@
 
 .township-userlist-container {
   min-height: 0px;
-  max-height: 545px !important;
+  max-height: 300px !important;
   overflow-y: auto !important;
   cursor: pointer;
   background-color: #FFF;
@@ -276,4 +276,27 @@ textarea.materialize-textarea:focus:not([readonly]) {
 
 .traditional-tabs-content--checked {
     display: block;
+}
+
+input:not([type]), 
+input[type=text], 
+input[type=password], 
+input[type=email], 
+input[type=url], 
+input[type=time], 
+input[type=date], 
+input[type=datetime], 
+input[type=datetime-local], 
+input[type=tel], 
+input[type=number], 
+input[type=search], 
+textarea.materialize-textarea {
+  max-width: 300px;
+  min-width: 300px;
+  display: block;
+}
+
+.admin-form-input {
+  min-width: 300px !important;
+  margin-bottom: 20px;
 }

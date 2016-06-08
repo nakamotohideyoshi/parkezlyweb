@@ -76,7 +76,7 @@ class PermitTypes extends React.Component {
             </div>
 
             <div className="row">
-              <div className="col s12">
+              <div className="col s12 admin-form-input">
                 <div className="form-group">
                   <label>Permit Type</label>
                   <input type="text" placeholder="Permit Type" {...permit_type}/>

@@ -113,7 +113,7 @@ class TownshipPermits extends React.Component {
             </div>
 
             <div className="row">
-              <div className="col s6">
+              <div className="col s6 admin-form-input">
                 <div className="form-group">
                   <label>User Id</label>
                   <div clasName="input-field col s12">
@@ -128,19 +128,7 @@ class TownshipPermits extends React.Component {
                   </div>
                 </div>
               </div>
-              <div className="col s6">
-                <div className="form-group">
-                  <label>Township Code</label>
-                  <input type="text" placeholder="Township Code" {...township_code}/>
-                </div>
-              </div>
-              <div className="col s6">
-                <div className="form-group">
-                  <label>Permit Name</label>
-                  <input type="text" placeholder="Permit Name" {...permit_name}/>
-                </div>
-              </div>
-              <div className="col s6">
+              <div className="col s6 admin-form-input">
                 <div className="form-group">
                   <label>User Name</label>
                   <SimpleSelect 
@@ -151,6 +139,18 @@ class TownshipPermits extends React.Component {
                     onValueChange = {(value) => {
                       dispatch(change('township-permits', 'name', value.value));     
                     }}></SimpleSelect>
+                </div>
+              </div>
+              <div className="col s6 admin-form-input">
+                <div className="form-group">
+                  <label>Township Code</label>
+                  <input type="text" placeholder="Township Code" {...township_code}/>
+                </div>
+              </div>
+              <div className="col s6 admin-form-input">
+                <div className="form-group">
+                  <label>Permit Name</label>
+                  <input type="text" placeholder="Permit Name" {...permit_name}/>
                 </div>
               </div>
             </div>

@@ -95,7 +95,7 @@ class TownshipPanelUsers extends React.Component {
           </div>
 
           <div className="divider" />
-          <div className="township-userlist-container">
+          <div>
             <table className="highlight">
               <thead>
                 <tr>
