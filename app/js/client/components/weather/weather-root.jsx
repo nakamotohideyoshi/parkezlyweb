@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import classNames from "classnames";
 import cookie from "react-cookie";
 import moment from "moment";
-//import momentTimezone from "moment-timezone";
 
 import Body from "../../../common/components/body/body.jsx";
 import { getWeather } from "../../actions/weather.js";

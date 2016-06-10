@@ -32,6 +32,7 @@ class Header extends Component {
         break;
       case "myAccountMenuLinks":
         currentMenu = myAccountMenuLinks;
+        break;
       case "driveEzlyMenuLinks":
         currentMenu = driveEzlyMenuLinks;
         break;
