@@ -25,6 +25,41 @@ class BursarPanelParkingPayment extends React.Component {
     super(props);
   }
 
+  renderTableData(filteredFacilitiesData) {
+    const filteredFacilities = filteredFacilitiesData.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS))
+    console.log(filteredFacilities)
+    if(filteredFacilities.length > 0){   
+      return filteredFacilities.map((facility) => {
+        return( 
+          <tr className="clickable" key={facility.id} onClick={
+            () => this.setState({
+              editMode: true,
+              createMode: false, 
+              fieldData: facility, 
+              facilityId: facility.id
+            })
+          }>
+            <td>{facility.township_code}</td>
+            <td>{facility.location_code}</td>
+            <td>{facility.location_name}</td>
+            <td>{facility.lot_row}</td>
+            <td>{facility.lot_number}</td>
+            <td>{facility.lot_id}</td>
+            <td>{facility.occupied}</td>
+            <td>{facility.plate_no}</td>
+            <td>{facility.plate_state}</td>
+          </tr>  
+        );
+      });
+    } else {
+      return( 
+        <tr>
+          <td>There are currently no facilities in this township or ones that match your search. Please create one.</td> 
+        </tr>
+      );
+    }
+  }
+
   render() {
     return (
       <div className="blue-body marginless-row">
