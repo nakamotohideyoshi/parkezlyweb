@@ -93,74 +93,74 @@ class TownshipCreate extends React.Component {
                 </div>
 
                 <div className="row">
-                  <div className="col s6">
+                  <div className="col s6 admin-form-input">
                     <div className="form-group">
                       <label>Manager ID</label>
                       <input type="text" placeholder="Manager ID" {...manager_id}/>
                     </div>
                     {manager_id.touched && manager_id.error && <div className="form-required">{manager_id.error}</div>}
                   </div>
-                  <div className="col s6">
+                  <div className="col s6 admin-form-input">
                     <div className="form-group">
                       <label>Manager Type</label>
                       <input type="text" placeholder="Manager Type" {...manager_type}/>
                     </div>
                   </div>
-                  <div className="col s6">
+                  <div className="col s6 admin-form-input">
                     <div className="form-group">
                       <label>Lot Manager</label>
                       <input type="text" placeholder="Lot Manager" {...lot_manager}/>
                     </div>
                   </div>
-                  <div className="col s6">
+                  <div className="col s6 admin-form-input">
                     <div className="form-group">
                       <label>Address</label>
                       <input type="text" placeholder="Address" {...address}/>
                     </div>
                   </div>
-                  <div className="col s6">
+                  <div className="col s6 admin-form-input">
                     <div className="form-group">
                       <label>City</label>
                       <input type="text" placeholder="City" {...city}/>
                     </div>
                   </div>
-                  <div className="col s6">
+                  <div className="col s6 admin-form-input">
                     <div className="form-group">
                       <label>State</label>
                       <input type="text" placeholder="State" {...state}/>
                     </div>
                   </div>
-                  <div className="col s6">
+                  <div className="col s6 admin-form-input">
                     <div className="form-group">
                       <label>Country</label>
                       <input type="text" placeholder="Country" {...country}/>
                     </div>
                   </div>
-                  <div className="col s6">
+                  <div className="col s6 admin-form-input">
                     <div className="form-group">
                       <label>Zip</label>
                       <input type="number" placeholder="Zip" {...zip}/>
                     </div>
                   </div>
-                  <div className="col s6">
+                  <div className="col s6 admin-form-input">
                     <div className="form-group">
                       <label>Contact Person</label>
                       <input type="text" placeholder="Contact Person" {...contact_person}/>
                     </div>
                   </div>
-                  <div className="col s6">
+                  <div className="col s6 admin-form-input">
                     <div className="form-group">
                       <label>Contact Title</label>
                       <input type="text" placeholder="Contact Title" {...contact_title}/>
                     </div>
                   </div>
-                  <div className="col s6">
+                  <div className="col s6 admin-form-input">
                     <div className="form-group">
                       <label>Contact Number</label>
                       <input type="text" placeholder="Contact Number" {...contact_number}/>
                     </div>
                   </div>
-                  <div className="col s6">
+                  <div className="col s6 admin-form-input">
                     <div className="form-group">
                       <label>Contact Email</label>
                       <input type="email" placeholder="Contact Email" {...contact_email}/>

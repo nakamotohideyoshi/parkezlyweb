@@ -137,11 +137,7 @@ export default class TownshipDetails extends React.Component {
             <div className="card-image" style={{backgroundColor: "#2E2E2E"}}>
               <img src={townshipData.township_logo} 
               className="township-details-image circle responsive-img" />
-              <div className="row">
-                <div className="col s6">
-                  <span className="card-title truncate">{townshipData.city}</span>
-                </div>
-              </div>
+              <span className="card-title valign-wrapper">{townshipData.city}</span>
               <div className="fixed-action-btn horizontal image-upload-button">
                 <a className="btn-floating btn-large btn-green waves-effect waves-light" onClick={() => this.handleClick()}>
                   <i className="large material-icons">file_upload</i>
@@ -159,73 +155,73 @@ export default class TownshipDetails extends React.Component {
                 </div>
               </div>
               <div className="row">
-                <div className="col s6">
+                <div className="col s6 admin-form-input">
                   <div className="form-group">
                     <label>Manager ID</label>
                     <input value={townshipData.manager_id} onChange={() => this.setState({townshipData: townshipData})}/>
                   </div>
                 </div>
-                <div className="col s6">
+                <div className="col s6 admin-form-input">
                   <div className="form-group">
                     <label>Manager Type</label>
                     <input value={townshipData.manager_type} onChange={() => this.setState({townshipData: townshipData})}/>
                   </div>
                 </div>
-                <div className="col s6">
+                <div className="col s6 admin-form-input">
                   <div className="form-group">
                     <label>Lot Manager</label>
                     <input value={townshipData.lot_manager} onChange={() => this.setState({townshipData: townshipData})}/>
                   </div>
                 </div>
-                <div className="col s6">
+                <div className="col s6 admin-form-input">
                   <div className="form-group">
                     <label>Address</label>
                     <input value={townshipData.address} onChange={() => this.setState({townshipData: townshipData})}/>
                   </div>
                 </div>
-                <div className="col s6">
+                <div className="col s6 admin-form-input">
                   <div className="form-group">
                     <label>City</label>
                     <input value={townshipData.city} onChange={() => this.setState({townshipData: townshipData})}/>
                   </div>
                 </div>
-                <div className="col s6">
+                <div className="col s6 admin-form-input">
                   <div className="form-group">
                     <label>State</label>
                     <input value={townshipData.state} onChange={() => this.setState({townshipData: townshipData})}/>
                   </div>
                 </div>
-                <div className="col s6">
+                <div className="col s6 admin-form-input">
                   <div className="form-group">
                     <label>Country</label>
                     <input value={townshipData.country} onChange={() => this.setState({townshipData: townshipData})}/>
                   </div>
                 </div>
-                <div className="col s6">
+                <div className="col s6 admin-form-input">
                   <div className="form-group">
                     <label>Zip</label>
                     <input value={townshipData.zip} onChange={() => this.setState({townshipData: townshipData})}/>
                   </div>
                 </div>
-                <div className="col s6">
+                <div className="col s6 admin-form-input">
                   <div className="form-group">
                     <label>Contact Person</label>
                     <input value={townshipData.contact_person} onChange={() => this.setState({townshipData: townshipData})}/>
                   </div>
                 </div>
-                <div className="col s6">
+                <div className="col s6 admin-form-input">
                   <div className="form-group">
                     <label>Contact Title</label>
                     <input value={townshipData.contact_title} onChange={() => this.setState({townshipData: townshipData})}/>
                   </div>
                 </div>
-                <div className="col s6">
+                <div className="col s6 admin-form-input">
                   <div className="form-group">
                     <label>Contact Number</label>
                     <input value={townshipData.contact_number} onChange={() => this.setState({townshipData: townshipData})}/>
                   </div>
                 </div>
-                <div className="col s6">
+                <div className="col s6 admin-form-input">
                   <div className="form-group">
                     <label>Contact Email</label>
                     <input value={townshipData.contact_email} onChange={() => this.setState({townshipData: townshipData})}/>
@@ -252,7 +248,7 @@ export default class TownshipDetails extends React.Component {
               <div className="card-image" style={{backgroundColor: "#2E2E2E"}}>
               <img src={townshipData.township_logo} 
               className="township-details-image circle responsive-img" />
-              <span className="card-title truncate">{townshipData.city}</span>
+              <span className="card-title valign-wrapper">{townshipData.city}</span>
               <div className="fixed-action-btn horizontal image-upload-button">
                 <a className="btn-floating btn-large btn-green waves-effect waves-light" onClick={() => this.handleClick()}>
                   <i className="large material-icons">file_upload</i>

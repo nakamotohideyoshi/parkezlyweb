@@ -2,10 +2,12 @@
 @import "~materialize-css/dist/css/materialize.css";
 @import url(https://fonts.googleapis.com/icon?family=Material+Icons);
 @import "~animate.css/animate.css";
-@import "./materialize.scss";
+@import "~react-selectize/themes/index.css";
 
+@import "./materialize.scss";
 @import "./variables.scss";
 @import "./common.scss";
+
 
 /* Add your component stylesheet below */
 @import "../js/client/components/find-parking/styles/find-parking.scss";

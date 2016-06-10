@@ -66,7 +66,16 @@
 
 .township-userlist-container {
   min-height: 0px;
-  max-height: 545px !important;
+  max-height: 500px !important;
+  overflow-y: auto !important;
+  cursor: pointer;
+  background-color: #FFF;
+
+}
+
+.township-permitrequests-container {
+  min-height: 0px;
+  max-height: 600px !important;
   overflow-y: auto !important;
   cursor: pointer;
   background-color: #FFF;
@@ -132,9 +141,13 @@
   background-color: #EAB41C;
 }
 
-.btn-green:hover {
+.btn-red {
+  background-color: #D9534F;
+}
+
+.btn-red:hover {
   color: #FFF;
-  background-color: #2DB63D;
+  background-color: #D9534F;
 }
 
 .admin-tile {
@@ -168,9 +181,12 @@
 }
 
 .card-title {
-  font-size: 50px !important;
+  font-size: 50 !important;
   width: calc(100% - 256px) !important;
-  background-color: rgba(107, 153, 194, 0.3);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical; 
 }
 
 .marginless-row {
@@ -200,4 +216,103 @@ textarea.materialize-textarea:focus:not([readonly]) {
 
 .clickable {
   cursor: pointer;
+}
+
+.traditional-tabs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    white-space: nowrap;
+}
+
+.traditional-tabs > :not(.traditional-tabs-panel) {
+    white-space: normal;
+}
+
+.traditional-tabs:after {
+    clear: both;
+    content: '';
+    display: table;
+}
+
+.traditional-tabs-panel {
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
+.traditional-tabs-title {
+    background: #EBEBEB;
+    color: #363636;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: bold;
+    padding-bottom: 30px;
+    padding-left: 20px;
+    padding-right: 20px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    white-space: normal;
+}
+
+.traditional-tabs-title--between,
+.traditional-tabs-title--last {
+    border-left: 1px solid #D2D2D2;
+}
+
+.traditional-tabs-title--first {
+    border-top-left-radius: 3px;
+}
+
+.traditional-tabs-title--last {
+    border-top-right-radius: 3px;
+}
+
+.traditional-tabs-title--checked {
+    background: #FAFAFA;
+}
+
+.traditional-tabs-content {
+    background: #FAFAFA;
+    border-radius: 0 3px 3px 3px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #363636;
+    display: none;
+    float: left;
+    overflow: hidden;
+    padding: 0 1em;
+    white-space: normal;
+    width: 100%;
+}
+
+.traditional-tabs-content--checked {
+    display: block;
+}
+
+input:not([type]), 
+input[type=text], 
+input[type=password], 
+input[type=email], 
+input[type=url], 
+input[type=time], 
+input[type=date], 
+input[type=datetime], 
+input[type=datetime-local], 
+input[type=tel], 
+input[type=number], 
+input[type=search], 
+textarea.materialize-textarea {
+  max-width: 250px;
+  min-width: 250px;
+  display: block;
+}
+
+.admin-form-input {
+  min-width: 300px !important;
+  margin-bottom: 20px;
 }

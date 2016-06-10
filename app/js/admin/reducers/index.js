@@ -1,12 +1,13 @@
 import { combineReducers } from 'redux';
 import {reducer as formReducer} from 'redux-form';
 
-import townshipListFetched from './reducer-township-list.js'
-import townshipCreate from './reducer-township-create.js'
-import townshipListEdited from './reducer-township-edit.js';
-import townshipDetails from './reducer-township-details.js';
-import uploadedImage from './reducer-image-upload.js';
-import townshipDetailsFetched from './reducer-details-fetch.js'
+import {
+  townshipListFetched, 
+  townshipCreate, 
+  townshipListEdited,
+  townshipDetailsFetched, 
+  uploadedImage,
+  townshipDetails} from './reducer-township-list.js';
 
 import {
   townshipUsersFetched, 
@@ -15,24 +16,81 @@ import {
   townshipFacilitiesFetched,
   townshipFacilitiesEdited,
   townshipFacilitiesCreated,
-} from './reducer-township-users.js';
+  townshipPermitRequestsFetched,
+  townshipPermitTypesFetched,
 
-const rootReducer = combineReducers({
+  townshipParkingPermitsFetched,
+  townshipPermitRequestsEdited,
+  
+  townshipParkingPermitsCreated,
+
+  townshipPermitsListFetched,
+  townshipPermitsListCreated,
+
+  townshipLocationsRateFetched,
+  townshipLocationsRateCreated,
+
+  townshipPermitTypesCreated,
+} from './reducer-township-panel.js';
+
+import {townshipSchemeTypesFetched} from './reducer-township-common.js';
+
+// Super Admin Panel
+
+var townshipReducers = { 
   townshipListFetched: townshipListFetched,
   townshipCreate: townshipCreate,
   townshipListEdited: townshipListEdited,
   townshipDetails: townshipDetails,
   townshipDetailsFetched: townshipDetailsFetched,
   uploadedImage: uploadedImage,
+};
 
+// Township Panel
+
+var townshipPanelReducers = { 
   townshipUsersFetched: townshipUsersFetched,
   townshipUsersEdited: townshipUsersEdited,
   townshipUsersCreated: townshipUsersCreated,
+
   townshipFacilitiesFetched: townshipFacilitiesFetched,
   townshipFacilitiesEdited: townshipFacilitiesEdited,
   townshipFacilitiesCreated: townshipFacilitiesCreated,
 
-  form: formReducer
-});
+  townshipPermitRequestsFetched: townshipPermitRequestsFetched,
+  townshipPermitRequestsEdited: townshipPermitRequestsEdited,
+
+  townshipPermitTypesFetched: townshipPermitTypesFetched,
+
+  townshipParkingPermitsFetched: townshipParkingPermitsFetched,
+  townshipParkingPermitsCreated: townshipParkingPermitsCreated,
+
+  townshipPermitsListFetched: townshipPermitsListFetched,
+  townshipPermitsListCreated: townshipPermitsListCreated,
+
+  townshipLocationsRateFetched: townshipLocationsRateFetched,
+  townshipLocationsRateCreated: townshipLocationsRateCreated,
+  
+  townshipPermitTypesCreated: townshipPermitTypesCreated
+};
+
+// Common / Shared between township stuff.
+
+var townshipCommonReducers = { 
+  townshipSchemeTypesFetched: townshipSchemeTypesFetched
+};
+
+var reduxFormReducer = { 
+  form: formReducer 
+};
+
+var combinedReducerObjects = Object.assign(
+  townshipReducers, 
+  townshipPanelReducers, 
+  townshipCommonReducers,
+  reduxFormReducer
+);
+
+const rootReducer = combineReducers(combinedReducerObjects);
 
 export default rootReducer;

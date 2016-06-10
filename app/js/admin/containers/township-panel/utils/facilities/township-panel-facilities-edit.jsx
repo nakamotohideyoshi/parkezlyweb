@@ -86,49 +86,49 @@ class TownshipPanelFacilitiesEdit extends React.Component {
           </div>
           <div className="container">
             <div className="row">
-              <div className="col s6">
+              <div className="col s6 admin-form-input">
                 <div className="form-group">
                   <label>Location Code</label>
                   <input type="text" placeholder="Location Code" {...location_code}/>
                 </div>
               </div>
-              <div className="col s6">
+              <div className="col s6 admin-form-input">
                 <div className="form-group">
                   <label>Location Name</label>
                   <input type="text" placeholder="Location Name" {...location_name}/>
                 </div>
               </div>
-              <div className="col s6">
+              <div className="col s6 admin-form-input">
                 <div className="form-group">
                   <label>Lot Row</label>
                   <input type="text" placeholder="Lot Row" {...lot_row}/>
                 </div>
               </div>
-              <div className="col s6">
+              <div className="col s6 admin-form-input">
                 <div className="form-group">
                   <label>Lot Number</label>
                   <input type="text" placeholder="Lot Number" {...lot_number}/>
                 </div>
               </div>
-              <div className="col s6">
+              <div className="col s6 admin-form-input">
                 <div className="form-group">
                   <label>Lot ID</label>
                   <input type="text" placeholder="Lot ID" {...lot_id}/>
                 </div>
               </div>
-              <div className="col s6">
+              <div className="col s6 admin-form-input">
                 <div className="form-group">
                   <label>Occupied</label>
                   <input type="text" placeholder="Occupied" {...occupied}/>
                 </div>
               </div>
-              <div className="col s6">
+              <div className="col s6 admin-form-input">
                 <div className="form-group">
                   <label>Plate No.</label>
                   <input type="text" placeholder="Plate No." {...plate_no}/>
                 </div>
               </div>
-              <div className="col s6">
+              <div className="col s6 admin-form-input">
                 <div className="form-group">
                   <label>Plate State</label>
                   <input type="text" placeholder="Plate State" {...plate_state}/>

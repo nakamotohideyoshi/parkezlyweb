@@ -82,19 +82,7 @@ class TownshipPanelUsers extends React.Component {
         <div>
           <div className="row marginless-row valign-wrapper">
             <div className="col s1"/>
-            <div className="col s2">
-              <p>
-                <input type="checkbox" className="filled-in" id="township-user-id" />
-                <label htmlFor="township-user-id">User Id</label>
-              </p>
-            </div>
-            <div className="col s2">
-              <p>
-                <input type="checkbox" className="filled-in" id="township-user-name" />
-                <label htmlFor="township-user-name">User Name</label>
-              </p>
-            </div>
-            <div className="search-wrapper card col s7" style={{marginBottom:10, marginTop: 10}}>
+            <div className="search-wrapper card col s10" style={{marginBottom: 10, marginTop: 10}}>
               <div className="row marginless-row valign-wrapper">
                 <SearchInput 
                 className="search search-input col s11" 
@@ -265,4 +253,21 @@ if(arrayName.length > 0){
 }else{
    //this array is empty
 }
+*/
+
+/*
+
+<div className="col s2">
+  <p>
+    <input type="checkbox" className="filled-in" id="township-user-id" />
+    <label htmlFor="township-user-id">User Id</label>
+  </p>
+</div>
+<div className="col s2">
+  <p>
+    <input type="checkbox" className="filled-in" id="township-user-name" />
+    <label htmlFor="township-user-name">User Name</label>
+  </p>
+</div>
+
 */

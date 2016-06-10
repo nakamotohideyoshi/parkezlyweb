@@ -1,4 +1,4 @@
-import * as types from '../constants/actionTypes.js';
+import * as types from '../constants/actionTypes.js'
 
 const initialState = {
   isLoading: true,
@@ -6,17 +6,17 @@ const initialState = {
   error: false
 };
 
-export default function townshipListEdited(state = initialState, action) {
+export function townshipSchemeTypesFetched(state = initialState, action) {
   switch(action.type) {
-    case types.TOWNSHIP_EDIT_PUT_ERROR:
+    case types.TOWNSHIP_SCHEME_TYPES_GET_ERROR:
       return Object.assign({}, state, {isLoading: false, data: action.data, error: true});
-    case types.TOWNSHIP_EDIT_PUT_SUCCESS:
+    case types.TOWNSHIP_SCHEME_TYPES_GET_SUCCESS:
+    console.log("SUCCESS")
+    console.log(action.data)
       return Object.assign({}, state, {isLoading: false, data: action.data, error: false });
-    case types.TOWNSHIP_EDIT_PUT_REQ:
+    case types.TOWNSHIP_SCHEME_TYPES_GET_REQ:
       return Object.assign({}, state, {isLoading: true, error: false });
-    case types.RESET_LOADING:
-      return Object.assign({}, state, initialState);
     default:
       return state;
   }
-}
+};
