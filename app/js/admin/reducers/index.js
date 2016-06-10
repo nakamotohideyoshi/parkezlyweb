@@ -35,6 +35,28 @@ import {
 
 import {townshipSchemeTypesFetched} from './reducer-township-common.js';
 
+import {
+  bursarParkingPaymentCreated,
+  bursarParkingPaymentFetched,
+  bursarParkingPaymentEdited,
+
+  bursarPermitPaymentCreated,
+  bursarPermitPaymentEdited,
+  bursarPermitPaymentFetched,
+
+  bursarTicketPaymentCreated,
+  bursarTicketPaymentEdited,
+  bursarTicketPaymentFetched,
+
+  bursarWalletPaymentCreated,
+  bursarWalletPaymentEdited,
+  bursarWalletPaymentFetched,
+
+  bursarTicketRatesCreated,
+  bursarTicketRatesEdited,
+  bursarTicketRatesFetched,
+} from './reducer-bursar-panel.js';
+
 // Super Admin Panel
 
 var townshipReducers = { 
@@ -73,6 +95,29 @@ var townshipPanelReducers = {
   
   townshipPermitTypesCreated: townshipPermitTypesCreated
 };
+
+var bursarPanelReducers = { 
+  bursarParkingPaymentCreated: bursarParkingPaymentCreated,
+  bursarParkingPaymentFetched: bursarParkingPaymentFetched,
+  bursarParkingPaymentEdited: bursarParkingPaymentEdited,
+
+  bursarPermitPaymentCreated: bursarPermitPaymentCreated,
+  bursarPermitPaymentEdited: bursarPermitPaymentEdited,
+  bursarPermitPaymentFetched: bursarPermitPaymentFetched,
+
+  bursarTicketPaymentCreated: bursarTicketPaymentCreated,
+  bursarTicketPaymentEdited: bursarTicketPaymentEdited,
+  bursarTicketPaymentFetched: bursarTicketPaymentFetched,
+
+  bursarWalletPaymentCreated: bursarWalletPaymentCreated,
+  bursarWalletPaymentEdited: bursarWalletPaymentEdited,
+  bursarWalletPaymentFetched: bursarWalletPaymentFetched,
+  
+  bursarTicketRatesCreated: bursarTicketRatesCreated,
+  bursarTicketRatesEdited: bursarTicketRatesEdited,
+  bursarTicketRatesFetched: bursarTicketRatesFetched,
+};
+
 
 // Common / Shared between township stuff.
 
