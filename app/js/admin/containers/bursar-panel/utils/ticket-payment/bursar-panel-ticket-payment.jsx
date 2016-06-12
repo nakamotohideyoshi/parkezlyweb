@@ -9,25 +9,52 @@ import Body from "../../../../../common/components/body/body.jsx"
 import Spinner from '../../../../common/components/spinner.jsx'
 import {optionsSelectize} from '../../../../common/components/options-selectize.js'
 
-import {fetchBursarParkingPayment} from '../../../../actions/actions-bursar-panel.jsx'
+import {fetchBursarTicketPayment} from '../../../../actions/actions-bursar-panel.jsx'
 import {fetchTownshipLocations} from '../../../../actions/actions-township-panel.jsx'
 import {fetchTownshipSchemeTypes} from '../../../../actions/actions-township-common.jsx'
 
 export const fields = [ 
-  'vehicle_id',
-  'user_name',
-  'date',
-  'location_id',
-  'scheme_type',
-  'rate',
-  'pay_method',
-  'amount',
-  'cashier_id',
+  'id',
+  'ip',
+  'ticket_no',
+  'plate_num',
   'user_id',
+  'address',
+  'email',
+  'paypal_total',
+  'violation_charge',
+  'violation_details',
+  'violation_location',
+  'pld_guilty',
+  'penalty_adjustment',
+  'adjust_rfchange',
+  'new_amt_due',
+  'pmt_status',
+  'ticket_status',
+  'pmt_options',
+  'ipn_txn_id',
+  'ipn_payment',
+  'tr_percentage',
+  'ipn_address',
+  'wallet_balance',
+  'township_code',
+  'twp_payment',
+  'ipn_status',
+  'adjust_ref',
+  'phone',
+  'paid_date',
+  'ipn_custom',
+  'penalty_change',
+  'date_payment',
+  'tr_fee',
+  'cheque_details',
+  'cheque_date',
+  'violation_date',
+  'cheque_no',
 ]
 
 
-class BursarPanelParkingPayment extends React.Component {
+class BursarPanelPermitPayment extends React.Component {
 
   constructor(props) {
     super(props);
@@ -40,7 +67,7 @@ class BursarPanelParkingPayment extends React.Component {
   }
 
   componentWillMount() {
-    this.props.fetchBursarParkingPayment();
+    this.props.fetchBursarTicketPayment();
     this.props.fetchTownshipSchemeTypes();
     this.props.fetchTownshipLocations(this.props.townshipCode);
   }
@@ -57,16 +84,43 @@ class BursarPanelParkingPayment extends React.Component {
     
     const {
       fields: {
-        vehicle_id,
-        user_name,
-        date,
-        location_id,
-        scheme_type,
-        rate,
-        pay_method,
-        amount,
-        cashier_id,
+        id,
+        ip,
+        ticket_no,
+        plate_num,
         user_id,
+        address,
+        email,
+        paypal_total,
+        violation_charge,
+        violation_details,
+        violation_location,
+        pld_guilty,
+        penalty_adjustment,
+        adjust_rfchange,
+        new_amt_due,
+        pmt_status,
+        ticket_status,
+        pmt_options,
+        ipn_txn_id,
+        ipn_payment,
+        tr_percentage,
+        ipn_address,
+        wallet_balance,
+        township_code,
+        twp_payment,
+        ipn_status,
+        adjust_ref,
+        phone,
+        paid_date,
+        ipn_custom,
+        penalty_change,
+        date_payment,
+        tr_fee,
+        cheque_details,
+        cheque_date,
+        violation_date,
+        cheque_no,
       },
       resetForm,
       submitting,
@@ -83,7 +137,7 @@ class BursarPanelParkingPayment extends React.Component {
 
             <div className="row">
               <div className="center-align">
-                <h4>Create a Parking Payment</h4>
+                <h4>Create a Ticket Payment</h4>
                 <p className="center-align">Create a parking payment by filling out the fields.</p>
               </div>
             </div>
@@ -146,7 +200,7 @@ class BursarPanelParkingPayment extends React.Component {
                 <button 
                 type="submit" 
                 disabled={submitting} 
-                className="waves-effect waves-light btn">Create Parking Payment</button>
+                className="waves-effect waves-light btn">Create Ticket Payment</button>
               </div>
             </div>
           </div>
@@ -160,39 +214,92 @@ class BursarPanelParkingPayment extends React.Component {
     return parkingPermitsData.map((data) => {
       return( 
         <tr key={data.id}>
-          <td>{data.vehicle_id}</td>
-          <td>{data.user_name}</td>
-          <td>{data.date}</td>
-          <td>{data.location_id}</td>
-          <td>{data.scheme_type}</td>
-          <td>{data.rate}</td>
-          <td>{data.payment_method}</td>
-          <td>{data.amount}</td>
-          <td>{data.cashier_id}</td>
+          <td>{data.id}</td>
+          <td>{data.ip}</td>
+          <td>{data.ticket_no}</td>
+          <td>{data.plate_num}</td>
           <td>{data.user_id}</td>
+          <td>{data.address}</td>
+          <td>{data.email}</td>
+          <td>{data.paypal_total}</td>
+          <td>{data.violation_charge}</td>
+          <td>{data.violation_details}</td>
+          <td>{data.violation_location}</td>
+          <td>{data.pld_guilty}</td>
+          <td>{data.penalty_adjustment}</td>
+          <td>{data.adjust_rfchange}</td>
+          <td>{data.new_amt_due}</td>
+          <td>{data.pmt_status}</td>
+          <td>{data.ticket_status}</td>
+          <td>{data.pmt_options}</td>
+          <td>{data.ipn_txn_id}</td>
+          <td>{data.ipn_payment}</td>
+          <td>{data.tr_percentage}</td>
+          <td>{data.ipn_address}</td>
+          <td>{data.wallet_balance}</td>
+          <td>{data.township_code}</td>
+          <td>{data.twp_payment}</td>
+          <td>{data.ipn_status}</td>
+          <td>{data.adjust_ref}</td>
+          <td>{data.phone}</td>
+          <td>{data.paid_date}</td>
+          <td>{data.ipn_custom}</td>
+          <td>{data.penalty_change}</td>
+          <td>{data.date_payment}</td>
+          <td>{data.tr_fee}</td>
+          <td>{data.cheque_details}</td>
+          <td>{data.cheque_date}</td>
+          <td>{data.violation_date}</td>
+          <td>{data.cheque_no}</td>
         </tr>
       );
     });
   }
 
   renderTable() {
-    console.log(this.props.bursarParkingPaymentFetched)
-    let parkingPermitsData = this.props.bursarParkingPaymentFetched.data.resource;
+    let parkingPermitsData = this.props.bursarTicketPaymentFetched.data.resource;
     return (
       <div>
         <table className="highlight">
           <thead>
             <tr>
-              <th data-field="id">Vechile Id</th>
-              <th data-field="name">User Name</th>
-              <th data-field="price">Date</th>
-              <th data-field="price">Location Id</th>
-              <th data-field="price">Scheme Type</th>
-              <th data-field="price">Rate</th>
-              <th data-field="price">Pay Method</th>
-              <th data-field="price">Amount</th>
-              <th data-field="price">Cashier Id</th>
-              <th data-field="price">User Id</th>
+              <th data-field="id">id</th>
+              <th data-field="id">ip</th>
+              <th data-field="id">ticket_no</th>
+              <th data-field="id">plate_num</th>
+              <th data-field="id">user_id</th>
+              <th data-field="id">address</th>
+              <th data-field="id">email</th>
+              <th data-field="id">paypal_total</th>
+              <th data-field="id">violation_charge</th>
+              <th data-field="id">violation_details</th>
+              <th data-field="id">violation_location</th>
+              <th data-field="id">pld_guilty</th>
+              <th data-field="id">penalty_adjustment</th>
+              <th data-field="id">adjust_rfchange</th>
+              <th data-field="id">new_amt_due</th>
+              <th data-field="id">pmt_status</th>
+              <th data-field="id">ticket_status</th>
+              <th data-field="id">pmt_options</th>
+              <th data-field="id">ipn_txn_id</th>
+              <th data-field="id">ipn_payment</th>
+              <th data-field="id">tr_percentage</th>
+              <th data-field="id">ipn_address</th>
+              <th data-field="id">wallet_balance</th>
+              <th data-field="id">township_code</th>
+              <th data-field="id">twp_payment</th>
+              <th data-field="id">ipn_status</th>
+              <th data-field="id">adjust_ref</th>
+              <th data-field="id">phone</th>
+              <th data-field="id">paid_date</th>
+              <th data-field="id">ipn_custom</th>
+              <th data-field="id">penalty_change</th>
+              <th data-field="id">date_payment</th>
+              <th data-field="id">tr_fee</th>
+              <th data-field="id">cheque_details</th>
+              <th data-field="id">cheque_date</th>
+              <th data-field="id">violation_date</th>
+              <th data-field="id">cheque_no</th>
             </tr>
           </thead>
           <tbody>
@@ -206,27 +313,27 @@ class BursarPanelParkingPayment extends React.Component {
           <a
             className="modal-trigger waves-effect waves-light btn valign" 
             onClick={() => $('#modal-bursar-payment-create').openModal()}
-            style={{margin: 10}}>Add New Parking Payment</a>
+            style={{margin: 10}}>Add New Ticket Payment</a>
         </div>
       </div>
     );
   }
 
   render() {
-    console.log(this.props.townshipLocationsFetched)
+    console.log(this.props.bursarTicketPaymentFetched)
     return (
       <div className="blue-body marginless-row">
         <Body showHeader={true}>
-          <div className="container" style={{marginTop: 40}}>
-            <div>
+          <div className="row" style={{marginTop: 40}}>
+            <div className="col s12">
               <nav>
                 <div className="nav-wrapper nav-admin z-depth-2">
-                  <a className="brand-logo center">Parking Payment</a>
+                  <a className="brand-logo center">Ticket Payment</a>
                 </div>
               </nav>
                <div className="card">
                   <div className="township-userlist-container">
-                    { this.props.bursarParkingPaymentFetched.isLoading ||
+                    { this.props.bursarTicketPaymentFetched.isLoading ||
                       this.props.townshipLocationsFetched.isLoading ? 
                       <div> </div> : this.renderTable()}
                   </div>
@@ -234,10 +341,8 @@ class BursarPanelParkingPayment extends React.Component {
             </div>
           </div>
         </Body>
-        { this.props.bursarParkingPaymentFetched.isLoading ||
-          this.props.townshipLocationsFetched.isLoading ||
-          this.props.townshipSchemeTypesFetched.isLoading ? 
-          <div> </div> : this.renderCreateModal()}
+
+
         <div id="modal-success" className="modal">
           <div className="modal-content">
             <h4>Success!</h4>
@@ -257,7 +362,7 @@ class BursarPanelParkingPayment extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    bursarParkingPaymentFetched: state.bursarParkingPaymentFetched,
+    bursarTicketPaymentFetched: state.bursarTicketPaymentFetched,
     townshipLocationsFetched: state.townshipLocationsFetched,
     townshipSchemeTypesFetched: state.townshipSchemeTypesFetched,
   }
@@ -265,13 +370,20 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    fetchBursarParkingPayment,
+    fetchBursarTicketPayment,
     fetchTownshipLocations,
     fetchTownshipSchemeTypes
   }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-  form: 'parking-payment',
+  form: 'ticket-payment',
   fields
-})(BursarPanelParkingPayment));
+})(BursarPanelPermitPayment));
+
+/*
+{ this.props.bursarTicketPaymentFetched.isLoading ||
+  this.props.townshipLocationsFetched.isLoading ||
+  this.props.townshipSchemeTypesFetched.isLoading ? 
+  <div> </div> : this.renderCreateModal()}
+  */

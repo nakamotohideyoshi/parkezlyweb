@@ -7,6 +7,8 @@ import * as apiConfig from '../config/api.js'
 
 const AXIOS_INSTANCE = axios.create(apiConfig.API_CONFIG);
 
+console.log(AXIOS_INSTANCE);
+
 
 export function fetchTownshipList(id) {
   const URL = 'townships_manager'

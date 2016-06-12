@@ -28,6 +28,7 @@
     "data-uri-to-buffer": "0.0.4",
     "express": "^4.13.4",
     "express-session": "^1.13.0",
+    "griddle-react": "^0.5.1",
     "hammerjs": "^2.0.8",
     "isomorphic-fetch": "^2.2.1",
     "jquery": "^2.2.3",

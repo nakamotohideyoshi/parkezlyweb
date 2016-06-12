@@ -116,7 +116,7 @@ export function createBursarPermitPayment(data) {
 
 
 export function fetchBursarTicketPayment(locationCode) {
-  const URL = 'ticket_payment';
+  const URL = 'ticket_payments';
 
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.BURSAR_TICKET_PAYMENT_GET_REQ));
@@ -131,7 +131,7 @@ export function fetchBursarTicketPayment(locationCode) {
 }
 
 export function editBursarTicketPayment(data, id) {
-  const URL = 'ticket_payment?ids=' + id;
+  const URL = 'ticket_payments?ids=' + id;
 
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.BURSAR_TICKET_PAYMENT_PUT_REQ));
@@ -149,7 +149,7 @@ export function editBursarTicketPayment(data, id) {
 
 export function createBursarTicketPayment(data) {
   
-  const URL = 'ticket_payment';
+  const URL = 'ticket_payments';
   
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.BURSAR_TICKET_PAYMENT_POST_REQ));

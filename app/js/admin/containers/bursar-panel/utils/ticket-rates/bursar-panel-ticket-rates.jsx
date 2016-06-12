@@ -27,7 +27,7 @@ export const fields = [
 ]
 
 
-class BursarPanelParkingPayment extends React.Component {
+class BursarPanelPermitPayment extends React.Component {
 
   constructor(props) {
     super(props);
@@ -272,6 +272,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-  form: 'parking-payment',
+  form: 'permit-payment',
   fields
-})(BursarPanelParkingPayment));
+})(BursarPanelPermitPayment));

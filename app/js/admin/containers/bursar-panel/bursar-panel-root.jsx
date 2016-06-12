@@ -5,7 +5,7 @@ import Body from "../../../common/components/body/body.jsx";
 
 
 import {fetchTownshipList, fetchTownshipDetails} from '../../actions/actions-township.js';
-import {BursarPanelTiles} from './bursar-panel-tiles.jsx'
+import {BursarPanelTiles} from './utils/bursar-panel-tiles.jsx'
 
 class BursarPanelRoot extends React.Component {
 
