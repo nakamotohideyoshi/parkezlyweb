@@ -14,6 +14,7 @@ import MyWalletController from "./components/my-wallet/my-wallet-controller.jsx"
 import PaymentSuccessful from "./components/payment/payment-successful.jsx";
 import PaymentFailure from "./components/payment/payment-failure.jsx";
 import WeatherController from "./components/weather/weather-controller.jsx";
+import NearbyController from "./components/nearby/nearby-controller.jsx";
 import Logout from "./components/logout/logout.jsx";
 
 export default function ClientIndex() {
@@ -33,6 +34,7 @@ export default function ClientIndex() {
       <Route path="finalize-payment" component={PaymentSuccessful}/>
       <Route path="payment-failure" component={PaymentFailure}/>
       <Route path="weather" component={WeatherController}/>
+      <Route path="nearby" component={NearbyController}/>
       <Route path="logout" component={Logout}/>
     </div>
   );

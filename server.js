@@ -5,6 +5,7 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 import express from 'express';
 import path from 'path';
 import http from 'http';
+import https from 'https';
 import fs from 'fs';
 import bodyParser from 'body-parser';
 import session from 'express-session';
@@ -14,6 +15,7 @@ import jwt from 'jsonwebtoken';
 import jwtConfig from './jwt.config.json';
 
 import paypalRoutes from './server/routes/paypal-routes.js';
+import mapRoutes from './server/routes/map-routes.js';
 
 var dataUriToBuffer = require('data-uri-to-buffer');
 
@@ -93,10 +95,13 @@ app.post('/api/logout', function(req, res) {
   res.status(200).json({'message' : 'User logged out'});   
 });
 
+/*Paypal specific rules */
 app.post('/api/add-funds', paypalRoutes.addFunds);
 app.post('/api/save-transaction', paypalRoutes.saveTransaction);
 
-
+/*Google Places API*/
+app.post('/api/nearby', mapRoutes.getNearbyPlaces);
+app.post('/api/get-location-details', mapRoutes.getLocationDetails);
 
 
 var jsonParser       = bodyParser.json({limit:1024*1024*20, type:'application/json'});

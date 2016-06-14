@@ -21,12 +21,6 @@ const Weather = (state = initialState, action) => {
         loading : false,
         weatherData: action.data
       };
-    case "FETCH_TRANSACTION_FAIL":
-      return {
-        ...state,
-        loading : false,
-        errorMessage: action.errorMessage
-      }
     case "LOCATION_NOT_FOUND":
       return {
         ...state,
