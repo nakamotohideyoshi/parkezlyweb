@@ -1,10 +1,15 @@
 /* Add any css libraries here */
-@import "~materialize-css/dist/css/materialize.css";
+@import "./materialize.scss";
+
+/* Fonts */
 @import url(https://fonts.googleapis.com/icon?family=Material+Icons);
+
+/* CSS Libraries in /node_modules folder */
 @import "~animate.css/animate.css";
 @import "~react-selectize/themes/index.css";
 
-@import "./materialize.scss";
+/* Global Overwrites */
+@import "./materialize-overwrite.scss";
 @import "./variables.scss";
 @import "./common.scss";
 
@@ -19,4 +24,3 @@
 @import "../js/client/components/my-locations/styles/my-locations.scss";
 @import "../js/client/components/my-wallet/styles/my-wallet.scss";
 @import "../js/admin/common/styles/admin-common.scss";
-@import "../js/admin/containers/township-list/styles/township-list.scss";

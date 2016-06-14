@@ -16,11 +16,16 @@ import {
 import {
   BursarPanelController,
   BursarParkingController,
+  BursarPermitController,
+  BursarTicketController,
+  BursarWalletController,
+  BursarTicketRatesController
 } from './containers/bursar-panel/bursar-panel-controller.jsx'
 
 // Redux
 import { Provider } from 'react-redux';
 import store from './store/store.js'
+console.log(store);
 
 export default function AdminIndex() {
   return (
@@ -35,10 +40,10 @@ export default function AdminIndex() {
 
         <Route path="admin/bursar/:townshipId" component={BursarPanelController} />
         <Route path="admin/bursar/parking/:townshipCode" component={BursarParkingController} />
-        <Route path="admin/bursar/permit/:townshipCode" component={BursarPanelController} />
-        <Route path="admin/bursar/ticket/:townshipCode" component={BursarPanelController} />
-        <Route path="admin/bursar/wallet/:townshipCode" component={BursarPanelController} />
-        <Route path="admin/bursar/ticket-rates/:townshipCode" component={BursarPanelController} />
+        <Route path="admin/bursar/permit/:townshipCode" component={BursarPermitController} />
+        <Route path="admin/bursar/ticket/:townshipCode" component={BursarTicketController} />
+        <Route path="admin/bursar/wallet/:townshipCode" component={BursarWalletController} />
+        <Route path="admin/bursar/ticket-rates/:townshipCode" component={BursarTicketRatesController} />
       </div>
   );
 }

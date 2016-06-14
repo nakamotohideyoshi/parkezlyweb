@@ -13,9 +13,15 @@ import {
   townshipUsersFetched, 
   townshipUsersEdited, 
   townshipUsersCreated, 
+
   townshipFacilitiesFetched,
   townshipFacilitiesEdited,
   townshipFacilitiesCreated,
+
+  townshipLocationsFetched,
+  townshipLocationsEdited,
+  townshipLocationsCreated,
+
   townshipPermitRequestsFetched,
   townshipPermitTypesFetched,
 
@@ -79,6 +85,10 @@ var townshipPanelReducers = {
   townshipFacilitiesEdited: townshipFacilitiesEdited,
   townshipFacilitiesCreated: townshipFacilitiesCreated,
 
+  townshipLocationsFetched: townshipLocationsFetched,
+  townshipLocationsEdited: townshipLocationsEdited,
+  townshipLocationsCreated: townshipLocationsCreated,
+
   townshipPermitRequestsFetched: townshipPermitRequestsFetched,
   townshipPermitRequestsEdited: townshipPermitRequestsEdited,
 
@@ -133,6 +143,7 @@ var combinedReducerObjects = Object.assign(
   townshipReducers, 
   townshipPanelReducers, 
   townshipCommonReducers,
+  bursarPanelReducers,
   reduxFormReducer
 );
 
