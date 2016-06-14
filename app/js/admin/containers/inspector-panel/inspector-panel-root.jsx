@@ -3,11 +3,10 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import Body from "../../../common/components/body/body.jsx";
 
-
 import {fetchTownshipList, fetchTownshipDetails} from '../../actions/actions-township.js';
-import {BursarPanelTiles} from './utils/bursar-panel-tiles.jsx'
+import {InspectorPanelTiles} from './utils/inspector-panel-tiles.jsx'
 
-class BursarPanelRoot extends React.Component {
+class InspectorPanelRoot extends React.Component {
 
   constructor(props) {
     super(props);
@@ -25,7 +24,7 @@ class BursarPanelRoot extends React.Component {
           <div className="content-container">
             <div className="container">
               {this.props.townshipDetailsFetched.isLoading ? <div> Loading...</div> : 
-                <BursarPanelTiles townshipCode={this.props.townshipDetailsFetched.data.resource[0].manager_id}/>}
+                <InspectorPanelTiles townshipCode={this.props.townshipDetailsFetched.data.resource[0].manager_id}/>}
             </div>
           </div>
         </Body>
@@ -42,10 +41,10 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    fetchTownshipList,
+    fetchTownshipList, 
     fetchTownshipDetails
   }, dispatch);
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(BursarPanelRoot);
+export default connect(mapStateToProps, mapDispatchToProps)(InspectorPanelRoot);

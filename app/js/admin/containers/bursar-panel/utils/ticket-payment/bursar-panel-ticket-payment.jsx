@@ -239,7 +239,7 @@ class BursarPanelPermitPayment extends React.Component {
   }
 
   renderTable() {
-    let TicketPermitsData = this.props.bursarTicketPaymentFetched.data.resource;
+  let TicketPermitsData = this.props.bursarTicketPaymentFetched.data.resource;
     return (
       <div>
         <div className="bursar-payment-container">
@@ -247,7 +247,7 @@ class BursarPanelPermitPayment extends React.Component {
             tableClassName={'table table-bordered table-striped table-hover'}
             filterClassName={''}
             useGriddleStyles={false}
-            results={TicketPermitsData }
+            results={TicketPermitsData}
             showFilter={true}
             showSettings={true}
             settingsToggleClassName='btn btn-default'
@@ -264,8 +264,10 @@ class BursarPanelPermitPayment extends React.Component {
             'violation_charge',
             'violation_details',
             'violation_location',]}
-            useCustomFilterComponent={true} customFilterComponent={customFilterComponent}
-            useCustomFilterer={true} customFilterer={customFilterFunction}
+            useCustomFilterComponent={true} 
+            customFilterComponent={customFilterComponent}
+            useCustomFilterer={true} 
+            customFilterer={customFilterFunction}
           />
         </div>
         <div className="divider"/> 

@@ -15,7 +15,7 @@ import {fetchTownshipSchemeTypes} from '../../../../actions/actions-township-com
 
 import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import Griddle from 'griddle-react'
-import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
+import {customFilterComponent, customFilterFunction, customColumnComponent} from '../../../../common/components/griddle-custom-filter.jsx'
 
 export const fields = [ 
   'id',
@@ -133,9 +133,29 @@ class BursarPanelWalletPayment extends React.Component {
 
   }
 
+  renderEditModal() {
+    console.log("Testing render modal")
+  }
+
   renderTable() {
     let walletData = this.props.bursarWalletPaymentFetched.data.resource;
     document.getElementById('griddle-metadata')
+
+    var renderEditModal = this.renderEditModal;
+    var metaDataFunction = () =>  {
+      return fields.map((data) => {
+        return( 
+          {
+            "columnName": data,
+            "customComponent": customColumnComponent,
+            'customComponentMetadata': {
+                'renderEditModal': renderEditModal
+            }
+          }
+        );
+      });
+    }
+    var columnMeta = metaDataFunction()
     return (
       <div>
         <div className="bursar-payment-container">
@@ -151,6 +171,7 @@ class BursarPanelWalletPayment extends React.Component {
           customPagerComponent={ BootstrapPager }
           useCustomFilterComponent={true} customFilterComponent={customFilterComponent}
           useCustomFilterer={true} customFilterer={customFilterFunction}
+          columnMetadata={columnMeta}
         />
         </div>
         <div className="divider"/> 

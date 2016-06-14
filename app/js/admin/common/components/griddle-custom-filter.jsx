@@ -44,3 +44,17 @@ export const customFilterComponent = React.createClass({
     )
   }
 });
+
+export const customColumnComponent = React.createClass({
+  getDefaultProps: function(){
+    return { "data": {}, "renderEditModal": null};
+  },
+  render: function(){
+    console.log()
+    return (
+      <div onClick={() => this.props.metadata.customComponentMetadata.renderEditModal()}>
+        {this.props.data}
+      </div>
+    );
+  }
+});
