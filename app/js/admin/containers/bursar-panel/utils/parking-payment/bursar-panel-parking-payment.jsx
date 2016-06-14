@@ -9,9 +9,13 @@ import Body from "../../../../../common/components/body/body.jsx"
 import Spinner from '../../../../common/components/spinner.jsx'
 import {optionsSelectize} from '../../../../common/components/options-selectize.js'
 
-import {fetchBursarParkingPayment} from '../../../../actions/actions-bursar-panel.jsx'
+import {fetchBursarParkingPayment, createBursarParkingPayment, resetLoading} from '../../../../actions/actions-bursar-panel.jsx'
 import {fetchTownshipLocations} from '../../../../actions/actions-township-panel.jsx'
 import {fetchTownshipSchemeTypes} from '../../../../actions/actions-township-common.jsx'
+
+import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
+import Griddle from 'griddle-react'
+import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 
 export const fields = [ 
   'vehicle_id',
@@ -36,7 +40,6 @@ class BursarPanelParkingPayment extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
     this.renderTable = this.renderTable.bind(this);
-    this.renderTableData = this.renderTableData.bind(this);
   }
 
   componentWillMount() {
@@ -45,12 +48,38 @@ class BursarPanelParkingPayment extends React.Component {
     this.props.fetchTownshipLocations(this.props.townshipCode);
   }
 
-  handleSuccess(){
+  componentDidUpdate() {
+    if (this.props.bursarParkingPaymentCreated.isLoading) {
+    } else if (!this.props.bursarParkingPaymentCreated.isLoading) {
+      this.handleSuccess();
+    }
+  };
 
+  handleSuccess(){
+    this.props.resetLoading();
+    $('#modal-bursar-payment-create').closeModal();
+    this.props.fetchBursarParkingPayment();
   }
 
   handleSubmit(data) {
+    this.props.createBursarParkingPayment(data);
+  }
 
+  tempInputs() {
+    const {dispatch} = this.props;
+
+    return fields.map((data) => {
+      return( 
+        <div className="col s6 admin-form-input">
+          <div className="form-group">
+            <label>{data}</label>
+            <input type="text" placeholder={data} onChange={(event) => 
+              dispatch(change('parking-payment', data, event.target.value))
+            }/>
+          </div>
+        </div>
+      );
+    });
   }
 
   renderCreateModal() {
@@ -120,21 +149,7 @@ class BursarPanelParkingPayment extends React.Component {
                     }}></SimpleSelect>
                 </div>
               </div>
-
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Vehicle Id</label>
-                  <input type="text" placeholder="Vehicle Id" {...vehicle_id}/>
-                </div>
-              </div>
-
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Vehicle Id</label>
-                  <input type="text" placeholder="Vehicle Id" {...vehicle_id}/>
-                </div>
-              </div>
-
+              {this.tempInputs()}
 
             </div>
           </div>
@@ -142,7 +157,7 @@ class BursarPanelParkingPayment extends React.Component {
 
           <div className="modal-footer">
             <div className="row marginless-row">
-              <div className="col s8">
+              <div className="col s12 center-align">
                 <button 
                 type="submit" 
                 disabled={submitting} 
@@ -156,49 +171,24 @@ class BursarPanelParkingPayment extends React.Component {
 
   }
 
-  renderTableData(parkingPermitsData) {
-    return parkingPermitsData.map((data) => {
-      return( 
-        <tr key={data.id}>
-          <td>{data.vehicle_id}</td>
-          <td>{data.user_name}</td>
-          <td>{data.date}</td>
-          <td>{data.location_id}</td>
-          <td>{data.scheme_type}</td>
-          <td>{data.rate}</td>
-          <td>{data.payment_method}</td>
-          <td>{data.amount}</td>
-          <td>{data.cashier_id}</td>
-          <td>{data.user_id}</td>
-        </tr>
-      );
-    });
-  }
-
   renderTable() {
     console.log(this.props.bursarParkingPaymentFetched)
-    let parkingPermitsData = this.props.bursarParkingPaymentFetched.data.resource;
+    let parkingData = this.props.bursarParkingPaymentFetched.data.resource;
     return (
       <div>
-        <table className="highlight">
-          <thead>
-            <tr>
-              <th data-field="id">Vechile Id</th>
-              <th data-field="name">User Name</th>
-              <th data-field="price">Date</th>
-              <th data-field="price">Location Id</th>
-              <th data-field="price">Scheme Type</th>
-              <th data-field="price">Rate</th>
-              <th data-field="price">Pay Method</th>
-              <th data-field="price">Amount</th>
-              <th data-field="price">Cashier Id</th>
-              <th data-field="price">User Id</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.renderTableData(parkingPermitsData)}
-          </tbody>
-        </table>
+        <Griddle
+          tableClassName={'table table-bordered table-striped table-hover'}
+          filterClassName={''}
+          useGriddleStyles={false}
+          results={parkingData}
+          showFilter={true}
+          showSettings={true}
+          settingsToggleClassName='btn btn-default'
+          useCustomPagerComponent={true}
+          customPagerComponent={ BootstrapPager }
+          useCustomFilterComponent={true} customFilterComponent={customFilterComponent}
+          useCustomFilterer={true} customFilterer={customFilterFunction}
+        />
 
         <div className="divider"/> 
 
@@ -217,8 +207,8 @@ class BursarPanelParkingPayment extends React.Component {
     return (
       <div className="blue-body marginless-row">
         <Body showHeader={true}>
-          <div className="container" style={{marginTop: 40}}>
-            <div>
+          <div className="row" style={{marginTop: 40}}>
+            <div className="col s12">
               <nav>
                 <div className="nav-wrapper nav-admin z-depth-2">
                   <a className="brand-logo center">Parking Payment</a>
@@ -258,6 +248,7 @@ class BursarPanelParkingPayment extends React.Component {
 function mapStateToProps(state) {
   return {
     bursarParkingPaymentFetched: state.bursarParkingPaymentFetched,
+    bursarParkingPaymentCreated: state.bursarParkingPaymentCreated,
     townshipLocationsFetched: state.townshipLocationsFetched,
     townshipSchemeTypesFetched: state.townshipSchemeTypesFetched,
   }
@@ -267,7 +258,9 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     fetchBursarParkingPayment,
     fetchTownshipLocations,
-    fetchTownshipSchemeTypes
+    resetLoading,
+    fetchTownshipSchemeTypes,
+    createBursarParkingPayment
   }, dispatch);
 }
 

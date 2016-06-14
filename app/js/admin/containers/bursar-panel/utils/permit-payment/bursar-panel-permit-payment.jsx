@@ -9,9 +9,13 @@ import Body from "../../../../../common/components/body/body.jsx"
 import Spinner from '../../../../common/components/spinner.jsx'
 import {optionsSelectize} from '../../../../common/components/options-selectize.js'
 
-import {fetchBursarPermitPayment} from '../../../../actions/actions-bursar-panel.jsx'
+import {fetchBursarPermitPayment, createBursarPermitPayment, resetLoading} from '../../../../actions/actions-bursar-panel.jsx'
 import {fetchTownshipLocations} from '../../../../actions/actions-township-panel.jsx'
 import {fetchTownshipSchemeTypes} from '../../../../actions/actions-township-common.jsx'
+
+import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
+import Griddle from 'griddle-react'
+import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 
 export const fields = [ 
   'date_expiry',
@@ -54,48 +58,34 @@ class BursarPanelPermitPayment extends React.Component {
     this.props.fetchTownshipLocations(this.props.townshipCode);
   }
 
-  handleSuccess(){
+  componentDidUpdate() {
+    if (this.props.bursarPermitPaymentCreated.isLoading) {
+    } else if (!this.props.bursarPermitPaymentCreated.isLoading) {
+      this.handleSuccess();
+    }
+  };
 
+  handleSuccess(){
+    this.props.resetLoading();
+    $('#modal-bursar-permit-create').closeModal();
+    this.props.fetchBursarPermitPayment();
   }
 
   handleSubmit(data) {
-
+    this.props.createBursarPermitPayment(data);
   }
 
   tempInputs() {
-    const {
-      fields: {
-        date_expiry,
-        user_name,
-        permit_approved,
-        rate,
-        pay_method,
-        amount,
-        cashier_id,
-        user_id,
-        twnship_code,
-        twnshp_name,
-        permit_name,
-        permit_type,
-        scheme_type,
-        loc_code,
-        loc_name,
-        duration,
-        duration_period,
-        ip,
-        date_payment
-      },
-      resetForm,
-      submitting,
-      dispatch
-    } = this.props
+    const {dispatch} = this.props;
 
     return fields.map((data) => {
       return( 
         <div className="col s6 admin-form-input">
           <div className="form-group">
             <label>{data}</label>
-            <input type="text" placeholder={data} {...[data]}/>
+            <input type="text" placeholder={data} onChange={(event) => 
+              dispatch(change('permit-payment', data, event.target.value))
+            }/>
           </div>
         </div>
       );
@@ -133,7 +123,7 @@ class BursarPanelPermitPayment extends React.Component {
 
     return(
       <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-        <div id="modal-bursar-payment-create" className="modal modal-fixed-footer">
+        <div id="modal-bursar-permit-create" className="modal modal-fixed-footer">
           <div className="modal-content">
 
             <div className="row">
@@ -152,7 +142,7 @@ class BursarPanelPermitPayment extends React.Component {
           
           <div className="modal-footer">
             <div className="row marginless-row">
-              <div className="col s8">
+              <div className="col s12 center-align">
                 <button 
                 type="submit" 
                 disabled={submitting} 
@@ -195,38 +185,31 @@ class BursarPanelPermitPayment extends React.Component {
   }
 
   renderTable() {
-    console.log("test");
-    let parkingPermitsData = this.props.bursarPermitPaymentFetched.data.resource;
+    let permitsData = this.props.bursarPermitPaymentFetched.data.resource;
     return (
       <div>
-        <table className="highlight">
-          <thead>
-            <tr>
-              <th data-field="id">Date Expiry </th>
-              <th data-field="id">User </th>
-              <th data-field="id">Name </th>
-              <th data-field="id">Permit Approved Rate  </th>
-              <th data-field="id">Pay Method </th>
-              <th data-field="id">Amount </th>
-              <th data-field="id">Cashier Id  </th>
-              <th data-field="id">User Id </th>
-              <th data-field="id">Twnshp Code </th>
-              <th data-field="id">Twnshp Name </th>
-              <th data-field="id">Permit Name </th>
-              <th data-field="id">Permit Type </th>
-              <th data-field="id">Scheme Type </th>
-              <th data-field="id">Loc Code  </th>
-              <th data-field="id">Loc Name  </th>
-              <th data-field="id">Duration </th>
-              <th data-field="id">Duration Period </th>
-              <th data-field="id">Ip  </th>
-              <th data-field="id">Date Payment</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.renderTableData(parkingPermitsData)}
-          </tbody>
-        </table>
+        <Griddle
+          tableClassName={'table table-bordered table-striped table-hover'}
+          filterClassName={''}
+          useGriddleStyles={false}
+          results={permitsData}
+          showFilter={true}
+          showSettings={true}
+          settingsToggleClassName='btn btn-default'
+          useCustomPagerComponent={true}
+          customPagerComponent={ BootstrapPager }
+          columns={['id',
+                    'date_expiry',
+                    'user_name',
+                    'permit_approved',
+                    'rate',
+                    'pay_method',
+                    'amount',
+                    'cashier_id',
+                    'user_id']}
+          useCustomFilterComponent={true} customFilterComponent={customFilterComponent}
+          useCustomFilterer={true} customFilterer={customFilterFunction}
+        />
       </div>
     );
   }
@@ -237,7 +220,7 @@ class BursarPanelPermitPayment extends React.Component {
       <div className="blue-body marginless-row">
         <Body showHeader={true}>
           <div className="row" style={{marginTop: 40}}>
-            <div className="col s12 m12 l12">
+            <div className="col s12">
               <nav>
                 <div className="nav-wrapper nav-admin z-depth-2">
                   <a className="brand-logo center">Permit Payment</a>
@@ -254,7 +237,7 @@ class BursarPanelPermitPayment extends React.Component {
               <div className="center-align">
                 <a
                   className="modal-trigger waves-effect waves-light btn valign" 
-                  onClick={() => $('#modal-bursar-payment-create').openModal()}
+                  onClick={() => $('#modal-bursar-permit-create').openModal()}
                   style={{margin: 10}}>Add New Permit Payment</a>
               </div>
                </div>
@@ -283,6 +266,7 @@ class BursarPanelPermitPayment extends React.Component {
 function mapStateToProps(state) {
   return {
     bursarPermitPaymentFetched: state.bursarPermitPaymentFetched,
+    bursarPermitPaymentCreated: state.bursarPermitPaymentCreated,
     townshipLocationsFetched: state.townshipLocationsFetched,
     townshipSchemeTypesFetched: state.townshipSchemeTypesFetched,
   }
@@ -291,6 +275,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     fetchBursarPermitPayment,
+    createBursarPermitPayment,
+    resetLoading,
     fetchTownshipLocations,
     fetchTownshipSchemeTypes
   }, dispatch);

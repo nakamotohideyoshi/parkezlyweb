@@ -4,6 +4,8 @@ import BursarPanelRoot from './bursar-panel-root.jsx'
 import BursarPanelParkingPayment from './utils/parking-payment/bursar-panel-parking-payment.jsx'
 import BursarPanelPermitPayment from './utils/permit-payment/bursar-panel-permit-payment.jsx'
 import BursarPanelTicketPayment from './utils/ticket-payment/bursar-panel-ticket-payment.jsx'
+import BursarPanelWalletPayment from './utils/wallet-payment/bursar-panel-wallet-payment.jsx'
+import BursarPanelTicketRates from './utils/ticket-rates/bursar-panel-ticket-rates.jsx';
 import store from '../../store/store.js'
 
 export class BursarPanelController extends React.Component {
@@ -70,7 +72,7 @@ export class BursarWalletController extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        <BursarPanelParkingPayment townshipCode={this.props.params.townshipCode} />
+        <BursarPanelWalletPayment townshipCode={this.props.params.townshipCode} />
       </Provider>
     );
   }
@@ -84,7 +86,7 @@ export class BursarTicketRatesController extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        <BursarPanelParkingPayment townshipCode={this.props.params.townshipCode} />
+        <BursarPanelTicketRates townshipCode={this.props.params.townshipCode} />
       </Provider>
     );
   }

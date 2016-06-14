@@ -223,7 +223,7 @@ export function createBursarWalletPayment(data) {
 
 
 export function fetchBursarTicketRates(locationCode) {
-  const URL = 'pay_for_wallet';
+  const URL = 'violation_code';
 
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.BURSAR_TICKET_RATES_GET_REQ));
@@ -238,7 +238,7 @@ export function fetchBursarTicketRates(locationCode) {
 }
 
 export function editBursarTicketRates(data, id) {
-  const URL = 'pay_for_wallet?ids=' + id;
+  const URL = 'violation_code?ids=' + id;
 
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.BURSAR_TICKET_RATES_PUT_REQ));
@@ -256,7 +256,7 @@ export function editBursarTicketRates(data, id) {
 
 export function createBursarTicketRates(data) {
   
-  const URL = 'pay_for_wallet';
+  const URL = 'violation_code';
   
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.BURSAR_TICKET_RATES_POST_REQ));
@@ -272,6 +272,11 @@ export function createBursarTicketRates(data) {
 }
 
 
+export function resetLoading() {
+  return {
+    type: types.RESET_LOADING
+  };
+}
 
 
 

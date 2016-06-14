@@ -9,9 +9,13 @@ import Body from "../../../../../common/components/body/body.jsx"
 import Spinner from '../../../../common/components/spinner.jsx'
 import {optionsSelectize} from '../../../../common/components/options-selectize.js'
 
-import {fetchBursarTicketPayment} from '../../../../actions/actions-bursar-panel.jsx'
+import {fetchBursarTicketPayment, createBursarTicketPayment, resetLoading} from '../../../../actions/actions-bursar-panel.jsx'
 import {fetchTownshipLocations} from '../../../../actions/actions-township-panel.jsx'
 import {fetchTownshipSchemeTypes} from '../../../../actions/actions-township-common.jsx'
+
+import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
+import Griddle from 'griddle-react'
+import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 
 export const fields = [ 
   'id',
@@ -64,6 +68,8 @@ class BursarPanelPermitPayment extends React.Component {
     this.handleSuccess = this.handleSuccess.bind(this);
     this.renderTable = this.renderTable.bind(this);
     this.renderTableData = this.renderTableData.bind(this);
+
+    
   }
 
   componentWillMount() {
@@ -72,16 +78,41 @@ class BursarPanelPermitPayment extends React.Component {
     this.props.fetchTownshipLocations(this.props.townshipCode);
   }
 
-  handleSuccess(){
+  componentDidUpdate() {
+    if (this.props.bursarTicketPaymentCreated.isLoading) {
+    } else if (!this.props.bursarTicketPaymentCreated.isLoading) {
+      this.handleSuccess();
+    }
+  };
 
+  handleSuccess(){
+    this.props.resetLoading();
+    $('#modal-bursar-payment-create').closeModal();
+    this.props.fetchBursarTicketPayment();
   }
 
   handleSubmit(data) {
+    this.props.createBursarTicketPayment(data);
+  }
 
+  tempInputs() {
+    const {dispatch} = this.props;
+
+    return fields.map((data) => {
+      return( 
+        <div className="col s6 admin-form-input">
+          <div className="form-group">
+            <label>{data}</label>
+            <input type="text" placeholder={data} onChange={(event) => 
+              dispatch(change('ticket-payment', data, event.target.value))
+            }/>
+          </div>
+        </div>
+      );
+    });
   }
 
   renderCreateModal() {
-    
     const {
       fields: {
         id,
@@ -127,9 +158,6 @@ class BursarPanelPermitPayment extends React.Component {
       dispatch
     } = this.props
 
-    var optionsLocationCode = optionsSelectize(this.props.townshipLocationsFetched.data.resource, 'location_code');
-    var optionsSchemeTypes = optionsSelectize(this.props.townshipSchemeTypesFetched.data.resource, 'scheme_type');
-
     return(
       <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
         <div id="modal-bursar-payment-create" className="modal modal-fixed-footer">
@@ -138,65 +166,19 @@ class BursarPanelPermitPayment extends React.Component {
             <div className="row">
               <div className="center-align">
                 <h4>Create a Ticket Payment</h4>
-                <p className="center-align">Create a parking payment by filling out the fields.</p>
+                <p className="center-align">Create a ticket payment by filling out the fields.</p>
               </div>
             </div>
 
             <div className="row">
-
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Scheme Type</label>
-                  <div clasName="input-field col s12">
-                    <SimpleSelect 
-                    options = {optionsSchemeTypes} 
-                    placeholder = "Select Scheme Type" 
-                    theme = "material" 
-                    style={{marginTop: 5}}
-                    onValueChange = {(value) => {
-                      dispatch(change('locations-rate', 'scheme_type', value.value)); 
-                    }}></SimpleSelect>
-                  </div>
-                </div>
-              </div>
-
-
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Location Code</label>
-                  <SimpleSelect 
-                    options = {optionsLocationCode} 
-                    placeholder = "Select a User Name" 
-                    theme = "material" 
-                    style={{marginTop: 5}}
-                    onValueChange = {(value) => {
-                      dispatch(change('parking-payment', 'location_code', value.value));     
-                    }}></SimpleSelect>
-                </div>
-              </div>
-
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Vehicle Id</label>
-                  <input type="text" placeholder="Vehicle Id" {...vehicle_id}/>
-                </div>
-              </div>
-
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Vehicle Id</label>
-                  <input type="text" placeholder="Vehicle Id" {...vehicle_id}/>
-                </div>
-              </div>
-
-
+              {this.tempInputs()}
             </div>
           </div>
           
 
           <div className="modal-footer">
             <div className="row marginless-row">
-              <div className="col s8">
+              <div className="col s12 center-align">
                 <button 
                 type="submit" 
                 disabled={submitting} 
@@ -210,8 +192,8 @@ class BursarPanelPermitPayment extends React.Component {
 
   }
 
-  renderTableData(parkingPermitsData) {
-    return parkingPermitsData.map((data) => {
+  renderTableData(TicketPermitsData) {
+    return TicketPermitsData.map((data) => {
       return( 
         <tr key={data.id}>
           <td>{data.id}</td>
@@ -257,56 +239,35 @@ class BursarPanelPermitPayment extends React.Component {
   }
 
   renderTable() {
-    let parkingPermitsData = this.props.bursarTicketPaymentFetched.data.resource;
+    let TicketPermitsData = this.props.bursarTicketPaymentFetched.data.resource;
     return (
       <div>
-        <table className="highlight">
-          <thead>
-            <tr>
-              <th data-field="id">id</th>
-              <th data-field="id">ip</th>
-              <th data-field="id">ticket_no</th>
-              <th data-field="id">plate_num</th>
-              <th data-field="id">user_id</th>
-              <th data-field="id">address</th>
-              <th data-field="id">email</th>
-              <th data-field="id">paypal_total</th>
-              <th data-field="id">violation_charge</th>
-              <th data-field="id">violation_details</th>
-              <th data-field="id">violation_location</th>
-              <th data-field="id">pld_guilty</th>
-              <th data-field="id">penalty_adjustment</th>
-              <th data-field="id">adjust_rfchange</th>
-              <th data-field="id">new_amt_due</th>
-              <th data-field="id">pmt_status</th>
-              <th data-field="id">ticket_status</th>
-              <th data-field="id">pmt_options</th>
-              <th data-field="id">ipn_txn_id</th>
-              <th data-field="id">ipn_payment</th>
-              <th data-field="id">tr_percentage</th>
-              <th data-field="id">ipn_address</th>
-              <th data-field="id">wallet_balance</th>
-              <th data-field="id">township_code</th>
-              <th data-field="id">twp_payment</th>
-              <th data-field="id">ipn_status</th>
-              <th data-field="id">adjust_ref</th>
-              <th data-field="id">phone</th>
-              <th data-field="id">paid_date</th>
-              <th data-field="id">ipn_custom</th>
-              <th data-field="id">penalty_change</th>
-              <th data-field="id">date_payment</th>
-              <th data-field="id">tr_fee</th>
-              <th data-field="id">cheque_details</th>
-              <th data-field="id">cheque_date</th>
-              <th data-field="id">violation_date</th>
-              <th data-field="id">cheque_no</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.renderTableData(parkingPermitsData)}
-          </tbody>
-        </table>
-
+        <div className="bursar-payment-container">
+          <Griddle
+            tableClassName={'table table-bordered table-striped table-hover'}
+            filterClassName={''}
+            useGriddleStyles={false}
+            results={TicketPermitsData }
+            showFilter={true}
+            showSettings={true}
+            settingsToggleClassName='btn btn-default'
+            useCustomPagerComponent={true}
+            customPagerComponent={ BootstrapPager }
+            columns={['id',
+            'ip',
+            'ticket_no',
+            'plate_num',
+            'user_id',
+            'address',
+            'email',
+            'paypal_total',
+            'violation_charge',
+            'violation_details',
+            'violation_location',]}
+            useCustomFilterComponent={true} customFilterComponent={customFilterComponent}
+            useCustomFilterer={true} customFilterer={customFilterFunction}
+          />
+        </div>
         <div className="divider"/> 
 
         <div className="center-align">
@@ -332,7 +293,7 @@ class BursarPanelPermitPayment extends React.Component {
                 </div>
               </nav>
                <div className="card">
-                  <div className="township-userlist-container">
+                  <div >
                     { this.props.bursarTicketPaymentFetched.isLoading ||
                       this.props.townshipLocationsFetched.isLoading ? 
                       <div> </div> : this.renderTable()}
@@ -341,8 +302,8 @@ class BursarPanelPermitPayment extends React.Component {
             </div>
           </div>
         </Body>
-
-
+        { this.props.bursarTicketPaymentFetched.isLoading ? 
+          <div> </div> : this.renderCreateModal()}
         <div id="modal-success" className="modal">
           <div className="modal-content">
             <h4>Success!</h4>
@@ -365,6 +326,7 @@ function mapStateToProps(state) {
     bursarTicketPaymentFetched: state.bursarTicketPaymentFetched,
     townshipLocationsFetched: state.townshipLocationsFetched,
     townshipSchemeTypesFetched: state.townshipSchemeTypesFetched,
+    bursarTicketPaymentCreated: state.bursarTicketPaymentCreated
   }
 }
 
@@ -372,7 +334,9 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     fetchBursarTicketPayment,
     fetchTownshipLocations,
-    fetchTownshipSchemeTypes
+    fetchTownshipSchemeTypes,
+    createBursarTicketPayment,
+    resetLoading,
   }, dispatch);
 }
 
@@ -387,3 +351,55 @@ export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   this.props.townshipSchemeTypesFetched.isLoading ? 
   <div> </div> : this.renderCreateModal()}
   */
+
+
+
+
+/*
+<table className="highlight">
+  <thead>
+    <tr>
+      <th data-field="id">id</th>
+      <th data-field="id">ip</th>
+      <th data-field="id">ticket_no</th>
+      <th data-field="id">plate_num</th>
+      <th data-field="id">user_id</th>
+      <th data-field="id">address</th>
+      <th data-field="id">email</th>
+      <th data-field="id">paypal_total</th>
+      <th data-field="id">violation_charge</th>
+      <th data-field="id">violation_details</th>
+      <th data-field="id">violation_location</th>
+      <th data-field="id">pld_guilty</th>
+      <th data-field="id">penalty_adjustment</th>
+      <th data-field="id">adjust_rfchange</th>
+      <th data-field="id">new_amt_due</th>
+      <th data-field="id">pmt_status</th>
+      <th data-field="id">ticket_status</th>
+      <th data-field="id">pmt_options</th>
+      <th data-field="id">ipn_txn_id</th>
+      <th data-field="id">ipn_payment</th>
+      <th data-field="id">tr_percentage</th>
+      <th data-field="id">ipn_address</th>
+      <th data-field="id">wallet_balance</th>
+      <th data-field="id">township_code</th>
+      <th data-field="id">twp_payment</th>
+      <th data-field="id">ipn_status</th>
+      <th data-field="id">adjust_ref</th>
+      <th data-field="id">phone</th>
+      <th data-field="id">paid_date</th>
+      <th data-field="id">ipn_custom</th>
+      <th data-field="id">penalty_change</th>
+      <th data-field="id">date_payment</th>
+      <th data-field="id">tr_fee</th>
+      <th data-field="id">cheque_details</th>
+      <th data-field="id">cheque_date</th>
+      <th data-field="id">violation_date</th>
+      <th data-field="id">cheque_no</th>
+    </tr>
+  </thead>
+  <tbody>
+    {this.renderTableData(TicketPermitsData)}
+  </tbody>
+</table>
+*/

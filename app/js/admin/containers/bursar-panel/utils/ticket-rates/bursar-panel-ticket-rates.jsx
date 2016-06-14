@@ -9,25 +9,29 @@ import Body from "../../../../../common/components/body/body.jsx"
 import Spinner from '../../../../common/components/spinner.jsx'
 import {optionsSelectize} from '../../../../common/components/options-selectize.js'
 
-import {fetchBursarParkingPayment} from '../../../../actions/actions-bursar-panel.jsx'
+import {fetchBursarTicketRates, createBursarTicketRates, resetLoading} from '../../../../actions/actions-bursar-panel.jsx'
 import {fetchTownshipLocations} from '../../../../actions/actions-township-panel.jsx'
 import {fetchTownshipSchemeTypes} from '../../../../actions/actions-township-common.jsx'
 
+import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
+import Griddle from 'griddle-react'
+import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
+
 export const fields = [ 
-  'vehicle_id',
-  'user_name',
-  'date',
-  'location_id',
-  'scheme_type',
-  'rate',
-  'pay_method',
-  'amount',
-  'cashier_id',
-  'user_id',
+  'id',
+  'date_time',
+  'violation_code',
+  'violation_description',
+  'violation_fee',
+  'township_code',
+  'violation_detail',
+  'section_law',
+  'section_num',
+  'state',
 ]
 
 
-class BursarPanelPermitPayment extends React.Component {
+class BursarPanelTicketRates extends React.Component {
 
   constructor(props) {
     super(props);
@@ -36,45 +40,66 @@ class BursarPanelPermitPayment extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
     this.renderTable = this.renderTable.bind(this);
-    this.renderTableData = this.renderTableData.bind(this);
   }
 
   componentWillMount() {
-    this.props.fetchBursarParkingPayment();
+    this.props.fetchBursarTicketRates();
     this.props.fetchTownshipSchemeTypes();
     this.props.fetchTownshipLocations(this.props.townshipCode);
-  }
+  } 
+
+  componentDidUpdate() {
+    if (this.props.bursarTicketRatesCreated.isLoading) {
+    } else if (!this.props.bursarTicketRatesCreated.isLoading) {
+      this.handleSuccess();
+    }
+  };
 
   handleSuccess(){
-
+    this.props.resetLoading();
+    $('#modal-bursar-payment-create').closeModal();
+    this.props.fetchBursarTicketRates();
   }
 
   handleSubmit(data) {
+    this.props.createBursarTicketRates(data);
+  }
 
+  tempInputs() {
+    const {dispatch} = this.props;
+
+    return fields.map((data) => {
+      return( 
+        <div className="col s6 admin-form-input">
+          <div className="form-group">
+            <label>{data}</label>
+            <input type="text" placeholder={data} onChange={(event) => 
+              dispatch(change('ticket-rates', data, event.target.value))
+            }/>
+          </div>
+        </div>
+      );
+    });
   }
 
   renderCreateModal() {
-    
     const {
       fields: {
-        vehicle_id,
-        user_name,
-        date,
-        location_id,
-        scheme_type,
-        rate,
+        id,
+        date_time,
+        user_id,
+        wallet_id,
+        current_balance,
         pay_method,
         amount,
         cashier_id,
-        user_id,
+        user_name,
+        cbalance,
       },
       resetForm,
       submitting,
       dispatch
     } = this.props
-
-    var optionsLocationCode = optionsSelectize(this.props.townshipLocationsFetched.data.resource, 'location_code');
-    var optionsSchemeTypes = optionsSelectize(this.props.townshipSchemeTypesFetched.data.resource, 'scheme_type');
 
     return(
       <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
@@ -83,70 +108,24 @@ class BursarPanelPermitPayment extends React.Component {
 
             <div className="row">
               <div className="center-align">
-                <h4>Create a Parking Payment</h4>
-                <p className="center-align">Create a parking payment by filling out the fields.</p>
+                <h4>Create a Ticket Rate</h4>
+                <p className="center-align">Create a Ticket Rate by filling out the fields.</p>
               </div>
             </div>
 
             <div className="row">
-
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Scheme Type</label>
-                  <div clasName="input-field col s12">
-                    <SimpleSelect 
-                    options = {optionsSchemeTypes} 
-                    placeholder = "Select Scheme Type" 
-                    theme = "material" 
-                    style={{marginTop: 5}}
-                    onValueChange = {(value) => {
-                      dispatch(change('locations-rate', 'scheme_type', value.value)); 
-                    }}></SimpleSelect>
-                  </div>
-                </div>
-              </div>
-
-
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Location Code</label>
-                  <SimpleSelect 
-                    options = {optionsLocationCode} 
-                    placeholder = "Select a User Name" 
-                    theme = "material" 
-                    style={{marginTop: 5}}
-                    onValueChange = {(value) => {
-                      dispatch(change('parking-payment', 'location_code', value.value));     
-                    }}></SimpleSelect>
-                </div>
-              </div>
-
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Vehicle Id</label>
-                  <input type="text" placeholder="Vehicle Id" {...vehicle_id}/>
-                </div>
-              </div>
-
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Vehicle Id</label>
-                  <input type="text" placeholder="Vehicle Id" {...vehicle_id}/>
-                </div>
-              </div>
-
-
+              {this.tempInputs()}
             </div>
           </div>
           
 
           <div className="modal-footer">
             <div className="row marginless-row">
-              <div className="col s8">
+              <div className="col s12 center-align">
                 <button 
                 type="submit" 
                 disabled={submitting} 
-                className="waves-effect waves-light btn">Create Parking Payment</button>
+                className="waves-effect waves-light btn">Create Ticket Rate</button>
               </div>
             </div>
           </div>
@@ -156,77 +135,52 @@ class BursarPanelPermitPayment extends React.Component {
 
   }
 
-  renderTableData(parkingPermitsData) {
-    return parkingPermitsData.map((data) => {
-      return( 
-        <tr key={data.id}>
-          <td>{data.vehicle_id}</td>
-          <td>{data.user_name}</td>
-          <td>{data.date}</td>
-          <td>{data.location_id}</td>
-          <td>{data.scheme_type}</td>
-          <td>{data.rate}</td>
-          <td>{data.payment_method}</td>
-          <td>{data.amount}</td>
-          <td>{data.cashier_id}</td>
-          <td>{data.user_id}</td>
-        </tr>
-      );
-    });
-  }
-
   renderTable() {
-    console.log(this.props.bursarParkingPaymentFetched)
-    let parkingPermitsData = this.props.bursarParkingPaymentFetched.data.resource;
+    let walletData = this.props.bursarTicketRatesFetched.data.resource;
     return (
       <div>
-        <table className="highlight">
-          <thead>
-            <tr>
-              <th data-field="id">Vechile Id</th>
-              <th data-field="name">User Name</th>
-              <th data-field="price">Date</th>
-              <th data-field="price">Location Id</th>
-              <th data-field="price">Scheme Type</th>
-              <th data-field="price">Rate</th>
-              <th data-field="price">Pay Method</th>
-              <th data-field="price">Amount</th>
-              <th data-field="price">Cashier Id</th>
-              <th data-field="price">User Id</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.renderTableData(parkingPermitsData)}
-          </tbody>
-        </table>
-
+        <div className="bursar-payment-container">
+          <Griddle
+            tableClassName={'table table-bordered table-striped table-hover'}
+            filterClassName={''}
+            useGriddleStyles={false}
+            results={walletData}
+            showFilter={true}
+            showSettings={true}
+            settingsToggleClassName='btn btn-default'
+            useCustomPagerComponent={true}
+            customPagerComponent={ BootstrapPager }
+            useCustomFilterComponent={true} customFilterComponent={customFilterComponent}
+            useCustomFilterer={true} customFilterer={customFilterFunction}     
+          />
+        </div>
         <div className="divider"/> 
 
         <div className="center-align">
           <a
             className="modal-trigger waves-effect waves-light btn valign" 
             onClick={() => $('#modal-bursar-payment-create').openModal()}
-            style={{margin: 10}}>Add New Parking Payment</a>
+            style={{margin: 10}}>Add New Ticket Rate</a>
         </div>
       </div>
     );
   }
 
   render() {
-    console.log(this.props.townshipLocationsFetched)
+    console.log(this.props.bursarTicketRatesFetched)
     return (
       <div className="blue-body marginless-row">
         <Body showHeader={true}>
-          <div className="container" style={{marginTop: 40}}>
-            <div>
+          <div className="row" style={{marginTop: 40}}>
+            <div className="col s12">
               <nav>
                 <div className="nav-wrapper nav-admin z-depth-2">
-                  <a className="brand-logo center">Parking Payment</a>
+                  <a className="brand-logo center">Ticket Rates</a>
                 </div>
               </nav>
                <div className="card">
-                  <div className="township-userlist-container">
-                    { this.props.bursarParkingPaymentFetched.isLoading ||
+                  <div >
+                    { this.props.bursarTicketRatesFetched.isLoading ||
                       this.props.townshipLocationsFetched.isLoading ? 
                       <div> </div> : this.renderTable()}
                   </div>
@@ -234,9 +188,7 @@ class BursarPanelPermitPayment extends React.Component {
             </div>
           </div>
         </Body>
-        { this.props.bursarParkingPaymentFetched.isLoading ||
-          this.props.townshipLocationsFetched.isLoading ||
-          this.props.townshipSchemeTypesFetched.isLoading ? 
+        { this.props.bursarTicketRatesFetched.isLoading ? 
           <div> </div> : this.renderCreateModal()}
         <div id="modal-success" className="modal">
           <div className="modal-content">
@@ -257,7 +209,8 @@ class BursarPanelPermitPayment extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    bursarParkingPaymentFetched: state.bursarParkingPaymentFetched,
+    bursarTicketRatesFetched: state.bursarTicketRatesFetched,
+    bursarTicketRatesCreated: state.bursarTicketRatesCreated,
     townshipLocationsFetched: state.townshipLocationsFetched,
     townshipSchemeTypesFetched: state.townshipSchemeTypesFetched,
   }
@@ -265,13 +218,15 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    fetchBursarParkingPayment,
+    fetchBursarTicketRates,
+    createBursarTicketRates,
+    resetLoading,
     fetchTownshipLocations,
     fetchTownshipSchemeTypes
   }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-  form: 'permit-payment',
+  form: 'ticket-rates',
   fields
-})(BursarPanelPermitPayment));
+})(BursarPanelTicketRates));
