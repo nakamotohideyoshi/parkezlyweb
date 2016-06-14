@@ -63,6 +63,12 @@ import {
   bursarTicketRatesFetched,
 } from './reducer-bursar-panel.js';
 
+import {
+  inspectorParkingFieldCreated,
+  inspectorParkingFieldFetched,
+  inspectorParkingFieldEdited,
+} from './reducer-inspector-panel.js';
+
 // Super Admin Panel
 
 var townshipReducers = { 
@@ -128,6 +134,11 @@ var bursarPanelReducers = {
   bursarTicketRatesFetched: bursarTicketRatesFetched,
 };
 
+var inspectorPanelReducers = {
+  inspectorParkingFieldCreated: inspectorParkingFieldCreated,
+  inspectorParkingFieldFetched: inspectorParkingFieldFetched,
+  inspectorParkingFieldEdited: inspectorParkingFieldEdited,
+}
 
 // Common / Shared between township stuff.
 
@@ -144,6 +155,7 @@ var combinedReducerObjects = Object.assign(
   townshipPanelReducers, 
   townshipCommonReducers,
   bursarPanelReducers,
+  inspectorPanelReducers,
   reduxFormReducer
 );
 

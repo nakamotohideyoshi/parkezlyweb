@@ -207,8 +207,10 @@ class BursarPanelPermitPayment extends React.Component {
                     'amount',
                     'cashier_id',
                     'user_id']}
-          useCustomFilterComponent={true} customFilterComponent={customFilterComponent}
-          useCustomFilterer={true} customFilterer={customFilterFunction}
+          useCustomFilterComponent={true} 
+          customFilterComponent={customFilterComponent}
+          useCustomFilterer={true} 
+          customFilterer={customFilterFunction}
         />
       </div>
     );
