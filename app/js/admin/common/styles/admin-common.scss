@@ -72,8 +72,8 @@
 
 .township-userlist-container {
   min-height: 0px;
-  max-height: 500px !important;
-  overflow-y: auto !important;
+
+
   cursor: pointer;
   background-color: #FFF;
 
@@ -81,16 +81,15 @@
 
 .bursar-payment-container {
   min-height: 0px;
-  max-height: 600px !important;
-  overflow-y: auto !important;
+
+
   cursor: pointer;
   background-color: #FFF;
 }
 
 .township-permitrequests-container {
   min-height: 0px;
-  max-height: 600px !important;
-  overflow-y: auto !important;
+
   cursor: pointer;
   background-color: #FFF;
 
@@ -327,7 +326,6 @@ textarea.materialize-textarea:focus:not([readonly]) {
 }
 
 .griddle .top-section {
-    margin-top: 20px;
     margin-bottom: 10px;
     display: table;
     width: 100%;
