@@ -231,7 +231,7 @@ class BursarPanelPermitPayment extends React.Component {
                <div className="card">
                   <div className="township-userlist-container">
                     { this.props.bursarPermitPaymentFetched.isLoading ? 
-                      <div> </div> : this.renderTable()}
+                      <div className="center-align"> <Spinner /> </div> : this.renderTable()}
                   </div>
 
               <div className="divider"/> 

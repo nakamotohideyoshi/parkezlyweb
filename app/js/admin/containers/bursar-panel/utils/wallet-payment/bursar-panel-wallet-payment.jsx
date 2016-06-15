@@ -202,7 +202,7 @@ class BursarPanelWalletPayment extends React.Component {
                   <div >
                     { this.props.bursarWalletPaymentFetched.isLoading ||
                       this.props.townshipLocationsFetched.isLoading ? 
-                      <div> </div> : this.renderTable()}
+                      <div className="center-align"> <Spinner /> </div> : this.renderTable()}
                   </div>
                </div>
             </div>
