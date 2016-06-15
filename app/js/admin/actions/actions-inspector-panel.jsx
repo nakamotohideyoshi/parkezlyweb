@@ -57,7 +57,7 @@ export function createInspectorParkingField(data) {
 }
 
 export function fetchInspectorPlate(locationCode) {
-  const URL = 'park_now_regd__users';
+  const URL = 'user_vehicles';
 
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.INSPECTOR_PLATE_GET_REQ));
@@ -72,7 +72,7 @@ export function fetchInspectorPlate(locationCode) {
 }
 
 export function editInspectorPlate(data, id) {
-  const URL = 'park_now_regd__users?ids=' + id;
+  const URL = 'user_vehicles?ids=' + id;
 
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.INSPECTOR_PLATE_PUT_REQ));
@@ -90,7 +90,7 @@ export function editInspectorPlate(data, id) {
 
 export function createInspectorPlate(data) {
   
-  const URL = 'park_now_regd__users';
+  const URL = 'user_vehicles';
   
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.INSPECTOR_PLATE_POST_REQ));
@@ -106,7 +106,7 @@ export function createInspectorPlate(data) {
 }
 
 export function fetchInspectorTicket(locationCode) {
-  const URL = 'park_now_regd__users';
+  const URL = 'parking_violations';
 
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.INSPECTOR_PARKING_FIELD_GET_REQ));
@@ -121,7 +121,7 @@ export function fetchInspectorTicket(locationCode) {
 }
 
 export function editInspectorTicket(data, id) {
-  const URL = 'park_now_regd__users?ids=' + id;
+  const URL = 'parking_violations?ids=' + id;
 
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.INSPECTOR_TICKET_PUT_REQ));
@@ -139,7 +139,7 @@ export function editInspectorTicket(data, id) {
 
 export function createInspectorTicket(data) {
   
-  const URL = 'park_now_regd__users';
+  const URL = 'parking_violations';
   
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.INSPECTOR_TICKET_POST_REQ));

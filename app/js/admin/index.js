@@ -10,7 +10,10 @@ import {
   TownshipUsersController, 
   TownshipFacilitiesController, 
   TownshipPermitsController, 
-  TownshipPermitRequestsController
+  TownshipPermitRequestsController,
+  TownshipViolationCodeController,
+  TownshipHearingPlaceController,
+
 } from "./containers/township-panel/township-panel-controller.jsx"
 
 import {
@@ -45,6 +48,8 @@ export default function AdminIndex() {
         <Route path="admin/township/facilities/:townshipCode" component={TownshipFacilitiesController}/>
         <Route path="admin/township/permit/:townshipCode" component={TownshipPermitsController}/>
         <Route path="admin/township/permit-requests/:townshipCode" component={TownshipPermitRequestsController}/>
+        <Route path="admin/township/violation-code/:townshipCode" component={TownshipViolationCodeController}/>
+        <Route path="admin/township/hearing-place/:townshipCode" component={TownshipHearingPlaceController}/>
 
         <Route path="admin/bursar/:townshipId" component={BursarPanelController} />
         <Route path="admin/bursar/parking/:townshipCode" component={BursarParkingController} />

@@ -152,6 +152,14 @@ class BursarPanelTicketRates extends React.Component {
             customPagerComponent={ BootstrapPager }
             useCustomFilterComponent={true} customFilterComponent={customFilterComponent}
             useCustomFilterer={true} customFilterer={customFilterFunction}     
+            columns={[
+              'id',  
+              'town_logo', 
+              'plate_no',  
+              'violation_fee', 
+              'violation_detail',  
+              'respond_date',  
+              'hearing_date',]}
           />
         </div>
         <div className="divider"/> 
@@ -182,7 +190,7 @@ class BursarPanelTicketRates extends React.Component {
                   <div >
                     { this.props.bursarTicketRatesFetched.isLoading ||
                       this.props.townshipLocationsFetched.isLoading ? 
-                      <div> </div> : this.renderTable()}
+                      <div className="center-align"> <Spinner /> </div> : this.renderTable()}
                   </div>
                </div>
             </div>

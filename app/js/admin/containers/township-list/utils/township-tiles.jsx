@@ -36,11 +36,11 @@ export default class TownshipTiles extends React.Component {
               </Link>
             </div>
             <div className="col s12 m12 l6">
-              <Link to={{pathname: `/admin/inspector/${townshipData.id}`}} 
+              <a 
               className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12">
                 <i className="material-icons valign">&#xE8B8;</i>
-                <h4> Settings </h4>
-              </Link>
+                <h4> Settings (N/A) </h4>
+              </a>
             </div>
           </div>
         </div>
