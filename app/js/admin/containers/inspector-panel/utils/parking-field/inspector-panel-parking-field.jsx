@@ -54,7 +54,7 @@ export const fields = [
 ]
 
 
-class InspectorParkingFieldPayment extends React.Component {
+class InspectorParkingField extends React.Component {
 
   constructor(props) {
     super(props);
@@ -165,11 +165,11 @@ class InspectorParkingFieldPayment extends React.Component {
     console.log(this.props.inspectorParkingFieldFetched)
     let parkingData = this.props.inspectorParkingFieldFetched.data.resource;
     /*
-              <a
-            className="modal-trigger waves-effect waves-light btn valign" 
-            onClick={() => $('#modal-Inspector-payment-create').openModal()}
-            style={{margin: 10}}>Add New Parked Vehicle Fields</a>
-            */
+      <a
+      className="modal-trigger waves-effect waves-light btn valign" 
+      onClick={() => $('#modal-Inspector-payment-create').openModal()}
+      style={{margin: 10}}>Add New Parked Vehicle Fields</a>
+    */
     return (
       <div>
         <Griddle
@@ -219,7 +219,7 @@ class InspectorParkingFieldPayment extends React.Component {
                   <div className="township-userlist-container">
                     { this.props.inspectorParkingFieldFetched.isLoading ||
                       this.props.townshipLocationsFetched.isLoading ? 
-                      <div> </div> : this.renderTable()}
+                      <div className="center-align"> <Spinner /> </div> : this.renderTable()}
                   </div>
                </div>
             </div>
@@ -268,4 +268,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   form: 'parking-field',
   fields
-})(InspectorParkingFieldPayment));
+})(InspectorParkingField));

@@ -68,9 +68,10 @@ export default class TownshipDetails extends React.Component {
   };
 
   componentWillUpdate() {
+    townshipData = this.props.townshipData;
     if (this.props.townshipDetailsFetched.isLoading === false) {
       let townshipObjects = this.props.townshipDetailsFetched.data.resource;
-      let filteredTownship = _.filter(townshipObjects, { 'id': this.props.townshipData.data.id})
+      let filteredTownship = _.filter(townshipObjects, { 'id': townshipData.data.id})
 
       this.props.updateTownshipDetails(filteredTownship[0]);
       this.props.resetLoading();

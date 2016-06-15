@@ -37,6 +37,14 @@ import {
   townshipLocationsRateCreated,
 
   townshipPermitTypesCreated,
+
+  townshipViolationCodeFetched,
+  townshipViolationCodeEdited,
+  townshipViolationCodeCreated,
+
+  townshipHearingPlaceFetched,
+  townshipHearingPlaceEdited,
+  townshipHearingPlaceCreated,
 } from './reducer-township-panel.js';
 
 import {townshipSchemeTypesFetched} from './reducer-township-common.js';
@@ -67,6 +75,14 @@ import {
   inspectorParkingFieldCreated,
   inspectorParkingFieldFetched,
   inspectorParkingFieldEdited,
+
+  inspectorPlateCreated,
+  inspectorPlateFetched,
+  inspectorPlateEdited,
+
+  inspectorTicketCreated,
+  inspectorTicketFetched,
+  inspectorTicketEdited,
 } from './reducer-inspector-panel.js';
 
 // Super Admin Panel
@@ -109,7 +125,15 @@ var townshipPanelReducers = {
   townshipLocationsRateFetched: townshipLocationsRateFetched,
   townshipLocationsRateCreated: townshipLocationsRateCreated,
   
-  townshipPermitTypesCreated: townshipPermitTypesCreated
+  townshipPermitTypesCreated: townshipPermitTypesCreated,
+
+  townshipViolationCodeFetched: townshipViolationCodeFetched,
+  townshipViolationCodeEdited: townshipViolationCodeEdited,
+  townshipViolationCodeCreated: townshipViolationCodeCreated,
+
+  townshipHearingPlaceFetched: townshipHearingPlaceFetched,
+  townshipHearingPlaceEdited: townshipHearingPlaceEdited,
+  townshipHearingPlaceCreated: townshipHearingPlaceCreated,
 };
 
 var bursarPanelReducers = { 
@@ -138,6 +162,14 @@ var inspectorPanelReducers = {
   inspectorParkingFieldCreated: inspectorParkingFieldCreated,
   inspectorParkingFieldFetched: inspectorParkingFieldFetched,
   inspectorParkingFieldEdited: inspectorParkingFieldEdited,
+
+  inspectorPlateCreated: inspectorPlateCreated,
+  inspectorPlateFetched: inspectorPlateFetched,
+  inspectorPlateEdited: inspectorPlateEdited,
+
+  inspectorTicketCreated: inspectorTicketCreated,
+  inspectorTicketFetched: inspectorTicketFetched,
+  inspectorTicketEdited: inspectorTicketEdited,
 }
 
 // Common / Shared between township stuff.

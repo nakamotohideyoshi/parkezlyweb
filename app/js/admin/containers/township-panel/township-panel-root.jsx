@@ -89,28 +89,34 @@ class TownshipPanelRoot extends React.Component {
                 <i className="material-icons left tab-bar-icons">home</i>Township Editor</a>
               </li>
               <li>
-                <Link to={{pathname: `/admin/township/users/${filteredTownship[0].manager_id}`}} className="waves-effect waves-light tab-bar-link">
+                <Link to={{pathname: `/admin/township/users/${filteredTownship[0].manager_id}`}} 
+                className="waves-effect waves-light tab-bar-link">
                 <i className="material-icons left tab-bar-icons">person</i>User List</Link>
               </li>
               <li>
-                <Link to={{pathname: `/admin/township/facilities/${filteredTownship[0].manager_id}`}} className="waves-effect waves-light tab-bar-link">
+                <Link to={{pathname: `/admin/township/facilities/${filteredTownship[0].manager_id}`}} 
+                className="waves-effect waves-light tab-bar-link">
                 <i className="material-icons left tab-bar-icons">place</i>Facilities List</Link>
               </li>
               <li>
-                <a href="/admin/township/1" className="waves-effect waves-light tab-bar-link">
-                <i className="material-icons left tab-bar-icons">event_note</i>Permit List</a>
+                <Link to={{pathname: `/admin/township/permit/${filteredTownship[0].manager_id}`}} 
+                className="waves-effect waves-light tab-bar-link">
+                <i className="material-icons left tab-bar-icons">event_note</i>Permit List</Link>
               </li>
               <li>
-                <a href="/admin/township/1" className="waves-effect waves-light tab-bar-link">
-                <i className="material-icons left tab-bar-icons">event_available</i>Permit Request List</a>
+                <Link to={{pathname: `/admin/township/permit-requests/${filteredTownship[0].manager_id}`}} 
+                className="waves-effect waves-light tab-bar-link">
+                <i className="material-icons left tab-bar-icons">event_available</i>Permit Request List</Link>
               </li>
               <li>
-                <a href="/admin/township/1" className="waves-effect waves-light tab-bar-link">
-                <i className="material-icons left tab-bar-icons">&#xE90D;</i>Inspector Panel</a>
+                <Link to={{pathname: `/admin/inspector/${filteredTownship[0].id}`}} 
+                className="waves-effect waves-light tab-bar-link">
+                <i className="material-icons left tab-bar-icons">&#xE90D;</i>Inspector Panel</Link>
               </li>
               <li>
-                <a href="/admin/township/1" className="waves-effect waves-light tab-bar-link">
-                <i className="material-icons left tab-bar-icons">&#xE227;</i>Bursar Panel</a>
+                <Link to={{pathname: `/admin/bursar/${filteredTownship[0].id}`}} 
+                className="waves-effect waves-light tab-bar-link">
+                <i className="material-icons left tab-bar-icons">&#xE227;</i>Bursar Panel</Link>
               </li>
             </ul>
 

@@ -72,8 +72,8 @@
 
 .township-userlist-container {
   min-height: 0px;
-
-
+  overflow-x: auto !important;
+  
   cursor: pointer;
   background-color: #FFF;
 
@@ -81,7 +81,7 @@
 
 .bursar-payment-container {
   min-height: 0px;
-
+  overflow-x: auto !important;
 
   cursor: pointer;
   background-color: #FFF;
@@ -89,7 +89,7 @@
 
 .township-permitrequests-container {
   min-height: 0px;
-
+  overflow-x: auto !important;
   cursor: pointer;
   background-color: #FFF;
 

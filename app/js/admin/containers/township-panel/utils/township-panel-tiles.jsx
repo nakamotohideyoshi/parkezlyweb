@@ -45,8 +45,25 @@ export default class TownshipPanelTiles extends React.Component {
             </Link>
           </div>
         </div>
+        <div className="row center-align marginless-row" style={{marginTop: 30}}>
+          <div className="col s12 m12 l6">
+            <Link 
+            to={{pathname: `/admin/township/violation-code/${this.props.townshipCode}`}} 
+            className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12">
+              <i className="material-icons valign">warning</i>
+              <h4> Violation Code List </h4>
+            </Link>
+          </div>
+          <div className="col s12 m12 l6">
+            <Link 
+            to={{pathname: `/admin/township/hearing-place/${this.props.townshipCode}`}} 
+            className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12">
+              <i className="material-icons valign">account_balance</i>
+              <h4> Hearing Place List </h4>
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }
 }
-//Test
