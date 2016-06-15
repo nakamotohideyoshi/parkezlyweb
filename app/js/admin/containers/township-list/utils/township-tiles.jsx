@@ -20,24 +20,27 @@ export default class TownshipTiles extends React.Component {
               </Link>
             </div>
             <div className="col s12 m12 l6">
-              <a className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12">
+              <Link to={{pathname: `/admin/inspector/${townshipData.id}`}} 
+              className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12">
                 <i className="material-icons valign">&#xE90D;</i>
                 <h4> Inspector Panel </h4>
-              </a>
+              </Link>
             </div>
           </div>
           <div className="row marginless-row">
             <div className="col s12 m12 l6">
-              <a className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12">
+              <Link to={{pathname: `/admin/bursar/${townshipData.id}`}}  
+              className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12">
                 <i className="material-icons valign">&#xE227;</i>
                 <h4> Bursar Panel </h4>
-              </a>
+              </Link>
             </div>
             <div className="col s12 m12 l6">
-              <a className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12">
+              <Link to={{pathname: `/admin/inspector/${townshipData.id}`}} 
+              className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12">
                 <i className="material-icons valign">&#xE8B8;</i>
                 <h4> Settings </h4>
-              </a>
+              </Link>
             </div>
           </div>
         </div>

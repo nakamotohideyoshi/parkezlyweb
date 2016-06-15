@@ -11,8 +11,6 @@ export function townshipSchemeTypesFetched(state = initialState, action) {
     case types.TOWNSHIP_SCHEME_TYPES_GET_ERROR:
       return Object.assign({}, state, {isLoading: false, data: action.data, error: true});
     case types.TOWNSHIP_SCHEME_TYPES_GET_SUCCESS:
-    console.log("SUCCESS")
-    console.log(action.data)
       return Object.assign({}, state, {isLoading: false, data: action.data, error: false });
     case types.TOWNSHIP_SCHEME_TYPES_GET_REQ:
       return Object.assign({}, state, {isLoading: true, error: false });

@@ -13,9 +13,15 @@ import {
   townshipUsersFetched, 
   townshipUsersEdited, 
   townshipUsersCreated, 
+
   townshipFacilitiesFetched,
   townshipFacilitiesEdited,
   townshipFacilitiesCreated,
+
+  townshipLocationsFetched,
+  townshipLocationsEdited,
+  townshipLocationsCreated,
+
   townshipPermitRequestsFetched,
   townshipPermitTypesFetched,
 
@@ -34,6 +40,34 @@ import {
 } from './reducer-township-panel.js';
 
 import {townshipSchemeTypesFetched} from './reducer-township-common.js';
+
+import {
+  bursarParkingPaymentCreated,
+  bursarParkingPaymentFetched,
+  bursarParkingPaymentEdited,
+
+  bursarPermitPaymentCreated,
+  bursarPermitPaymentEdited,
+  bursarPermitPaymentFetched,
+
+  bursarTicketPaymentCreated,
+  bursarTicketPaymentEdited,
+  bursarTicketPaymentFetched,
+
+  bursarWalletPaymentCreated,
+  bursarWalletPaymentEdited,
+  bursarWalletPaymentFetched,
+
+  bursarTicketRatesCreated,
+  bursarTicketRatesEdited,
+  bursarTicketRatesFetched,
+} from './reducer-bursar-panel.js';
+
+import {
+  inspectorParkingFieldCreated,
+  inspectorParkingFieldFetched,
+  inspectorParkingFieldEdited,
+} from './reducer-inspector-panel.js';
 
 // Super Admin Panel
 
@@ -57,6 +91,10 @@ var townshipPanelReducers = {
   townshipFacilitiesEdited: townshipFacilitiesEdited,
   townshipFacilitiesCreated: townshipFacilitiesCreated,
 
+  townshipLocationsFetched: townshipLocationsFetched,
+  townshipLocationsEdited: townshipLocationsEdited,
+  townshipLocationsCreated: townshipLocationsCreated,
+
   townshipPermitRequestsFetched: townshipPermitRequestsFetched,
   townshipPermitRequestsEdited: townshipPermitRequestsEdited,
 
@@ -74,6 +112,34 @@ var townshipPanelReducers = {
   townshipPermitTypesCreated: townshipPermitTypesCreated
 };
 
+var bursarPanelReducers = { 
+  bursarParkingPaymentCreated: bursarParkingPaymentCreated,
+  bursarParkingPaymentFetched: bursarParkingPaymentFetched,
+  bursarParkingPaymentEdited: bursarParkingPaymentEdited,
+
+  bursarPermitPaymentCreated: bursarPermitPaymentCreated,
+  bursarPermitPaymentEdited: bursarPermitPaymentEdited,
+  bursarPermitPaymentFetched: bursarPermitPaymentFetched,
+
+  bursarTicketPaymentCreated: bursarTicketPaymentCreated,
+  bursarTicketPaymentEdited: bursarTicketPaymentEdited,
+  bursarTicketPaymentFetched: bursarTicketPaymentFetched,
+
+  bursarWalletPaymentCreated: bursarWalletPaymentCreated,
+  bursarWalletPaymentEdited: bursarWalletPaymentEdited,
+  bursarWalletPaymentFetched: bursarWalletPaymentFetched,
+  
+  bursarTicketRatesCreated: bursarTicketRatesCreated,
+  bursarTicketRatesEdited: bursarTicketRatesEdited,
+  bursarTicketRatesFetched: bursarTicketRatesFetched,
+};
+
+var inspectorPanelReducers = {
+  inspectorParkingFieldCreated: inspectorParkingFieldCreated,
+  inspectorParkingFieldFetched: inspectorParkingFieldFetched,
+  inspectorParkingFieldEdited: inspectorParkingFieldEdited,
+}
+
 // Common / Shared between township stuff.
 
 var townshipCommonReducers = { 
@@ -88,6 +154,8 @@ var combinedReducerObjects = Object.assign(
   townshipReducers, 
   townshipPanelReducers, 
   townshipCommonReducers,
+  bursarPanelReducers,
+  inspectorPanelReducers,
   reduxFormReducer
 );
 
