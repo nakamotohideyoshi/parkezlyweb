@@ -167,7 +167,6 @@ class FindParking extends Component {
         loading={loading}>
           {parkNowBtn}
           {gMap}
-          }
       </Body>
     );
   }

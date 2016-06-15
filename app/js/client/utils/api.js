@@ -14,3 +14,11 @@ export const paypalAPIConfig = {
 export const weatherAPIConfig = {
   baseURL: "http://api.openweathermap.org/data/2.5/weather"
 };
+
+export const placesAPIConfig = {
+  baseURL: "http://localhost:3000/api"
+};
+
+export const locationAPIConfig = {
+	baseURL: "http://maps.googleapis.com/maps/api/geocode/json"
+}
