@@ -4,7 +4,7 @@ import classNames from "classnames";
 import Body from "../../../common/components/body/body.jsx";
 import { GoogleMapLoader, GoogleMap, Marker } from "react-google-maps";
 import { getPlaces, getLocationDetails } from "../../actions/nearby.js";
-import { setPosition } from "../../actions/location.js";
+import { setPosition, setInitialPosition } from "../../actions/location.js";
 import { throttle } from "lodash";
 import "./styles/nearby.scss";
 
@@ -18,6 +18,7 @@ class Nearby extends Component {
   constructor(props) {
     super(props);
     this.handleCenterChanged = throttle(this.handleCenterChanged.bind(this), 300);
+    this.goToInitialLocation = this.goToInitialLocation.bind(this);
   }
 
   componentWillMount() {
@@ -40,8 +41,14 @@ class Nearby extends Component {
     const lat = position.coords.latitude;
     const lon = position.coords.longitude;
     
-    dispatch(setPosition(lat, lon));
+    dispatch(setInitialPosition(lat, lon));
     dispatch(getLocationDetails(lat, lon));
+  }
+
+  goToInitialLocation() {
+    const { dispatch, location } = this.props;
+    const { initialLat, initialLon } = location;
+    dispatch(setPosition(initialLat, initialLon));
   }
 
   handleCenterChanged() {
@@ -92,6 +99,13 @@ class Nearby extends Component {
     );
   }
 
+  renderMyLocationIcon() {
+    return (
+      <div className="my-location-marker" onClick={this.goToInitialLocation}>
+      </div>
+    );
+  }
+
   renderGMap() {
     let lat = this.props.location.lat || 40.7128;
     let lon = this.props.location.lon || -73.935242;
@@ -126,6 +140,7 @@ class Nearby extends Component {
   render() {
     const gMap = this.renderGMap();
     const content = this.renderContent();
+    const myLocationIcon = this.renderMyLocationIcon();
     const { loading } = this.props.nearby;
 
     return (
@@ -135,6 +150,7 @@ class Nearby extends Component {
         loading={false}>
           {content}
           {gMap}
+          {myLocationIcon}
       </Body>
     );
   }

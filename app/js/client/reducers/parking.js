@@ -1,9 +1,8 @@
 import { combineReducers } from 'redux';
+import Location from "./location.js";
 
 const initialState = {
   loading: false,
-  lat: 40.7128,
-  lng: -73.935242,
   markers: [],
   free : true,
   paid : true,
@@ -11,13 +10,8 @@ const initialState = {
 };
 
 const Parking = (state = initialState, action) => {
+  console.log(action);
   switch(action.type) {
-    case "UPDATE_GEOLOCATION":
-      return {
-        ...state,
-        lat: action.position.lat,
-        lng: action.position.lng
-      }
     case "FETCH_PARKING_INITIATE":
       return {
         ...state,
@@ -55,7 +49,8 @@ const Parking = (state = initialState, action) => {
 };
 
 const ParkingReducers = combineReducers({
-  Parking
+  parking: Parking,
+  location: Location
 });
 
 export default ParkingReducers;

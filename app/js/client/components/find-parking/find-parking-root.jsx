@@ -4,10 +4,12 @@ import classNames from "classnames";
 import Body from "../../../common/components/body/body.jsx";
 import GrayButton from "../../../common/components/button/gray-button.jsx";
 import ImageCheckbox from "../../../common/components/footer/utils/image-checkbox.jsx";
-import {GoogleMapLoader, GoogleMap, Marker} from "react-google-maps";
+import { GoogleMapLoader, GoogleMap, Marker } from "react-google-maps";
 import { default as MarkerClusterer } from "react-google-maps/lib/addons/MarkerClusterer";
 import { updateGeolocation, getNearbyParking, setParkingType } from "../../actions/parking.js";
+import { setPosition, setInitialPosition } from "../../actions/location.js";
 import { FREE_MAP_MARKER, PAID_MAP_MARKER, MANAGED_MAP_MARKER } from "./constants/texts.js";
+import { throttle } from "lodash";
 
 const canUseDOM = !!(
   typeof window !== 'undefined' &&
@@ -18,6 +20,8 @@ const canUseDOM = !!(
 class FindParking extends Component {
   constructor(props) {
     super(props);
+    this.handleCenterChanged = throttle(this.handleCenterChanged.bind(this), 300);
+    this.goToInitialLocation = this.goToInitialLocation.bind(this);
   }
 
   componentDidMount() {
@@ -32,15 +36,13 @@ class FindParking extends Component {
 
   initializePosition(position) {
     const { dispatch } = this.props;
-    const pos = {
-      lat: position.coords.latitude,
-      lng: position.coords.longitude
-    };
+    const lat = position.coords.latitude;
+    const lng = position.coords.longitude;
     const demoPos = {
       lat: 40.7128,
-      lng: -73.935242,
+      lng: -73.935242
     };
-    dispatch(updateGeolocation(demoPos));
+    dispatch(setInitialPosition(lat, lng));
     dispatch(getNearbyParking(demoPos));
   }
 
@@ -48,6 +50,41 @@ class FindParking extends Component {
     const { dispatch, parking } = this.props;
     const currentVal = parking[type];
     dispatch(setParkingType(type, !currentVal));
+  }
+
+  handleCenterChanged() {
+    const map = this.refs["gMap"];
+    const { dispatch, location } = this.props;
+    const { lat, lon } = location;
+    const newPos = map.getCenter();
+    const initialPos = {
+      lat: parseFloat(lat),
+      lng: parseFloat(lon)
+    };
+    const newLat = newPos.lat();
+    const newLon = newPos.lng();
+    if (newPos.equals(new google.maps.LatLng(initialPos))) {
+      return;
+    } else {
+      dispatch(setPosition(newLat, newLon));
+      dispatch(getNearbyParking({
+        lat: newLat,
+        lng: newLon
+      }));
+    }
+  }
+
+  goToInitialLocation() {
+    const { dispatch, location } = this.props;
+    const { initialLat, initialLon } = location;
+    dispatch(setPosition(initialLat, initialLon));
+  }
+
+  renderMyLocationIcon() {
+    return (
+      <div className="my-location-marker" onClick={this.goToInitialLocation}>
+      </div>
+    );
   }
 
   renderMarker(markerItem, index) {
@@ -93,8 +130,16 @@ class FindParking extends Component {
   }
 
   renderGMap() {
-    const { lat, lng, markers } = this.props.parking;
+    const { markers } = this.props.parking;
+    let lat = this.props.location.lat || 40.7128;
+    let lon = this.props.location.lon || -73.935242;
+    const currentPos =  new google.maps.LatLng({
+      lat: parseFloat(lat),
+      lng: parseFloat(lon)
+    });
+    const currentMarker = (<Marker position={currentPos}/>);
     const markersList = markers.map(this.renderMarker.bind(this));
+    markersList.push(currentMarker);
     return (
       <section style={{height: "100%"}}>
         <GoogleMapLoader
@@ -106,11 +151,12 @@ class FindParking extends Component {
           }
           googleMapElement={
             <GoogleMap
-              ref={null}
+              ref="gMap"
               defaultZoom={10}
-              defaultCenter={{ lat: lat, lng: lng }}
+              defaultCenter={{ lat: lat, lng: lon }}
               onClick={null}
-              center={{ lat: lat, lng: lng }}>
+              center={{ lat: lat, lng: lon }}
+              onCenterChanged={this.handleCenterChanged}>
                 {markersList}
             </GoogleMap>
           }/>
@@ -143,19 +189,31 @@ class FindParking extends Component {
     );
   }
 
-  renderParkNowBtn() {
+  renderFindNearbyBtn() {
     return (
-      <div className="park-now-btn">
+      <div className="find-nearby-btn action-btn">
         <GrayButton onClick={null}>
-          PARK NOW
+          FIND NEARBY
+        </GrayButton>
+      </div>
+    );
+  }
+
+  renderSearchBtn() {
+    return (
+      <div className="search-btn action-btn">
+        <GrayButton onClick={null}>
+          SEARCH OTHER LOCATIONS
         </GrayButton>
       </div>
     );
   }
 
   render() {
-    const parkNowBtn = this.renderParkNowBtn();
+    const parkNowBtn = this.renderFindNearbyBtn();
+    const searchBtn = this.renderSearchBtn();
     const gMap = this.renderGMap();
+    const myLocationIcon = this.renderMyLocationIcon();
     const { loading } = this.props.parking;
     const footerContent = this.renderFooterContent();
     return (
@@ -166,7 +224,9 @@ class FindParking extends Component {
         footerContent={footerContent}
         loading={loading}>
           {parkNowBtn}
+          {searchBtn}
           {gMap}
+          {myLocationIcon}
       </Body>
     );
   }
@@ -174,7 +234,8 @@ class FindParking extends Component {
 
 const MapStateToProps = (state) => {
   return {
-    parking: state.Parking
+    parking: state.parking,
+    location: state.location
   };
 };
 
