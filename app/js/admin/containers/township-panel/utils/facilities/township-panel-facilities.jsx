@@ -167,7 +167,7 @@ class TownshipPanelFacilities extends React.Component {
                 <button fetchTownshipFacilitie
                 type="submit" 
                 disabled={submitting} 
-                className="waves-effect waves-light btn">Create Parking Plate</button>
+                className="waves-effect waves-light btn">Create Township Facility</button>
               </div>
             </div>
           </div>
@@ -188,7 +188,7 @@ class TownshipPanelFacilities extends React.Component {
       <div className="container">
         <Link 
         to={{pathname: `admin/township/facilities/parking-rules/${locationCode}`}} 
-        style={{marginTop: 10, }}
+        style={{marginTop: 20, }}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">report</i>
           <h4> {locationCode}'s Parking Rules </h4>
