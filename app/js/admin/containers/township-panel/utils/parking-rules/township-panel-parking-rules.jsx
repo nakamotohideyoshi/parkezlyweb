@@ -11,6 +11,8 @@ import Body from "../../../../../common/components/body/body.jsx"
 import Spinner from '../../../../common/components/spinner.jsx'
 import {optionsSelectize} from '../../../../common/components/options-selectize.js'
 
+import TownshipPanelParkingRulesEdit from './township-panel-parking-rules-edit.jsx'
+
 import {
   fetchParkingRules, 
   editParkingRules, 
@@ -23,8 +25,9 @@ import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import Griddle from 'griddle-react'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 
+import {SchemaFilterTest} from '../../../../common/components/schema-filter-test.jsx'
+
 export const fields = [ 
-  'id',  
   'date_time', 
   'location_code', 
   'location_name', 
@@ -77,18 +80,18 @@ class TownshipPanelParkingRules extends React.Component {
 
     window.scrollTo(0, 0);
 
+    SchemaFilterTest();
+
     this.state = {
       showEditModal: false,
-      locationId: null
+      locationId: null,
+      filteredData: null
     }
 
     this.renderCreateModal = this.renderCreateModal.bind(this);
     this.openEditModal = this.openEditModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
-    this.handleEditSubmit = this.handleEditSubmit.bind(this);
-    this.handleEditSuccess = this.handleEditSuccess.bind(this);
-    this.tempInputsEdit = this.tempInputsEdit.bind(this);
     this.renderTable = this.renderTable.bind(this);
   }
 
@@ -110,19 +113,11 @@ class TownshipPanelParkingRules extends React.Component {
     this.props.resetLoading();
     $('#modal-township-parking-rules').closeModal();
     $('#modal-success').openModal();
-    this.props.fetchParkingRules();
-  }
-
-  handleEditSuccess() {
-
+    this.props.fetchParkingRules(this.props.locationCode);
   }
 
   handleSubmit(data) {
     this.props.createParkingRules(data);
-  }
-
-  handleEditSubmit(data) {
-
   }
 
   tempInputs() {
@@ -142,41 +137,36 @@ class TownshipPanelParkingRules extends React.Component {
     });
   }
 
-  tempInputsEdit() {
-    const {dispatch} = this.props;
-    if (this.state.showEditModal) {
-      $('#modal-township-parking-rules-edit').openModal();
-      var fieldData = this.props.townshipParkingRulesFetched.data.resource;   
-      const filteredData = fieldData.filter(createFilter(this.state.locationId.toString(), ['id']));
-      return fields.map((data) => {
-        return( 
-          <div className="col s6 admin-form-input">
-            <div className="form-group">
-              <label>{data}</label>
-              <input type="text" value={filteredData[0][data]} placeholder={data} onChange={(event) => 
-                dispatch(change('parking-rules', data, event.target.value))
-              }/>
-            </div>
-          </div>
-        );
-      });
-    } 
-  }
-
   renderCreateModal() {
     
     const {
-      fields: {
-        vehicle_id,
-        user_name,
-        date,
-        location_id,
-        scheme_type,
-        rate,
-        pay_method,
-        amount,
-        cashier_id,
-        user_id,
+      fields: {  
+        date_time, 
+        location_code, 
+        location_name, 
+        time_rule, 
+        day_rule,  
+        max_time,  
+        enforced,  
+        date_special_enforce,  
+        custom_notice, 
+        active,
+        date,  
+        city,  
+        state, 
+        pricing, 
+        pricing_duration, 
+        zip_code,  
+        start_time,  
+        end_time,  
+        this_day,  
+        parking_times, 
+        no_parking_times,  
+        start_end_rule,  
+        this_hour, 
+        max_hours, 
+        start_hour,  
+        end_hour,
       },
       resetForm,
       submitting,
@@ -209,7 +199,7 @@ class TownshipPanelParkingRules extends React.Component {
                 <button fetchTownshipFacilitie
                 type="submit" 
                 disabled={submitting} 
-                className="waves-effect waves-light btn">Edit Parking Rule</button>
+                className="waves-effect waves-light btn">Add Parking Rule</button>
               </div>
             </div>
           </div>
@@ -220,7 +210,10 @@ class TownshipPanelParkingRules extends React.Component {
   }
 
   openEditModal(locationId) {
-    this.setState({showEditModal: true, locationId: locationId});
+    var fieldData = this.props.townshipParkingRulesFetched.data.resource;   
+    const filteredData = fieldData.filter(createFilter(locationId.toString(), ['id']));
+    this.setState({showEditModal: true, filteredData: filteredData[0]});
+    $('#modal-township-parking-rules-edit').openModal()
   }
 
   renderEditModal() {
@@ -230,39 +223,11 @@ class TownshipPanelParkingRules extends React.Component {
       dispatch
     } = this.props
 
-    return (
-      <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-        <div id="modal-township-parking-rules-edit" className="modal modal-fixed-footer">
-          <div className="modal-content">
+      
 
-            <div className="row">
-              <div className="center-align">
-                <h4>Edit a Parking Rule</h4>
-                <p className="center-align">Edit a Parking Rule by filling out the fields.</p>
-              </div>
-            </div>
-
-            <div className="row">
-
-              {this.tempInputsEdit()}
-
-            </div>
-          </div>
-          
-
-          <div className="modal-footer">
-            <div className="row marginless-row">
-              <div className="col s12 center-align">
-                <button fetchTownshipFacilitie
-                type="submit" 
-                disabled={submitting} 
-                className="waves-effect waves-light btn">Edit Parking Rule</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
-    );
+      return (
+        <TownshipPanelParkingRulesEdit initialValues={this.state.filteredData} handleSuccess={this.handleSuccess}/>
+      );
   }
 
   renderTable() {
@@ -326,6 +291,7 @@ class TownshipPanelParkingRules extends React.Component {
   }
 
   render() {
+    console.log(this.props.townshipParkingRulesCreated)
     return (
       <div className="blue-body marginless-row">
         <Body showHeader={true}>

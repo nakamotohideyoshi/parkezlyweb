@@ -319,14 +319,16 @@ export function townshipParkingRulesCreated(state = initialState, action) {
   }
 };
 
-export function townshipParkingRulesFetched(state = initialState, action) {
+export function townshipParkingRulesEdited(state = initialState, action) {
   switch(action.type) {
-    case types.TOWNSHIP_PARKING_RULES_GET_ERROR:
+    case types.TOWNSHIP_PARKING_RULES_PUT_ERROR:
       return Object.assign({}, state, {isLoading: false, data: action.data, error: true});
-    case types.TOWNSHIP_PARKING_RULES_GET_SUCCESS:
+    case types.TOWNSHIP_PARKING_RULES_PUT_SUCCESS:
       return Object.assign({}, state, {isLoading: false, data: action.data, error: false });
-    case types.TOWNSHIP_PARKING_RULES_GET_REQ:
+    case types.TOWNSHIP_PARKING_RULES_PUT_REQ:
       return Object.assign({}, state, {isLoading: true, error: false });
+    case types.RESET_LOADING:
+      return Object.assign({}, state, initialState);
     default:
       return state;
   }
@@ -342,6 +344,8 @@ export function townshipViolationCodeFetched(state = initialState, action) {
       return Object.assign({}, state, {isLoading: false, data: action.data, error: false });
     case types.TOWNSHIP_VIOLATION_CODE_GET_REQ:
       return Object.assign({}, state, {isLoading: true, error: false });
+    case types.RESET_LOADING:
+      return Object.assign({}, state, initialState);
     default:
       return state;
   }
@@ -362,13 +366,13 @@ export function townshipViolationCodeCreated(state = initialState, action) {
   }
 };
 
-export function townshipViolationCodeFetched(state = initialState, action) {
+export function townshipViolationCodeEdited(state = initialState, action) {
   switch(action.type) {
-    case types.TOWNSHIP_VIOLATION_CODE_GET_ERROR:
+    case types.TOWNSHIP_VIOLATION_CODE_PUT_ERROR:
       return Object.assign({}, state, {isLoading: false, data: action.data, error: true});
-    case types.TOWNSHIP_VIOLATION_CODE_GET_SUCCESS:
+    case types.TOWNSHIP_VIOLATION_CODE_PUT_SUCCESS:
       return Object.assign({}, state, {isLoading: false, data: action.data, error: false });
-    case types.TOWNSHIP_VIOLATION_CODE_GET_REQ:
+    case types.TOWNSHIP_VIOLATION_CODE_PUT_REQ:
       return Object.assign({}, state, {isLoading: true, error: false });
     default:
       return state;
@@ -387,6 +391,8 @@ export function townshipHearingPlaceFetched(state = initialState, action) {
       return Object.assign({}, state, {isLoading: false, data: action.data, error: false });
     case types.TOWNSHIP_HEARING_PLACE_GET_REQ:
       return Object.assign({}, state, {isLoading: true, error: false });
+    case types.RESET_LOADING:
+      return Object.assign({}, state, initialState);
     default:
       return state;
   }
@@ -407,14 +413,16 @@ export function townshipHearingPlaceCreated(state = initialState, action) {
   }
 };
 
-export function townshipHearingPlaceFetched(state = initialState, action) {
+export function townshipHearingPlaceEdited(state = initialState, action) {
   switch(action.type) {
-    case types.TOWNSHIP_HEARING_PLACE_GET_ERROR:
+    case types.TOWNSHIP_HEARING_PLACE_PUT_ERROR:
       return Object.assign({}, state, {isLoading: false, data: action.data, error: true});
-    case types.TOWNSHIP_HEARING_PLACE_GET_SUCCESS:
+    case types.TOWNSHIP_HEARING_PLACE_PUT_SUCCESS:
       return Object.assign({}, state, {isLoading: false, data: action.data, error: false });
-    case types.TOWNSHIP_HEARING_PLACE_GET_REQ:
+    case types.TOWNSHIP_HEARING_PLACE_PUT_REQ:
       return Object.assign({}, state, {isLoading: true, error: false });
+    case types.RESET_LOADING:
+      return Object.assign({}, state, initialState);
     default:
       return state;
   }
