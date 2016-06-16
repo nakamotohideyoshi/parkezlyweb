@@ -7,6 +7,7 @@ import TownshipPanelPermits from './utils/permits/township-panel-permits.jsx'
 import TownshipPanelPermitRequests from './utils/permit-requests/township-panel-permit-requests.jsx'
 import TownshipPanelViolationCode from './utils/violation-code/township-panel-violation-code.jsx';
 import TownshipPanelHearingPlace from './utils/hearing-place/township-panel-hearing-place.jsx'
+import TownshipPanelParkingRules from './utils/parking-rules/township-panel-parking-rules.jsx'
 import store from '../../store/store.js';
 
 export class TownshipPanelController extends React.Component {
@@ -102,6 +103,20 @@ export class TownshipViolationCodeController extends React.Component {
     return (
       <Provider store={store}>
         <TownshipPanelViolationCode townshipCode={this.props.params.townshipCode} />
+      </Provider>
+    );
+  }
+}
+
+export class TownshipParkingRulesController extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <Provider store={store}>
+        <TownshipPanelParkingRules locationCode={this.props.params.locationCode} />
       </Provider>
     );
   }

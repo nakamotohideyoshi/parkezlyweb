@@ -22,6 +22,7 @@ export default class TownshipPanelPermits extends React.Component {
 
   constructor(props) {
     super(props);
+    window.scrollTo(0, 0);
   }
 
   render() {

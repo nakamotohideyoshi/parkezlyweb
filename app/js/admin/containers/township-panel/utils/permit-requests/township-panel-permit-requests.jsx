@@ -19,6 +19,9 @@ export default class TownshipPanelPermitRequests extends React.Component {
 
   constructor(props) {
     super(props);
+    
+    window.scrollTo(0, 0);
+
     $('.collapsible').collapsible();
 
     this.state = {

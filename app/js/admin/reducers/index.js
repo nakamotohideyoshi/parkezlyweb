@@ -45,6 +45,10 @@ import {
   townshipHearingPlaceFetched,
   townshipHearingPlaceEdited,
   townshipHearingPlaceCreated,
+
+  townshipParkingRulesFetched,
+  townshipParkingRulesEdited,
+  townshipParkingRulesCreated
 } from './reducer-township-panel.js';
 
 import {townshipSchemeTypesFetched} from './reducer-township-common.js';
@@ -134,6 +138,10 @@ var townshipPanelReducers = {
   townshipHearingPlaceFetched: townshipHearingPlaceFetched,
   townshipHearingPlaceEdited: townshipHearingPlaceEdited,
   townshipHearingPlaceCreated: townshipHearingPlaceCreated,
+
+  townshipParkingRulesFetched: townshipParkingRulesFetched,
+  townshipParkingRulesEdited: townshipParkingRulesEdited,
+  townshipParkingRulesCreated: townshipParkingRulesCreated,
 };
 
 var bursarPanelReducers = { 

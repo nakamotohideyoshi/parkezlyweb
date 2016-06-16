@@ -13,6 +13,7 @@ import {
   TownshipPermitRequestsController,
   TownshipViolationCodeController,
   TownshipHearingPlaceController,
+  TownshipParkingRulesController,
 
 } from "./containers/township-panel/township-panel-controller.jsx"
 
@@ -45,11 +46,17 @@ export default function AdminIndex() {
 
         <Route path="admin/township/:townshipId" component={TownshipPanelController}/>
         <Route path="admin/township/users/:townshipCode" component={TownshipUsersController}/>
+
         <Route path="admin/township/facilities/:townshipCode" component={TownshipFacilitiesController}/>
+        <Route path="admin/township/facilities/parking-rules/:locationCode" component={TownshipParkingRulesController}/>
+
         <Route path="admin/township/permit/:townshipCode" component={TownshipPermitsController}/>
         <Route path="admin/township/permit-requests/:townshipCode" component={TownshipPermitRequestsController}/>
         <Route path="admin/township/violation-code/:townshipCode" component={TownshipViolationCodeController}/>
         <Route path="admin/township/hearing-place/:townshipCode" component={TownshipHearingPlaceController}/>
+
+
+
 
         <Route path="admin/bursar/:townshipId" component={BursarPanelController} />
         <Route path="admin/bursar/parking/:townshipCode" component={BursarParkingController} />
@@ -57,6 +64,10 @@ export default function AdminIndex() {
         <Route path="admin/bursar/ticket/:townshipCode" component={BursarTicketController} />
         <Route path="admin/bursar/wallet/:townshipCode" component={BursarWalletController} />
         <Route path="admin/bursar/ticket-rates/:townshipCode" component={BursarTicketRatesController} />
+
+
+
+        
 
         <Route path="admin/inspector/:townshipId" component={InspectorPanelController} />
         <Route path="admin/inspector/parking-field/:townshipId" component={InspectorParkingFieldController} />

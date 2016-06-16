@@ -415,6 +415,55 @@ export function createViolationCode(data) {
   }
 }
 
+export function fetchParkingRules(locationCode) {
+  const URL = 'parking_rules?filter=location_code' + '%3D%22' + locationCode + '%22';
+
+  return function(dispatch) {
+    dispatch(apiTownship.requestData(types.TOWNSHIP_PARKING_RULES_GET_REQ));
+    return AXIOS_INSTANCE.get(URL)
+    .then(function(response) {
+      dispatch(apiTownship.receiveData(response.data, types.TOWNSHIP_PARKING_RULES_GET_SUCCESS));
+    })
+    .catch(function(response){
+      dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_PARKING_RULES_GET_ERROR));
+    })
+  }
+}
+
+export function editParkingRules(data, id) {
+  const URL = 'parking_rules?ids=' + id;
+
+  return function(dispatch) {
+    dispatch(apiTownship.requestData(types.TOWNSHIP_PARKING_RULES_PUT_REQ));
+    return AXIOS_INSTANCE.put(URL, data)
+    .then(function(response) {
+      dispatch(apiTownship.receiveData(response.data, types.TOWNSHIP_PARKING_RULES_PUT_SUCCESS));
+      dispatch(reset('parking-payment'));
+    })
+    .catch(function(response){
+      dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_PARKING_RULES_PUT_ERROR));
+      console.log(response);
+    })
+  }
+}
+
+export function createParkingRules(data) {
+  
+  const URL = 'parking_rules';
+  
+  return function(dispatch) {
+    dispatch(apiTownship.requestData(types.TOWNSHIP_VIOLATION_CODE_POST_REQ));
+    return AXIOS_INSTANCE.post(URL, data)
+    .then(function(response) {
+      dispatch(apiTownship.receiveData(response.data, types.TOWNSHIP_VIOLATION_CODE_POST_SUCCESS));
+      dispatch(reset('parking-payment'));
+    })
+    .catch(function(response){
+      dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_VIOLATION_CODE_POST_ERROR));
+    })
+  }
+}
+
 
 
 export function resetLoading() {
