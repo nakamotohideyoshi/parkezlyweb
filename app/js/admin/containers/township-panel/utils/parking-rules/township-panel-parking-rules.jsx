@@ -170,7 +170,7 @@ class TownshipPanelParkingRules extends React.Component {
                 <button fetchTownshipFacilitie
                 type="submit" 
                 disabled={submitting} 
-                className="waves-effect waves-light btn">Create Parking Plate</button>
+                className="waves-effect waves-light btn">Create Parking Rule</button>
               </div>
             </div>
           </div>
