@@ -452,14 +452,14 @@ export function createParkingRules(data) {
   const URL = 'parking_rules';
   
   return function(dispatch) {
-    dispatch(apiTownship.requestData(types.TOWNSHIP_VIOLATION_CODE_POST_REQ));
+    dispatch(apiTownship.requestData(types.TOWNSHIP_PARKING_RULES_POST_REQ));
     return AXIOS_INSTANCE.post(URL, data)
     .then(function(response) {
-      dispatch(apiTownship.receiveData(response.data, types.TOWNSHIP_VIOLATION_CODE_POST_SUCCESS));
+      dispatch(apiTownship.receiveData(response.data, types.TOWNSHIP_PARKING_RULES_POST_SUCCESS));
       dispatch(reset('parking-payment'));
     })
     .catch(function(response){
-      dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_VIOLATION_CODE_POST_ERROR));
+      dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_PARKING_RULES_POST_ERROR));
     })
   }
 }
