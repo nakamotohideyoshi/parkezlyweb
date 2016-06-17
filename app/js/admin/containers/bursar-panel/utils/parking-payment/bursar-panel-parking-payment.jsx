@@ -102,8 +102,8 @@ class BursarPanelParkingPayment extends React.Component {
       dispatch
     } = this.props
 
-    var optionsLocationCode = optionsSelectize(this.props.townshipLocationsFetched.data.resource, 'location_code');
-    var optionsSchemeTypes = optionsSelectize(this.props.townshipSchemeTypesFetched.data.resource, 'scheme_type');
+    //var optionsLocationCode = optionsSelectize(this.props.townshipLocationsFetched.data.resource, 'location_code');
+    //var optionsSchemeTypes = optionsSelectize(this.props.townshipSchemeTypesFetched.data.resource, 'scheme_type');
 
     return(
       <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
@@ -118,37 +118,6 @@ class BursarPanelParkingPayment extends React.Component {
             </div>
 
             <div className="row">
-
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Scheme Type</label>
-                  <div clasName="input-field col s12">
-                    <SimpleSelect 
-                    options = {optionsSchemeTypes} 
-                    placeholder = "Select Scheme Type" 
-                    theme = "material" 
-                    style={{marginTop: 5}}
-                    onValueChange = {(value) => {
-                      dispatch(change('locations-rate', 'scheme_type', value.value)); 
-                    }}></SimpleSelect>
-                  </div>
-                </div>
-              </div>
-
-
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Location Code</label>
-                  <SimpleSelect 
-                    options = {optionsLocationCode} 
-                    placeholder = "Select a User Name" 
-                    theme = "material" 
-                    style={{marginTop: 5}}
-                    onValueChange = {(value) => {
-                      dispatch(change('parking-payment', 'location_code', value.value));     
-                    }}></SimpleSelect>
-                </div>
-              </div>
               {this.tempInputs()}
 
             </div>
@@ -172,7 +141,6 @@ class BursarPanelParkingPayment extends React.Component {
   }
 
   renderTable() {
-    console.log(this.props.bursarParkingPaymentFetched)
     let parkingData = this.props.bursarParkingPaymentFetched.data.resource;
     return (
       <div>
@@ -198,6 +166,7 @@ class BursarPanelParkingPayment extends React.Component {
             onClick={() => $('#modal-bursar-payment-create').openModal()}
             style={{margin: 10}}>Add New Parking Payment</a>
         </div>
+
       </div>
     );
   }
@@ -216,17 +185,14 @@ class BursarPanelParkingPayment extends React.Component {
               </nav>
                <div className="card">
                   <div className="township-userlist-container">
-                    { this.props.bursarParkingPaymentFetched.isLoading ||
-                      this.props.townshipLocationsFetched.isLoading ? 
+                    { this.props.bursarParkingPaymentFetched.isLoading ? 
                       <div className="center-align"> <Spinner /> </div> : this.renderTable()}
                   </div>
                </div>
             </div>
           </div>
         </Body>
-        { this.props.bursarParkingPaymentFetched.isLoading ||
-          this.props.townshipLocationsFetched.isLoading ||
-          this.props.townshipSchemeTypesFetched.isLoading ? 
+        { this.props.bursarParkingPaymentFetched.isLoading ? 
           <div> </div> : this.renderCreateModal()}
         <div id="modal-success" className="modal">
           <div className="modal-content">
@@ -247,10 +213,7 @@ class BursarPanelParkingPayment extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    bursarParkingPaymentFetched: state.bursarParkingPaymentFetched,
-    bursarParkingPaymentCreated: state.bursarParkingPaymentCreated,
-    townshipLocationsFetched: state.townshipLocationsFetched,
-    townshipSchemeTypesFetched: state.townshipSchemeTypesFetched,
+    bursarParkingPaymentFetched: state.bursarParkingPaymentFetched
   }
 }
 

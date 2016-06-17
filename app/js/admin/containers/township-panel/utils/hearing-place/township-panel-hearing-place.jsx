@@ -32,6 +32,8 @@ class TownshipPanelHearingPlace extends React.Component {
   constructor(props) {
     super(props);
 
+    window.scrollTo(0, 0);
+
     this.renderCreateModal = this.renderCreateModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
