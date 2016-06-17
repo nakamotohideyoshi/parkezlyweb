@@ -15,6 +15,7 @@ import {
   editTownshipFacilities, 
   createTownshipFacilities, 
   fetchTownshipLocations, 
+  createTownshipLocations,
   resetLoading} from '../../../../actions/actions-township-panel.jsx'
 import {fetchTownshipSchemeTypes} from '../../../../actions/actions-township-common.jsx'
 
@@ -22,6 +23,7 @@ import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import Griddle from 'griddle-react'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 import { Link } from 'react-router';
+import TownshipPanelFacilitiesEdit from './township-panel-facilities-edit.jsx';
 
 export const fields = [ 
   'id',  
@@ -52,7 +54,9 @@ class customColumnComponent extends React.Component {
 
   render() {
     return (
-      <div onClick={() => this.props.metadata.customComponentMetadata.renderEditModal(this.props.rowData.location_code)}>
+      <div onClick={() => this.props.metadata.customComponentMetadata.renderEditModal(
+        this.props.rowData.location_code, 
+        this.props.rowData)}>
         {this.props.data}
       </div>
     );
@@ -71,6 +75,8 @@ class TownshipPanelFacilities extends React.Component {
     this.state = {
       showParkingRulesButton: false,
       parkingLocationCode: null,
+      showEditModal: false,
+      rowData: null,
     }
 
     this.renderCreateModal = this.renderCreateModal.bind(this);
@@ -87,21 +93,21 @@ class TownshipPanelFacilities extends React.Component {
   }
 
   componentDidUpdate() {
-    if (this.props.townshipFacilitiesCreated.isLoading) {
-    } else if (!this.props.townshipFacilitiesCreated.isLoading) {
+    if (this.props.townshipLocationsCreated.isLoading) {
+    } else if (!this.props.townshipLocationsCreated.isLoading) {
       this.handleSuccess();
     }
   };
 
   handleSuccess(){
     this.props.resetLoading();
-    $('#modal-inspector-ticket-create').closeModal();
+    $('#modal-facilities-create').closeModal();
     $('#modal-success').openModal();
-    this.props.fetchTownshipFacilities();
+    this.props.fetchTownshipLocations(this.props.townshipCode);
   }
 
   handleSubmit(data) {
-    this.props.createTownshipFacilities(data);
+    this.props.createTownshipLocations(data);
   }
 
   tempInputs() {
@@ -113,7 +119,7 @@ class TownshipPanelFacilities extends React.Component {
           <div className="form-group">
             <label>{data}</label>
             <input type="text" placeholder={data} onChange={(event) => 
-              dispatch(change('create-ticket', data, event.target.value))
+              dispatch(change('create', data, event.target.value))
             }/>
           </div>
         </div>
@@ -143,7 +149,7 @@ class TownshipPanelFacilities extends React.Component {
 
     return(
       <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-        <div id="modal-inspector-ticket-create" className="modal modal-fixed-footer">
+        <div id="modal-facilities-create" className="modal modal-fixed-footer">
           <div className="modal-content">
 
             <div className="row">
@@ -154,9 +160,7 @@ class TownshipPanelFacilities extends React.Component {
             </div>
 
             <div className="row">
-
               {this.tempInputs()}
-
             </div>
           </div>
           
@@ -177,10 +181,11 @@ class TownshipPanelFacilities extends React.Component {
 
   }
 
-  renderEditModal(locationCode) {
+  renderEditModal(locationCode, rowData) {
+    console.log(rowData);
     console.log(locationCode);
     window.scrollTo(0, document.body.scrollHeight);
-    this.setState({showParkingRulesButton: true, parkingLocationCode: locationCode})
+    this.setState({showParkingRulesButton: true, rowData: rowData, showEditModal: true, parkingLocationCode: locationCode})
   }
 
   renderParkingRulesButton(locationCode) {
@@ -193,18 +198,35 @@ class TownshipPanelFacilities extends React.Component {
           <i className="material-icons valign">report</i>
           <h4> {locationCode}'s Parking Rules </h4>
         </Link>
+        <a
+        onClick={() => {
+          this.setState({showEditModal: true})
+          $('#modal-township-facilities-edit').openModal(); 
+        }}
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">edit</i>
+          <h4> Edit: {locationCode} </h4>
+        </a>
+        <a
+        onClick={() => {
+          this.setState({showEditModal: true})
+          $('#modal-township-facilities-duplicate').openModal(); 
+        }}
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">content_copy</i>
+          <h4> Duplicate: {locationCode} </h4>
+        </a>
       </div>
     );
   }
 
   renderTable() {
-    console.log(this.props.townshipLocations)
     let parkingData = this.props.townshipLocationsFetched.data.resource;
 
     var renderEditModal = this.renderEditModal;
     var metaDataFunction = () =>  {
       return fields.map((data) => {
-        return( 
+        return(
           {
             "columnName": data,
             "customComponent": customColumnComponent,
@@ -249,7 +271,7 @@ class TownshipPanelFacilities extends React.Component {
 
           <a
             className="modal-trigger waves-effect waves-light btn valign" 
-            onClick={() => $('#modal-inspector-ticket-create').openModal()}
+            onClick={() => $('#modal-facilities-create').openModal()}
             style={{margin: 10}}>Add New Facility</a>
 
         </div>
@@ -262,7 +284,7 @@ class TownshipPanelFacilities extends React.Component {
     return (
       <div className="blue-body marginless-row">
         <Body showHeader={true}>
-          <div className="row" style={{marginTop: 40}}>
+          <div className="row marginless-row" style={{marginTop: 40}}>
             <div className="col s12">
               <nav>
                 <div className="nav-wrapper nav-admin z-depth-2">
@@ -276,16 +298,23 @@ class TownshipPanelFacilities extends React.Component {
                       <div> </div> : this.renderTable()}
                   </div>
                </div>
-
                {this.state.showParkingRulesButton ? 
                 this.renderParkingRulesButton(this.state.parkingLocationCode) : <div> </div>}
             </div>
           </div>
         </Body>
-        { this.props.townshipFacilitiesFetched.isLoading ||
+
+        { 
+          this.props.townshipFacilitiesFetched.isLoading ||
           this.props.townshipLocationsFetched.isLoading ||
-          this.props.townshipSchemeTypesFetched.isLoading ? 
-          <div> </div> : this.renderCreateModal()}
+          this.props.townshipSchemeTypesFetched.isLoading ?
+          <div> </div> : this.renderCreateModal()
+        }
+
+        { 
+          !this.state.showEditModal ?
+          <div></div> : <TownshipPanelFacilitiesEdit initialValues={this.state.rowData} handleSuccess={this.handleSuccess}/>
+        }
 
         <div id="modal-success" className="modal">
           <div className="modal-content">
@@ -307,7 +336,7 @@ class TownshipPanelFacilities extends React.Component {
 function mapStateToProps(state) {
   return {
     townshipFacilitiesFetched: state.townshipFacilitiesFetched,
-    townshipFacilitiesCreated: state.townshipFacilitiesCreated,
+    townshipLocationsCreated: state.townshipLocationsCreated,
     townshipLocationsFetched: state.townshipLocationsFetched,
     townshipSchemeTypesFetched: state.townshipSchemeTypesFetched,
   }
@@ -317,6 +346,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     fetchTownshipFacilities,
     fetchTownshipLocations,
+    createTownshipLocations,
     resetLoading,
     fetchTownshipSchemeTypes,
     createTownshipFacilities
@@ -324,6 +354,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-  form: 'create-ticket',
+  form: 'create',
   fields
 })(TownshipPanelFacilities));
