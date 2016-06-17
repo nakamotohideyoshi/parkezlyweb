@@ -6,9 +6,16 @@ import GrayButton from "../../../common/components/button/gray-button.jsx";
 import ImageCheckbox from "../../../common/components/footer/utils/image-checkbox.jsx";
 import { GoogleMapLoader, GoogleMap, Marker } from "react-google-maps";
 import { default as MarkerClusterer } from "react-google-maps/lib/addons/MarkerClusterer";
-import { updateGeolocation, getNearbyParking, setParkingType } from "../../actions/parking.js";
+import {
+  updateGeolocation,
+  getNearbyParking,
+  setParkingType,
+  setParkingOptions,
+  setOtherLocations
+} from "../../actions/parking.js";
 import { setPosition, setInitialPosition } from "../../actions/location.js";
 import { FREE_MAP_MARKER, PAID_MAP_MARKER, MANAGED_MAP_MARKER } from "./constants/texts.js";
+import {SimpleSelect} from "react-selectize";
 import { throttle } from "lodash";
 
 const canUseDOM = !!(
@@ -22,6 +29,10 @@ class FindParking extends Component {
     super(props);
     this.handleCenterChanged = throttle(this.handleCenterChanged.bind(this), 300);
     this.goToInitialLocation = this.goToInitialLocation.bind(this);
+    this.showParkingOptions = this.showParkingOptions.bind(this);
+    this.hideParkingOptions = this.hideParkingOptions.bind(this);
+    this.showOtherLocationOptions = this.showOtherLocationOptions.bind(this);
+    this.hideOtherLocationOptions = this.hideOtherLocationOptions.bind(this);
   }
 
   componentDidMount() {
@@ -80,9 +91,80 @@ class FindParking extends Component {
     dispatch(setPosition(initialLat, initialLon));
   }
 
+  showParkingOptions() {
+    const { dispatch } = this.props;
+    dispatch(setParkingOptions(true));
+  }
+
+  showOtherLocationOptions() {
+    const { dispatch } = this.props;
+    dispatch(setOtherLocations(true));
+  }
+
+  hideParkingOptions() {
+    const { dispatch } = this.props;
+    dispatch(setParkingOptions(false));
+  }
+
+  hideOtherLocationOptions() {
+    const { dispatch } = this.props;
+    dispatch(setOtherLocations(false));
+  }
+
   renderMyLocationIcon() {
     return (
       <div className="my-location-marker" onClick={this.goToInitialLocation}>
+      </div>
+    );
+  }
+
+  renderSearchLocations() {
+    const options = [
+      {
+        label: "Birmingham, AI",
+        value: "BM"
+      },
+      {
+        label: "New York, NY",
+        value: "NY"
+      }
+    ];
+    return (
+      <div className="other-locations">
+        <div className="row heading">
+          <div className="col s10">
+            Search Other Locations
+          </div>
+          <div className="col s2">
+            <span className="close-btn" onClick={this.hideOtherLocationOptions}>
+            </span>
+          </div>
+        </div>
+        <div>
+          Select a City
+        </div>
+        <div>
+          <SimpleSelect 
+            options = {options} 
+            placeholder = "Select City from DB" 
+            />
+        </div>
+        <div>
+          OR
+        </div>
+        <div>
+          Search By Address
+        </div>
+        <div>
+          <input
+            type="text"
+            placeholder="Enter Address Here ...."/>
+        </div>
+        <div>
+          <GrayButton onClick={this.showParkingOptions}>
+            FIND
+          </GrayButton>
+        </div>
       </div>
     );
   }
@@ -192,7 +274,7 @@ class FindParking extends Component {
   renderFindNearbyBtn() {
     return (
       <div className="find-nearby-btn action-btn">
-        <GrayButton onClick={null}>
+        <GrayButton onClick={this.showParkingOptions}>
           FIND NEARBY
         </GrayButton>
       </div>
@@ -202,20 +284,66 @@ class FindParking extends Component {
   renderSearchBtn() {
     return (
       <div className="search-btn action-btn">
-        <GrayButton onClick={null}>
+        <GrayButton onClick={this.showOtherLocationOptions}>
           SEARCH OTHER LOCATIONS
         </GrayButton>
       </div>
     );
   }
 
+  renderParkingOptions() {
+    return (
+      <div className="parking-options">
+        <div className="row">
+          <div className="col s11">Available Parking</div>
+          <div className="col s1">
+            <span className="close-btn" onClick={this.hideParkingOptions}>
+            </span>
+          </div>
+        </div>
+
+        <div className="row parking-type">
+          <div className="col s10 free-parking">
+            <div>FREE Public Parking</div>
+            <div>6 AM to 10 PM</div>
+          </div>
+          <div className="col s2">
+            15.6 Miles
+          </div>
+        </div>
+
+        <div className="row parking-type">
+          <div className="col s10 public-parking">
+            <div>Public Parking</div>
+            <div>6 AM to 10 PM</div>
+          </div>
+          <div className="col s2">
+            15.6 Miles
+          </div>
+        </div>
+
+        <div className="row parking-type">
+          <div className="col s10 managed-parking">
+            <div>Managed Parking</div>
+            <div>6 AM to 10 PM</div>
+          </div>
+          <div className="col s2">
+            15.6 Miles
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   render() {
-    const parkNowBtn = this.renderFindNearbyBtn();
-    const searchBtn = this.renderSearchBtn();
     const gMap = this.renderGMap();
     const myLocationIcon = this.renderMyLocationIcon();
-    const { loading } = this.props.parking;
+    const { loading, showParkingOptions, showOtherLocations } = this.props.parking;
+    const parkNowBtn = !showParkingOptions && !showOtherLocations ? this.renderFindNearbyBtn() : null;
+    const searchBtn = !showParkingOptions && !showOtherLocations ? this.renderSearchBtn() : null;
     const footerContent = this.renderFooterContent();
+    const parkingOptions = showParkingOptions ? this.renderParkingOptions() : null;
+    const otherLocations = showOtherLocations ? this.renderSearchLocations() : null;
     return (
       <Body
         ref="find-parking-body"
@@ -223,6 +351,8 @@ class FindParking extends Component {
         showFooter={true}
         footerContent={footerContent}
         loading={loading}>
+          {parkingOptions}
+          {otherLocations}
           {parkNowBtn}
           {searchBtn}
           {gMap}

@@ -79,3 +79,17 @@ export const setParkingType = (type, val) => {
     }
   }
 };
+
+export const setParkingOptions = (status) => {
+  return {
+    type: Actions.SET_PARKING_OPTIONS,
+    status
+  };
+};
+
+export const setOtherLocations = (status) => {
+  return {
+    type: Actions.SET_OTHER_LOCATIONS,
+    status
+  };
+};

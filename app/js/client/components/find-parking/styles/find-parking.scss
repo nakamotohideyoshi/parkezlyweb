@@ -32,3 +32,87 @@
   background-size: contain;
   cursor: pointer;
 }
+
+.parking-options {
+  position: absolute;
+  top: 55px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 10;
+  padding: 20px 15px 10px;
+  background: rgba(0,0,0,0.7) !important;
+  color: $white;
+
+  .close-btn {
+    cursor: pointer;
+    background: url('../images/cross.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: block;
+    width: 25px;
+    height: 25px;
+  }
+
+  .parking-type {
+    cursor: pointer;
+    padding: 8px 0;
+    border-radius: 3px;
+
+    &:hover {
+      background: rgba(0,0,0,0.8) !important;
+    }
+  }
+
+  .free-parking {
+    background: url('../images/park@3x.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding-left: 75px;
+  }
+  .public-parking {
+    background: url('../images/paid_parking@3x.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding-left: 75px;
+  }
+  .managed-parking {
+    background: url('../images/managed@3x.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding-left: 75px;
+  }
+}
+.other-locations {
+  width: 330px;
+  position: absolute;
+  top: 150px;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 20px 15px 20px;
+  background: rgba(0,0,0,0.7) !important;
+  color: $white;
+  margin: 0 auto;
+  border-radius: 3px;
+  text-align: center;
+
+  & > div {
+    margin: 8px 0;
+  }
+
+  .heading {
+    border-bottom: 1px solid $white;
+    padding: 5px 0;
+  }
+
+  .close-btn {
+    cursor: pointer;
+    background: url('../images/cross.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: block;
+    width: 25px;
+    height: 25px;
+  }
+}
