@@ -17,6 +17,8 @@ import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import Griddle from 'griddle-react'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 
+import InspectorPanelParkingFieldEdit from './inspector-panel-parking-field-edit.jsx'
+
 export const fields = [ 
   'id',  
   'expiry_time', 
@@ -53,16 +55,43 @@ export const fields = [
   'token',
 ]
 
+class customColumnComponent extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div onClick={() => this.props.metadata.customComponentMetadata.renderEditModal(
+        this.props.rowData.id, 
+        this.props.rowData)}>
+        {this.props.data}
+      </div>
+    );
+  }
+}
+
+customColumnComponent.defaultProps = { "data": {}, "renderEditModal": null};
+
 
 class InspectorParkingField extends React.Component {
 
   constructor(props) {
     super(props);
 
+    this.state = {
+      showEditDuplicateButtons: false,
+      parkingLocationCode: null,
+      showEditModal: false,
+      rowData: null,
+    }
+
     this.renderCreateModal = this.renderCreateModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
     this.renderTable = this.renderTable.bind(this);
+    this.renderEditModal = this.renderEditModal.bind(this);
   }
 
   componentWillMount() {
@@ -109,16 +138,39 @@ class InspectorParkingField extends React.Component {
     
     const {
       fields: {
-        vehicle_id,
-        user_name,
-        date,
-        location_id,
-        scheme_type,
-        rate,
-        pay_method,
-        amount,
-        cashier_id,
-        user_id,
+        id,  
+        expiry_time, 
+        user_id, 
+        user_name, 
+        location_address,  
+        google_map,  
+        parking_scheme,  
+        rate,  
+        payment_method,  
+        location_name, 
+        vehicle_image, 
+        township_code, 
+        scheme_type, 
+        my_permit, 
+        my_wallet, 
+        payment, 
+        ipn_txn_id,  
+        pay_method,  
+        ipn_payment, 
+        ipn_status,  
+        parking_status,  
+        entry_time,  
+        exit_time, 
+        ip,  
+        upark, 
+        lot_row, 
+        lot_number,  
+        my_timer1, 
+        qrcode,  
+        change_defaults, 
+        township_rules,  
+        pl_state,  
+        token,
       },
       resetForm,
       submitting,
@@ -170,6 +222,23 @@ class InspectorParkingField extends React.Component {
       onClick={() => $('#modal-Inspector-payment-create').openModal()}
       style={{margin: 10}}>Add New Parked Vehicle Fields</a>
     */
+
+    var renderEditModal = this.renderEditModal;
+    var metaDataFunction = () =>  {
+      return fields.map((data) => {
+        return(
+          {
+            "columnName": data,
+            "customComponent": customColumnComponent,
+            'customComponentMetadata': {
+                'renderEditModal': renderEditModal
+            }
+          }
+        );
+      });
+    }
+    var columnMeta = metaDataFunction()
+
     return (
       <div>
         <Griddle
@@ -184,6 +253,7 @@ class InspectorParkingField extends React.Component {
           customPagerComponent={ BootstrapPager }
           useCustomFilterComponent={true} customFilterComponent={customFilterComponent}
           useCustomFilterer={true} customFilterer={customFilterFunction}
+          columnMetadata={columnMeta}
           columns={['id',  
                   'expiry_time', 
                   'user_id', 
@@ -203,12 +273,45 @@ class InspectorParkingField extends React.Component {
     );
   }
 
+  renderEditModal(recordId, rowData) {
+    console.log(rowData);
+    console.log(recordId);
+    window.scrollTo(0, document.body.scrollHeight);
+    this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true, parkingLocationCode: recordId})
+  }
+
+  renderEditDuplicateButtons(recordId) {
+    return (
+      <div className="container">
+        <a
+        style={{marginTop: 20}}
+        onClick={() => {
+          this.setState({showEditModal: true})
+          $('#modal-inspector-parking-field-edit').openModal(); 
+        }}
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">edit</i>
+          <h4> Edit - Parking Field ID: {recordId} </h4>
+        </a>
+        <a
+        onClick={() => {
+          this.setState({showEditModal: true})
+          $('#modal-inspector-parking-field-duplicate').openModal(); 
+        }}
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">content_copy</i>
+          <h4> Duplicate - Parking Field ID: {recordId} </h4>
+        </a>
+      </div>
+    );
+  }
+
   render() {
     console.log(this.props.townshipLocationsFetched)
     return (
       <div className="blue-body marginless-row">
         <Body showHeader={true}>
-          <div className="row" style={{marginTop: 40}}>
+          <div className="row marginless-row" style={{marginTop: 40}}>
             <div className="col s12">
               <nav>
                 <div className="nav-wrapper nav-admin z-depth-2">
@@ -222,6 +325,8 @@ class InspectorParkingField extends React.Component {
                       <div className="center-align"> <Spinner /> </div> : this.renderTable()}
                   </div>
                </div>
+               {this.state.showEditDuplicateButtons ? 
+                this.renderEditDuplicateButtons(this.state.parkingLocationCode) : <div> </div>}
             </div>
           </div>
         </Body>
@@ -229,6 +334,11 @@ class InspectorParkingField extends React.Component {
           this.props.townshipLocationsFetched.isLoading ||
           this.props.townshipSchemeTypesFetched.isLoading ? 
           <div> </div> : this.renderCreateModal()}
+
+          { 
+            !this.state.showEditModal ?
+            <div></div> : <InspectorPanelParkingFieldEdit initialValues={this.state.rowData} handleSuccess={this.handleSuccess}/>
+          }
         <div id="modal-success" className="modal">
           <div className="modal-content">
             <h4>Success!</h4>

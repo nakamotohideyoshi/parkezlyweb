@@ -30,9 +30,9 @@ export function editInspectorParkingField(data, id) {
     return AXIOS_INSTANCE.put(URL, data)
     .then(function(response) {
       dispatch(apiTownship.receiveData(response.data, types.INSPECTOR_PARKING_FIELD_PUT_SUCCESS));
-      dispatch(reset('parking-payment'));
+      dispatch(reset('parking-field-edit'));
     })
-    .catch(function(response){
+    .catch(function(response) {
       dispatch(apiTownship.receiveError(response.data, types.INSPECTOR_PARKING_FIELD_PUT_ERROR));
       console.log(response);
     })

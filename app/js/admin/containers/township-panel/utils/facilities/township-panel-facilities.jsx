@@ -73,7 +73,7 @@ class TownshipPanelFacilities extends React.Component {
     window.scrollTo(0, 0);
 
     this.state = {
-      showParkingRulesButton: false,
+      showEditDuplicateButtons: false,
       parkingLocationCode: null,
       showEditModal: false,
       rowData: null,
@@ -185,10 +185,10 @@ class TownshipPanelFacilities extends React.Component {
     console.log(rowData);
     console.log(locationCode);
     window.scrollTo(0, document.body.scrollHeight);
-    this.setState({showParkingRulesButton: true, rowData: rowData, showEditModal: true, parkingLocationCode: locationCode})
+    this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true, parkingLocationCode: locationCode})
   }
 
-  renderParkingRulesButton(locationCode) {
+  renderEditDuplicateButtons(locationCode) {
     return (
       <div className="container">
         <Link 
@@ -298,8 +298,8 @@ class TownshipPanelFacilities extends React.Component {
                       <div> </div> : this.renderTable()}
                   </div>
                </div>
-               {this.state.showParkingRulesButton ? 
-                this.renderParkingRulesButton(this.state.parkingLocationCode) : <div> </div>}
+               {this.state.showEditDuplicateButtons ? 
+                this.renderEditDuplicateButtons(this.state.parkingLocationCode) : <div> </div>}
             </div>
           </div>
         </Body>

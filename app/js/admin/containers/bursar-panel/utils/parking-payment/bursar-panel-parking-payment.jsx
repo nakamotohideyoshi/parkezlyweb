@@ -30,16 +30,42 @@ export const fields = [
   'user_id',
 ]
 
+class customColumnComponent extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div onClick={() => this.props.metadata.customComponentMetadata.renderEditModal(
+        this.props.rowData.id, 
+        this.props.rowData)}>
+        {this.props.data}
+      </div>
+    );
+  }
+}
+
+customColumnComponent.defaultProps = { "data": {}, "renderEditModal": null};
 
 class BursarPanelParkingPayment extends React.Component {
 
   constructor(props) {
     super(props);
 
+    this.state = {
+      showEditDuplicateButtons: false,
+      parkingLocationCode: null,
+      showEditModal: false,
+      rowData: null,
+    }
+
     this.renderCreateModal = this.renderCreateModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
     this.renderTable = this.renderTable.bind(this);
+    this.renderEditModal = this.renderEditModal.bind(this);
   }
 
   componentWillMount() {
@@ -142,6 +168,23 @@ class BursarPanelParkingPayment extends React.Component {
 
   renderTable() {
     let parkingData = this.props.bursarParkingPaymentFetched.data.resource;
+
+    var renderEditModal = this.renderEditModal;
+    var metaDataFunction = () =>  {
+      return fields.map((data) => {
+        return(
+          {
+            "columnName": data,
+            "customComponent": customColumnComponent,
+            'customComponentMetadata': {
+                'renderEditModal': renderEditModal
+            }
+          }
+        );
+      });
+    }
+    var columnMeta = metaDataFunction()
+
     return (
       <div>
         <Griddle
@@ -156,6 +199,7 @@ class BursarPanelParkingPayment extends React.Component {
           customPagerComponent={ BootstrapPager }
           useCustomFilterComponent={true} customFilterComponent={customFilterComponent}
           useCustomFilterer={true} customFilterer={customFilterFunction}
+          columnMetadata={columnMeta}
         />
 
         <div className="divider"/> 
@@ -171,12 +215,43 @@ class BursarPanelParkingPayment extends React.Component {
     );
   }
 
+  renderEditModal(recordId, rowData) {
+    window.scrollTo(0, document.body.scrollHeight);
+    this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true, parkingLocationCode: recordId})
+  }
+
+  renderEditDuplicateButtons(recordId) {
+
+    return (
+      <div className="container">
+        <a
+        style={{marginTop: 20}}
+        onClick={() => {
+          this.setState({showEditModal: true})
+          $('#modal-inspector-ticket-edit').openModal(); 
+        }}
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">edit</i>
+          <h4> Edit - Parking Payment ID: {recordId} </h4>
+        </a>
+        <a
+        onClick={() => {
+          this.setState({showEditModal: true})
+          $('#modal-inspector-ticket-duplicate').openModal(); 
+        }}
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">content_copy</i>
+          <h4> Duplicate - Parking Payment ID: {recordId} </h4>
+        </a>
+      </div>
+    );
+  }
+
   render() {
-    console.log(this.props.townshipLocationsFetched)
     return (
       <div className="blue-body marginless-row">
         <Body showHeader={true}>
-          <div className="row" style={{marginTop: 40}}>
+          <div className="row marginless-row" style={{marginTop: 40}}>
             <div className="col s12">
               <nav>
                 <div className="nav-wrapper nav-admin z-depth-2">
@@ -189,6 +264,8 @@ class BursarPanelParkingPayment extends React.Component {
                       <div className="center-align"> <Spinner /> </div> : this.renderTable()}
                   </div>
                </div>
+               {this.state.showEditDuplicateButtons ? 
+                this.renderEditDuplicateButtons(this.state.parkingLocationCode) : <div> </div>}
             </div>
           </div>
         </Body>
@@ -213,7 +290,8 @@ class BursarPanelParkingPayment extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    bursarParkingPaymentFetched: state.bursarParkingPaymentFetched
+    bursarParkingPaymentFetched: state.bursarParkingPaymentFetched,
+    bursarParkingPaymentCreated: state.bursarParkingPaymentCreated
   }
 }
 
