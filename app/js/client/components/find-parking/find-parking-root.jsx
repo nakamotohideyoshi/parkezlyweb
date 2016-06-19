@@ -11,7 +11,8 @@ import {
   getNearbyParking,
   setParkingType,
   setParkingOptions,
-  setOtherLocations
+  setOtherLocations,
+  setSelectedMarker
 } from "../../actions/parking.js";
 import { setPosition, setInitialPosition } from "../../actions/location.js";
 import { FREE_MAP_MARKER, PAID_MAP_MARKER, MANAGED_MAP_MARKER } from "./constants/texts.js";
@@ -47,8 +48,8 @@ class FindParking extends Component {
 
   initializePosition(position) {
     const { dispatch } = this.props;
-    const lat = position.coords.latitude;
-    const lng = position.coords.longitude;
+    const lat = 40.7128; //position.coords.latitude;
+    const lng = -73.935242; //position.coords.longitude;
     const demoPos = {
       lat: 40.7128,
       lng: -73.935242
@@ -116,6 +117,11 @@ class FindParking extends Component {
       <div className="my-location-marker" onClick={this.goToInitialLocation}>
       </div>
     );
+  }
+
+  selectMarker(marker) {
+    const { dispatch } = this.props;
+    dispatch(setSelectedMarker(marker));
   }
 
   renderSearchLocations() {
@@ -212,16 +218,30 @@ class FindParking extends Component {
   }
 
   renderGMap() {
-    const { markers } = this.props.parking;
+    const { markers, selectedMarker } = this.props.parking;
     let lat = this.props.location.lat || 40.7128;
     let lon = this.props.location.lon || -73.935242;
     const currentPos =  new google.maps.LatLng({
       lat: parseFloat(lat),
       lng: parseFloat(lon)
     });
-    const currentMarker = (<Marker position={currentPos}/>);
+    let centerPos = {
+      lat: lat,
+      lng: lon
+    };
+    let currentMarker = (<Marker position={currentPos}/>);
+    if(selectedMarker) {
+      let centerLat = parseFloat(selectedMarker.lat);
+      let centerLon = parseFloat(selectedMarker.lng);
+      centerPos = {
+        lat: parseFloat(centerLat),
+        lng: parseFloat(centerLon)
+      };
+    }
+    
     const markersList = markers.map(this.renderMarker.bind(this));
     markersList.push(currentMarker);
+
     return (
       <section style={{height: "100%"}}>
         <GoogleMapLoader
@@ -235,9 +255,9 @@ class FindParking extends Component {
             <GoogleMap
               ref="gMap"
               defaultZoom={10}
-              defaultCenter={{ lat: lat, lng: lon }}
+              defaultCenter={centerPos}
               onClick={null}
-              center={{ lat: lat, lng: lon }}
+              center={centerPos}
               onCenterChanged={this.handleCenterChanged}>
                 {markersList}
             </GoogleMap>
@@ -291,7 +311,43 @@ class FindParking extends Component {
     );
   }
 
+  renderParkingOption(marker) {
+    const validClass = classNames({
+      "col": true,
+      "s10": true,
+      "free-parking": marker.marker === "ez-free",
+      "public-parking": marker.marker == "ez-paid",
+      "managed-parking": marker.marker == "ez-managed"
+    });
+    let parkingTypeText = "";
+    switch (marker.marker) {
+      case "ez-free":
+        parkingTypeText = "FREE Public Parking";
+        break;
+      case "ez-paid":
+        parkingTypeText = "Public Parking";
+        break;
+      case "ez-managed":
+        parkingTypeText = "Managed Parking";
+        break;
+    }
+    const distance = parseFloat(marker.distancea / 5280).toFixed(1);
+    return (
+      <div className="row parking-type" onClick={this.selectMarker.bind(this, marker)}>
+        <div className={validClass}>
+          <div>{parkingTypeText}</div>
+          <div>{marker.html}</div>
+        </div>
+        <div className="col s2">
+          {distance} Miles
+        </div>
+      </div>
+    );
+  }
+
   renderParkingOptions() {
+    const { markers } = this.props.parking;
+    const parkingOptions = markers.map(this.renderParkingOption, this);
     return (
       <div className="parking-options">
         <div className="row">
@@ -301,36 +357,7 @@ class FindParking extends Component {
             </span>
           </div>
         </div>
-
-        <div className="row parking-type">
-          <div className="col s10 free-parking">
-            <div>FREE Public Parking</div>
-            <div>6 AM to 10 PM</div>
-          </div>
-          <div className="col s2">
-            15.6 Miles
-          </div>
-        </div>
-
-        <div className="row parking-type">
-          <div className="col s10 public-parking">
-            <div>Public Parking</div>
-            <div>6 AM to 10 PM</div>
-          </div>
-          <div className="col s2">
-            15.6 Miles
-          </div>
-        </div>
-
-        <div className="row parking-type">
-          <div className="col s10 managed-parking">
-            <div>Managed Parking</div>
-            <div>6 AM to 10 PM</div>
-          </div>
-          <div className="col s2">
-            15.6 Miles
-          </div>
-        </div>
+        {parkingOptions}
       </div>
     );
   }

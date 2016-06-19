@@ -93,3 +93,10 @@ export const setOtherLocations = (status) => {
     status
   };
 };
+
+export const setSelectedMarker = (marker) => {
+  return {
+    type: Actions.SET_SELECTED_MARKER,
+    marker
+  };
+}
