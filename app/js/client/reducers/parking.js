@@ -6,7 +6,10 @@ const initialState = {
   markers: [],
   free : true,
   paid : true,
-  managed : true
+  managed : true,
+  showParkingOptions: false,
+  showOtherLocations: false,
+  selectedMarker: null
 };
 
 const Parking = (state = initialState, action) => {
@@ -42,6 +45,21 @@ const Parking = (state = initialState, action) => {
       return {
         ...state,
         managed: action.val
+      }
+    case "SET_PARKING_OPTIONS":
+      return {
+        ...state,
+        showParkingOptions: action.status
+      }
+    case "SET_OTHER_LOCATIONS":
+      return {
+        ...state,
+        showOtherLocations: action.status
+      }
+    case "SET_SELECTED_MARKER":
+      return {
+        ...state,
+        selectedMarker: action.marker
       }
     default:
       return state;
