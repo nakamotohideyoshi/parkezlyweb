@@ -24,6 +24,7 @@ import {fetchTownshipSchemeTypes} from '../../../../actions/actions-township-com
 import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import Griddle from 'griddle-react'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
+import { Link } from 'react-router';
 
 import {SchemaFilterTest} from '../../../../common/components/schema-filter-test.jsx'
 
@@ -85,7 +86,9 @@ class TownshipPanelParkingRules extends React.Component {
     this.state = {
       showEditModal: false,
       locationId: null,
-      filteredData: null
+      filteredData: null,
+      showEditButton: false,
+      duplicateModal: false,
     }
 
     this.renderCreateModal = this.renderCreateModal.bind(this);
@@ -186,9 +189,7 @@ class TownshipPanelParkingRules extends React.Component {
             </div>
 
             <div className="row">
-
               {this.tempInputs()}
-
             </div>
           </div>
           
@@ -210,10 +211,10 @@ class TownshipPanelParkingRules extends React.Component {
   }
 
   openEditModal(locationId) {
+    this.setState({showEditButton: true});
     var fieldData = this.props.townshipParkingRulesFetched.data.resource;   
     const filteredData = fieldData.filter(createFilter(locationId.toString(), ['id']));
-    this.setState({showEditModal: true, filteredData: filteredData[0]});
-    $('#modal-township-parking-rules-edit').openModal()
+    this.setState({locationId: locationId, filteredData: filteredData[0]});
   }
 
   renderEditModal() {
@@ -223,13 +224,13 @@ class TownshipPanelParkingRules extends React.Component {
       dispatch
     } = this.props
 
-      
-
-      return (
-        <TownshipPanelParkingRulesEdit initialValues={this.state.filteredData} handleSuccess={this.handleSuccess}/>
-      );
+    return (
+      <TownshipPanelParkingRulesEdit 
+      initialValues={this.state.filteredData} 
+      handleSuccess={this.handleSuccess} 
+      duplicateModal={this.state.duplicateModal}/>
+    );
   }
-
   renderTable() {
     let parkingData = this.props.townshipParkingRulesFetched.data.resource;
 
@@ -290,12 +291,35 @@ class TownshipPanelParkingRules extends React.Component {
     );
   }
 
+  renderEditButtons(locationId) {
+    console.log(locationId)
+    return (
+      <div className="container">
+        <a 
+        onClick={() => {$('#modal-township-parking-rules-edit').openModal(); this.setState({showEditModal: true, duplicateModal: false})}}
+        style={{marginTop: 20}}
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">edit</i>
+          <h4> Edit Parking Rule: {locationId} </h4>
+        </a>
+
+        <a 
+        onClick={() => {$('#modal-township-parking-rules-duplicate').openModal(); this.setState({showEditModal: true, duplicateModal: true})}}
+        style={{marginTop: 20 }}
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">content_copy</i>
+          <h4> Duplicate Parking Rule: {locationId} </h4>
+        </a>
+      </div>
+    );
+  }
+
   render() {
     console.log(this.props.townshipParkingRulesCreated)
     return (
       <div className="blue-body marginless-row">
         <Body showHeader={true}>
-          <div className="row" style={{marginTop: 40}}>
+          <div className="row marginless-row" style={{marginTop: 40}}>
             <div className="col s12">
               <nav>
                 <div className="nav-wrapper nav-admin z-depth-2">
@@ -308,6 +332,9 @@ class TownshipPanelParkingRules extends React.Component {
                       <div> </div> : this.renderTable()}
                   </div>
                </div>
+
+               {this.state.showEditButton ? 
+                this.renderEditButtons(this.state.locationId) : <div> </div>}
             </div>
           </div>
         </Body>

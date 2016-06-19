@@ -98,7 +98,7 @@ export function createTownshipFacilities(data) {
     return AXIOS_INSTANCE.post(URL, data)
     .then(function(response) {
       dispatch(apiTownship.receiveData(response.data, types.TOWNSHIP_FACILITIES_POST_SUCCESS));
-      dispatch(reset('township-panel-users-edit'));
+      dispatch(reset('township-panel-facilities-edit'));
     })
     .catch(function(response){
       dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_FACILITIES_POST_ERROR));
