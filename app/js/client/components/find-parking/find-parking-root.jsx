@@ -102,6 +102,7 @@ class FindParking extends Component {
   showParkingOptions() {
     const { dispatch } = this.props;
     dispatch(setParkingOptions(true));
+    this.hideParkingOptions();
   }
 
   showOtherLocationOptions() {
@@ -122,12 +123,14 @@ class FindParking extends Component {
   selectLocation(address) {
     const { dispatch } = this.props;
     dispatch(getLocationCoordinates(address.value));
+    this.hideOtherLocationOptions();
   }
 
   selectLocationFromInput() {
     const { dispatch } = this.props;
     const address = this.refs["custom-location"].value;
     dispatch(getLocationCoordinates(address));
+    this.hideOtherLocationOptions();
   }
 
   renderMyLocationIcon() {
