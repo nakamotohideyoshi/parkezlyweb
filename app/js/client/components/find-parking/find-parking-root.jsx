@@ -124,6 +124,12 @@ class FindParking extends Component {
     dispatch(getLocationCoordinates(address.value));
   }
 
+  selectLocationFromInput() {
+    const { dispatch } = this.props;
+    const address = this.refs["custom-location"].value;
+    dispatch(getLocationCoordinates(address));
+  }
+
   renderMyLocationIcon() {
     return (
       <div className="my-location-marker" onClick={this.goToInitialLocation}>
@@ -175,11 +181,12 @@ class FindParking extends Component {
         </div>
         <div>
           <input
+            ref="custom-location"
             type="text"
             placeholder="Enter Address Here ...."/>
         </div>
         <div>
-          <GrayButton onClick={this.selectLocation.bind(this)}>
+          <GrayButton onClick={this.selectLocationFromInput.bind(this)}>
             FIND
           </GrayButton>
         </div>
