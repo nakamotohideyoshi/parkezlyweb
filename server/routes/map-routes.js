@@ -45,3 +45,25 @@ exports.getLocationDetails = function (req, res) {
     console.log("Got error: " + e.message);
   });
 };
+
+exports.getLocationCoordinates = function (req, res) {
+  console.log(req.body);
+  var address = req.body.address;
+  var path = "/maps/api/geocode/json?address=" + address + "&key=AIzaSyDtFlHY3zvCOq72mg6D4RPrw10PnZTTxpw";
+  var options = {
+    host: "maps.googleapis.com",
+    path: path
+  };
+  https.get(options, function(resp){
+    var responseBody = "";
+    resp.on('data', function(chunk){
+      responseBody += chunk;
+    });
+    resp.on('end', function() {
+      var locationData = JSON.parse(responseBody);
+      res.send(locationData);
+    });
+  }).on("error", function(e){
+    console.log("Got error: " + e.message);
+  });
+};

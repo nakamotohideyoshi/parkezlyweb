@@ -1,8 +1,9 @@
 import axios from "axios";
-import * as Config from "../utils/api.js";
+import { APIConfig, placesAPIConfig } from "../utils/api.js";
 
 export const getNearByParking = (position) => {
   const { lat, lng } = position;
+
   return axios(
     Object.assign(
       {
@@ -12,16 +13,16 @@ export const getNearByParking = (position) => {
           params:
           [
             {
-              "name":"in_lat",
-              "value":"40.7346687317"
+              "name": "in_lat",
+              "value": lat
             },
             {
-              "name":"in_lng",
-              "value":"-73.4461441040"
+              "name": "in_lng",
+              "value": lng
             }
           ]
         }
-      }, Config.APIConfig
+      }, APIConfig
     )
   );
 };

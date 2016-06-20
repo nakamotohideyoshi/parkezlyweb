@@ -102,6 +102,7 @@ app.post('/api/save-transaction', paypalRoutes.saveTransaction);
 /*Google Places API*/
 app.post('/api/nearby', mapRoutes.getNearbyPlaces);
 app.post('/api/get-location-details', mapRoutes.getLocationDetails);
+app.post('/api/get-location-coordinates', mapRoutes.getLocationCoordinates);
 
 
 var jsonParser       = bodyParser.json({limit:1024*1024*20, type:'application/json'});
