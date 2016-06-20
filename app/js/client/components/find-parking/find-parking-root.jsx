@@ -14,7 +14,7 @@ import {
   setOtherLocations,
   setSelectedMarker
 } from "../../actions/parking.js";
-import { setPosition, setInitialPosition } from "../../actions/location.js";
+import { setPosition, setInitialPosition, getLocationCoordinates } from "../../actions/location.js";
 import { FREE_MAP_MARKER, PAID_MAP_MARKER, MANAGED_MAP_MARKER } from "./constants/texts.js";
 import {SimpleSelect} from "react-selectize";
 import { throttle } from "lodash";
@@ -46,16 +46,26 @@ class FindParking extends Component {
     }
   }
 
+  fetchNearbyParking() {
+    const { dispatch, location } = this.props;
+    const { lat, lon } = location;
+    const pos = {
+      lat: lat,
+      lng: lon
+    };
+    dispatch(getNearbyParking(pos));
+  }
+
   initializePosition(position) {
     const { dispatch } = this.props;
     const lat = 40.7128; //position.coords.latitude;
     const lng = -73.935242; //position.coords.longitude;
     const demoPos = {
-      lat: 40.7128,
-      lng: -73.935242
+      lat: 40.7346687317,
+      lng: -73.4461441040
     };
     dispatch(setInitialPosition(lat, lng));
-    dispatch(getNearbyParking(demoPos));
+    this.fetchNearbyParking();
   }
 
   toggleParking(type) {
@@ -79,10 +89,7 @@ class FindParking extends Component {
       return;
     } else {
       dispatch(setPosition(newLat, newLon));
-      dispatch(getNearbyParking({
-        lat: newLat,
-        lng: newLon
-      }));
+      this.fetchNearbyParking();
     }
   }
 
@@ -112,6 +119,11 @@ class FindParking extends Component {
     dispatch(setOtherLocations(false));
   }
 
+  selectLocation(address) {
+    const { dispatch } = this.props;
+    dispatch(getLocationCoordinates(address.value));
+  }
+
   renderMyLocationIcon() {
     return (
       <div className="my-location-marker" onClick={this.goToInitialLocation}>
@@ -128,11 +140,11 @@ class FindParking extends Component {
     const options = [
       {
         label: "Birmingham, AI",
-        value: "BM"
+        value: "Birmingham"
       },
       {
         label: "New York, NY",
-        value: "NY"
+        value: "New York"
       }
     ];
     return (
@@ -153,7 +165,7 @@ class FindParking extends Component {
           <SimpleSelect 
             options = {options} 
             placeholder = "Select City from DB" 
-            />
+            onValueChange={this.selectLocation.bind(this)}/>
         </div>
         <div>
           OR
@@ -167,7 +179,7 @@ class FindParking extends Component {
             placeholder="Enter Address Here ...."/>
         </div>
         <div>
-          <GrayButton onClick={this.showParkingOptions}>
+          <GrayButton onClick={this.selectLocation.bind(this)}>
             FIND
           </GrayButton>
         </div>

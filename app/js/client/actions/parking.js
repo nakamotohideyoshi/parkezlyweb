@@ -99,4 +99,4 @@ export const setSelectedMarker = (marker) => {
     type: Actions.SET_SELECTED_MARKER,
     marker
   };
-}
+};

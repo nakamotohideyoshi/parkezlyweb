@@ -1,4 +1,12 @@
-import { SET_CURRENT_LOCATION, SET_INITIAL_LOCATION } from "../constants/actions.js";
+import * as LocationAPI from "../api/location.js"
+import {
+  SET_CURRENT_LOCATION,
+  SET_INITIAL_LOCATION,
+  FETCH_LAT_LNG_INITIATE,
+  RECEIVED_LAT_LNG,
+  RECEIVE_LAT_LNG_FAILED
+} from "../constants/actions.js";
+import { getNearbyParking } from "./parking.js";
 
 export const setPosition = (lat, lon) => {
   return {
@@ -17,5 +25,34 @@ export const setInitialPosition = (lat, lon) => {
       lat: lat,
       lon: lon
     }
+  };
+};
+
+const initiateLatLngFetch = () => {
+  return {
+    type: FETCH_LAT_LNG_INITIATE
+  };
+};
+
+
+const receiveLatLngFailed = () => {
+  return {
+    type: RECEIVE_LAT_LNG_FAILED
+  };
+};
+
+export const getLocationCoordinates = (address) => {
+  return dispatch => {
+    dispatch(initiateLatLngFetch());
+    return LocationAPI.getLocationCoordinates(address)
+      .then((response) => {
+        const { data } = response;
+        const { results } = data;
+        dispatch(setPosition( results[0].geometry.location.lat, results[0].geometry.location.lng ));
+        dispatch(getNearbyParking( results[0].geometry.location ));
+      })
+      .catch((response) => {
+        dispatch(receiveLatLngFailed(response));
+      });
   };
 };
