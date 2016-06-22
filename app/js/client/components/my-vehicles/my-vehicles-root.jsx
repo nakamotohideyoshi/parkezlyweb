@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 import classNames from "classnames";
 import cookie from 'react-cookie';
-
+import { SimpleSelect } from "react-selectize";
 import Body from "../../../common/components/body/body.jsx";
 import GrayButton from "../../../common/components/button/gray-button.jsx";
 import LicensePlateField from "../../../common/components/fields/license-plate-field.jsx";
