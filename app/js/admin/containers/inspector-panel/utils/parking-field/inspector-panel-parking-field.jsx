@@ -17,6 +17,9 @@ import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import Griddle from 'griddle-react'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 
+import {ajaxSelectizeGet, ajaxDelete} from '../../../../common/components/ajax-selectize.js'
+import AdminSelectize from '../../../../common/components/admin-selectize.jsx'
+
 import InspectorPanelParkingFieldEdit from './inspector-panel-parking-field-edit.jsx'
 
 export const fields = [ 
@@ -85,6 +88,7 @@ class InspectorParkingField extends React.Component {
       parkingLocationCode: null,
       showEditModal: false,
       rowData: null,
+      selectizeOptions: {}
     }
 
     this.renderCreateModal = this.renderCreateModal.bind(this);
@@ -98,6 +102,7 @@ class InspectorParkingField extends React.Component {
     this.props.fetchInspectorParkingField();
     this.props.fetchTownshipSchemeTypes();
     this.props.fetchTownshipLocations(this.props.townshipCode);
+    ajaxSelectizeGet('payment_type', 'pay_method', this.selectizeOptionsUpdate);
   }
 
   componentDidUpdate() {
@@ -106,6 +111,13 @@ class InspectorParkingField extends React.Component {
       this.handleSuccess();
     }
   };
+
+  selectizeOptionsUpdate(test, keyName) {
+    var optionsDataObject = {[keyName]: test};
+    Object.assign(this.state.selectizeOptions, optionsDataObject);
+    //console.log(this.state.selectizeOptions)
+    this.forceUpdate();
+  }
 
   handleSuccess(){
     this.props.resetLoading();
@@ -192,6 +204,13 @@ class InspectorParkingField extends React.Component {
             <div className="row">
 
               {this.tempInputs()}
+
+              <AdminSelectize 
+                options={this.state.selectizeOptions}
+                objectKey={'pay_method'} 
+                formName={'parking-payment'} 
+                fieldName={'pay_method'}
+                dispatch={dispatch} />
 
             </div>
           </div>

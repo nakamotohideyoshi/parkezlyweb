@@ -26,7 +26,7 @@ import Griddle from 'griddle-react'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 import { Link } from 'react-router';
 
-import {SchemaFilterTest} from '../../../../common/components/schema-filter-test.jsx'
+
 
 export const fields = [ 
   'date_time', 
@@ -80,8 +80,6 @@ class TownshipPanelParkingRules extends React.Component {
     super(props);
 
     window.scrollTo(0, 0);
-
-    SchemaFilterTest();
 
     this.state = {
       showEditModal: false,

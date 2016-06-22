@@ -13,9 +13,13 @@ import {fetchTownshipList, updateTownshipDetails} from '../../actions/actions-to
 
 const KEYS_TO_FILTERS = ['city']
 
+import {SchemaFilterTest} from '../../common/components/schema-filter-test.jsx'
+
 class TownshipListRoot extends React.Component {
   constructor(props) {
     super(props);
+
+    SchemaFilterTest();
 
     this.state = {
       searchTerm: ''

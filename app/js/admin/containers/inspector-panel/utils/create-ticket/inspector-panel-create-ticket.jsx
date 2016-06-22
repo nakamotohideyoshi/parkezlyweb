@@ -237,6 +237,7 @@ class InspectorCreateTicket extends React.Component {
       });
     }
     var columnMeta = metaDataFunction()
+    
     return (
       <div>
         <Griddle

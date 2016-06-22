@@ -3,9 +3,9 @@ import { reduxForm, change } from 'redux-form'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import datetime from 'node-datetime'
-import {SimpleSelect} from "react-selectize"
+import {SimpleSelect} from 'react-selectize'
 
-import Body from "../../../../../common/components/body/body.jsx"
+import Body from '../../../../../common/components/body/body.jsx'
 import Spinner from '../../../../common/components/spinner.jsx'
 import {optionsSelectize} from '../../../../common/components/options-selectize.js'
 
