@@ -16,7 +16,7 @@ import {
 } from "../../actions/parking.js";
 import { setPosition, setInitialPosition, getLocationCoordinates } from "../../actions/location.js";
 import { FREE_MAP_MARKER, PAID_MAP_MARKER, MANAGED_MAP_MARKER } from "./constants/texts.js";
-import {SimpleSelect} from "react-selectize";
+import { SimpleSelect } from "react-selectize";
 import { throttle } from "lodash";
 
 const canUseDOM = !!(
@@ -102,7 +102,6 @@ class FindParking extends Component {
   showParkingOptions() {
     const { dispatch } = this.props;
     dispatch(setParkingOptions(true));
-    this.hideParkingOptions();
   }
 
   showOtherLocationOptions() {
