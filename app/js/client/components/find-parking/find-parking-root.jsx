@@ -12,6 +12,7 @@ import {
   setParkingType,
   setParkingOptions,
   setOtherLocations,
+  setSelectedLocation,
   setSelectedMarker
 } from "../../actions/parking.js";
 import { setPosition, setInitialPosition, getLocationCoordinates } from "../../actions/location.js";
@@ -34,6 +35,7 @@ class FindParking extends Component {
     this.hideParkingOptions = this.hideParkingOptions.bind(this);
     this.showOtherLocationOptions = this.showOtherLocationOptions.bind(this);
     this.hideOtherLocationOptions = this.hideOtherLocationOptions.bind(this);
+    this.handleBack = this.handleBack.bind(this);
   }
 
   componentDidMount() {
@@ -102,11 +104,13 @@ class FindParking extends Component {
   showParkingOptions() {
     const { dispatch } = this.props;
     dispatch(setParkingOptions(true));
+    dispatch(setSelectedLocation(null));
   }
 
   showOtherLocationOptions() {
     const { dispatch } = this.props;
     dispatch(setOtherLocations(true));
+    dispatch(setSelectedLocation(null));
   }
 
   hideParkingOptions() {
@@ -122,6 +126,7 @@ class FindParking extends Component {
   selectLocation(address) {
     const { dispatch } = this.props;
     dispatch(getLocationCoordinates(address.value));
+    dispatch(setSelectedLocation(address.value));
     this.hideOtherLocationOptions();
   }
 
@@ -129,7 +134,16 @@ class FindParking extends Component {
     const { dispatch } = this.props;
     const address = this.refs["custom-location"].value;
     dispatch(getLocationCoordinates(address));
+    dispatch(setSelectedLocation(address));
     this.hideOtherLocationOptions();
+  }
+
+  handleBack() {
+    const { dispatch } = this.props;
+    this.goToInitialLocation();
+    this.hideParkingOptions();
+    this.hideOtherLocationOptions();
+    dispatch(setSelectedLocation(null));
   }
 
   renderMyLocationIcon() {
@@ -332,6 +346,31 @@ class FindParking extends Component {
     );
   }
 
+  renderLocationLabel() {
+    const { selectedLocation } = this.props.parking;
+    return (
+      <div className="selected-location">
+        {selectedLocation}
+      </div>
+    )
+  }
+
+  renderBackBtn() {
+    return (
+      <div className="back-btn">
+        <a href="javascript:void(0)" onClick={this.handleBack}>Back</a>
+      </div>
+    )
+  }
+
+  renderParkingInfoBtn() {
+    return (
+      <div className="parking-info-btn">
+        <a href="javascript:void(0)" onClick={this.showParkingOptions}>Parking Info</a>
+      </div>
+    )
+  }
+
   renderParkingOption(marker) {
     const validClass = classNames({
       "col": true,
@@ -384,14 +423,18 @@ class FindParking extends Component {
   }
 
   render() {
+    console.log(this.props.parking);
     const gMap = this.renderGMap();
     const myLocationIcon = this.renderMyLocationIcon();
-    const { loading, showParkingOptions, showOtherLocations } = this.props.parking;
-    const parkNowBtn = !showParkingOptions && !showOtherLocations ? this.renderFindNearbyBtn() : null;
-    const searchBtn = !showParkingOptions && !showOtherLocations ? this.renderSearchBtn() : null;
+    const { loading, showParkingOptions, showOtherLocations, selectedLocation } = this.props.parking;
+    const parkNowBtn = !showParkingOptions && !showOtherLocations && !selectedLocation ? this.renderFindNearbyBtn() : null;
+    const searchBtn = !showParkingOptions && !showOtherLocations && !selectedLocation ? this.renderSearchBtn() : null;
     const footerContent = this.renderFooterContent();
     const parkingOptions = showParkingOptions ? this.renderParkingOptions() : null;
     const otherLocations = showOtherLocations ? this.renderSearchLocations() : null;
+    const selectedLocationLabel = selectedLocation ? this.renderLocationLabel() : null;
+    const backBtn = selectedLocation ? this.renderBackBtn() : null;
+    const parkingInfoBtn = selectedLocation ? this.renderParkingInfoBtn() : null;
     return (
       <Body
         ref="find-parking-body"
@@ -399,12 +442,17 @@ class FindParking extends Component {
         showFooter={true}
         footerContent={footerContent}
         loading={loading}>
-          {parkingOptions}
-          {otherLocations}
-          {parkNowBtn}
-          {searchBtn}
-          {gMap}
-          {myLocationIcon}
+          <div className="find-parking-container">
+            {parkingOptions}
+            {otherLocations}
+            {parkNowBtn}
+            {searchBtn}
+            {selectedLocationLabel}
+            {gMap}
+            {backBtn}
+            {parkingInfoBtn}
+            {myLocationIcon}
+          </div>
       </Body>
     );
   }
