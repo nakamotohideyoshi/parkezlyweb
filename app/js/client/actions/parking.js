@@ -100,3 +100,10 @@ export const setSelectedMarker = (marker) => {
     marker
   };
 };
+
+export const setSelectedLocation = (location) => {
+  return {
+    type: Actions.SET_SELECTED_LOCATION,
+    location
+  }
+}
