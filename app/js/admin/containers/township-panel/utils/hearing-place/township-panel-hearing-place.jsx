@@ -16,6 +16,10 @@ import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import Griddle from 'griddle-react'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 
+import TownshipPanelHearingPlaceForm from './township-panel-hearing-place-form.jsx'
+import customColumnComponent from '../../../../common/components/custom-column-component.jsx'
+import {ajaxSelectizeGet, ajaxDelete} from '../../../../common/components/ajax-selectize.js'
+
 export const fields = [ 
   'id',  
   'date_time', 
@@ -34,10 +38,19 @@ class TownshipPanelHearingPlace extends React.Component {
 
     window.scrollTo(0, 0);
 
+    this.state = {
+      showEditDuplicateButtons: false,
+      parkingLocationCode: null,
+      showEditModal: false,
+      rowData: null,
+      selectizeOptions: {}
+    }
+
     this.renderCreateModal = this.renderCreateModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
     this.renderTable = this.renderTable.bind(this);
+    this.renderEditModal = this.renderEditModal.bind(this);
   }
 
   componentWillMount() {
@@ -85,6 +98,7 @@ class TownshipPanelHearingPlace extends React.Component {
     
     const {
       fields: {
+        id,
         vehicle_id,
         user_name,
         date,
@@ -102,37 +116,14 @@ class TownshipPanelHearingPlace extends React.Component {
     } = this.props
 
     return(
-      <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-        <div id="modal-inspector-ticket-create" className="modal modal-fixed-footer">
-          <div className="modal-content">
-
-            <div className="row">
-              <div className="center-align">
-                <h4>Create a Hearing Place</h4>
-                <p className="center-align">Create a Hearing Place by filling out the fields.</p>
-              </div>
-            </div>
-
-            <div className="row">
-
-              {this.tempInputs()}
-
-            </div>
-          </div>
-          
-
-          <div className="modal-footer">
-            <div className="row marginless-row">
-              <div className="col s12 center-align">
-                <button 
-                type="submit" 
-                disabled={submitting} 
-                className="waves-effect waves-light btn">Create Hearing Place</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
+      <TownshipPanelHearingPlaceForm
+        modalName="modal-violation-code-create" 
+        modalText="Create a Hearing Place" 
+        submitType="CREATE"
+        initialValues={null}
+        editMode={false}
+        handleSuccess={this.handleSuccess}
+      />
     );
 
   }
@@ -140,6 +131,22 @@ class TownshipPanelHearingPlace extends React.Component {
   renderTable() {
     console.log(this.props.townshipHearingPlaceFetched)
     let parkingData = this.props.townshipHearingPlaceFetched.data.resource;
+
+    var renderEditModal = this.renderEditModal
+    var metaDataFunction = () =>  {
+      return fields.map((data) => {
+        return(
+          {
+            "columnName": data,
+            "customComponent": customColumnComponent,
+            'customComponentMetadata': {
+                'renderEditModal': renderEditModal
+            }
+          }
+        );
+      });
+    }
+    var columnMeta = metaDataFunction()
 
     return (
       <div>
@@ -155,6 +162,7 @@ class TownshipPanelHearingPlace extends React.Component {
           customPagerComponent={ BootstrapPager }
           useCustomFilterComponent={true} customFilterComponent={customFilterComponent}
           useCustomFilterer={true} customFilterer={customFilterFunction}
+          columnMetadata={columnMeta}
         />
 
         <div className="divider"/> 
@@ -171,12 +179,84 @@ class TownshipPanelHearingPlace extends React.Component {
     );
   }
 
+  renderEditModal(recordId, rowData) {
+    console.log(rowData);
+    console.log(recordId);
+    window.scrollTo(0, document.body.scrollHeight);
+    this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true, parkingLocationCode: recordId})
+  }
+
+  renderEditDuplicateButtons(recordId) {
+    return (
+      <div className="container">
+        <a
+        style={{marginTop: 20}}
+        onClick={() => {
+          this.setState({showEditModal: true})
+          $('#modal-violation-code-edit').openModal(); 
+        }}
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">edit</i>
+          <h4> Edit - Hearing Place ID: {recordId} </h4>
+        </a>
+
+        <a
+        onClick={() => {
+          this.setState({showEditModal: true})
+          $('#modal-violation-code-duplicate').openModal(); 
+        }}
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">content_copy</i>
+          <h4> Duplicate - Hearing Place ID: {recordId} </h4>
+        </a>
+
+        <a
+        onClick={() => $('#modal-delete').openModal() }
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">delete</i>
+          <h4> Delete - Hearing Place ID: {recordId} </h4>
+        </a>
+
+        <div id="modal-delete" className="modal" style={{overflowX: "hidden"}}>
+          <div className="modal-content">
+            <h4>Delete</h4>
+            <p>Are you sure you want to delete this record?</p>
+          </div>
+          <div className="modal-footer">
+            <div className="row marginless-row">
+              <div className="col s6 left">
+                <button 
+                  href="#" 
+                  className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
+              </div>
+              <div className="col s3">
+                <a className="waves-effect waves-light btn btn-red" 
+                onClick={() => {
+                  $('#modal-delete').closeModal()
+                }}>No</a>
+              </div>
+              <div className="col s3">
+                <a className="waves-effect waves-light btn btn-green" 
+                onClick={() => {
+                  $('#modal-delete').closeModal()
+                  ajaxDelete('hearing_place_info', recordId, this.handleSuccess);
+                  this.setState({showEditDuplicateButtons: false});
+                  window.scrollTo(0, 0);
+                }}>Yes</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   render() {
     console.log(this.props.townshipLocationsFetched)
     return (
       <div className="blue-body marginless-row">
         <Body showHeader={true}>
-          <div className="row" style={{marginTop: 40}}>
+          <div className="row marginless-row" style={{marginTop: 40}}>
             <div className="col s12">
               <nav>
                 <div className="nav-wrapper nav-admin z-depth-2">
@@ -190,13 +270,41 @@ class TownshipPanelHearingPlace extends React.Component {
                       <div> </div> : this.renderTable()}
                   </div>
                </div>
+               {
+                this.state.showEditDuplicateButtons ? 
+                this.renderEditDuplicateButtons(this.state.parkingLocationCode) : <div> </div>}
             </div>
           </div>
         </Body>
-        { this.props.townshipHearingPlaceFetched.isLoading ||
-          this.props.townshipLocationsFetched.isLoading ||
-          this.props.townshipSchemeTypesFetched.isLoading ? 
+        { this.props.townshipHearingPlaceFetched.isLoading ? 
           <div> </div> : this.renderCreateModal()}
+
+        { 
+          !this.state.showEditModal ?
+          <div></div> : 
+          <div>
+            <TownshipPanelHearingPlaceForm
+              initialValues={this.state.rowData} 
+              handleSuccess={this.handleSuccess}
+              modalName="modal-violation-code-edit" 
+              modalText="Edit a Hearing Place" 
+              submitType="EDIT"
+              initialValues={this.state.rowData} 
+              rowData={this.state.rowData}
+              handleSuccess={this.handleSuccess}
+              />
+            <TownshipPanelHearingPlaceForm 
+              initialValues={this.state.rowData} 
+              handleSuccess={this.handleSuccess}
+              modalName="modal-violation-code-duplicate" 
+              modalText="Duplicate a Hearing Place" 
+              submitType="DUPLICATE"
+              initialValues={this.state.rowData} 
+              rowData={this.state.rowData}
+              handleSuccess={this.handleSuccess}
+              />
+          </div>
+        }
 
         <div id="modal-success" className="modal">
           <div className="modal-content">

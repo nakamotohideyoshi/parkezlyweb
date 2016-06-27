@@ -9,11 +9,74 @@ import {fetchTownshipPermitRequests,
 
 import {Tabbordion, Panel} from 'react-tabbordion'
 
+import {ajaxSelectizeGet, ajaxDelete} from '../../../../common/components/ajax-selectize.js'
+import Griddle from 'griddle-react'
+import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
+import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
+
+import {createFilter} from 'react-search-input';
+
 var classNames = {
   content: 'traditional-tabs-content',
   panel: 'traditional-tabs-panel',
   title: 'traditional-tabs-title'
 }
+
+export const fields = [ 
+  'id',  
+  'date_time', 
+  'user_id', 
+  'township_code', 
+  'township_name', 
+  'permit_type', 
+  'permit_name', 
+  'residency_proof', 
+  'approved',  
+  'date_action', 
+  'status',  
+  'paid',  
+  'user_comments', 
+  'town_comments', 
+  'logo',  
+  'scheme_type', 
+  'first_contact_date',  
+  'permit_status_image', 
+  'rate',  
+  'user_name', 
+  'signature',
+]
+
+class customColumnComponent extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    console.log(this.props.rowData)
+    if(this.props.data === "YES") {
+      return (
+        <div style={{color: "blue"}}>
+          <i className="material-icons valign" style={{color: "#2DB63D"}}>check_box</i>
+        </div>
+      );
+    } else if (this.props.data === "NO") {
+      return (
+        <div style={{color: "blue"}}>
+          <i className="material-icons valign" style={{color: "#EAB41C"}}>new_releases</i>
+        </div>
+      );
+    } else {
+      return (
+        <div style={{color: "blue"}}>
+          <i className="material-icons valign" style={{color: "#D9534F"}}>indeterminate_check_box</i>
+        </div>
+      );
+    }
+  }
+}
+
+customColumnComponent.defaultProps = { "data": {}, "renderEditModal": null};
 
 export default class TownshipPanelPermitRequests extends React.Component {
 
@@ -25,11 +88,17 @@ export default class TownshipPanelPermitRequests extends React.Component {
     $('.collapsible').collapsible();
 
     this.state = {
+      showEditDuplicateButtons: false,
+      parkingLocationCode: null,
+      showEditModal: false,
+      rowData: null,
+      selectizeOptions: {},
       requestName: 'Name Unavailable'
     }
 
     this.renderApproveModal = this.renderApproveModal.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
+    this.renderEditModal = this.renderEditModal.bind(this);
   }
 
   componentWillMount() {
@@ -122,42 +191,51 @@ export default class TownshipPanelPermitRequests extends React.Component {
     }
   }
 
+  renderEditModal(recordId, rowData) {
+    console.log(rowData);
+    console.log(recordId);
+    window.scrollTo(0, document.body.scrollHeight);
+    this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true, parkingLocationCode: recordId})
+  }
+
   renderPendingTable() {
-    /*
-    if(this.props.townshipPermitRequestsFetched.isLoading === false) {
-      console.log(this.props.townshipPermitRequestsFetched);
-    }
-    */
+
    var filteredSubscriptions = this.props.townshipPermitRequestsFetched.data;
    console.log(filteredSubscriptions.resource);
+
+    var columnMeta = [
+      {
+        "columnName": "approved",
+        "customComponent": customColumnComponent
+      }
+    ];
+
     return(
-      <div className="township-permitrequests-container">
-        <table className="highlight">
-          <thead>
-            <tr>
-              <th data-field="id">ID</th>
-              <th data-field="name">Township Code</th>
-              <th data-field="price">Township Name</th>
-              <th data-field="price">Permit Type</th>
-              <th data-field="price">Permit Name</th>
-              <th data-field="price">Residency Proof</th>
-              <th data-field="price">Approved</th>
-              <th data-field="price">Date Action</th>
-              <th data-field="price">Status</th>
-              <th data-field="price">Paid</th>
-              <th data-field="price">User Comments</th>
-              <th data-field="price">Town Comments</th>
-              <th data-field="price">Logo</th>
-              <th data-field="price">Scheme Type</th>
-              <th data-field="price">First Contact Date</th>
-              <th data-field="price">Rate</th>
-              <th data-field="price">User Name</th>
-            </tr>
-          </thead>
-          {this.renderPendingData(filteredSubscriptions)}
-        </table>
-        
-      </div>
+      <Griddle
+        tableClassName={'table table-bordered table-striped table-hover'}
+        filterClassName={''}
+        useGriddleStyles={false}
+        results={filteredSubscriptions.resource}
+        showFilter={true}
+        showSettings={true}
+        settingsToggleClassName='btn btn-default'
+        useCustomPagerComponent={true}
+        customPagerComponent={ BootstrapPager }
+        useCustomFilterComponent={true} 
+        customFilterComponent={customFilterComponent}
+        useCustomFilterer={true} 
+        customFilterer={customFilterFunction}
+        columnMetadata={columnMeta}
+        columns={['id',  
+                  'date_time', 
+                  'user_id', 
+                  'township_code', 
+                  'township_name', 
+                  'permit_type', 
+                  'permit_name', 
+                  'residency_proof', 
+                  'approved',  ]}
+      />
     );
   }
 
@@ -398,41 +476,3 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TownshipPanelPermitRequests);
-
-/*
-
-      <div className="blue-body marginless-row">
-        <Body showHeader={true}>
-          <div className="container" style={{marginTop: 40}}>
-            <nav style={{marginTop: 40}}>
-              <div className="nav-wrapper nav-admin z-depth-2">
-                <a className="brand-logo center">Township Permit Requests</a>
-              </div>
-            </nav>
-            <div className="card">
-              <div className="card-content">
-                <ul className="collapsible" data-collapsible="expandable">
-                  <li>
-                    <div className="collapsible-header active"><i className="material-icons">priority_high</i>Pending - Click Here to Toggle</div> 
-                    <div className="collapsible-body">
-                      <p>There are currently no pending subscriptions.</p>
-                    </div>
-                  </li>
-                  <li>
-                    <div className="collapsible-header active"><i className="material-icons">done</i>Approved - Click Here to Toggle</div>
-                    <div className="collapsible-body">
-                      {this.props.townshipPermitRequestsFetched.isLoading ? 
-                          <div>Loading...</div> : this.renderPendingTable() }
-                    </div>
-                  </li>
-                  <li>
-                    <div className="collapsible-header"><i className="material-icons">whatshot</i>Rejected - Click Here To Toggle</div>
-                    <div className="collapsible-body"><p>There are no rejected subscriptions yet.</p></div>
-                  </li>
-                </ul>
-              </div>              
-            </div>
-          </div>
-        </Body>
-      </div>
-*/

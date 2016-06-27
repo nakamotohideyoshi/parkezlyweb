@@ -26,7 +26,7 @@ import Griddle from 'griddle-react'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 import { Link } from 'react-router';
 
-
+import {ajaxSelectizeGet, ajaxDelete} from '../../../../common/components/ajax-selectize.js'
 
 export const fields = [ 
   'date_time', 
@@ -87,6 +87,7 @@ class TownshipPanelParkingRules extends React.Component {
       filteredData: null,
       showEditButton: false,
       duplicateModal: false,
+      rowData: null,
     }
 
     this.renderCreateModal = this.renderCreateModal.bind(this);
@@ -210,6 +211,7 @@ class TownshipPanelParkingRules extends React.Component {
 
   openEditModal(locationId) {
     this.setState({showEditButton: true});
+    window.scrollTo(0, document.body.scrollHeight);
     var fieldData = this.props.townshipParkingRulesFetched.data.resource;   
     const filteredData = fieldData.filter(createFilter(locationId.toString(), ['id']));
     this.setState({locationId: locationId, filteredData: filteredData[0]});
@@ -308,6 +310,45 @@ class TownshipPanelParkingRules extends React.Component {
           <i className="material-icons valign">content_copy</i>
           <h4> Duplicate Parking Rule: {locationId} </h4>
         </a>
+
+        <a
+        onClick={() => $('#modal-delete').openModal() }
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">delete</i>
+          <h4> Delete: {locationId} </h4>
+        </a>
+
+        <div id="modal-delete" className="modal" style={{overflowX: "hidden"}}>
+          <div className="modal-content">
+            <h4>Delete</h4>
+            <p>Are you sure you want to delete this record?</p>
+          </div>
+          <div className="modal-footer">
+            <div className="row marginless-row">
+              <div className="col s6 left">
+                <button 
+                  href="#" 
+                  className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
+              </div>
+              <div className="col s3">
+                <a className="waves-effect waves-light btn btn-red" 
+                onClick={() => {
+                  $('#modal-delete').closeModal()
+                }}>No</a>
+              </div>
+              <div className="col s3">
+                <a className="waves-effect waves-light btn btn-green" 
+                onClick={() => {
+                  $('#modal-delete').closeModal()
+                  ajaxDelete('parking_rules', locationId, this.handleSuccess);
+                  this.setState({showEditDuplicateButtons: false});
+                  window.scrollTo(0, 0);
+                }}>Yes</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     );
   }

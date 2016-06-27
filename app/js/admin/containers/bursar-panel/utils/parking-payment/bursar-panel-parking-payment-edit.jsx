@@ -69,7 +69,6 @@ export default class BursarPanelParkingPaymentEdit extends React.Component {
   selectizeOptionsUpdate(test, keyName) {
     var optionsDataObject = {[keyName]: test};
     Object.assign(this.state.selectizeOptions, optionsDataObject);
-    //console.log(this.state.selectizeOptions)
     this.forceUpdate();
   }
 

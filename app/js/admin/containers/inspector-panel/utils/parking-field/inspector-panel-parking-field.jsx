@@ -20,7 +20,7 @@ import {customFilterComponent, customFilterFunction} from '../../../../common/co
 import {ajaxSelectizeGet, ajaxDelete} from '../../../../common/components/ajax-selectize.js'
 import AdminSelectize from '../../../../common/components/admin-selectize.jsx'
 
-import InspectorPanelParkingFieldEdit from './inspector-panel-parking-field-edit.jsx'
+import InspectorPanelParkingFieldForm from './inspector-panel-parking-field-form.jsx'
 
 export const fields = [ 
   'id',  
@@ -77,7 +77,6 @@ class customColumnComponent extends React.Component {
 
 customColumnComponent.defaultProps = { "data": {}, "renderEditModal": null};
 
-
 class InspectorParkingField extends React.Component {
 
   constructor(props) {
@@ -112,13 +111,6 @@ class InspectorParkingField extends React.Component {
     }
   };
 
-  selectizeOptionsUpdate(test, keyName) {
-    var optionsDataObject = {[keyName]: test};
-    Object.assign(this.state.selectizeOptions, optionsDataObject);
-    //console.log(this.state.selectizeOptions)
-    this.forceUpdate();
-  }
-
   handleSuccess(){
     this.props.resetLoading();
     $('#modal-Inspector-payment-create').closeModal();
@@ -129,118 +121,22 @@ class InspectorParkingField extends React.Component {
     this.props.createInspectorParkingField(data);
   }
 
-  tempInputs() {
-    const {dispatch} = this.props;
-
-    return fields.map((data) => {
-      return( 
-        <div className="col s6 admin-form-input">
-          <div className="form-group">
-            <label>{data}</label>
-            <input type="text" placeholder={data} onChange={(event) => 
-              dispatch(change('parking-field', data, event.target.value))
-            }/>
-          </div>
-        </div>
-      );
-    });
-  }
-
   renderCreateModal() {
-    
-    const {
-      fields: {
-        id,  
-        expiry_time, 
-        user_id, 
-        user_name, 
-        location_address,  
-        google_map,  
-        parking_scheme,  
-        rate,  
-        payment_method,  
-        location_name, 
-        vehicle_image, 
-        township_code, 
-        scheme_type, 
-        my_permit, 
-        my_wallet, 
-        payment, 
-        ipn_txn_id,  
-        pay_method,  
-        ipn_payment, 
-        ipn_status,  
-        parking_status,  
-        entry_time,  
-        exit_time, 
-        ip,  
-        upark, 
-        lot_row, 
-        lot_number,  
-        my_timer1, 
-        qrcode,  
-        change_defaults, 
-        township_rules,  
-        pl_state,  
-        token,
-      },
-      resetForm,
-      submitting,
-      dispatch
-    } = this.props
-
     return(
-      <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-        <div id="modal-Inspector-payment-create" className="modal modal-fixed-footer">
-          <div className="modal-content">
-
-            <div className="row">
-              <div className="center-align">
-                <h4>Create a Parked Vehicle Fields</h4>
-                <p className="center-align">Create a Parked Vehicle Fields by filling out the fields.</p>
-              </div>
-            </div>
-
-            <div className="row">
-
-              {this.tempInputs()}
-
-              <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'pay_method'} 
-                formName={'parking-payment'} 
-                fieldName={'pay_method'}
-                dispatch={dispatch} />
-
-            </div>
-          </div>
-          
-
-          <div className="modal-footer">
-            <div className="row marginless-row">
-              <div className="col s12 center-align">
-                <button 
-                type="submit" 
-                disabled={submitting} 
-                className="waves-effect waves-light btn">Create Parked Vehicle Fields</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
+      <InspectorPanelParkingFieldForm 
+      modalName="modal-inspector-parking-field-create" 
+      modalText="Create a Parking Field" 
+      submitType="CREATE"
+      initialValues={null}
+      editMode={false}
+      handleSuccess={this.handleSuccess}
+      />
     );
 
   }
 
   renderTable() {
-    console.log(this.props.inspectorParkingFieldFetched)
     let parkingData = this.props.inspectorParkingFieldFetched.data.resource;
-    /*
-      <a
-      className="modal-trigger waves-effect waves-light btn valign" 
-      onClick={() => $('#modal-Inspector-payment-create').openModal()}
-      style={{margin: 10}}>Add New Parked Vehicle Fields</a>
-    */
 
     var renderEditModal = this.renderEditModal;
     var metaDataFunction = () =>  {
@@ -287,14 +183,17 @@ class InspectorParkingField extends React.Component {
 
         <div className="center-align">
 
+        <a
+          className="modal-trigger waves-effect waves-light btn valign" 
+          onClick={() => $('#modal-inspector-parking-field-create').openModal()}
+          style={{margin: 10}}>Add Parking Payment</a>
+
         </div>
       </div>
     );
   }
 
   renderEditModal(recordId, rowData) {
-    console.log(rowData);
-    console.log(recordId);
     window.scrollTo(0, document.body.scrollHeight);
     this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true, parkingLocationCode: recordId})
   }
@@ -312,6 +211,7 @@ class InspectorParkingField extends React.Component {
           <i className="material-icons valign">edit</i>
           <h4> Edit - Parking Field ID: {recordId} </h4>
         </a>
+
         <a
         onClick={() => {
           this.setState({showEditModal: true})
@@ -321,12 +221,18 @@ class InspectorParkingField extends React.Component {
           <i className="material-icons valign">content_copy</i>
           <h4> Duplicate - Parking Field ID: {recordId} </h4>
         </a>
+
+        <a
+        onClick={() => $('#modal-delete').openModal() }
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">delete</i>
+          <h4> Delete - Parking Payment ID: {recordId} </h4>
+        </a>
       </div>
     );
   }
 
   render() {
-    console.log(this.props.townshipLocationsFetched)
     return (
       <div className="blue-body marginless-row">
         <Body showHeader={true}>
@@ -349,14 +255,34 @@ class InspectorParkingField extends React.Component {
             </div>
           </div>
         </Body>
-        { this.props.inspectorParkingFieldFetched.isLoading ||
-          this.props.townshipLocationsFetched.isLoading ||
-          this.props.townshipSchemeTypesFetched.isLoading ? 
+        { this.props.inspectorParkingFieldFetched.isLoading ? 
           <div> </div> : this.renderCreateModal()}
 
           { 
             !this.state.showEditModal ?
-            <div></div> : <InspectorPanelParkingFieldEdit initialValues={this.state.rowData} handleSuccess={this.handleSuccess}/>
+            <div></div> : 
+            <div>
+              <InspectorPanelParkingFieldForm 
+                initialValues={this.state.rowData} 
+                handleSuccess={this.handleSuccess}
+                modalName="modal-inspector-parking-field-edit" 
+                modalText="Edit a Parking Field" 
+                submitType="EDIT"
+                initialValues={this.state.rowData} 
+                rowData={this.state.rowData}
+                handleSuccess={this.handleSuccess}
+                />
+              <InspectorPanelParkingFieldForm 
+                initialValues={this.state.rowData} 
+                handleSuccess={this.handleSuccess}
+                modalName="modal-inspector-parking-field-duplicate" 
+                modalText="Duplicate a Parking Field" 
+                submitType="DUPLICATE"
+                initialValues={this.state.rowData} 
+                rowData={this.state.rowData}
+                handleSuccess={this.handleSuccess}
+                />
+            </div>
           }
         <div id="modal-success" className="modal">
           <div className="modal-content">

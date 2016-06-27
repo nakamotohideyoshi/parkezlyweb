@@ -16,7 +16,7 @@ import {fetchTownshipSchemeTypes} from '../../../../actions/actions-township-com
 import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import Griddle from 'griddle-react'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
-import InspectorPanelCreateTicketEdit from './inspector-panel-create-ticket-edit.jsx'
+import InspectorPanelCreateTicketForm from './inspector-panel-create-ticket-form.jsx'
 
 export const fields = [ 
   'id',
@@ -86,6 +86,7 @@ class InspectorCreateTicket extends React.Component {
       parkingLocationCode: null,
       showEditModal: false,
       rowData: null,
+      selectizeOptions: {}
     }
 
     this.renderCreateModal = this.renderCreateModal.bind(this);
@@ -137,84 +138,16 @@ class InspectorCreateTicket extends React.Component {
   }
 
   renderCreateModal() {
-    
-    const {
-      fields: {
-        id,
-        town_logo, 
-        plate_no,
-        violation_fee, 
-        violation_detail,  
-        respond_date,  
-        hearing_date,  
-        hearing_location,  
-        date_ticket, 
-        plead_guilty_no_guilty,  
-        v_user_name, 
-        address, 
-        email, 
-        phone, 
-        officer_name,  
-        officer_id,  
-        user_id, 
-        ticket_no, 
-        violation_code,  
-        violation_description, 
-        violation_location,  
-        court_id,  
-        hearing_address, 
-        township_code, 
-        v_user_id, 
-        tkt_status,  
-        signature, 
-        penalty_adjustment,  
-        adjustment_reference,  
-        hearing_hour,  
-        hearing_time,  
-        am_pm, 
-        twp_payment, 
-        paid_amount, 
-        paid_date,
-      },
-      resetForm,
-      submitting,
-      dispatch
-    } = this.props
-
     return(
-      <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-        <div id="modal-inspector-ticket-create" className="modal modal-fixed-footer">
-          <div className="modal-content">
-
-            <div className="row">
-              <div className="center-align">
-                <h4>Create a Parking Ticket</h4>
-                <p className="center-align">Create a Parking Ticket by filling out the fields.</p>
-              </div>
-            </div>
-
-            <div className="row">
-
-              {this.tempInputs()}
-
-            </div>
-          </div>
-          
-
-          <div className="modal-footer">
-            <div className="row marginless-row">
-              <div className="col s12 center-align">
-                <button 
-                type="submit" 
-                disabled={submitting} 
-                className="waves-effect waves-light btn">Create Parking Ticket</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
+      <InspectorPanelCreateTicketForm
+        modalName="modal-inspector-ticket-create" 
+        modalText="Create a Ticket" 
+        submitType="CREATE"
+        initialValues={null}
+        editMode={false}
+        handleSuccess={this.handleSuccess}
+      />
     );
-
   }
 
   renderTable() {
@@ -288,7 +221,6 @@ class InspectorCreateTicket extends React.Component {
   }
 
   renderEditDuplicateButtons(recordId) {
-
     return (
       <div className="container">
         <a
@@ -299,8 +231,9 @@ class InspectorCreateTicket extends React.Component {
         }}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">edit</i>
-          <h4> Edit - Ticket ID: {recordId} </h4>
+          <h4> Edit - Parking Ticket ID: {recordId} </h4>
         </a>
+
         <a
         onClick={() => {
           this.setState({showEditModal: true})
@@ -308,8 +241,46 @@ class InspectorCreateTicket extends React.Component {
         }}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">content_copy</i>
-          <h4> Duplicate - Ticket ID: {recordId} </h4>
+          <h4> Duplicate - Parking Ticket ID: {recordId} </h4>
         </a>
+
+        <a
+        onClick={() => $('#modal-delete').openModal() }
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">delete</i>
+          <h4> Delete - Parking Ticket ID: {recordId} </h4>
+        </a>
+
+        <div id="modal-delete" className="modal" style={{overflowX: "hidden"}}>
+          <div className="modal-content">
+            <h4>Delete</h4>
+            <p>Are you sure you want to delete this record?</p>
+          </div>
+          <div className="modal-footer">
+            <div className="row marginless-row">
+              <div className="col s6 left">
+                <button 
+                  href="#" 
+                  className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
+              </div>
+              <div className="col s3">
+                <a className="waves-effect waves-light btn btn-red" 
+                onClick={() => {
+                  $('#modal-delete').closeModal()
+                }}>No</a>
+              </div>
+              <div className="col s3">
+                <a className="waves-effect waves-light btn btn-green" 
+                onClick={() => {
+                  $('#modal-delete').closeModal()
+                  ajaxDelete('user_vehicles', recordId, this.handleSuccess);
+                  this.setState({showEditDuplicateButtons: false});
+                  window.scrollTo(0, 0);
+                }}>Yes</a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -338,14 +309,36 @@ class InspectorCreateTicket extends React.Component {
             </div>
           </div>
         </Body>
-        { this.props.inspectorTicketFetched.isLoading ||
-          this.props.townshipLocationsFetched.isLoading ||
-          this.props.townshipSchemeTypesFetched.isLoading ? 
+
+        { 
+          this.props.inspectorTicketFetched.isLoading ? 
           <div>  </div> : this.renderCreateModal()}
 
         { 
           !this.state.showEditModal ?
-          <div></div> : <InspectorPanelCreateTicketEdit initialValues={this.state.rowData} handleSuccess={this.handleSuccess}/>
+          <div></div> : 
+          <div>
+            <InspectorPanelCreateTicketForm
+              initialValues={this.state.rowData} 
+              handleSuccess={this.handleSuccess}
+              modalName="modal-inspector-ticket-edit" 
+              modalText="Edit a Ticket" 
+              submitType="EDIT"
+              initialValues={this.state.rowData} 
+              rowData={this.state.rowData}
+              handleSuccess={this.handleSuccess}
+              />
+            <InspectorPanelCreateTicketForm 
+              initialValues={this.state.rowData} 
+              handleSuccess={this.handleSuccess}
+              modalName="modal-inspector-ticket-duplicate" 
+              modalText="Duplicate a Ticket" 
+              submitType="DUPLICATE"
+              initialValues={this.state.rowData} 
+              rowData={this.state.rowData}
+              handleSuccess={this.handleSuccess}
+              />
+          </div>
         }
 
         <div id="modal-success" className="modal">

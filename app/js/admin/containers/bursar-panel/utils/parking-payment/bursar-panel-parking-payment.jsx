@@ -434,26 +434,3 @@ export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   form: 'parking-payment',
   fields
 })(BursarPanelParkingPayment));
-
-
-
-//var optionsLocationCode = optionsSelectize(this.props.townshipLocationsFetched.data.resource, 'location_code');
-//var optionsSchemeTypes = optionsSelectize(this.props.townshipSchemeTypesFetched.data.resource, 'scheme_type');
-
-/*
-<div className="col s6 admin-form-input">
-  <div className="form-group">
-    <label>Scheme Type</label>
-    <div clasName="input-field col s12">
-      <SimpleSelect 
-      options = {optionsSchemeTypes} 
-      placeholder = "Select Scheme Type" 
-      theme = "material" 
-      style={{marginTop: 5}}
-      onValueChange = {(value) => {
-        dispatch(change('locations-rate', 'scheme_type', value.value)); 
-      }}></SimpleSelect>
-    </div>
-  </div>
-</div>
-*/
