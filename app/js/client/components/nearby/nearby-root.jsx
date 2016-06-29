@@ -17,7 +17,7 @@ const canUseDOM = !!(
 class Nearby extends Component {
   constructor(props) {
     super(props);
-    this.handleCenterChanged = throttle(this.handleCenterChanged.bind(this), 300);
+    this.handleCenterChanged = throttle(this.handleCenterChanged.bind(this), 100);
     this.goToInitialLocation = this.goToInitialLocation.bind(this);
   }
 

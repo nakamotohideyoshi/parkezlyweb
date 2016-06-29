@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from "react";
+import React, { ReactDOM, Component, PropTypes } from "react";
 import { connect } from "react-redux";
 import classNames from "classnames";
 import Body from "../../../common/components/body/body.jsx";
@@ -13,7 +13,11 @@ import {
   setParkingOptions,
   setOtherLocations,
   setSelectedLocation,
-  setSelectedMarker
+  setSelectedMarker,
+  getParkingRules,
+  setSelectedParking,
+  hideSelectedParking,
+  getParkingLot
 } from "../../actions/parking.js";
 import { setPosition, setInitialPosition, getLocationCoordinates } from "../../actions/location.js";
 import { FREE_MAP_MARKER, PAID_MAP_MARKER, MANAGED_MAP_MARKER } from "./constants/texts.js";
@@ -29,13 +33,15 @@ const canUseDOM = !!(
 class FindParking extends Component {
   constructor(props) {
     super(props);
-    this.handleCenterChanged = throttle(this.handleCenterChanged.bind(this), 300);
+    this.handleCenterChanged = throttle(this.handleCenterChanged.bind(this), 100);
     this.goToInitialLocation = this.goToInitialLocation.bind(this);
     this.showParkingOptions = this.showParkingOptions.bind(this);
     this.hideParkingOptions = this.hideParkingOptions.bind(this);
     this.showOtherLocationOptions = this.showOtherLocationOptions.bind(this);
     this.hideOtherLocationOptions = this.hideOtherLocationOptions.bind(this);
     this.handleBack = this.handleBack.bind(this);
+    this.handleParkingSelection = this.handleParkingSelection.bind(this);
+    this.hideParkingModal = this.hideParkingModal.bind(this);
   }
 
   componentDidMount() {
@@ -68,6 +74,7 @@ class FindParking extends Component {
     };
     dispatch(setInitialPosition(lat, lng));
     this.fetchNearbyParking();
+    dispatch(getParkingRules("New York"));
   }
 
   toggleParking(type) {
@@ -75,7 +82,7 @@ class FindParking extends Component {
     const currentVal = parking[type];
     dispatch(setParkingType(type, !currentVal));
   }
-
+  /* This is probably not required */
   handleCenterChanged() {
     const map = this.refs["gMap"];
     const { dispatch, location } = this.props;
@@ -127,6 +134,7 @@ class FindParking extends Component {
     const { dispatch } = this.props;
     dispatch(getLocationCoordinates(address.value));
     dispatch(setSelectedLocation(address.value));
+    dispatch(getParkingRules(address.value));
     this.hideOtherLocationOptions();
   }
 
@@ -135,6 +143,7 @@ class FindParking extends Component {
     const address = this.refs["custom-location"].value;
     dispatch(getLocationCoordinates(address));
     dispatch(setSelectedLocation(address));
+    dispatch(getParkingRules(address.value));
     this.hideOtherLocationOptions();
   }
 
@@ -144,6 +153,20 @@ class FindParking extends Component {
     this.hideParkingOptions();
     this.hideOtherLocationOptions();
     dispatch(setSelectedLocation(null));
+  }
+
+  handleParkingSelection(parking_type, location_code) {
+    const { dispatch } = this.props;
+    dispatch(setSelectedParking(parking_type, location_code));
+    if(parking_type === "MANAGED") {
+      //dispatch(getParkingLot(location_code));
+      dispatch(getParkingLot("NY-FDV-L01"));
+    }
+  }
+
+  hideParkingModal() {
+    const { dispatch } = this.props;
+    dispatch(hideSelectedParking());
   }
 
   renderMyLocationIcon() {
@@ -223,17 +246,21 @@ class FindParking extends Component {
     });
 
     let iconUrl = "";
+    let clickHandler = "";
     switch (marker) {
       case "ez-free": {
         iconUrl = FREE_MAP_MARKER;
+        clickHandler = () => {this.handleParkingSelection("FREE", markerItem)};
         break;
       }
       case "ez-paid": {
         iconUrl = PAID_MAP_MARKER;
+        clickHandler = () => {this.handleParkingSelection("PAID", markerItem)};
         break;
       }
       case "ez-managed": {
         iconUrl = MANAGED_MAP_MARKER;
+        clickHandler = () => {this.handleParkingSelection("MANAGED", markerItem)};
         break;
       }
     }
@@ -248,7 +275,7 @@ class FindParking extends Component {
       icon
     };
     return (
-      <Marker {...markerProps} key={index}/>
+      <Marker {...markerProps} key={index} onClick={clickHandler}/>
     );
   }
 
@@ -292,8 +319,7 @@ class FindParking extends Component {
               defaultZoom={10}
               defaultCenter={centerPos}
               onClick={null}
-              center={centerPos}
-              onCenterChanged={this.handleCenterChanged}>
+              center={centerPos}>
                 {markersList}
             </GoogleMap>
           }/>
@@ -422,11 +448,111 @@ class FindParking extends Component {
     );
   }
 
+  renderFreePaidParkingModal() {
+    const { parkingRules, selectedMarkerItem } = this.props.parking;
+    console.log(parkingRules);
+    console.log(selectedMarkerItem);
+    const currentRules = parkingRules[selectedMarkerItem.location_code];
+    const pricing = currentRules.pricing == 0 ? "FREE" : "$" + currentRules.pricing + "/" + currentRules.pricing_duration + "min";
+    console.log(currentRules);
+    return (
+      <div className="free-parking-modal">
+        <div className="row heading">
+          <h4 className="col s11">Parking Info</h4>
+          <div className="col s1">
+            <span className="close-btn" onClick={this.hideParkingModal}/>
+          </div>
+        </div>
+        <div className="row parking-details">
+          <div className="col s12">
+            Public Parking: {pricing}
+          </div>
+          <div className="col s12">
+            {selectedMarkerItem.title}
+          </div>
+          <div className="col s12">
+            {selectedMarkerItem.address}
+          </div>
+          <div className="col s12">
+            {selectedMarkerItem.html}
+            <hr/>
+          </div>
+          <div className="col s12">
+            Today: {currentRules.this_day}
+          </div>
+          <div className="col s12">
+            Time: {currentRules.time_rule}
+          </div>
+          <div className="col s12">
+            Max: {currentRules.max_hours} Hours
+          </div>
+          <div className="col s6 link">
+            <a href="javascript:void(0)">Street View</a>
+          </div>
+          <div className="col s6 link">
+            <a href="javascript:void(0)">Directions</a>
+          </div>
+          <div className="col s12">
+            <GrayButton onClick={this.selectLocationFromInput.bind(this)}>
+              PARK HERE
+            </GrayButton>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderLot(lot) {
+    const { lot_row, lot_number, occupied } = lot;
+    const carClasses = classNames({
+      "car-icon": true,
+      "occupied": occupied.toUpperCase() === "YES",
+      "available": occupied.toUpperCase() === "NO"
+    });
+    return (
+      <div className="col s2 car">
+        <div className={carClasses}>
+        </div>
+        <div className="lot-number">
+          Row {lot_row}: {lot_number}
+        </div>
+      </div>
+    );
+  }
+
+  renderManagedParkingModal() {
+    const { lotsData } = this.props.parking;
+    const carList = lotsData.map(this.renderLot, this);
+    return (
+      <div className="managed-parking-modal">
+        <div className="row heading">
+          <h4 className="col s11">Current Parking Lot Status</h4>
+          <div className="col s1">
+            <span className="close-btn" onClick={this.hideParkingModal}/>
+          </div>
+        </div>
+        <div className="row">
+          {carList}
+        </div>
+      </div>
+    );
+  }
+
   render() {
     console.log(this.props.parking);
     const gMap = this.renderGMap();
     const myLocationIcon = this.renderMyLocationIcon();
-    const { loading, showParkingOptions, showOtherLocations, selectedLocation } = this.props.parking;
+    const {
+      loading,
+      showParkingOptions,
+      showOtherLocations,
+      selectedLocation,
+      selectedLocationCode,
+      showFreeParkingModal,
+      showPaidParkingModal,
+      showManagedParkingModal,
+      lotsData
+    } = this.props.parking;
     const parkNowBtn = !showParkingOptions && !showOtherLocations && !selectedLocation ? this.renderFindNearbyBtn() : null;
     const searchBtn = !showParkingOptions && !showOtherLocations && !selectedLocation ? this.renderSearchBtn() : null;
     const footerContent = this.renderFooterContent();
@@ -435,6 +561,11 @@ class FindParking extends Component {
     const selectedLocationLabel = selectedLocation ? this.renderLocationLabel() : null;
     const backBtn = selectedLocation ? this.renderBackBtn() : null;
     const parkingInfoBtn = selectedLocation ? this.renderParkingInfoBtn() : null;
+
+    //After marker is selected
+    const freeParkingModal = showFreeParkingModal || showPaidParkingModal ? this.renderFreePaidParkingModal() : null;
+    const managedParkingModal = showManagedParkingModal && lotsData ? this.renderManagedParkingModal() : null;
+
     return (
       <Body
         ref="find-parking-body"
@@ -448,6 +579,8 @@ class FindParking extends Component {
             {parkNowBtn}
             {searchBtn}
             {selectedLocationLabel}
+            {freeParkingModal}
+            {managedParkingModal}
             {gMap}
             {backBtn}
             {parkingInfoBtn}

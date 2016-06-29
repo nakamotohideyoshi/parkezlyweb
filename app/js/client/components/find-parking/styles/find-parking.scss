@@ -157,3 +157,105 @@
   left: auto;
   right: 50px;
 }
+
+.free-parking-modal {
+  position: absolute;
+  width: 400px;
+  left: 0;
+  right: 0;
+  top: 60px;
+  margin: 0 auto;
+  z-index:999;
+  background: $white;
+  padding: 20px 20px 0;
+  border: 1px solid $black;
+  border-radius: 8px;
+
+  .heading {
+    border-bottom: 1px solid $black;
+    padding: 0 0 10px;
+  }
+
+  h4 {
+    font-size: 20px;
+    padding: 0;
+    margin: 0;
+  }
+
+  .close-btn {
+    cursor: pointer;
+    background: url('../images/cross-black.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: block;
+    width: 25px;
+    height: 25px;
+  }
+
+  .parking-details {
+    font-size: 16px;
+    > div {
+      padding: 0 0 5px 0;
+    }
+    .link {
+      text-align: center;
+      margin: 15px 0;
+
+      a {
+        color: $link;
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+.managed-parking-modal {
+  position: absolute;
+  width: 500px;
+  left: 0;
+  right: 0;
+  top: 60px;
+  margin: 0 auto;
+  z-index:999;
+  background: $white;
+  padding: 20px 20px 0;
+  border: 1px solid $black;
+  border-radius: 8px;
+
+  .heading {
+    border-bottom: 1px solid $black;
+    padding: 0 0 10px;
+  }
+
+  h4 {
+    font-size: 20px;
+    padding: 0;
+    margin: 0;
+  }
+
+  .close-btn {
+    cursor: pointer;
+    background: url('../images/cross-black.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: block;
+    width: 25px;
+    height: 25px;
+  }
+  .car-icon {
+    &.occupied {
+      background-image: url('../images/popup_car_red@3x.png');
+    }
+    &.available {
+      background-image: url('../images/ride@3x.png');
+    }
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    height: 30px;
+  }
+  .lot-number {
+    font-size: 14px;
+    text-align: center;
+  }
+}
