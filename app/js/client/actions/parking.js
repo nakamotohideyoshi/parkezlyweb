@@ -107,3 +107,113 @@ export const setSelectedLocation = (location) => {
     location
   }
 }
+
+const receivedParkingRules = (data) => {
+  console.log(data);
+  return {
+    type: Actions.FETCH_PARKING_RULES_SUCCESS,
+    data
+  };
+};
+
+const fetchParkingRulesFailed = (error) => {
+  return {
+    type: Actions.FETCH_PARKING_RULES_FAIL,
+    error
+  };
+};
+
+export const getParkingRules = (city) => {
+  return dispatch => {
+    return ParkingAPI.getParkingRules(city)
+      .then((response) => {
+        const respArr = response.data.resource;
+        const formattedArr = {};
+        for (var i = 0; i < respArr.length; i++ ) {
+          if(respArr[i].location_code) {
+            formattedArr[respArr[i].location_code] = respArr[i];
+          }
+        }
+        dispatch(receivedParkingRules(formattedArr));
+      })
+      .catch((response) => {
+        dispatch(fetchParkingRulesFailed(response));
+      });
+  };
+};
+
+const showFreeParkingModal = (markerItem) => {
+  return {
+    type: Actions.SHOW_FREE_PARKING,
+    markerItem
+  };
+};
+
+const showPaidParkingModal = (markerItem) => {
+  return {
+    type: Actions.SHOW_PAID_PARKING,
+    markerItem
+  };
+};
+
+const showManagedParkingModal = (markerItem) => {
+  return {
+    type: Actions.SHOW_MANAGED_PARKING,
+    markerItem
+  };
+};
+
+export const setSelectedParking = (parkingType, markerItem) => {
+  return dispatch => {
+    switch (parkingType) {
+      case "FREE":
+        dispatch(showFreeParkingModal(markerItem));
+        break;
+      case "PAID":
+        dispatch(showPaidParkingModal(markerItem));
+        break;
+      case "MANAGED":
+        dispatch(showManagedParkingModal(markerItem));
+        break;
+    }
+  }
+};
+
+export const hideSelectedParking = () => {
+  return {
+    type: Actions.HIDE_SELECTED_PARKING
+  }
+}
+
+const initiateParkingLotFetch = () => {
+  return {
+    type: Actions.FETCH_PARKING_LOT_INITIATE
+  };
+};
+
+const receivedParkingLot = (data) => {
+  return {
+    type: Actions.FETCH_PARKING_LOT_SUCCESS,
+    data
+  };
+};
+
+const fetchNearParkingLotFailed = (error) => {
+  return {
+    type: Actions.FETCH_PARKING_LOT_FAIL,
+    error
+  };
+};
+
+export const getParkingLot = (locationCode) => {
+  return dispatch => {
+    dispatch(initiateParkingLotFetch());
+    return ParkingAPI.getParkingLot(locationCode)
+      .then((response) => {
+        dispatch(receivedParkingLot(response.data));
+      })
+      .catch((response) => {
+        dispatch(fetchNearParkingLotFailed(response));
+      });
+  };
+};
