@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import Location from "./location.js";
+import Vehicle from "./vehicle.js";
 import { GenericError } from "../constants/texts.js";
 
 const initialState = {
@@ -20,6 +21,8 @@ const initialState = {
   selectedMarkerItem: null,
   managedParkingLoading: false,
   lotsData: null,
+  selectedParkingCode: null,
+  bookingStep: 0,
   error: null
 };
 
@@ -93,6 +96,7 @@ const Parking = (state = initialState, action) => {
         showFreeParkingModal: true,
         showPaidParkingModal: false,
         showManagedParkingModal: false,
+        bookingStep: 1,
         selectedMarkerItem: action.markerItem
       }
     case "SHOW_PAID_PARKING":
@@ -101,6 +105,7 @@ const Parking = (state = initialState, action) => {
         showFreeParkingModal: false,
         showPaidParkingModal: true,
         showManagedParkingModal: false,
+        bookingStep: 1,
         selectedMarkerItem: action.markerItem
       }
     case "SHOW_MANAGED_PARKING":
@@ -109,6 +114,7 @@ const Parking = (state = initialState, action) => {
         showFreeParkingModal: false,
         showPaidParkingModal: false,
         showManagedParkingModal: true,
+        bookingStep: 1,
         selectedMarkerItem: action.markerItem
       }
     case "HIDE_SELECTED_PARKING":
@@ -117,7 +123,9 @@ const Parking = (state = initialState, action) => {
         showFreeParkingModal: false,
         showPaidParkingModal: false,
         showManagedParkingModal: false,
-        selectedMarkerItem: null
+        selectedParkingCode: null,
+        selectedMarkerItem: null,
+        bookingStep: 0
       }
     case "FETCH_PARKING_LOT_INITIATE":
       return {
@@ -136,6 +144,12 @@ const Parking = (state = initialState, action) => {
         managedParkingLoading: false,
         error: action.error
       }
+    case "SELECT_PARKING":
+      return {
+        ...state,
+        selectedParkingCode: action.location,
+        bookingStep: 2
+      }
     default:
       return state;
   }
@@ -143,7 +157,8 @@ const Parking = (state = initialState, action) => {
 
 const ParkingReducers = combineReducers({
   parking: Parking,
-  location: Location
+  location: Location,
+  vehicle: Vehicle
 });
 
 export default ParkingReducers;

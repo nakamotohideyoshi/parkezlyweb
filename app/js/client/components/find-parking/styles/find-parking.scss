@@ -161,6 +161,7 @@
 .free-parking-modal {
   position: absolute;
   width: 400px;
+  height: 462px;
   left: 0;
   right: 0;
   top: 60px;
@@ -207,6 +208,16 @@
       }
     }
   }
+
+  .plate-list {
+    max-height: 362px;
+    overflow-y: auto;
+
+    .plate {
+      border-bottom: 1px solid $light-grey;
+      padding: 5px 0;
+    }
+  }
 }
 
 .managed-parking-modal {
@@ -242,6 +253,9 @@
     width: 25px;
     height: 25px;
   }
+  .car-list {
+    min-height: 240px;
+  }
   .car-icon {
     &.occupied {
       background-image: url('../images/popup_car_red@3x.png');
@@ -257,5 +271,8 @@
   .lot-number {
     font-size: 14px;
     text-align: center;
+  }
+  .park-here-btn {
+    margin: 15px 0;
   }
 }
