@@ -1,9 +1,11 @@
 import React, { ReactDOM, Component, PropTypes } from "react";
 import { connect } from "react-redux";
 import classNames from "classnames";
+import cookie from 'react-cookie';
 import Body from "../../../common/components/body/body.jsx";
 import GrayButton from "../../../common/components/button/gray-button.jsx";
 import ImageCheckbox from "../../../common/components/footer/utils/image-checkbox.jsx";
+import ParkingModal from "./parking-modal.jsx";
 import { GoogleMapLoader, GoogleMap, Marker } from "react-google-maps";
 import { default as MarkerClusterer } from "react-google-maps/lib/addons/MarkerClusterer";
 import {
@@ -17,9 +19,11 @@ import {
   getParkingRules,
   setSelectedParking,
   hideSelectedParking,
-  getParkingLot
+  getParkingLot,
+  selectParking
 } from "../../actions/parking.js";
 import { setPosition, setInitialPosition, getLocationCoordinates } from "../../actions/location.js";
+import { getVehicles } from "../../actions/vehicle.js";
 import { FREE_MAP_MARKER, PAID_MAP_MARKER, MANAGED_MAP_MARKER } from "./constants/texts.js";
 import { SimpleSelect } from "react-selectize";
 import { throttle } from "lodash";
@@ -42,6 +46,8 @@ class FindParking extends Component {
     this.handleBack = this.handleBack.bind(this);
     this.handleParkingSelection = this.handleParkingSelection.bind(this);
     this.hideParkingModal = this.hideParkingModal.bind(this);
+    this.selectParkingandFetchVehicles = this.selectParkingandFetchVehicles.bind(this);
+    this.selectVehiclePlate = this.selectVehiclePlate.bind(this);
   }
 
   componentDidMount() {
@@ -167,6 +173,17 @@ class FindParking extends Component {
   hideParkingModal() {
     const { dispatch } = this.props;
     dispatch(hideSelectedParking());
+  }
+
+  selectParkingandFetchVehicles(location_code) {
+    const { dispatch } = this.props;
+    const userId = cookie.load('userId');
+    dispatch(getVehicles(userId));
+    dispatch(selectParking(location_code));
+  }
+
+  selectVehiclePlate(plate) {
+    console.log(plate);
   }
 
   renderMyLocationIcon() {
@@ -448,57 +465,106 @@ class FindParking extends Component {
     );
   }
 
-  renderFreePaidParkingModal() {
+  /* Booking Step 1 */
+
+  renderFreePaidParkingModalContent() {
     const { parkingRules, selectedMarkerItem } = this.props.parking;
-    console.log(parkingRules);
-    console.log(selectedMarkerItem);
     const currentRules = parkingRules[selectedMarkerItem.location_code];
     const pricing = currentRules.pricing == 0 ? "FREE" : "$" + currentRules.pricing + "/" + currentRules.pricing_duration + "min";
-    console.log(currentRules);
+    const parkNowAction = () => {this.selectParkingandFetchVehicles(selectedMarkerItem.location_code)};
     return (
-      <div className="free-parking-modal">
-        <div className="row heading">
-          <h4 className="col s11">Parking Info</h4>
-          <div className="col s1">
-            <span className="close-btn" onClick={this.hideParkingModal}/>
-          </div>
+      <div className="row parking-details">
+        <div className="col s12">
+          Public Parking: {pricing}
         </div>
-        <div className="row parking-details">
-          <div className="col s12">
-            Public Parking: {pricing}
-          </div>
-          <div className="col s12">
-            {selectedMarkerItem.title}
-          </div>
-          <div className="col s12">
-            {selectedMarkerItem.address}
-          </div>
-          <div className="col s12">
-            {selectedMarkerItem.html}
-            <hr/>
-          </div>
-          <div className="col s12">
-            Today: {currentRules.this_day}
-          </div>
-          <div className="col s12">
-            Time: {currentRules.time_rule}
-          </div>
-          <div className="col s12">
-            Max: {currentRules.max_hours} Hours
-          </div>
-          <div className="col s6 link">
-            <a href="javascript:void(0)">Street View</a>
-          </div>
-          <div className="col s6 link">
-            <a href="javascript:void(0)">Directions</a>
-          </div>
-          <div className="col s12">
-            <GrayButton onClick={this.selectLocationFromInput.bind(this)}>
-              PARK HERE
-            </GrayButton>
-          </div>
+        <div className="col s12">
+          {selectedMarkerItem.title}
+        </div>
+        <div className="col s12">
+          {selectedMarkerItem.address}
+        </div>
+        <div className="col s12">
+          {selectedMarkerItem.html}
+          <hr/>
+        </div>
+        <div className="col s12">
+          Today: {currentRules.this_day}
+        </div>
+        <div className="col s12">
+          Time: {currentRules.time_rule}
+        </div>
+        <div className="col s12">
+          Max: {currentRules.max_hours} Hours
+        </div>
+        <div className="col s6 link">
+          <a href="javascript:void(0)">Street View</a>
+        </div>
+        <div className="col s6 link">
+          <a href="javascript:void(0)">Directions</a>
+        </div>
+        <div className="col s12">
+          <GrayButton onClick={parkNowAction}>
+            PARK HERE
+          </GrayButton>
         </div>
       </div>
+    );
+  }
+
+  /* Booking Step 2 */
+
+  renderPlate(plate) {
+    const { plate_no, registered_state } = plate;
+    const clickHandler = () => {this.selectVehiclePlate(plate)};
+    return (
+      <div className="plate">
+        <a href="javascript:void(0)" onClick={clickHandler}>
+          <div>
+            License Plate #: {plate_no}
+          </div>
+          <div>
+            State: {registered_state}
+          </div>
+        </a>
+      </div>
+    );
+  }
+
+  renderVehicleList() {
+    let vehicles = [];
+    if(this.props.vehicle) {
+      vehicles = this.props.vehicle.vehicles;
+    }
+    const plates = vehicles.map(this.renderPlate, this);
+    return (
+      <div className="plate-list">
+        {plates}
+      </div>
+    );
+  }
+
+  /* Booking Step 3 */
+
+  renderVehicleForm() {
+
+  }
+
+  renderFreePaidParkingModal() {
+    const { bookingStep } = this.props.parking;
+    let content = "";
+    if(bookingStep == 1) {
+      content = this.renderFreePaidParkingModalContent();
+    } else if(bookingStep == 2) {
+      content = this.renderVehicleList();
+    } else if(bookingStep == 3) {
+      content = this.renderVehicleForm();
+    }
+    return (
+      <ParkingModal
+        className="free-parking-modal"
+        onHide={this.hideParkingModal}>
+        {content}
+      </ParkingModal>
     );
   }
 
@@ -531,15 +597,20 @@ class FindParking extends Component {
             <span className="close-btn" onClick={this.hideParkingModal}/>
           </div>
         </div>
-        <div className="row">
+        <div className="row car-list">
           {carList}
+        </div>
+        <div className="park-here-btn">
+          <GrayButton onClick={this.selectLocationFromInput.bind(this)}>
+            PARK HERE
+          </GrayButton>
         </div>
       </div>
     );
   }
 
   render() {
-    console.log(this.props.parking);
+    console.log(this.props.vehicle);
     const gMap = this.renderGMap();
     const myLocationIcon = this.renderMyLocationIcon();
     const {
@@ -594,7 +665,8 @@ class FindParking extends Component {
 const MapStateToProps = (state) => {
   return {
     parking: state.parking,
-    location: state.location
+    location: state.location,
+    vehicle: state.vehicle.Vehicle.vehicleList
   };
 };
 

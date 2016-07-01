@@ -217,3 +217,10 @@ export const getParkingLot = (locationCode) => {
       });
   };
 };
+
+export const selectParking = (locationCode) => {
+  return {
+    type: Actions.SELECT_PARKING,
+    location: locationCode
+  };
+};
