@@ -224,3 +224,10 @@ export const selectParking = (locationCode) => {
     location: locationCode
   };
 };
+
+export const setSelectedPlate = (plate) => {
+  return {
+    type: Actions.SET_SELECTED_PLATE,
+    plate
+  };
+};

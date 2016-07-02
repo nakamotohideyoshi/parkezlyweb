@@ -4,10 +4,15 @@ import classNames from "classnames";
 import cookie from 'react-cookie';
 import Body from "../../../common/components/body/body.jsx";
 import GrayButton from "../../../common/components/button/gray-button.jsx";
+import LicensePlateField from "../../../common/components/fields/license-plate-field.jsx";
+import Chooser from "../../../common/components/fields/chooser/chooser.jsx";
 import ImageCheckbox from "../../../common/components/footer/utils/image-checkbox.jsx";
 import ParkingModal from "./parking-modal.jsx";
 import { GoogleMapLoader, GoogleMap, Marker } from "react-google-maps";
 import { default as MarkerClusterer } from "react-google-maps/lib/addons/MarkerClusterer";
+import { states } from "../../constants/states.js";
+import { statesHash } from "../../constants/states-hash.js";
+
 import {
   updateGeolocation,
   getNearbyParking,
@@ -20,7 +25,8 @@ import {
   setSelectedParking,
   hideSelectedParking,
   getParkingLot,
-  selectParking
+  selectParking,
+  setSelectedPlate
 } from "../../actions/parking.js";
 import { setPosition, setInitialPosition, getLocationCoordinates } from "../../actions/location.js";
 import { getVehicles } from "../../actions/vehicle.js";
@@ -48,6 +54,7 @@ class FindParking extends Component {
     this.hideParkingModal = this.hideParkingModal.bind(this);
     this.selectParkingandFetchVehicles = this.selectParkingandFetchVehicles.bind(this);
     this.selectVehiclePlate = this.selectVehiclePlate.bind(this);
+    this.confirmBooking = this.confirmBooking.bind(this);
   }
 
   componentDidMount() {
@@ -183,7 +190,13 @@ class FindParking extends Component {
   }
 
   selectVehiclePlate(plate) {
+    const { dispatch } = this.props;
     console.log(plate);
+    dispatch(setSelectedPlate(plate));
+  }
+
+  confirmBooking() {
+    const { dispatch } = this.props;
   }
 
   renderMyLocationIcon() {
@@ -536,9 +549,17 @@ class FindParking extends Component {
       vehicles = this.props.vehicle.vehicles;
     }
     const plates = vehicles.map(this.renderPlate, this);
+    const clickHandler = () => {this.selectVehiclePlate({})};
     return (
-      <div className="plate-list">
-        {plates}
+      <div>
+        <div className="plate-list">
+          {plates}
+        </div>
+        <div>
+          <GrayButton onClick={clickHandler}>
+            Skip This
+          </GrayButton>
+        </div>
       </div>
     );
   }
@@ -546,7 +567,43 @@ class FindParking extends Component {
   /* Booking Step 3 */
 
   renderVehicleForm() {
-
+    //this.refs["license-number"].setValue(selectedPlate);
+    //this.refs["select-state"].setValue(state);
+    const { selectedPlate, parkingRules, selectedMarkerItem } = this.props.parking;
+    const { registered_state, plate_no } = selectedPlate;
+    const label = statesHash[registered_state];
+    const currentRules = parkingRules[selectedMarkerItem.location_code];
+    const { parking_times, max_hours} = currentRules;
+    return (
+      <div className="vehicle-form">
+        <h4>Parking</h4>
+        <div className="row">
+          <div className="col s6">
+            {parking_times}
+          </div>
+          <div className="col s6">
+            Max: {max_hours} Hours
+          </div>
+        </div>
+        <form className="select-vehicle">
+          <LicensePlateField
+            ref="license-number"
+            placeholder="LICENSE PLATE #"
+            className="license-no"
+            defaultValue={plate_no}/>
+          <SimpleSelect 
+            options = {states} 
+            placeholder = "Select State" 
+            onValueChange={null}
+            defaultValue={{label: label, value: registered_state}}/>
+        </form>
+        <div>
+          <GrayButton onClick={this.confirmBooking}>
+            PARK NOW
+          </GrayButton>
+        </div>
+      </div>
+    );
   }
 
   renderFreePaidParkingModal() {
