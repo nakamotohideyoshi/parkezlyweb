@@ -23,6 +23,7 @@ const initialState = {
   lotsData: null,
   selectedParkingCode: null,
   bookingStep: 0,
+  selectedPlate: null,
   error: null
 };
 
@@ -125,7 +126,8 @@ const Parking = (state = initialState, action) => {
         showManagedParkingModal: false,
         selectedParkingCode: null,
         selectedMarkerItem: null,
-        bookingStep: 0
+        bookingStep: 0,
+        selectedPlate: null
       }
     case "FETCH_PARKING_LOT_INITIATE":
       return {
@@ -149,6 +151,12 @@ const Parking = (state = initialState, action) => {
         ...state,
         selectedParkingCode: action.location,
         bookingStep: 2
+      }
+    case "SET_SELECTED_PLATE":
+      return {
+        ...state,
+        selectedPlate: action.plate,
+        bookingStep: 3
       }
     default:
       return state;

@@ -210,13 +210,25 @@
   }
 
   .plate-list {
-    max-height: 362px;
+    max-height: 315px;
     overflow-y: auto;
 
     .plate {
       border-bottom: 1px solid $light-grey;
       padding: 5px 0;
     }
+  }
+
+  .select-vehicle {
+    .react-selectize {
+      &.root-node {
+        width: 100%;
+      }
+    }
+  }
+
+  .vehicle-form {
+    text-align: center;
   }
 }
 
