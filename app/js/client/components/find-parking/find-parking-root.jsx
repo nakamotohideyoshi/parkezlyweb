@@ -12,7 +12,7 @@ import { GoogleMapLoader, GoogleMap, Marker } from "react-google-maps";
 import { default as MarkerClusterer } from "react-google-maps/lib/addons/MarkerClusterer";
 import { states } from "../../constants/states.js";
 import { statesHash } from "../../constants/states-hash.js";
-
+import { hours } from "../../constants/hours.js";
 import {
   updateGeolocation,
   getNearbyParking,
@@ -26,7 +26,8 @@ import {
   hideSelectedParking,
   getParkingLot,
   selectParking,
-  setSelectedPlate
+  setSelectedPlate,
+  setBookingStep
 } from "../../actions/parking.js";
 import { setPosition, setInitialPosition, getLocationCoordinates } from "../../actions/location.js";
 import { getVehicles } from "../../actions/vehicle.js";
@@ -55,6 +56,7 @@ class FindParking extends Component {
     this.selectParkingandFetchVehicles = this.selectParkingandFetchVehicles.bind(this);
     this.selectVehiclePlate = this.selectVehiclePlate.bind(this);
     this.confirmBooking = this.confirmBooking.bind(this);
+    this.goToPayment = this.goToPayment.bind(this);
   }
 
   componentDidMount() {
@@ -199,16 +201,21 @@ class FindParking extends Component {
     const { dispatch } = this.props;
   }
 
-  renderMyLocationIcon() {
-    return (
-      <div className="my-location-marker" onClick={this.goToInitialLocation}>
-      </div>
-    );
+  goToPayment() {
+    const { dispatch } = this.props;
+    dispatch(setBookingStep(4));
   }
 
   selectMarker(marker) {
     const { dispatch } = this.props;
     dispatch(setSelectedMarker(marker));
+  }
+
+  renderMyLocationIcon() {
+    return (
+      <div className="my-location-marker" onClick={this.goToInitialLocation}>
+      </div>
+    );
   }
 
   renderSearchLocations() {
@@ -564,16 +571,79 @@ class FindParking extends Component {
     );
   }
 
-  /* Booking Step 3 */
+  /* Booking Step 3 and 4 */
 
-  renderVehicleForm() {
-    //this.refs["license-number"].setValue(selectedPlate);
-    //this.refs["select-state"].setValue(state);
-    const { selectedPlate, parkingRules, selectedMarkerItem } = this.props.parking;
+  renderPlateForm() {
+    const { selectedPlate } = this.props.parking;
     const { registered_state, plate_no } = selectedPlate;
     const label = statesHash[registered_state];
+    return (
+      <form className="select-vehicle">
+        <LicensePlateField
+          ref="license-number"
+          placeholder="LICENSE PLATE #"
+          className="license-no"
+          defaultValue={plate_no}/>
+        <SimpleSelect 
+          options = {states} 
+          placeholder = "Select State" 
+          onValueChange={null}
+          defaultValue={{label: label, value: registered_state}}/>
+      </form>
+    );
+  }
+
+  renderVehicleFormButton() {
+    const { showPaidParkingModal } = this.props.parking;
+    const btnText = showPaidParkingModal ? "PAY AND PARK" : "PARK NOW";
+    const nextStep = showPaidParkingModal ? this.goToPayment : this.confirmBooking;
+    return (
+      <div>
+        <GrayButton onClick={nextStep}>
+          {btnText}
+        </GrayButton>
+      </div>
+    );
+  }
+
+  renderHoursSelectionForm() {
+    return (
+      <SimpleSelect 
+        options = {hours} 
+        placeholder = "Select Hours" 
+        onValueChange={null}
+        defaultValue={{label: "1.0 Hrs", value: 1}}/>
+    );
+  }
+
+  renderPaymentBtns() {
+    return (
+      <div>
+        <div>
+          <GrayButton onClick={this.nextStep}>
+            Pay with Wallet
+          </GrayButton>
+        </div>
+        <div>
+          <GrayButton onClick={this.nextStep}>
+            Make Payment
+          </GrayButton>
+        </div>
+      </div>
+    );
+  }
+
+  renderParkingOverview() {
+    const { selectedPlate, parkingRules, selectedMarkerItem, showPaidParkingModal, bookingStep } = this.props.parking;
+    const { registered_state, plate_no } = selectedPlate;
+
     const currentRules = parkingRules[selectedMarkerItem.location_code];
     const { parking_times, max_hours} = currentRules;
+    const rateString = "Rate: $" + currentRules.pricing + "/" + currentRules.pricing_duration + "min";
+    const rate = showPaidParkingModal ? rateString : null;
+    
+    const form = bookingStep == 4 ? this.renderHoursSelectionForm() : this.renderPlateForm();
+    const btns = bookingStep == 4 ? this.renderPaymentBtns() : this.renderVehicleFormButton();
     return (
       <div className="vehicle-form">
         <h4>Parking</h4>
@@ -585,36 +655,32 @@ class FindParking extends Component {
             Max: {max_hours} Hours
           </div>
         </div>
-        <form className="select-vehicle">
-          <LicensePlateField
-            ref="license-number"
-            placeholder="LICENSE PLATE #"
-            className="license-no"
-            defaultValue={plate_no}/>
-          <SimpleSelect 
-            options = {states} 
-            placeholder = "Select State" 
-            onValueChange={null}
-            defaultValue={{label: label, value: registered_state}}/>
-        </form>
-        <div>
-          <GrayButton onClick={this.confirmBooking}>
-            PARK NOW
-          </GrayButton>
+        {form}
+        <div className="parking-rate">
+          {rate}
         </div>
+        {btns}
       </div>
     );
   }
 
+  renderPayment() {
+   
+  }
+
   renderFreePaidParkingModal() {
-    const { bookingStep } = this.props.parking;
+    const { bookingStep, showPaidParkingModal, showFreeParkingModal } = this.props.parking;
     let content = "";
     if(bookingStep == 1) {
       content = this.renderFreePaidParkingModalContent();
     } else if(bookingStep == 2) {
       content = this.renderVehicleList();
     } else if(bookingStep == 3) {
-      content = this.renderVehicleForm();
+      content = this.renderParkingOverview();
+    } else if(bookingStep == 4 && showFreeParkingModal) {
+      content = this.renderPayment();
+    } else if(bookingStep == 4 && showPaidParkingModal) {
+      content = this.renderParkingOverview();
     }
     return (
       <ParkingModal
@@ -667,7 +733,7 @@ class FindParking extends Component {
   }
 
   render() {
-    console.log(this.props.vehicle);
+    console.log(this.props.parking);
     const gMap = this.renderGMap();
     const myLocationIcon = this.renderMyLocationIcon();
     const {

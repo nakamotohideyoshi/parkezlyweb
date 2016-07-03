@@ -231,3 +231,10 @@ export const setSelectedPlate = (plate) => {
     plate
   };
 };
+
+export const setBookingStep = (step) => {
+  return {
+    type: Actions.SET_BOOKING_STEP,
+    step
+  };
+}

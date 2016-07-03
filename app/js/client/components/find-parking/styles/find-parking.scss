@@ -229,6 +229,20 @@
 
   .vehicle-form {
     text-align: center;
+
+    h4 {
+      margin: 5px 0 15px 0;
+    }
+
+    .parking-rate {
+      margin: 15px 0;
+    }
+
+    .react-selectize {
+      &.root-node {
+        width: 100%;
+      }
+    }
   }
 }
 
