@@ -10,7 +10,7 @@ class ParkingModal extends Component {
     return (
       <div className={className}>
         <div className="row heading">
-          <h4 className="col s11">Parking Info</h4>
+          <h4 className="col s11">{heading}</h4>
           <div className="col s1">
             <span className="close-btn" onClick={onHide}/>
           </div>

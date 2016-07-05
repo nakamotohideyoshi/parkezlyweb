@@ -636,8 +636,10 @@ class FindParking extends Component {
   renderParkingOverview() {
     const { selectedPlate, parkingRules, selectedMarkerItem, showPaidParkingModal, bookingStep } = this.props.parking;
     const { registered_state, plate_no } = selectedPlate;
-
+    console.log(selectedMarkerItem);
+console.log(parkingRules);
     const currentRules = parkingRules[selectedMarkerItem.location_code];
+
     const { parking_times, max_hours} = currentRules;
     const rateString = "Rate: $" + currentRules.pricing + "/" + currentRules.pricing_duration + "min";
     const rate = showPaidParkingModal ? rateString : null;
@@ -671,10 +673,12 @@ class FindParking extends Component {
   renderFreePaidParkingModal() {
     const { bookingStep, showPaidParkingModal, showFreeParkingModal } = this.props.parking;
     let content = "";
+    let heading = "Parking Info";
     if(bookingStep == 1) {
       content = this.renderFreePaidParkingModalContent();
     } else if(bookingStep == 2) {
       content = this.renderVehicleList();
+      heading = "Select Vehicle";
     } else if(bookingStep == 3) {
       content = this.renderParkingOverview();
     } else if(bookingStep == 4 && showFreeParkingModal) {
@@ -685,11 +689,14 @@ class FindParking extends Component {
     return (
       <ParkingModal
         className="free-parking-modal"
-        onHide={this.hideParkingModal}>
+        onHide={this.hideParkingModal}
+        heading={heading}>
         {content}
       </ParkingModal>
     );
   }
+
+  /* Booking Step 1 Managed*/
 
   renderLot(lot) {
     const { lot_row, lot_number, occupied } = lot;
@@ -709,26 +716,44 @@ class FindParking extends Component {
     );
   }
 
-  renderManagedParkingModal() {
-    const { lotsData } = this.props.parking;
+  renderLots() {
+    const { lotsData, selectedMarkerItem } = this.props.parking;
+    const parkNowAction = () => {this.selectParkingandFetchVehicles(selectedMarkerItem.location_code)};
     const carList = lotsData.map(this.renderLot, this);
     return (
-      <div className="managed-parking-modal">
-        <div className="row heading">
-          <h4 className="col s11">Current Parking Lot Status</h4>
-          <div className="col s1">
-            <span className="close-btn" onClick={this.hideParkingModal}/>
-          </div>
-        </div>
+      <div>
         <div className="row car-list">
           {carList}
         </div>
         <div className="park-here-btn">
-          <GrayButton onClick={this.selectLocationFromInput.bind(this)}>
+          <GrayButton onClick={parkNowAction}>
             PARK HERE
           </GrayButton>
         </div>
       </div>
+    );
+  }
+
+  renderManagedParkingModal() {
+    const { bookingStep } = this.props.parking;
+    let content = "";
+    let heading = "";
+    if(bookingStep == 1) {
+      heading = "Current Parking Lot Status";
+      content = this.renderLots();
+    } else if(bookingStep == 2) {
+      heading = "Select Vehicle";
+      content = this.renderVehicleList();
+    } else if(bookingStep == 3) {
+      content = this.renderParkingOverview();
+    }
+    return (
+      <ParkingModal
+        className="managed-parking-modal"
+        onHide={this.hideParkingModal}
+        heading={heading}>
+        {content}
+      </ParkingModal>
     );
   }
 
