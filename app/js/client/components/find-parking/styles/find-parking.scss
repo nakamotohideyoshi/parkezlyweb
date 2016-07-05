@@ -253,11 +253,12 @@
   right: 0;
   top: 60px;
   margin: 0 auto;
-  z-index:999;
+  z-index: 999;
   background: $white;
-  padding: 20px 20px 0;
+  padding: 20px 20px 15px 20px;
   border: 1px solid $black;
   border-radius: 8px;
+  text-align: center;
 
   .heading {
     border-bottom: 1px solid $black;
@@ -284,10 +285,10 @@
   }
   .car-icon {
     &.occupied {
-      background-image: url('../images/popup_car_red@3x.png');
+      background-image: url('../images/ride@3x.png');
     }
     &.available {
-      background-image: url('../images/ride@3x.png');
+      background-image: url('../images/popup_car_red@3x.png');
     }
     background-repeat: no-repeat;
     background-position: center;
@@ -300,5 +301,21 @@
   }
   .park-here-btn {
     margin: 15px 0;
+  }
+
+  .plate-list {
+    max-height: 315px;
+    overflow-y: auto;
+
+    .plate {
+      border-bottom: 1px solid $light-grey;
+      padding: 5px 0;
+    }
+  }
+
+  .react-selectize {
+    &.root-node {
+      width: 100%;
+    }
   }
 }
