@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router'
 
+
 export class InspectorPanelTiles extends Component {
   render() {
     return (
@@ -22,11 +23,18 @@ export class InspectorPanelTiles extends Component {
           </div>
         </div>
         <div className="row marginless-row">
-          <div className="col s12 m12 l12 animated fadeInUp">
+          <div className="col s12 m12 l6 animated fadeInUp">
             <Link to={{pathname: `/admin/inspector/create-ticket/${this.props.townshipCode}`}} 
             className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12">
               <i className="material-icons valign">receipt</i>
               <h4> Create Ticket </h4>
+            </Link>
+          </div>
+          <div className="col s12 m12 l6 animated fadeInUp">
+            <Link to={{pathname: `/admin/inspector/map-view/${this.props.townshipCode}`}} 
+            className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12">
+              <i className="material-icons valign">map</i>
+              <h4> Map View </h4>
             </Link>
           </div>
         </div>

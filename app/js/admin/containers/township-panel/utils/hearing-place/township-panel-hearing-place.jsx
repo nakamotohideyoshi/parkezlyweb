@@ -10,6 +10,7 @@ import Spinner from '../../../../common/components/spinner.jsx'
 import {optionsSelectize} from '../../../../common/components/options-selectize.js'
 
 import {fetchTownshipLocations, fetchHearingPlace, createHearingPlace, resetLoading} from '../../../../actions/actions-township-panel.jsx'
+import {fetchInspectorTicket, createInspectorTicket} from '../../../../actions/actions-inspector-panel.jsx'
 import {fetchTownshipSchemeTypes} from '../../../../actions/actions-township-common.jsx'
 
 import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
@@ -68,7 +69,7 @@ class TownshipPanelHearingPlace extends React.Component {
 
   handleSuccess(){
     this.props.resetLoading();
-    $('#modal-inspector-ticket-create').closeModal();
+    $('#modal-hearing-place-create').closeModal();
     $('#modal-success').openModal();
     this.props.fetchHearingPlace();
   }
@@ -117,7 +118,7 @@ class TownshipPanelHearingPlace extends React.Component {
 
     return(
       <TownshipPanelHearingPlaceForm
-        modalName="modal-violation-code-create" 
+        modalName="modal-hearing-place-create" 
         modalText="Create a Hearing Place" 
         submitType="CREATE"
         initialValues={null}
@@ -171,7 +172,7 @@ class TownshipPanelHearingPlace extends React.Component {
 
           <a
             className="modal-trigger waves-effect waves-light btn valign" 
-            onClick={() => $('#modal-inspector-ticket-create').openModal()}
+            onClick={() => $('#modal-hearing-place-create').openModal()}
             style={{margin: 10}}>Add New Hearing Place</a>
 
         </div>
@@ -193,7 +194,7 @@ class TownshipPanelHearingPlace extends React.Component {
         style={{marginTop: 20}}
         onClick={() => {
           this.setState({showEditModal: true})
-          $('#modal-violation-code-edit').openModal(); 
+          $('#modal-hearing-place-edit').openModal(); 
         }}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">edit</i>
@@ -203,7 +204,7 @@ class TownshipPanelHearingPlace extends React.Component {
         <a
         onClick={() => {
           this.setState({showEditModal: true})
-          $('#modal-violation-code-duplicate').openModal(); 
+          $('#modal-hearing-place-duplicate').openModal(); 
         }}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">content_copy</i>
@@ -286,7 +287,7 @@ class TownshipPanelHearingPlace extends React.Component {
             <TownshipPanelHearingPlaceForm
               initialValues={this.state.rowData} 
               handleSuccess={this.handleSuccess}
-              modalName="modal-violation-code-edit" 
+              modalName="modal-hearing-place-edit" 
               modalText="Edit a Hearing Place" 
               submitType="EDIT"
               initialValues={this.state.rowData} 
@@ -296,7 +297,7 @@ class TownshipPanelHearingPlace extends React.Component {
             <TownshipPanelHearingPlaceForm 
               initialValues={this.state.rowData} 
               handleSuccess={this.handleSuccess}
-              modalName="modal-violation-code-duplicate" 
+              modalName="modal-hearing-place-duplicate" 
               modalText="Duplicate a Hearing Place" 
               submitType="DUPLICATE"
               initialValues={this.state.rowData} 

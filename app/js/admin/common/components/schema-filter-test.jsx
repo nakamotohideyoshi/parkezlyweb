@@ -19,7 +19,7 @@ export const API_CONFIG = {
 };
 
 const AXIOS_INSTANCE = axios.create(API_CONFIG);
-const NAME_TO_SEARCH = 'cashier_id';
+const NAME_TO_SEARCH = 'lat';
 
 export const SchemaFilterTest = function() {
   // Testing multiple concurrent AXIOS Requests

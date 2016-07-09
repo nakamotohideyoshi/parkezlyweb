@@ -31,7 +31,9 @@ import {
   InspectorCreateTicketController,
   InspectorSearchPlateController,
   InspectorParkingFieldController,
-
+  InspectorMapViewController,
+  InspectorVehicleInfoController,
+  InspectorMapTicketController
 } from './containers/inspector-panel/inspector-panel-controller.jsx'
 
 // Redux
@@ -65,14 +67,16 @@ export default function AdminIndex() {
         <Route path="admin/bursar/wallet/:townshipCode" component={BursarWalletController} />
         <Route path="admin/bursar/ticket-rates/:townshipCode" component={BursarTicketRatesController} />
 
-
-
         
 
         <Route path="admin/inspector/:townshipId" component={InspectorPanelController} />
         <Route path="admin/inspector/parking-field/:townshipId" component={InspectorParkingFieldController} />
         <Route path="admin/inspector/search-plate/:townshipId" component={InspectorSearchPlateController} />
         <Route path="admin/inspector/create-ticket/:townshipId" component={InspectorCreateTicketController} />
+        <Route path="admin/inspector/map-view/:townshipId" component={InspectorMapViewController} />
+        <Route path="admin/inspector/map-view/create-ticket/:vehicleCode" component={InspectorCreateTicketController} />
+        <Route path="admin/inspector/vehicle-info/:vehicleCode" component={InspectorVehicleInfoController} />
+        <Route path="admin/inspector/vehicle-info/create-ticket/:vehicleCode" component={InspectorMapTicketController} />
 
 
 

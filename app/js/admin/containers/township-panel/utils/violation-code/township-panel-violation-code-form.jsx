@@ -2,10 +2,11 @@ import React from 'react';
 import { reduxForm, change } from 'redux-form'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import datetime from 'node-datetime'
+import moment from 'moment'
 import {SimpleSelect} from "react-selectize"
 import { browserHistory } from 'react-router'
 import {createFilter} from 'react-search-input';
+
 
 import Body from "../../../../../common/components/body/body.jsx"
 import Spinner from '../../../../common/components/spinner.jsx'
@@ -24,6 +25,8 @@ import {customFilterComponent, customFilterFunction} from '../../../../common/co
 
 import { ajaxSelectizeGet, ajaxDelete } from '../../../../common/components/ajax-selectize.js'
 import AdminSelectize from '../../../../common/components/admin-selectize.jsx'
+
+import { GoogleMapLoader, GoogleMap, Marker } from "react-google-maps";
 
 export const fields = [ 
   'id',
@@ -55,6 +58,8 @@ export default class InspectorSearchTicketForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
     this.selectizeOptionsUpdate = this.selectizeOptionsUpdate.bind(this);
+
+    this.props.dispatch(change('violation-code-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
   }
 
   handleSubmit(data) {
@@ -86,13 +91,7 @@ export default class InspectorSearchTicketForm extends React.Component {
   }
 
   componentWillMount() {
-    ajaxSelectizeGet('manage_locations', 'location_code', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('scheme_type', 'scheme_type', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('payment_type', 'pay_method', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('township_users', 'user_id', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('township_users', 'user_name', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('user_vehicles', 'plate_no', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('locations_rate', 'rate', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('townships_manager', 'manager_id', this.selectizeOptionsUpdate);
   }
 
   componentDidUpdate() {
@@ -164,6 +163,12 @@ export default class InspectorSearchTicketForm extends React.Component {
       dispatch
     } = this.props
 
+    $('.datepicker').pickadate({
+      selectMonths: true, // Creates a dropdown to control month
+      selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
+
+
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
@@ -182,75 +187,13 @@ export default class InspectorSearchTicketForm extends React.Component {
 
                 <AdminSelectize 
                 options={this.state.selectizeOptions}
-                objectKey={'pay_method'} 
+                objectKey={'manager_id'} 
                 formName={'violation-code-form'} 
-                fieldName={'pay_method'}
+                fieldName={'township_code'}
                 defaultData={this.props.rowData}
                 dispatch={dispatch} 
                 />
 
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'location_code'} 
-                formName={'violation-code-form'} 
-                fieldName={'location_code'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'scheme_type'} 
-                formName={'violation-code-form'} 
-                fieldName={'scheme_type'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'pay_method'} 
-                formName={'violation-code-form'} 
-                fieldName={'pay_method'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'user_id'} 
-                formName={'violation-code-form'} 
-                fieldName={'user_id'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'user_name'} 
-                formName={'violation-code-form'} 
-                fieldName={'user_name'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'plate_no'} 
-                formName={'violation-code-form'} 
-                fieldName={'plate_no'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'rate'} 
-                formName={'violation-code-form'} 
-                fieldName={'rate'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
 
                 {this.tempInputsEdit(this.props.initialValues)}
 
@@ -297,3 +240,13 @@ export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   fields,
   overwriteOnInitialValuesChange : true
 })(InspectorSearchTicketForm));
+
+/*
+
+<div className="col s6 admin-form-input">
+  <div className="form-group">
+    <input type="date" className="datepicker" />
+  </div>
+</div>
+
+*/

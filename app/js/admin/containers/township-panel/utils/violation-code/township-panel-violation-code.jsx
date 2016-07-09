@@ -20,17 +20,19 @@ import TownshipPanelViolationCodeForm from './township-panel-violation-code-form
 import customColumnComponent from '../../../../common/components/custom-column-component.jsx'
 import {ajaxSelectizeGet, ajaxDelete} from '../../../../common/components/ajax-selectize.js'
 
+import { GoogleMapLoader, GoogleMap, Marker } from "react-google-maps";
+
 
 export const fields = [ 
   'id',
-  'date_time', 
-  'violation_code',  
-  'violation_description', 
-  'violation_fee', 
-  'township_code', 
-  'violation_detail',  
-  'section_law', 
-  'section_num', 
+  'date_time',
+  'violation_code',
+  'violation_description',
+  'violation_fee',
+  'township_code',
+  'violation_detail',
+  'section_law',
+  'section_num',
   'state',
 ]
 
@@ -102,7 +104,7 @@ class TownshipPanelViolationCode extends React.Component {
     return(
       <TownshipPanelViolationCodeForm
         modalName="modal-violation-code-create" 
-        modalText="Create a Violation Code" 
+        modalText="Create a Violation Type" 
         submitType="CREATE"
         initialValues={null}
         editMode={false}
@@ -156,8 +158,7 @@ class TownshipPanelViolationCode extends React.Component {
           <a
             className="modal-trigger waves-effect waves-light btn valign" 
             onClick={() => $('#modal-violation-code-create').openModal()}
-            style={{margin: 10}}>Add New Violation Code</a>
-
+            style={{margin: 10}}>Add New Violation Type</a>
         </div>
       </div>
     );
@@ -181,7 +182,7 @@ class TownshipPanelViolationCode extends React.Component {
         }}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">edit</i>
-          <h4> Edit - Violation Code ID: {recordId} </h4>
+          <h4> Edit - Violation Type ID: {recordId} </h4>
         </a>
 
         <a
@@ -191,14 +192,14 @@ class TownshipPanelViolationCode extends React.Component {
         }}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">content_copy</i>
-          <h4> Duplicate - Violation Code ID: {recordId} </h4>
+          <h4> Duplicate - Violation Type ID: {recordId} </h4>
         </a>
 
         <a
         onClick={() => $('#modal-delete').openModal() }
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">delete</i>
-          <h4> Delete - Violation Code ID: {recordId} </h4>
+          <h4> Delete - Violation Type ID: {recordId} </h4>
         </a>
 
         <div id="modal-delete" className="modal" style={{overflowX: "hidden"}}>
@@ -244,7 +245,7 @@ class TownshipPanelViolationCode extends React.Component {
             <div className="col s12">
               <nav>
                 <div className="nav-wrapper nav-admin z-depth-2">
-                  <a className="brand-logo center">Violation Code</a>
+                  <a className="brand-logo center">Violation Type</a>
                 </div>
               </nav>
                <div className="card">
@@ -271,7 +272,7 @@ class TownshipPanelViolationCode extends React.Component {
               initialValues={this.state.rowData} 
               handleSuccess={this.handleSuccess}
               modalName="modal-violation-code-edit" 
-              modalText="Edit a Violation Code" 
+              modalText="Edit a Violation Type" 
               submitType="EDIT"
               initialValues={this.state.rowData} 
               rowData={this.state.rowData}
@@ -281,7 +282,7 @@ class TownshipPanelViolationCode extends React.Component {
               initialValues={this.state.rowData} 
               handleSuccess={this.handleSuccess}
               modalName="modal-violation-code-duplicate" 
-              modalText="Duplicate a Violation Code" 
+              modalText="Duplicate a Violation Type" 
               submitType="DUPLICATE"
               initialValues={this.state.rowData} 
               rowData={this.state.rowData}

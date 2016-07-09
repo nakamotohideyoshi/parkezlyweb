@@ -2,7 +2,7 @@ import React from 'react';
 import { reduxForm, change } from 'redux-form'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import datetime from 'node-datetime'
+import moment from 'moment'
 import {SimpleSelect} from "react-selectize"
 import { browserHistory } from 'react-router'
 import {createFilter} from 'react-search-input';
@@ -52,12 +52,14 @@ export default class TownshipPanelHearingPlaceForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
     this.selectizeOptionsUpdate = this.selectizeOptionsUpdate.bind(this);
+    this.props.dispatch(change('hearing-place-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
   }
 
   handleSubmit(data) {
     
     $('#' + this.props.modalName).closeModal();
     $('#modal-success').openModal();
+    this.props.dispatch(change('hearing-place-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
 
     switch(this.props.submitType) {
       case "CREATE":
@@ -158,6 +160,7 @@ export default class TownshipPanelHearingPlaceForm extends React.Component {
       submitting,
       dispatch
     } = this.props
+
 
     return (
       <div>
