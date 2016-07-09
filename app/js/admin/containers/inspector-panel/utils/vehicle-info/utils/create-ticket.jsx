@@ -65,16 +65,23 @@ export default class CreateTicket extends React.Component {
 
   constructor(props) {
     super(props);
+
     this.state = {
-      hearingData: null,
-      violationData: null,
+      hearingMenu: false,
+      violationMenu: false,
+      hearingSelected: false,
+      violationSelected: false,
       tableMenu: false,
     }
+
+    this.handleHearingData = this.handleHearingData.bind(this)
+    this.renderHearingLocation = this.renderHearingLocation.bind(this)
   }
 
   componentWillMount() {
     this.props.fetchHearingPlace();
     this.props.fetchViolationCode();
+
   }
 
   renderHearingLocation() {
@@ -82,10 +89,10 @@ export default class CreateTicket extends React.Component {
       <div 
       className="card waves-effect waves-dark" 
       style={{backgroundColor: "#F6EADF", border: "2px solid black", display: "block", borderBottom: "0px"}}
-      onClick={() => this.setState({tableMenu: true})}>
+      onClick={() => this.setState({tableMenu: true, violationMenu: false, hearingMenu: true})}>
         <div style={{backgroundColor: "#F6EADF"}} className="township-userlist-container center-align">
           <div style={{marginTop: 20, fontSize: 50}}> Hearing Location </div>
-          <h5>Location: </h5>
+          {this.state.hearingSelected ? <h5>Location: {this.props.fields.hearing_location.value}</h5> : <h5> Select a Location </h5>}
         </div>
        </div>
     );
@@ -96,24 +103,40 @@ export default class CreateTicket extends React.Component {
       <div 
       className="card waves-effect waves-dark" 
       style={{backgroundColor: "#F6EADF", display: "block", border: "2px solid black"}}
-      onClick={() => this.setState({tableMenu: true})}>
+      onClick={() => this.setState({tableMenu: true, violationMenu: true, hearingMenu: false})}>
         <div style={{backgroundColor: "#F6EADF"}} className="township-userlist-container center-align">
           <div style={{marginTop: 20, fontSize: 50}}> Violation Type </div>
-          <h5>Violation Code: {this.props.vehicleCode}</h5>
-          <h5>Violation Fee: </h5>
-          <h5>Description:  </h5>
+          {this.state.violationSelected ? 
+            <div>
+              <h5>Violation Code: {this.props.fields.violation_code.value}</h5>
+              <h5>Violation Fee: {this.props.fields.violation_fee.value}</h5>
+              <h5>Description:  {this.props.fields.violation_description.value}</h5>
+            </div> 
+            : <h5>Select a Violation Type</h5>}
         </div>
        </div>
     );
   }
 
+  handleHearingData(data) {
+    console.log(data);
+    console.log(this.props.fields)
+
+    for (var key in data) {
+      console.log(data[key]);
+      this.props.dispatch(change('map-create-ticket-form', key, data[key]));
+    }
+
+    this.setState({tableMenu: false, hearingSelected: true})
+  }
+
   renderHearingMenu() {
-    console.log(this.props.townshipHearingPlaceFetched.data.resource);
     let hearingData = this.props.townshipHearingPlaceFetched.data.resource;
     return hearingData.map((data) => {
       return (
         <div 
           className="card waves-effect waves-dark" 
+          onClick={() => this.handleHearingData(data)}
           style={{backgroundColor: "#F6EADF", border: "2px solid black", display: "block", borderBottom: "0px"}}
           >
             <h5> Location: {data.hearing_location} </h5>
@@ -122,12 +145,46 @@ export default class CreateTicket extends React.Component {
     });
   }
 
+  handleViolationData(data) {
+    console.log(data);
+    console.log(this.props.fields)
+
+    for (var key in data) {
+      console.log(data[key]);
+      this.props.dispatch(change('map-create-ticket-form', key, data[key]));
+    }
+
+    this.setState({tableMenu: false, violationSelected: true})
+  }
+
+  renderViolationMenu() {
+    let hearingData = this.props.townshipViolationCodeFetched.data.resource;
+    return hearingData.map((data) => {
+      return (
+        <div 
+          className="card waves-effect waves-dark" 
+          onClick={() => this.handleViolationData(data)}
+          style={{backgroundColor: "#F6EADF", border: "2px solid black", display: "block", borderBottom: "0px"}}
+          >
+            <h5> Violation Code: {data.violation_code} </h5>
+        </div>
+      );
+    });
+  }
+
+  
+
   render() {
     if (!this.state.tableMenu) {
       return (
         <div className="blue-body marginless-row" style={{backgroundColor: "#FBE6CB"}}>
           <Body showHeader={true}>
-            <div className="card waves-effect waves-dark" style={{backgroundColor: "#F6EADF", border: "2px solid black", display: "block", borderBottom: "0px"}}>
+            <div className="card waves-effect waves-dark" 
+              style={{
+              backgroundColor: "#F6EADF", 
+              border: "2px solid black", 
+              display: "block", 
+              borderBottom: "0px"}}>
               <div style={{backgroundColor: "#F6EADF"}} className="township-userlist-container center-align">
                 <div style={{marginTop: 20, fontSize: 50}}> Vehicle Info. </div>
                 <img src={require('../../../../../../../images/car_red@3x.png')} className="responsive-img"/>
@@ -141,7 +198,12 @@ export default class CreateTicket extends React.Component {
             { this.props.townshipViolationCodeFetched.isLoading ? 
             <div></div> : this.renderViolationCode()}
 
-            <div className="card waves-effect waves-light" style={{backgroundColor: "#CC0000", border: "2px solid black", display: "block", marginTop: 80}}>
+            <div className="card waves-effect waves-light" style={{
+              backgroundColor: "#CC0000", 
+              border: "2px solid black", 
+              display: "block", 
+              marginTop: 120
+              }}>
               <div className="township-userlist-container center-align" style={{backgroundColor: "#CC0000"}}>
                 <i style={{color: "white", fontSize: "80"}} className="material-icons valign">receipt</i>
                 <h4 style={{color: "white"}}> Create Ticket </h4>
@@ -151,14 +213,25 @@ export default class CreateTicket extends React.Component {
         </div>
       );
     } else if (this.state.tableMenu) {
-      return (
-        <div className="blue-body marginless-row" style={{backgroundColor: "#FBE6CB"}}>
-          <Body showHeader={true}>
-            <h3 style={{border: "2px solid black", display: "block", padding: 20, margin: 0, borderBottom: "0px", fontWeight: "bold"}}> Hearing Locations: </h3>
-            {this.renderHearingMenu()} 
-          </Body>
-        </div>
-      )
+      if(this.state.hearingMenu) {
+        return (
+          <div className="blue-body marginless-row" style={{backgroundColor: "#FBE6CB"}}>
+            <Body showHeader={true}>
+              <h3 style={{border: "2px solid black", display: "block", padding: 20, margin: 0, borderBottom: "0px", fontWeight: "bold"}}> Hearing Locations: </h3>
+              {this.renderHearingMenu()} 
+            </Body>
+          </div>
+        )
+      } else if (this.state.violationMenu) {
+          return (
+            <div className="blue-body marginless-row" style={{backgroundColor: "#FBE6CB"}}>
+              <Body showHeader={true}>
+                <h3 style={{border: "2px solid black", display: "block", padding: 20, margin: 0, borderBottom: "0px", fontWeight: "bold"}}> Violation Type: </h3>
+                {this.renderViolationMenu()} 
+              </Body>
+            </div>
+          )
+      }
     }
     
   }
@@ -198,7 +271,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-  form: 'map-create-ticket',
+  form: 'map-create-ticket-form',
   fields
 })(CreateTicket));
 

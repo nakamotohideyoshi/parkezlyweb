@@ -72,12 +72,11 @@ export default class InspectorVehicleInfo extends React.Component {
 
 
 /*
-
-          <div className="center-align"> 
-            <div className="card" style={{backgroundColor: "#F6EADF"}}>
-              <div> Vehicle Info. </div>
-              <h3>Plate Number - {this.props.vehicleCode}</h3>
-              <img src={require('../../../../../../images/car_red@3x.png')} />
-            </div>
-          </div>
+<div className="center-align"> 
+  <div className="card" style={{backgroundColor: "#F6EADF"}}>
+    <div> Vehicle Info. </div>
+    <h3>Plate Number - {this.props.vehicleCode}</h3>
+    <img src={require('../../../../../../images/car_red@3x.png')} />
+  </div>
+</div>
 */
