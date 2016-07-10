@@ -176,52 +176,6 @@ export default class InspectorSearchTicketForm extends React.Component {
 
               <div className="row">
 
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'pay_method'} 
-                formName={'search-plate-form'} 
-                fieldName={'pay_method'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'location_code'} 
-                formName={'search-plate-form'} 
-                fieldName={'location_code'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'scheme_type'} 
-                formName={'search-plate-form'} 
-                fieldName={'scheme_type'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'pay_method'} 
-                formName={'search-plate-form'} 
-                fieldName={'pay_method'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'user_id'} 
-                formName={'search-plate-form'} 
-                fieldName={'user_id'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
                 <AdminSelectize 
                 options={this.state.selectizeOptions}
                 objectKey={'user_name'} 
@@ -230,25 +184,7 @@ export default class InspectorSearchTicketForm extends React.Component {
                 defaultData={this.props.rowData}
                 dispatch={dispatch} 
                 />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'plate_no'} 
-                formName={'search-plate-form'} 
-                fieldName={'plate_no'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'rate'} 
-                formName={'search-plate-form'} 
-                fieldName={'rate'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
+                
                 {this.tempInputsEdit(this.props.initialValues)}
 
               </div>
