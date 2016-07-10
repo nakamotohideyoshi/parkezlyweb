@@ -16,7 +16,7 @@ export default class InspectorVehicleInfo extends React.Component {
 
           <div className="row marginless-row">
             <div className="center-align">
-              <div className="card waves-effect waves-dark" 
+              <div className="card" 
               style={{
               backgroundColor: "#F6EADF", 
               display: "block", }}>
@@ -38,19 +38,47 @@ export default class InspectorVehicleInfo extends React.Component {
             </div>
           </div>
 
-          <div className="card waves-effect waves-dark" 
-            style={{
-            backgroundColor: "#4C4B49", 
-            display: "block", }}>
-                <div className="township-userlist-container" style={{backgroundColor: "#4C4B49"}}>
-                  <div className="row marginless-row center-align">
-                    <h3 className="col s12" style={{color: "white", fontSize: 100, margin: 0, fontWeight: "bold"}}> 0:0:0 </h3>
+          <div className="card" 
+          style={{
+          backgroundColor: "#4C4B49", 
+          display: "block", }}>
+              <div className="township-userlist-container" style={{backgroundColor: "#4C4B49"}}>
+                <div className="row marginless-row center-align">
+                  <span className="col s12" style={{color: "white", fontSize: 50, margin: 0, fontWeight: "bold"}}> 0:0:0 </span>
+                </div>
+                <div className="row marginless-row center-align">
+                  <span className="col s12" style={{color: "white", margin: 0}}>Hours : Minutes : Seconds </span>
+                </div>
+              </div>
+          </div>
+
+          <div className="card" 
+          style={{
+          backgroundColor: "#313131", 
+          display: "block", }}>
+              <div className="township-userlist-container" style={{backgroundColor: "#313131", color: "white",}}>
+                <div className="row">
+                  <div className="right-align">
+                    <h5 className="col s6">Plate #:</h5> 
                   </div>
-                  <div className="row marginless-row center-align">
-                    <h3 className="col s12" style={{color: "white"}}>Hours : Minutes : Seconds </h3>
+                  <div className="left-align">
+                    <h5 className="col s6">TypeError</h5>
+                  </div>
+                  <div className="right-align">
+                    <h5 className="col s6">Violation Fee:</h5> 
+                  </div>
+                  <div className="left-align">
+                    <h5 className="col s6">Test</h5>
+                  </div>
+                  <div className="right-align">
+                    <h5 className="col s6">Description:</h5>  
+                  </div>
+                  <div className="left-align">
+                    <h5 className="col s6">Test</h5>
                   </div>
                 </div>
-            </div>
+              </div>
+          </div>
 
           <div className="row marginless-row" style={{marginTop: 40}}>
             <div className="col s12 m12 l12 animated fadeInUp">
@@ -61,48 +89,20 @@ export default class InspectorVehicleInfo extends React.Component {
               </Link>
             </div>
 
-            <div className="card waves-effect waves-light" 
-              onClick={() => browserHistory.push(`/admin/inspector/search-plate/${this.props.vehicleCode}`)} 
-              style={{
-              backgroundColor: "#0d53cf", 
-              border: "2px solid black", 
-              display: "block", 
-              borderBottom: 0
-              }}>
-              <div 
-              className="township-userlist-container center-align" 
-              style={{backgroundColor: "#0d53cf"}}>
-                <i style={{color: "white", fontSize: "80"}} className="material-icons valign">search</i>
-                <h4 style={{color: "white"}}> Find this Vehicle </h4>
-              </div>
+            <div className="col s12 m12 l12 animated fadeInUp">
+              <Link to={{pathname: `/admin/inspector/vehicle-info/create-ticket/:${this.props.vehicleCode}`}} 
+              className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12" style={{backgroundColor: "#CC0000"}}>
+                <i className="material-icons valign">receipt</i>
+                <h4> Create Ticket </h4>
+              </Link>
             </div>
 
-            <div className="card waves-effect waves-light" 
-              onClick={() => browserHistory.push(`/admin/inspector/vehicle-info/create-ticket/:${this.props.vehicleCode}`)} 
-              style={{
-              backgroundColor: "#CC0000", 
-              display: "block", 
-              }}>
-              <div 
-              className="township-userlist-container center-align" 
-              style={{backgroundColor: "#CC0000"}}>
-                <i style={{color: "white", fontSize: "80"}} className="material-icons valign">receipt</i>
-                <h4 style={{color: "white"}}> Create Ticket </h4>
-              </div>
-            </div>
-
-            <div className="card waves-effect waves-light" 
-              onClick={() => browserHistory.push(`/admin/inspector/vehicle-info/create-ticket/:${this.props.vehicleCode}`)} 
-              style={{
-              backgroundColor: "#FCFF00", 
-              display: "block", 
-              }}>
-              <div 
-              className="township-userlist-container center-align" 
-              style={{backgroundColor: "#FCFF00"}}>
-                <i style={{color: "black", fontSize: "80"}} className="material-icons valign">arrow_back</i>
-                <h4 style={{color: "black"}}> Back </h4>
-              </div>
+            <div className="col s12 m12 l12 animated fadeInUp">
+              <Link to={{pathname: `/admin/inspector/search-plate/${this.props.vehicleCode}`}} 
+              className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12" style={{backgroundColor: "#FCFF00", color: "black"}}>
+                <i className="material-icons valign">arrow_back</i>
+                <h4> Back </h4>
+              </Link>
             </div>
 
           </div>
