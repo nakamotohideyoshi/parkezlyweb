@@ -10,6 +10,10 @@ import TownshipPanelUsersEdit from './township-panel-users-edit.jsx';
 import TownshipPanelUsersCreate from './township-panel-users-create.jsx';
 import Spinner from '../../../../common/components/spinner.jsx';
 
+import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
+import Griddle from 'griddle-react'
+import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
+
 import { Link } from 'react-router';
 
 const KEYS_TO_FILTERS = ['user_id',
@@ -76,55 +80,34 @@ class TownshipPanelUsers extends React.Component {
   }
 
   renderUserTable() {
-    if (this.state.editMode === false) {
-      const filteredUsers = this.props.townshipUsersFetched.data.resource;
-      return (
-        <div>
-          <div className="row marginless-row valign-wrapper">
-            <div className="col s1"/>
-            <div className="search-wrapper card col s10" style={{marginBottom: 10, marginTop: 10}}>
-              <div className="row marginless-row valign-wrapper">
-                <SearchInput 
-                className="search search-input col s11" 
-                onChange={(term) => this.setState({searchTerm: term})}
-                style={{border: 0, margin: 0}} />
-                <i className="material-icons col s1 valign clickable">search</i>
-              </div>
-            </div>
-            <div className="col s1"/>
-          </div>
+    let parkingData = this.props.townshipUsersFetched.data.resource;
+    return (
+      <div>
+        <Griddle
+          tableClassName={'table table-bordered table-striped table-hover'}
+          filterClassName={''}
+          useGriddleStyles={false}
+          results={parkingData}
+          showFilter={true}
+          showSettings={true}
+          settingsToggleClassName='btn btn-default'
+          useCustomPagerComponent={true}
+          customPagerComponent={ BootstrapPager }
+          useCustomFilterComponent={true} customFilterComponent={customFilterComponent}
+          useCustomFilterer={true} customFilterer={customFilterFunction}
+        />
 
-          <div className="divider" />
-          <div className="township-userlist-container">
-            <table className="highlight">
-              <thead>
-                <tr>
-                  <th data-field="id">User ID</th>
-                  <th data-field="name">User Name</th>
-                  <th data-field="price">Township Code</th>
-                  <th data-field="price">Township Name</th>
-                  <th data-field="price">Profile Name</th>
-                  <th data-field="price">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-              {this.renderUserTableData(filteredUsers)}
-              </tbody>
-            </table>
-          </div>
+        <div className="divider"/> 
+
+        <div className="center-align">
+
+          <a
+            className="modal-trigger waves-effect waves-light btn valign" 
+            onClick={() => $('#modal-violation-code-create').openModal()}
+            style={{margin: 10}}>Add New User</a>
         </div>
-      );   
-    } else {
-      return (
-        <TownshipPanelUsersEdit 
-        initialValues={this.state.fieldData} 
-        setInitialValues={() => this.props.fetchTownshipUsers(this.props.townshipCode)}
-        userId={this.state.userId}
-        editModeFalse={() => this.setState({editMode: false})}
-        openModal={() => $('#modal-success').openModal()} />
-      );
-    }
-    
+      </div>
+    );
   }
 
   renderUserList() {
@@ -187,12 +170,20 @@ class TownshipPanelUsers extends React.Component {
     return (
       <div className="blue-body marginless-row">
         <Body showHeader={true}>
-          <div className="container" style={{marginTop: 40}}>
-            {this.state.createMode ?
-              this.renderUserCreate()
-              :
-              this.renderUserList()
-            }
+          <div className="row marginless-row" style={{marginTop: 40}}>
+            <div className="col s12">
+              <nav>
+                <div className="nav-wrapper nav-admin z-depth-2">
+                  <a className="brand-logo center">User List</a>
+                </div>
+              </nav>
+              <div className="card">
+                <div className="township-userlist-container">
+                  {this.props.townshipUsersFetched.isLoading ? 
+                    <div> </div> : this.renderUserTable()}
+                </div>
+              </div>
+            </div>
           </div>
         </Body>
 
@@ -229,45 +220,3 @@ export default connect(mapStateToProps, mapDispatchToProps)(TownshipPanelUsers);
 
 
 
-
-//<i>{(()=>{ console.log("Testing 123") })()}</i>
-
-/*
-
-<a 
-className="collection-item waves-effect waves-dark avatar" 
-key={township.id} 
-onClick={() => this.props.updateTownshipDetails(township)}>
-    <img 
-    src={township.township_logo} 
-    alt="" className="circle"/>
-    <span className="title">{township.city}</span>
- 
-   <p>{township.city} - {township.manager_type}</p>
-</a>
-*/
-
-/*
-if(arrayName.length > 0){   
-    //this array is not empty 
-}else{
-   //this array is empty
-}
-*/
-
-/*
-
-<div className="col s2">
-  <p>
-    <input type="checkbox" className="filled-in" id="township-user-id" />
-    <label htmlFor="township-user-id">User Id</label>
-  </p>
-</div>
-<div className="col s2">
-  <p>
-    <input type="checkbox" className="filled-in" id="township-user-name" />
-    <label htmlFor="township-user-name">User Name</label>
-  </p>
-</div>
-
-*/

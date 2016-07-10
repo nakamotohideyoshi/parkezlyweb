@@ -17,6 +17,10 @@ import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import Griddle from 'griddle-react'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 
+import { ajaxSelectizeGet, ajaxDelete } from '../../../../common/components/ajax-selectize.js'
+
+import InspectorPanelSearchPlateForm from './inspector-panel-search-plate-form.jsx'
+
 export const fields = [ 
   'id',  
   'date_time', 
@@ -29,16 +33,44 @@ export const fields = [
   'vehicle_image',
 ]
 
+class customColumnComponent extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div onClick={() => this.props.metadata.customComponentMetadata.renderEditModal(
+        this.props.rowData.id, 
+        this.props.rowData)}>
+        {this.props.data}
+      </div>
+    );
+  }
+}
+
+customColumnComponent.defaultProps = { "data": {}, "renderEditModal": null};
+
 
 class InspectorSearchPlate extends React.Component {
 
   constructor(props) {
     super(props);
 
+    this.state = {
+      showEditDuplicateButtons: false,
+      parkingLocationCode: null,
+      showEditModal: false,
+      rowData: null,
+      selectizeOptions: {}
+    }
+
     this.renderCreateModal = this.renderCreateModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
     this.renderTable = this.renderTable.bind(this);
+    this.renderEditModal = this.renderEditModal.bind(this);
   }
 
   componentWillMount() {
@@ -83,64 +115,37 @@ class InspectorSearchPlate extends React.Component {
   }
 
   renderCreateModal() {
-    
-    const {
-      fields: {
-        vehicle_id,
-        user_name,
-        date,
-        location_id,
-        scheme_type,
-        rate,
-        pay_method,
-        amount,
-        cashier_id,
-        user_id,
-      },
-      resetForm,
-      submitting,
-      dispatch
-    } = this.props
-
     return(
-      <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-        <div id="modal-inspector-ticket-create" className="modal modal-fixed-footer">
-          <div className="modal-content">
-
-            <div className="row">
-              <div className="center-align">
-                <h4>Create a Parking Plate</h4>
-                <p className="center-align">Create a Parking Plate by filling out the fields.</p>
-              </div>
-            </div>
-
-            <div className="row">
-
-              {this.tempInputs()}
-
-            </div>
-          </div>
-          
-
-          <div className="modal-footer">
-            <div className="row marginless-row">
-              <div className="col s12 center-align">
-                <button 
-                type="submit" 
-                disabled={submitting} 
-                className="waves-effect waves-light btn">Create Parking Plate</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
+      <InspectorPanelSearchPlateForm 
+        modalName="modal-bursar-payment-create" 
+        modalText="Create a Plate" 
+        submitType="CREATE"
+        initialValues={null}
+        editMode={false}
+        handleSuccess={this.handleSuccess}
+      />
     );
-
   }
 
   renderTable() {
     console.log(this.props.inspectorPlateFetched)
     let parkingData = this.props.inspectorPlateFetched.data.resource;
+
+    var renderEditModal = this.renderEditModal;
+    var metaDataFunction = () =>  {
+      return fields.map((data) => {
+        return(
+          {
+            "columnName": data,
+            "customComponent": customColumnComponent,
+            'customComponentMetadata': {
+                'renderEditModal': renderEditModal
+            }
+          }
+        );
+      });
+    }
+    var columnMeta = metaDataFunction()
 
     return (
       <div>
@@ -156,6 +161,7 @@ class InspectorSearchPlate extends React.Component {
           customPagerComponent={ BootstrapPager }
           useCustomFilterComponent={true} customFilterComponent={customFilterComponent}
           useCustomFilterer={true} customFilterer={customFilterFunction}
+          columnMetadata={columnMeta}
         />
 
         <div className="divider"/> 
@@ -164,7 +170,7 @@ class InspectorSearchPlate extends React.Component {
 
           <a
             className="modal-trigger waves-effect waves-light btn valign" 
-            onClick={() => $('#modal-inspector-ticket-create').openModal()}
+            onClick={() => $('#modal-bursar-payment-create').openModal()}
             style={{margin: 10}}>Add New Plate</a>
 
         </div>
@@ -172,12 +178,83 @@ class InspectorSearchPlate extends React.Component {
     );
   }
 
+  renderEditDuplicateButtons(recordId) {
+    return (
+      <div className="container">
+        <a
+        style={{marginTop: 20}}
+        onClick={() => {
+          this.setState({showEditModal: true})
+          $('#modal-bursar-ticket-edit').openModal(); 
+        }}
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">edit</i>
+          <h4> Edit - Plate ID: {recordId} </h4>
+        </a>
+
+        <a
+        onClick={() => {
+          this.setState({showEditModal: true})
+          $('#modal-bursar-ticket-duplicate').openModal(); 
+        }}
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">content_copy</i>
+          <h4> Duplicate - Plate ID: {recordId} </h4>
+        </a>
+
+        <a
+        onClick={() => $('#modal-delete').openModal() }
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">delete</i>
+          <h4> Delete - Plate ID: {recordId} </h4>
+        </a>
+
+        <div id="modal-delete" className="modal" style={{overflowX: "hidden"}}>
+          <div className="modal-content">
+            <h4>Delete</h4>
+            <p>Are you sure you want to delete this record?</p>
+          </div>
+          <div className="modal-footer">
+            <div className="row marginless-row">
+              <div className="col s6 left">
+                <button 
+                  href="#" 
+                  className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
+              </div>
+              <div className="col s3">
+                <a className="waves-effect waves-light btn btn-red" 
+                onClick={() => {
+                  $('#modal-delete').closeModal()
+                }}>No</a>
+              </div>
+              <div className="col s3">
+                <a className="waves-effect waves-light btn btn-green" 
+                onClick={() => {
+                  $('#modal-delete').closeModal()
+                  ajaxDelete('user_vehicles', recordId, this.handleSuccess);
+                  this.setState({showEditDuplicateButtons: false});
+                  window.scrollTo(0, 0);
+                }}>Yes</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderEditModal(recordId, rowData) {
+    window.scrollTo(0, document.body.scrollHeight);
+    this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true, parkingLocationCode: recordId})
+  }
+
+
   render() {
     console.log(this.props.townshipLocationsFetched)
     return (
       <div className="blue-body marginless-row">
         <Body showHeader={true}>
-          <div className="row" style={{marginTop: 40}}>
+          <div className="row marginless-row" style={{marginTop: 40}}>
             <div className="col s12">
               <nav>
                 <div className="nav-wrapper nav-admin z-depth-2">
@@ -191,13 +268,41 @@ class InspectorSearchPlate extends React.Component {
                       <div> </div> : this.renderTable()}
                   </div>
                </div>
+
+               {this.state.showEditDuplicateButtons ? 
+                this.renderEditDuplicateButtons(this.state.parkingLocationCode) : <div> </div>}
             </div>
           </div>
         </Body>
-        { this.props.inspectorPlateFetched.isLoading ||
-          this.props.townshipLocationsFetched.isLoading ||
-          this.props.townshipSchemeTypesFetched.isLoading ? 
+        { this.props.inspectorPlateFetched.isLoading ? 
           <div> </div> : this.renderCreateModal()}
+
+        { 
+          !this.state.showEditModal ?
+          <div></div> : 
+          <div>
+            <InspectorPanelSearchPlateForm
+              initialValues={this.state.rowData} 
+              handleSuccess={this.handleSuccess}
+              modalName="modal-bursar-ticket-edit" 
+              modalText="Edit a Plate" 
+              submitType="EDIT"
+              initialValues={this.state.rowData} 
+              rowData={this.state.rowData}
+              handleSuccess={this.handleSuccess}
+              />
+            <InspectorPanelSearchPlateForm 
+              initialValues={this.state.rowData} 
+              handleSuccess={this.handleSuccess}
+              modalName="modal-bursar-ticket-duplicate" 
+              modalText="Duplicate a Plate" 
+              submitType="DUPLICATE"
+              initialValues={this.state.rowData} 
+              rowData={this.state.rowData}
+              handleSuccess={this.handleSuccess}
+              />
+          </div>
+        }
 
         <div id="modal-success" className="modal">
           <div className="modal-content">
@@ -236,6 +341,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-  form: 'create-ticket',
+  form: 'search-plate-edit',
   fields
 })(InspectorSearchPlate));
