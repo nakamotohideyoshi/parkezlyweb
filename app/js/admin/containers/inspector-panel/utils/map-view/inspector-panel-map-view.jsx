@@ -45,8 +45,14 @@ export default class InspectorMapView extends React.Component {
       <InfoWindow 
       key={`${ref}_info_window`}
       onCloseclick={this.handleMarkerClose.bind(this, marker)}
+      className="center-align"
       >
-        <div onClick={() => browserHistory.push(`admin/inspector/vehicle-info/${title}`)}>{title} - Click Here -</div>      
+        <div 
+        onClick={() => browserHistory.push(`admin/inspector/vehicle-info/${title}`)} 
+        className="center-align">
+        {title} 
+          <div> - Click Here - </div>
+        </div>      
         
       </InfoWindow>
     );
@@ -100,7 +106,7 @@ export default class InspectorMapView extends React.Component {
       <div className="marginless-row">
         <Body showHeader={true}>
             <div>
-              <section style={{height: "calc(100% - 55px)"}}>
+              <section style={{height: "calc(100% - 165px)"}}>
                 <GoogleMapLoader
                   containerElement={
                     <div
@@ -119,6 +125,9 @@ export default class InspectorMapView extends React.Component {
                   </GoogleMap>
                 }/>
               </section>
+              <div className="footer">
+                Test
+              </div>
             </div>
         </Body>
       </div>
