@@ -3,7 +3,6 @@ import { reduxForm, change } from 'redux-form'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import datetime from 'node-datetime'
-import {SimpleSelect} from "react-selectize"
 import { browserHistory } from 'react-router'
 import {createFilter} from 'react-search-input';
 
@@ -24,6 +23,7 @@ import {customFilterComponent, customFilterFunction} from '../../../../common/co
 
 import { ajaxSelectizeGet, ajaxDelete } from '../../../../common/components/ajax-selectize.js'
 import AdminSelectize from '../../../../common/components/admin-selectize.jsx'
+import {SimpleSelect} from "react-selectize"
 
 export const fields = [ 
   'id',
@@ -138,8 +138,8 @@ export default class TownshipPanelUsersForm extends React.Component {
 
     const fields = [ 
       'id',
+      'user_id',
       'profile_name',
-      'status'
     ]
 
     return fields.map((data) => {
@@ -178,15 +178,22 @@ export default class TownshipPanelUsersForm extends React.Component {
               </div>
 
               <div className="row">
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'user_id'} 
-                formName={'township-users-form'} 
-                fieldName={'user_id'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
+                <div className="col s6 admin-form-input">
+                  <div className="form-group">
+                    <label>status</label>
+                    <div clasName="input-field col s12">
+                      <SimpleSelect 
+                        options = {[{label: "ACTIVE", value: "ACTIVE"}, {label: "INACTIVE", value: "INACTIVE"}]} 
+                        placeholder = "status"
+                        theme = "material"
+                        style={{marginTop: 5}}
+                        transitionEnter = {true} 
+                        onValueChange = {(value) => {
+                          dispatch(change('township-users-form', 'status', value.value)); 
+                        }}/>
+                    </div>
+                  </div>
+                </div>
 
                 <AdminSelectize 
                 options={this.state.selectizeOptions}
