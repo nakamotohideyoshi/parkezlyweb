@@ -138,8 +138,6 @@ export default class TownshipPanelUsersForm extends React.Component {
 
     const fields = [ 
       'id',
-      'user_id',
-      'user_name',
       'profile_name',
       'status'
     ]
@@ -180,6 +178,24 @@ export default class TownshipPanelUsersForm extends React.Component {
               </div>
 
               <div className="row">
+
+                <AdminSelectize 
+                options={this.state.selectizeOptions}
+                objectKey={'user_id'} 
+                formName={'township-users-form'} 
+                fieldName={'user_id'}
+                defaultData={this.props.rowData}
+                dispatch={dispatch} 
+                />
+
+                <AdminSelectize 
+                options={this.state.selectizeOptions}
+                objectKey={'user_name'} 
+                formName={'township-users-form'} 
+                fieldName={'user_name'}
+                defaultData={this.props.rowData}
+                dispatch={dispatch} 
+                />
 
                 {this.tempInputsEdit(this.props.initialValues)}
 
