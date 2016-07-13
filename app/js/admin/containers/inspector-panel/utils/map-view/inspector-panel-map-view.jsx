@@ -6,7 +6,8 @@ import Spinner from '../../../../common/components/spinner.jsx'
 import { browserHistory } from 'react-router'
 
 import { GoogleMapLoader, GoogleMap, Marker, InfoWindow } from "react-google-maps";
-import { ajaxGet, ajaxDelete } from '../../../../common/components/ajax-selectize.js'
+import { ajaxGet, ajaxDelete } from '../../../../common/components/ajax-selectize.js';
+import ImageCheckbox from '../../../../../common/components/footer/utils/image-checkbox.jsx';
 
 export default class InspectorMapView extends React.Component {
 
@@ -50,7 +51,7 @@ export default class InspectorMapView extends React.Component {
         <div 
         onClick={() => browserHistory.push(`admin/inspector/vehicle-info/${title}`)} 
         className="center-align">
-        {title} 
+          {title} 
           <div> - Click Here - </div>
         </div>      
         
@@ -126,7 +127,15 @@ export default class InspectorMapView extends React.Component {
                 }/>
               </section>
               <div className="footer">
-                Test
+                <div className="col s4 footer-item">
+                  <img src={require('../../../../../../images/car_red@3x.png')} className="responsive-img"/>
+                </div>
+                <div className="col s4 footer-item">
+                  <img src={require('../../../../../../images/car_red@3x.png')} className="responsive-img"/>
+                </div>
+                <div className="col s4 footer-item">
+                  <img src={require('../../../../../../images/car_red@3x.png')} className="responsive-img"/>
+                </div>
               </div>
             </div>
         </Body>
