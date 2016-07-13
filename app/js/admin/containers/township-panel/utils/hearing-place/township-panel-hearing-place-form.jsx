@@ -95,6 +95,11 @@ export default class TownshipPanelHearingPlaceForm extends React.Component {
   }
 
   componentDidUpdate() {
+    if (this.props.townshipHearingPlaceCreated.isLoading) {
+      } else if (!this.props.townshipHearingPlaceCreated.isLoading) {
+        this.handleSuccess();
+      }
+
     if (this.props.townshipHearingPlaceEdited.isLoading) {
       } else if (!this.props.townshipHearingPlaceEdited.isLoading) {
         this.handleSuccess();
