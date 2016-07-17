@@ -17,6 +17,12 @@ import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import Griddle from 'griddle-react'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 
+import customColumnComponent from '../../../../common/components/custom-column-component.jsx'
+import { ajaxSelectizeGet, ajaxDelete } from '../../../../common/components/ajax-selectize.js'
+import AdminSelectize from '../../../../common/components/admin-selectize.jsx'
+
+import BursarPanelTicketRatesForm from './bursar-panel-ticket-rates-form.jsx'
+
 export const fields = [ 
   'id',
   'date_time',
@@ -36,10 +42,19 @@ class BursarPanelTicketRates extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      showEditDuplicateButtons: false,
+      parkingLocationCode: null,
+      showEditModal: false,
+      rowData: null,
+      selectizeOptions: {}
+    }
+
     this.renderCreateModal = this.renderCreateModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
     this.renderTable = this.renderTable.bind(this);
+    this.renderEditModal = this.renderEditModal.bind(this);
   }
 
   componentWillMount() {
@@ -83,60 +98,36 @@ class BursarPanelTicketRates extends React.Component {
   }
 
   renderCreateModal() {
-    const {
-      fields: {
-        id,
-        date_time,
-        user_id,
-        wallet_id,
-        current_balance,
-        pay_method,
-        amount,
-        cashier_id,
-        user_name,
-        cbalance,
-      },
-      resetForm,
-      submitting,
-      dispatch
-    } = this.props
-
     return(
-      <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-        <div id="modal-bursar-payment-create" className="modal modal-fixed-footer">
-          <div className="modal-content">
-
-            <div className="row">
-              <div className="center-align">
-                <h4>Create a Ticket Rate</h4>
-                <p className="center-align">Create a Ticket Rate by filling out the fields.</p>
-              </div>
-            </div>
-
-            <div className="row">
-              {this.tempInputs()}
-            </div>
-          </div>
-          
-
-          <div className="modal-footer">
-            <div className="row marginless-row">
-              <div className="col s12 center-align">
-                <button 
-                type="submit" 
-                disabled={submitting} 
-                className="waves-effect waves-light btn">Create Ticket Rate</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
+      <BursarPanelTicketRatesForm 
+        modalName="modal-bursar-ticket-rates-create" 
+        modalText="Create a Ticket Rates" 
+        submitType="CREATE"
+        initialValues={null}
+        editMode={false}
+        handleSuccess={this.handleSuccess}
+      />
     );
-
   }
 
   renderTable() {
     let walletData = this.props.bursarTicketRatesFetched.data.resource;
+
+    var renderEditModal = this.renderEditModal;
+    var metaDataFunction = () =>  {
+      return fields.map((data) => {
+        return( 
+          {
+            "columnName": data,
+            "customComponent": customColumnComponent,
+            'customComponentMetadata': {
+                'renderEditModal': renderEditModal
+            }
+          }
+        );
+      });
+    }
+    var columnMeta = metaDataFunction()
     return (
       <div>
         <div className="bursar-payment-container">
@@ -152,6 +143,7 @@ class BursarPanelTicketRates extends React.Component {
             customPagerComponent={ BootstrapPager }
             useCustomFilterComponent={true} customFilterComponent={customFilterComponent}
             useCustomFilterer={true} customFilterer={customFilterFunction}     
+            columnMetadata={columnMeta}
             columns={[
               'id',  
               'town_logo', 
@@ -167,11 +159,81 @@ class BursarPanelTicketRates extends React.Component {
         <div className="center-align">
           <a
             className="modal-trigger waves-effect waves-light btn valign" 
-            onClick={() => $('#modal-bursar-payment-create').openModal()}
+            onClick={() => $('#modal-bursar-ticket-rates-create').openModal()}
             style={{margin: 10}}>Add New Ticket Rate</a>
         </div>
       </div>
     );
+  }
+
+  renderEditDuplicateButtons(recordId) {
+    return (
+      <div className="container">
+        <a
+        style={{marginTop: 20}}
+        onClick={() => {
+          this.setState({showEditModal: true})
+          $('#modal-bursar-ticket-rates-edit').openModal(); 
+        }}
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">edit</i>
+          <h4> Edit - Ticket Rates ID: {recordId} </h4>
+        </a>
+
+        <a
+        onClick={() => {
+          this.setState({showEditModal: true})
+          $('#modal-bursar-ticket-rates-duplicate').openModal(); 
+        }}
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">content_copy</i>
+          <h4> Duplicate - Ticket Rates ID: {recordId} </h4>
+        </a>
+
+        <a
+        onClick={() => $('#modal-delete').openModal() }
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">delete</i>
+          <h4> Delete - Ticket Rates ID: {recordId} </h4>
+        </a>
+
+        <div id="modal-delete" className="modal" style={{overflowX: "hidden"}}>
+          <div className="modal-content">
+            <h4>Delete</h4>
+            <p>Are you sure you want to delete this record?</p>
+          </div>
+          <div className="modal-footer">
+            <div className="row marginless-row">
+              <div className="col s6 left">
+                <button 
+                  href="#" 
+                  className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
+              </div>
+              <div className="col s3">
+                <a className="waves-effect waves-light btn btn-red" 
+                onClick={() => {
+                  $('#modal-delete').closeModal()
+                }}>No</a>
+              </div>
+              <div className="col s3">
+                <a className="waves-effect waves-light btn btn-green" 
+                onClick={() => {
+                  $('#modal-delete').closeModal()
+                  ajaxDelete('parking_violations', recordId, this.handleSuccess);
+                  this.setState({showEditDuplicateButtons: false});
+                  window.scrollTo(0, 0);
+                }}>Yes</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderEditModal(recordId, rowData) {
+    window.scrollTo(0, document.body.scrollHeight);
+    this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true, parkingLocationCode: recordId})
   }
 
   render() {
@@ -179,7 +241,7 @@ class BursarPanelTicketRates extends React.Component {
     return (
       <div className="blue-body marginless-row">
         <Body showHeader={true}>
-          <div className="row" style={{marginTop: 40}}>
+          <div className="row marginless-row" style={{marginTop: 40}}>
             <div className="col s12">
               <nav>
                 <div className="nav-wrapper nav-admin z-depth-2">
@@ -188,16 +250,47 @@ class BursarPanelTicketRates extends React.Component {
               </nav>
                <div className="card">
                   <div >
-                    { this.props.bursarTicketRatesFetched.isLoading ||
+                    { 
+                      this.props.bursarTicketRatesFetched.isLoading ||
                       this.props.townshipLocationsFetched.isLoading ? 
                       <div className="center-align"> <Spinner /> </div> : this.renderTable()}
                   </div>
                </div>
+               {this.state.showEditDuplicateButtons ? 
+                this.renderEditDuplicateButtons(this.state.parkingLocationCode) : <div> </div>}
             </div>
           </div>
         </Body>
-        { this.props.bursarTicketRatesFetched.isLoading ? 
-          <div> </div> : this.renderCreateModal()}
+        { 
+          this.props.bursarTicketRatesFetched.isLoading ? 
+          <div> </div> : this.renderCreateModal()
+        }
+        { 
+          !this.state.showEditModal ?
+          <div></div> : 
+          <div>
+            <BursarPanelTicketRatesForm 
+              initialValues={this.state.rowData} 
+              handleSuccess={this.handleSuccess}
+              modalName="modal-bursar-ticket-rates-edit" 
+              modalText="Edit a Ticket Rate" 
+              submitType="EDIT"
+              initialValues={this.state.rowData} 
+              rowData={this.state.rowData}
+              handleSuccess={this.handleSuccess}
+              />
+            <BursarPanelTicketRatesForm   
+              initialValues={this.state.rowData} 
+              handleSuccess={this.handleSuccess}
+              modalName="modal-bursar-ticket-rates-duplicate" 
+              modalText="Duplicate a Ticket Rate" 
+              submitType="DUPLICATE"
+              initialValues={this.state.rowData} 
+              rowData={this.state.rowData}
+              handleSuccess={this.handleSuccess}
+              />
+          </div>
+        }
         <div id="modal-success" className="modal">
           <div className="modal-content">
             <h4>Success!</h4>

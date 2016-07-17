@@ -442,24 +442,3 @@ export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   fields,
   validate
 })(TownshipDetails))
-
-
-/*
-if (this.props.townshipDetailsFetched.isLoading === false) {
-  let townshipObjects = this.props.townshipDetailsFetched.data.resource;
-  let filteredTownship = _.filter(townshipObjects, { 'id': this.props.townshipData.id})
-
-  this.props.updateTownshipDetails(filteredTownship[0]);
-  this.props.resetLoading();
-}
-*/
-
-
-/*
-  if (!this.props.townshipListFetched.isLoading) {
-    let dataValid;
-    let townshipObjects = this.props.townshipListFetched.data.resource;
-    let filteredTownship = _.filter(townshipObjects, { 'id': parseInt(this.props.townshipId)});
-    townshipData = filteredTownship[0];
-  }
-*/
