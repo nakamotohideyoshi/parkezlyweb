@@ -24,7 +24,11 @@ const initialState = {
   selectedParkingCode: null,
   bookingStep: 0,
   selectedPlate: null,
-  error: null
+  error: null,
+  selectedHours: 1,
+  currentBalance: 0,
+  paymentMethod: null,
+  priceToPay: 0
 };
 
 const Parking = (state = initialState, action) => {
@@ -74,7 +78,8 @@ const Parking = (state = initialState, action) => {
     case "SET_SELECTED_MARKER":
       return {
         ...state,
-        selectedMarker: action.marker
+        selectedMarker: action.marker,
+        showParkingOptions: false
       }
     case "SET_SELECTED_LOCATION":
       return {
@@ -127,7 +132,10 @@ const Parking = (state = initialState, action) => {
         selectedParkingCode: null,
         selectedMarkerItem: null,
         bookingStep: 0,
-        selectedPlate: null
+        selectedPlate: null,
+        paymentMethod: null,
+        currentBalance: 0,
+        selectedHours: 1
       }
     case "FETCH_PARKING_LOT_INITIATE":
       return {
@@ -161,7 +169,52 @@ const Parking = (state = initialState, action) => {
     case "SET_BOOKING_STEP":
       return {
         ...state,
-        bookingStep: action.step
+        bookingStep: action.step,
+        loading: false
+      }
+    case "INITIATE_GET_CHARGES":
+      return {
+        ...state,
+        loading: true
+      }
+    case "FETCH_CHARGES_SUCCESS":
+      return {
+        ...state,
+        loading: false,
+        selectedTownshipCharges: action.townshipCharges
+      }
+    case "FETCH_CHARGES_FAIL":
+      return {
+        ...state,
+        loading: false,
+        error: action.error
+      }
+    case "SET_SELECTED_HOURS":
+      return {
+        ...state,
+        selectedHours: action.hours
+      }
+    case "INITIATE_GET_BALANCE":
+      return {
+        ...state,
+        loading: true,
+        paymentMethod: "WALLET"
+      }
+    case "SET_CURRENT_BALANCE":
+      return {
+        ...state,
+        currentBalance: action.currentBal,
+        loading: false
+      }
+    case "SET_PRICE_TO_PAY":
+      return {
+        ...state,
+        priceToPay: action.price
+      }
+    case "INITIATE_PAYMENT_WITH_WALLET":
+      return {
+        ...state,
+        loading: true
       }
     default:
       return state;

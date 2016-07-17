@@ -27,7 +27,13 @@ import {
   getParkingLot,
   selectParking,
   setSelectedPlate,
-  setBookingStep
+  setBookingStep,
+  createBooking,
+  getTownship,
+  setSelectedHours,
+  getBalance,
+  setPriceToPay,
+  chargeWallet
 } from "../../actions/parking.js";
 import { setPosition, setInitialPosition, getLocationCoordinates } from "../../actions/location.js";
 import { getVehicles } from "../../actions/vehicle.js";
@@ -57,6 +63,11 @@ class FindParking extends Component {
     this.selectVehiclePlate = this.selectVehiclePlate.bind(this);
     this.confirmBooking = this.confirmBooking.bind(this);
     this.goToPayment = this.goToPayment.bind(this);
+    this.getCharges = this.getCharges.bind(this);
+    this.setParkingHours = this.setParkingHours.bind(this);
+    this.showWalletBalance = this.showWalletBalance.bind(this);
+    this.payFromWallet = this.payFromWallet.bind(this);
+    this.closeWalletModal = this.closeWalletModal.bind(this);
   }
 
   componentDidMount() {
@@ -185,6 +196,7 @@ class FindParking extends Component {
   }
 
   selectParkingandFetchVehicles(location_code) {
+    this.getCharges();
     const { dispatch } = this.props;
     const userId = cookie.load('userId');
     dispatch(getVehicles(userId));
@@ -198,7 +210,64 @@ class FindParking extends Component {
   }
 
   confirmBooking() {
-    const { dispatch } = this.props;
+    const { dispatch, location, parking } = this.props;
+    const { selectedMarkerItem, selectedPlate } = parking;
+    const {
+      address,
+      lat,
+      lng,
+      title,
+      url,
+      html,
+      location_code,
+      marker,
+      category
+    } = selectedMarkerItem;
+    const { plate_no, registered_state } = selectedPlate;
+    const userLat = location.lat;
+    const userLng = location.lon;
+
+    const wayPointData = [{
+        "lat": userLat,
+        "lng": userLng,
+        "name": title,
+        "latlng": userLat +"," + userLng,
+        "address": address,
+        "audio_blog": "",
+        "plate_no": plate_no,
+        "entry_time": "",
+        "exit_time": "",
+        "parking_status": "ENTRY",
+        "city": "",
+        "state": "",
+        "zip": "",
+        "address1": "",
+        "address2": "",
+        "country": "",
+        "address0": "",
+        "max_time": "",
+        "alert": "",
+        "latlng2": "",
+        "expiry_time": "",
+        "token": "ezly",
+        "pi_state": "",
+        "date_difference": "",
+        "street_address": ""
+    }];
+    const poiv2Data = [{
+      "lat": lat,
+      "lng": lng,
+      "title": title,
+      "address": address,
+      "url": url,
+      "html": html,
+      "category": category,
+      "marker": marker,
+      "title_state": "",
+      "location_code": location_code
+    }];
+    dispatch(createBooking(wayPointData, poiv2Data));
+
   }
 
   goToPayment() {
@@ -211,11 +280,136 @@ class FindParking extends Component {
     dispatch(setSelectedMarker(marker));
   }
 
+  getCharges() {
+    const { dispatch, parking } = this.props;
+    const { selectedMarkerItem } = parking;
+    const { location_code } = selectedMarkerItem;
+    dispatch(getTownship(location_code));
+  }
+
+  setParkingHours(hours) {
+    const { dispatch } = this.props;
+    dispatch(setSelectedHours(hours.value));
+  }
+
+  showWalletBalance() {
+    const { dispatch, parking } = this.props;
+    const { selectedTownshipCharges, selectedHours, parkingRules, selectedMarkerItem } = parking;
+    const { tr_fee, tr_percentage } = selectedTownshipCharges;
+    const currentRules = parkingRules[selectedMarkerItem.location_code];
+    const { pricing, pricing_duration } = currentRules;
+    const hourlyPrice = parseFloat(pricing)*selectedHours;
+    const totalPrice = hourlyPrice + (hourlyPrice*parseFloat(tr_percentage)) + parseFloat(tr_fee);
+
+    dispatch(setPriceToPay(totalPrice.toFixed(2)));
+    const userId = cookie.load('userId');
+    dispatch(getBalance(userId));
+    $(this.refs["wallet-balance-modal"]).openModal();
+  }
+
   renderMyLocationIcon() {
     return (
       <div className="my-location-marker" onClick={this.goToInitialLocation}>
       </div>
     );
+  }
+
+  getPPWaypointAndPoivData() {
+    const { location, parking } = this.props;
+    const { selectedMarkerItem, selectedPlate } = parking;
+    const {
+      address,
+      lat,
+      lng,
+      title,
+      url,
+      html,
+      location_code,
+      marker,
+      category
+    } = selectedMarkerItem;
+    const { plate_no, registered_state } = selectedPlate;
+    const userLat = location.lat;
+    const userLng = location.lon;
+    const wayPointData = [{
+      "date_time": "",
+      "entry_time": "",
+      "plate_no": plate_no,
+      "exit_time": "",
+      "max_time": "",
+      "name": "",
+      "latlng": userLat+","+userLng,
+      "address": "",
+      "lng": userLng,
+      "audio_blog": "",
+      "address1": "",
+      "address2": "",
+      "city": "",
+      "state": "",
+      "zip": "",
+      "country": "USA",
+      "lat": userLat,
+      "parking_status": "ENTRY",
+      "ipn_custom": "",
+      "ipn_txn_id": "",
+      "ipn_payment": "",
+      "ipn_status": "",
+      "ipn_address": "",
+      "quantity": "",
+      "purchased_hours": "",
+      "pricing_duration": "",
+      "pricing": "",
+      "total_amt": "",
+      "amount": "",
+      "street_address": ""
+    }];
+
+    const poiv2Data = [{
+      "lat": lat,
+      "lng": lng,
+      "title": title,
+      "address": address,
+      "url": url,
+      "html": html,
+      "category": category,
+      "marker": marker,
+      "title_state": "",
+      "location_code": location_code
+    }];
+
+    return {
+      wayPoint: wayPointData,
+      poiv: poiv2Data
+    }
+  }
+
+  payFromWallet() {
+    const { dispatch, parking } = this.props;
+    const { priceToPay, currentBalance } = parking;
+    const { wayPoint, poiv } = this.getPPWaypointAndPoivData();
+    if(priceToPay < currentBalance) {
+      const userId = cookie.load('userId');
+      const paymentObj = {
+        "ipn_status": "",
+        "ipn_txn_id":"",
+        "ipn_custom":"",
+        "date_time": "",
+        "paid_date": "",
+        "add_amt": "",
+        "ipn_address": "",
+        "user_id": userId,
+        "last_paid_amt": priceToPay,
+        "new_balance": currentBalance - priceToPay,
+        "current_balance": currentBalance,
+        "ip": "",
+      };
+      dispatch(chargeWallet(paymentObj, wayPoint, poiv));
+    }
+  }
+
+  closeWalletModal(e) {
+    e.preventDefault();
+    $(this.refs["wallet-balance-modal"]).closeModal();
   }
 
   renderSearchLocations() {
@@ -574,9 +768,10 @@ class FindParking extends Component {
   /* Booking Step 3 and 4 */
 
   renderPlateForm() {
-    const { selectedPlate } = this.props.parking;
+    const { selectedPlate, showPaidParkingModal } = this.props.parking;
     const { registered_state, plate_no } = selectedPlate;
     const label = statesHash[registered_state];
+    const numHours = showPaidParkingModal ? this.renderHoursSelectionForm() : null;
     return (
       <form className="select-vehicle">
         <LicensePlateField
@@ -589,18 +784,19 @@ class FindParking extends Component {
           placeholder = "Select State" 
           onValueChange={null}
           defaultValue={{label: label, value: registered_state}}/>
+        {numHours}
       </form>
     );
   }
 
   renderVehicleFormButton() {
     const { showPaidParkingModal } = this.props.parking;
-    const btnText = showPaidParkingModal ? "PAY AND PARK" : "PARK NOW";
-    const nextStep = showPaidParkingModal ? this.goToPayment : this.confirmBooking;
+    //const btnText = showPaidParkingModal ? "PAY AND PARK" : "PARK NOW";
+    //const nextStep = showPaidParkingModal ? this.goToPayment : this.confirmBooking;
     return (
       <div>
-        <GrayButton onClick={nextStep}>
-          {btnText}
+        <GrayButton onClick={this.confirmBooking}>
+          Park Now
         </GrayButton>
       </div>
     );
@@ -611,7 +807,7 @@ class FindParking extends Component {
       <SimpleSelect 
         options = {hours} 
         placeholder = "Select Hours" 
-        onValueChange={null}
+        onValueChange={this.setParkingHours} //this.getCharges
         defaultValue={{label: "1.0 Hrs", value: 1}}/>
     );
   }
@@ -620,7 +816,7 @@ class FindParking extends Component {
     return (
       <div>
         <div>
-          <GrayButton onClick={this.nextStep}>
+          <GrayButton onClick={this.showWalletBalance}>
             Pay with Wallet
           </GrayButton>
         </div>
@@ -644,8 +840,7 @@ console.log(parkingRules);
     const rateString = "Rate: $" + currentRules.pricing + "/" + currentRules.pricing_duration + "min";
     const rate = showPaidParkingModal ? rateString : null;
     
-    const form = bookingStep == 4 ? this.renderHoursSelectionForm() : this.renderPlateForm();
-    const btns = bookingStep == 4 ? this.renderPaymentBtns() : this.renderVehicleFormButton();
+    const btns = showPaidParkingModal ? this.renderPaymentBtns() : this.renderVehicleFormButton();
     return (
       <div className="vehicle-form">
         <h4>Parking</h4>
@@ -657,17 +852,13 @@ console.log(parkingRules);
             Max: {max_hours} Hours
           </div>
         </div>
-        {form}
+        {this.renderPlateForm()}
         <div className="parking-rate">
           {rate}
         </div>
         {btns}
       </div>
     );
-  }
-
-  renderPayment() {
-   
   }
 
   renderFreePaidParkingModal() {
@@ -681,10 +872,8 @@ console.log(parkingRules);
       heading = "Select Vehicle";
     } else if(bookingStep == 3) {
       content = this.renderParkingOverview();
-    } else if(bookingStep == 4 && showFreeParkingModal) {
-      content = this.renderPayment();
-    } else if(bookingStep == 4 && showPaidParkingModal) {
-      content = this.renderParkingOverview();
+    } else if(bookingStep == 4) {
+      content = this.renderConfirmationScreen();
     }
     return (
       <ParkingModal
@@ -757,10 +946,110 @@ console.log(parkingRules);
     );
   }
 
+  renderPayWithWalletAlert() {
+    const { parking } = this.props;
+    const { currentBalance, priceToPay } = parking;
+    const messsage = currentBalance < priceToPay ? (
+      <div>Your Wallet Balance is low. Required Amount ${priceToPay}.</div>
+    ) : (
+      <div>Would you like to pay ${priceToPay} from your ParkEZly wallet?</div>
+    );
+    return (
+      <div className="modal modal-fixed-footer wallet-balance-modal" ref="wallet-balance-modal">
+        <div className="modal-content">
+          <h3>Wallet Balance: ${currentBalance}</h3>
+          {messsage} 
+        </div>
+        <div className="modal-footer">
+          <a href="javascript:void(0)"
+            onClick={this.closeWalletModal}
+            className="waves-effect waves-green btn btn-flat">
+              Not Now
+          </a>
+
+          <a href="javascript:void(0)"
+            onClick={this.payFromWallet}
+            className="modal-action modal-close waves-effect waves-green btn-flat">
+              Yes
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  renderConfirmationScreen() {
+    return (
+      <div>
+        Dummy Data
+        <h1>3 : 59 : 28</h1>
+        <div>
+          <div className="row">
+            <div className="col s4">
+              Plate#:
+            </div>
+            <div className="col s8">
+              AAA1234 NY
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col s4">
+              Parked At:
+            </div>
+            <div className="col s8">
+              July 17, 2016
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col s4">
+              Expires At:
+            </div>
+            <div className="col s8">
+              July 17, 2016
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col s4">
+              Max Time:
+            </div>
+            <div className="col s8">
+              4 Hours
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col s4">
+              Address:
+            </div>
+            <div className="col s8">
+              123 Down Street, NY..
+            </div>
+          </div>
+        </div>
+
+        <GrayButton onClick={null}>
+          EXIT
+        </GrayButton>
+
+        <GrayButton onClick={null}>
+          FIND MY VEHICLE
+        </GrayButton>
+
+        <GrayButton onClick={null}>
+          HIDE
+        </GrayButton>
+
+      </div>
+    );
+  }
+
   render() {
-    console.log(this.props.parking);
+    console.log(this.props);
     const gMap = this.renderGMap();
     const myLocationIcon = this.renderMyLocationIcon();
+    const payWithWalletAlert = this.renderPayWithWalletAlert();
     const {
       loading,
       showParkingOptions,
@@ -804,6 +1093,7 @@ console.log(parkingRules);
             {backBtn}
             {parkingInfoBtn}
             {myLocationIcon}
+            {payWithWalletAlert}
           </div>
       </Body>
     );
