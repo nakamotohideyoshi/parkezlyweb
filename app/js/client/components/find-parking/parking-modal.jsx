@@ -8,14 +8,16 @@ class ParkingModal extends Component {
   render() {
     const { heading, children, onHide, className } = this.props;
     return (
-      <div className={className}>
-        <div className="row heading">
-          <h4 className="col s11">{heading}</h4>
-          <div className="col s1">
-            <span className="close-btn" onClick={onHide}/>
+      <div className="parking-overlay">
+        <div className={className}>
+          <div className="row heading">
+            <h4 className="col s11">{heading}</h4>
+            <div className="col s1">
+              <span className="close-btn" onClick={onHide}/>
+            </div>
           </div>
+          {children}
         </div>
-        {children}
       </div>
     );
   }

@@ -158,17 +158,26 @@
   right: 50px;
 }
 
+.parking-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 50;
+  background: rgba(0,0,0,0.8);
+}
+
 .free-parking-modal {
   position: absolute;
   width: 400px;
-  height: 462px;
   left: 0;
   right: 0;
   top: 60px;
   margin: 0 auto;
   z-index:999;
   background: $white;
-  padding: 20px 20px 0;
+  padding: 20px 20px 20px;
   border: 1px solid $black;
   border-radius: 8px;
 
@@ -241,6 +250,7 @@
     .react-selectize {
       &.root-node {
         width: 100%;
+        margin-bottom: 20px;
       }
     }
   }

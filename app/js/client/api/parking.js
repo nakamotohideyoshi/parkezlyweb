@@ -55,3 +55,50 @@ export const getParkingLot = (locationCode) => {
     )
   );
 };
+
+export const parkingWayPointUpdate = (waypointData) => {
+console.log(waypointData);
+  return axios(
+    Object.assign(
+      {
+        method: "post",
+        url: "pzly01live7/_table/waypoints",
+        data : waypointData
+      }, APIConfig
+    )
+  );
+};
+
+export const makePoivRequest = (poivData) => {
+  return axios(
+    Object.assign(
+      {
+        method: "post",
+        url: "pzly01live7/_table/poiv2",
+        data : poivData
+      }, APIConfig
+    )
+  );
+};
+
+export const getTownshipCode = (location_code) => {
+  return axios(
+    Object.assign(
+      {
+        method: "get",
+        url: "pzly01live7/_table/manage_locations?filter=location_code="+location_code
+      }, APIConfig
+    )
+  );
+};
+
+export const getExtraFees = (township_code) => {
+  return axios(
+    Object.assign(
+      {
+        method: "get",
+        url: "pzly01live7/_table/service_charges?filter=manager_id="+township_code
+      }, APIConfig
+    )
+  );
+};
