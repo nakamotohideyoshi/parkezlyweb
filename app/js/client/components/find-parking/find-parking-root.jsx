@@ -790,9 +790,6 @@ class FindParking extends Component {
   }
 
   renderVehicleFormButton() {
-    const { showPaidParkingModal } = this.props.parking;
-    //const btnText = showPaidParkingModal ? "PAY AND PARK" : "PARK NOW";
-    //const nextStep = showPaidParkingModal ? this.goToPayment : this.confirmBooking;
     return (
       <div>
         <GrayButton onClick={this.confirmBooking}>
@@ -979,9 +976,8 @@ console.log(parkingRules);
 
   renderConfirmationScreen() {
     return (
-      <div>
-        Dummy Data
-        <h1>3 : 59 : 28</h1>
+      <div className="parking-confirmation">
+        <h3>3 : 59 : 28</h3>
         <div>
           <div className="row">
             <div className="col s4">
