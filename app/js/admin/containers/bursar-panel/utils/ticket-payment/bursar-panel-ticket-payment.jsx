@@ -17,6 +17,12 @@ import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import Griddle from 'griddle-react'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 
+import BursarPanelTicketPaymentForm from './bursar-panel-ticket-payment-form.jsx'
+
+import customColumnComponent from '../../../../common/components/custom-column-component.jsx'
+import {ajaxSelectizeGet, ajaxDelete} from '../../../../common/components/ajax-selectize.js'
+
+
 export const fields = [ 
   'id',
   'ip',
@@ -58,18 +64,24 @@ export const fields = [
 ]
 
 
-class BursarPanelPermitPayment extends React.Component {
+class BursarPanelTicketPayment extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.state = {
+      showEditDuplicateButtons: false,
+      parkingLocationCode: null,
+      showEditModal: false,
+      rowData: null,
+      selectizeOptions: {}
+    }
 
     this.renderCreateModal = this.renderCreateModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
     this.renderTable = this.renderTable.bind(this);
-    this.renderTableData = this.renderTableData.bind(this);
-
-    
+    this.renderEditModal = this.renderEditModal.bind(this);
   }
 
   componentWillMount() {
@@ -159,87 +171,40 @@ class BursarPanelPermitPayment extends React.Component {
     } = this.props
 
     return(
-      <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-        <div id="modal-bursar-payment-create" className="modal modal-fixed-footer">
-          <div className="modal-content">
 
-            <div className="row">
-              <div className="center-align">
-                <h4>Create a Ticket Payment</h4>
-                <p className="center-align">Create a ticket payment by filling out the fields.</p>
-              </div>
-            </div>
-
-            <div className="row">
-              {this.tempInputs()}
-            </div>
-          </div>
-          
-
-          <div className="modal-footer">
-            <div className="row marginless-row">
-              <div className="col s12 center-align">
-                <button 
-                type="submit" 
-                disabled={submitting} 
-                className="waves-effect waves-light btn">Create Ticket Payment</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
+      <BursarPanelTicketPaymentForm 
+        modalName="modal-bursar-payment-create" 
+        modalText="Create a Ticket Payment" 
+        submitType="CREATE"
+        initialValues={null}
+        editMode={false}
+        handleSuccess={this.handleSuccess}
+      />
+      
     );
 
   }
 
-  renderTableData(TicketPermitsData) {
-    return TicketPermitsData.map((data) => {
-      return( 
-        <tr key={data.id}>
-          <td>{data.id}</td>
-          <td>{data.ip}</td>
-          <td>{data.ticket_no}</td>
-          <td>{data.plate_num}</td>
-          <td>{data.user_id}</td>
-          <td>{data.address}</td>
-          <td>{data.email}</td>
-          <td>{data.paypal_total}</td>
-          <td>{data.violation_charge}</td>
-          <td>{data.violation_details}</td>
-          <td>{data.violation_location}</td>
-          <td>{data.pld_guilty}</td>
-          <td>{data.penalty_adjustment}</td>
-          <td>{data.adjust_rfchange}</td>
-          <td>{data.new_amt_due}</td>
-          <td>{data.pmt_status}</td>
-          <td>{data.ticket_status}</td>
-          <td>{data.pmt_options}</td>
-          <td>{data.ipn_txn_id}</td>
-          <td>{data.ipn_payment}</td>
-          <td>{data.tr_percentage}</td>
-          <td>{data.ipn_address}</td>
-          <td>{data.wallet_balance}</td>
-          <td>{data.township_code}</td>
-          <td>{data.twp_payment}</td>
-          <td>{data.ipn_status}</td>
-          <td>{data.adjust_ref}</td>
-          <td>{data.phone}</td>
-          <td>{data.paid_date}</td>
-          <td>{data.ipn_custom}</td>
-          <td>{data.penalty_change}</td>
-          <td>{data.date_payment}</td>
-          <td>{data.tr_fee}</td>
-          <td>{data.cheque_details}</td>
-          <td>{data.cheque_date}</td>
-          <td>{data.violation_date}</td>
-          <td>{data.cheque_no}</td>
-        </tr>
+  renderTable() {
+
+  let TicketPermitsData = this.props.bursarTicketPaymentFetched.data.resource;
+
+  var renderEditModal = this.renderEditModal;
+  var metaDataFunction = () =>  {
+    return fields.map((data) => {
+      return(
+        {
+          "columnName": data,
+          "customComponent": customColumnComponent,
+          'customComponentMetadata': {
+              'renderEditModal': renderEditModal
+          }
+        }
       );
     });
   }
+  var columnMeta = metaDataFunction()
 
-  renderTable() {
-  let TicketPermitsData = this.props.bursarTicketPaymentFetched.data.resource;
     return (
       <div>
         <div className="bursar-payment-container">
@@ -268,6 +233,7 @@ class BursarPanelPermitPayment extends React.Component {
             customFilterComponent={customFilterComponent}
             useCustomFilterer={true} 
             customFilterer={customFilterFunction}
+            columnMetadata={columnMeta}
           />
         </div>
         <div className="divider"/> 
@@ -282,12 +248,82 @@ class BursarPanelPermitPayment extends React.Component {
     );
   }
 
+  renderEditDuplicateButtons(recordId) {
+    return (
+      <div className="container">
+        <a
+        style={{marginTop: 20}}
+        onClick={() => {
+          this.setState({showEditModal: true})
+          $('#modal-bursar-ticket-edit').openModal(); 
+        }}
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">edit</i>
+          <h4> Edit - Ticket Payment ID: {recordId} </h4>
+        </a>
+
+        <a
+        onClick={() => {
+          this.setState({showEditModal: true})
+          $('#modal-bursar-ticket-duplicate').openModal(); 
+        }}
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">content_copy</i>
+          <h4> Duplicate - Ticket Payment ID: {recordId} </h4>
+        </a>
+
+        <a
+        onClick={() => $('#modal-delete').openModal() }
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">delete</i>
+          <h4> Delete - Ticket Payment ID: {recordId} </h4>
+        </a>
+
+        <div id="modal-delete" className="modal" style={{overflowX: "hidden"}}>
+          <div className="modal-content">
+            <h4>Delete</h4>
+            <p>Are you sure you want to delete this record?</p>
+          </div>
+          <div className="modal-footer">
+            <div className="row marginless-row">
+              <div className="col s6 left">
+                <button 
+                  href="#" 
+                  className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
+              </div>
+              <div className="col s3">
+                <a className="waves-effect waves-light btn btn-red" 
+                onClick={() => {
+                  $('#modal-delete').closeModal()
+                }}>No</a>
+              </div>
+              <div className="col s3">
+                <a className="waves-effect waves-light btn btn-green" 
+                onClick={() => {
+                  $('#modal-delete').closeModal()
+                  ajaxDelete('ticket_payments', recordId, this.handleSuccess);
+                  this.setState({showEditDuplicateButtons: false});
+                  window.scrollTo(0, 0);
+                }}>Yes</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderEditModal(recordId, rowData) {
+    window.scrollTo(0, document.body.scrollHeight);
+    this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true, parkingLocationCode: recordId})
+  }
+
   render() {
     console.log(this.props.bursarTicketPaymentFetched)
     return (
       <div className="blue-body marginless-row">
         <Body showHeader={true}>
-          <div className="row" style={{marginTop: 40}}>
+          <div className="row marginless-row" style={{marginTop: 40}}>
             <div className="col s12">
               <nav>
                 <div className="nav-wrapper nav-admin z-depth-2">
@@ -301,11 +337,45 @@ class BursarPanelPermitPayment extends React.Component {
                       <div className="center-align"> <Spinner /> </div> : this.renderTable()}
                   </div>
                </div>
+
+               {this.state.showEditDuplicateButtons ? 
+                this.renderEditDuplicateButtons(this.state.parkingLocationCode) : <div> </div>}
             </div>
           </div>
         </Body>
-        { this.props.bursarTicketPaymentFetched.isLoading ? 
-          <div> </div> : this.renderCreateModal()}
+
+        { 
+          this.props.bursarTicketPaymentFetched.isLoading ? 
+          <div> </div> : this.renderCreateModal()
+        }
+
+        { 
+          !this.state.showEditModal ?
+          <div></div> : 
+          <div>
+            <BursarPanelTicketPaymentForm  
+              initialValues={this.state.rowData} 
+              handleSuccess={this.handleSuccess}
+              modalName="modal-bursar-ticket-edit" 
+              modalText="Edit a Permit Payment" 
+              submitType="EDIT"
+              initialValues={this.state.rowData} 
+              rowData={this.state.rowData}
+              handleSuccess={this.handleSuccess}
+              />
+            <BursarPanelTicketPaymentForm  
+              initialValues={this.state.rowData} 
+              handleSuccess={this.handleSuccess}
+              modalName="modal-bursar-ticket-duplicate" 
+              modalText="Duplicate a Permit Payment" 
+              submitType="DUPLICATE"
+              initialValues={this.state.rowData} 
+              rowData={this.state.rowData}
+              handleSuccess={this.handleSuccess}
+              />
+          </div>
+        }
+
         <div id="modal-success" className="modal">
           <div className="modal-content">
             <h4>Success!</h4>
@@ -345,63 +415,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   form: 'ticket-payment',
   fields
-})(BursarPanelPermitPayment));
-
-/*
-{ this.props.bursarTicketPaymentFetched.isLoading ||
-  this.props.townshipLocationsFetched.isLoading ||
-  this.props.townshipSchemeTypesFetched.isLoading ? 
-  <div> </div> : this.renderCreateModal()}
-  */
-
-
-
-
-/*
-<table className="highlight">
-  <thead>
-    <tr>
-      <th data-field="id">id</th>
-      <th data-field="id">ip</th>
-      <th data-field="id">ticket_no</th>
-      <th data-field="id">plate_num</th>
-      <th data-field="id">user_id</th>
-      <th data-field="id">address</th>
-      <th data-field="id">email</th>
-      <th data-field="id">paypal_total</th>
-      <th data-field="id">violation_charge</th>
-      <th data-field="id">violation_details</th>
-      <th data-field="id">violation_location</th>
-      <th data-field="id">pld_guilty</th>
-      <th data-field="id">penalty_adjustment</th>
-      <th data-field="id">adjust_rfchange</th>
-      <th data-field="id">new_amt_due</th>
-      <th data-field="id">pmt_status</th>
-      <th data-field="id">ticket_status</th>
-      <th data-field="id">pmt_options</th>
-      <th data-field="id">ipn_txn_id</th>
-      <th data-field="id">ipn_payment</th>
-      <th data-field="id">tr_percentage</th>
-      <th data-field="id">ipn_address</th>
-      <th data-field="id">wallet_balance</th>
-      <th data-field="id">township_code</th>
-      <th data-field="id">twp_payment</th>
-      <th data-field="id">ipn_status</th>
-      <th data-field="id">adjust_ref</th>
-      <th data-field="id">phone</th>
-      <th data-field="id">paid_date</th>
-      <th data-field="id">ipn_custom</th>
-      <th data-field="id">penalty_change</th>
-      <th data-field="id">date_payment</th>
-      <th data-field="id">tr_fee</th>
-      <th data-field="id">cheque_details</th>
-      <th data-field="id">cheque_date</th>
-      <th data-field="id">violation_date</th>
-      <th data-field="id">cheque_no</th>
-    </tr>
-  </thead>
-  <tbody>
-    {this.renderTableData(TicketPermitsData)}
-  </tbody>
-</table>
-*/
+})(BursarPanelTicketPayment));

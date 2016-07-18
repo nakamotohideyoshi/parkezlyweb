@@ -24,6 +24,7 @@ import Griddle from 'griddle-react'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 import { Link } from 'react-router';
 import TownshipPanelFacilitiesEdit from './township-panel-facilities-edit.jsx';
+import {ajaxSelectizeGet, ajaxDelete} from '../../../../common/components/ajax-selectize.js'
 
 export const fields = [ 
   'id',  
@@ -73,7 +74,7 @@ class TownshipPanelFacilities extends React.Component {
     window.scrollTo(0, 0);
 
     this.state = {
-      showParkingRulesButton: false,
+      showEditDuplicateButtons: false,
       parkingLocationCode: null,
       showEditModal: false,
       rowData: null,
@@ -178,17 +179,17 @@ class TownshipPanelFacilities extends React.Component {
         </div>
       </form>
     );
-
   }
 
   renderEditModal(locationCode, rowData) {
     console.log(rowData);
     console.log(locationCode);
     window.scrollTo(0, document.body.scrollHeight);
-    this.setState({showParkingRulesButton: true, rowData: rowData, showEditModal: true, parkingLocationCode: locationCode})
+    this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true, parkingLocationCode: locationCode})
   }
 
-  renderParkingRulesButton(locationCode) {
+  renderEditDuplicateButtons(locationCode) {
+    console.log(this.state.rowData.id)
     return (
       <div className="container">
         <Link 
@@ -216,6 +217,44 @@ class TownshipPanelFacilities extends React.Component {
           <i className="material-icons valign">content_copy</i>
           <h4> Duplicate: {locationCode} </h4>
         </a>
+
+        <a
+        onClick={() => $('#modal-delete').openModal() }
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">delete</i>
+          <h4> Delete: {locationCode} </h4>
+        </a>
+        <div id="modal-delete" className="modal" style={{overflowX: "hidden"}}>
+          <div className="modal-content">
+            <h4>Delete</h4>
+            <p>Are you sure you want to delete this record?</p>
+          </div>
+          <div className="modal-footer">
+            <div className="row marginless-row">
+              <div className="col s6 left">
+                <button 
+                  href="#" 
+                  className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
+              </div>
+              <div className="col s3">
+                <a className="waves-effect waves-light btn btn-red" 
+                onClick={() => {
+                  $('#modal-delete').closeModal()
+                }}>No</a>
+              </div>
+              <div className="col s3">
+                <a className="waves-effect waves-light btn btn-green" 
+                onClick={() => {
+                  $('#modal-delete').closeModal()
+                  ajaxDelete('manage_locations', this.state.rowData.id, this.handleSuccess);
+                  this.setState({showEditDuplicateButtons: false});
+                  window.scrollTo(0, 0);
+                }}>Yes</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     );
   }
@@ -298,8 +337,8 @@ class TownshipPanelFacilities extends React.Component {
                       <div> </div> : this.renderTable()}
                   </div>
                </div>
-               {this.state.showParkingRulesButton ? 
-                this.renderParkingRulesButton(this.state.parkingLocationCode) : <div> </div>}
+               {this.state.showEditDuplicateButtons ? 
+                this.renderEditDuplicateButtons(this.state.parkingLocationCode) : <div> </div>}
             </div>
           </div>
         </Body>

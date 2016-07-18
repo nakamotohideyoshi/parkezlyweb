@@ -40,7 +40,7 @@ export class BursarPanelTiles extends Component {
             <Link to={{pathname: `/admin/bursar/ticket-rates/${this.props.townshipCode}`}} 
             className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12">
               <i className="material-icons valign">monetization_on</i>
-              <h4> Ticket Rates </h4>
+              <h4> Adjust Tickets Charges </h4>
             </Link>
           </div>
         </div>

@@ -48,7 +48,6 @@ export default class TownshipPanelFacilitiesEdit extends React.Component {
 
   constructor(props) {
     super(props);
-
     this.tempInputsEdit = this.tempInputsEdit.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);

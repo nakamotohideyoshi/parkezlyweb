@@ -12,11 +12,11 @@ import Spinner from '../../../../common/components/spinner.jsx'
 import {optionsSelectize} from '../../../../common/components/options-selectize.js'
 
 import {
-  fetchParkingRules, 
-  editParkingRules, 
-  createParkingRules, 
+  fetchInspectorParkingField, 
+  editInspectorParkingField, 
+  createInspectorParkingField, 
   fetchTownshipLocations, 
-  resetLoading} from '../../../../actions/actions-township-panel.jsx'
+  resetLoading} from '../../../../actions/actions-inspector-panel.jsx'
 import {fetchTownshipSchemeTypes} from '../../../../actions/actions-township-common.jsx'
 
 import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
@@ -24,36 +24,42 @@ import Griddle from 'griddle-react'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 
 export const fields = [   
-  'id',
-  'date_time', 
-  'location_code', 
+  'id',  
+  'expiry_time', 
+  'user_id', 
+  'user_name', 
+  'location_address',  
+  'google_map',  
+  'parking_scheme',  
+  'rate',  
+  'payment_method',  
   'location_name', 
-  'time_rule', 
-  'day_rule',  
-  'max_time',  
-  'enforced',  
-  'date_special_enforce',  
-  'custom_notice', 
-  'active',
-  'date',  
-  'city',  
-  'state', 
-  'pricing', 
-  'pricing_duration', 
-  'zip_code',  
-  'start_time',  
-  'end_time',  
-  'this_day',  
-  'parking_times', 
-  'no_parking_times',  
-  'start_end_rule',  
-  'this_hour', 
-  'max_hours', 
-  'start_hour',  
-  'end_hour',
+  'vehicle_image', 
+  'township_code', 
+  'scheme_type', 
+  'my_permit', 
+  'my_wallet', 
+  'payment', 
+  'ipn_txn_id',  
+  'pay_method',  
+  'ipn_payment', 
+  'ipn_status',  
+  'parking_status',  
+  'entry_time',  
+  'exit_time', 
+  'ip',  
+  'upark', 
+  'lot_row', 
+  'lot_number',  
+  'my_timer1', 
+  'qrcode',  
+  'change_defaults', 
+  'township_rules',  
+  'pl_state',  
+  'token',
 ]
 
-export default class TownshipPanelParkingRulesEdit extends React.Component {
+export default class InspectorPanelParkingFieldEdit extends React.Component {
 
   constructor(props) {
     super(props);
@@ -65,30 +71,30 @@ export default class TownshipPanelParkingRulesEdit extends React.Component {
   }
 
   handleSubmit(data) {
-    console.log(data)
-    this.props.editParkingRules(data, data.id);
+    console.log(data.id)
+    this.props.editInspectorParkingField(data, data.id);
   }
 
   handleDuplicateSubmit(data) {
-    this.props.createParkingRules(data);
+    this.props.createInspectorParkingField(data);
   }
 
   componentDidUpdate() {
-    if (this.props.townshipParkingRulesEdited.isLoading) {
-      } else if (!this.props.townshipParkingRulesEdited.isLoading) {
+    if (this.props.inspectorParkingFieldEdited.isLoading) {
+      } else if (!this.props.inspectorParkingFieldEdited.isLoading) {
         this.handleSuccess();
       }
 
-    if (this.props.townshipParkingRulesCreated.isLoading) {
-      } else if (!this.props.townshipParkingRulesEdited.isLoading) {
+    if (this.props.inspectorParkingFieldCreated.isLoading) {
+      } else if (!this.props.inspectorParkingFieldEdited.isLoading) {
         this.handleSuccess();
       }
   };
 
   handleSuccess(){
     this.props.resetLoading();
-    $('#modal-township-parking-rules-edit').closeModal();
-    $('#modal-township-parking-rules-duplicate').closeModal();
+    $('#modal-inspector-parking-field-duplicate').closeModal();
+    $('#modal-inspector-parking-field-edit').closeModal();
     $('#modal-success').openModal();
     this.props.handleSuccess();
   }
@@ -96,33 +102,39 @@ export default class TownshipPanelParkingRulesEdit extends React.Component {
   tempInputsEdit(initialValues) {
      const {
       fields: {  
-        id,
-        date_time, 
-        location_code, 
+        id,  
+        expiry_time, 
+        user_id, 
+        user_name, 
+        location_address,  
+        google_map,  
+        parking_scheme,  
+        rate,  
+        payment_method,  
         location_name, 
-        time_rule, 
-        day_rule,  
-        max_time,  
-        enforced,  
-        date_special_enforce,  
-        custom_notice, 
-        active,
-        date,  
-        city,  
-        state, 
-        pricing, 
-        pricing_duration, 
-        zip_code,  
-        start_time,  
-        end_time,  
-        this_day,  
-        parking_times, 
-        no_parking_times,  
-        start_end_rule,  
-        this_hour, 
-        max_hours, 
-        start_hour,  
-        end_hour,
+        vehicle_image, 
+        township_code, 
+        scheme_type, 
+        my_permit, 
+        my_wallet, 
+        payment, 
+        ipn_txn_id,  
+        pay_method,  
+        ipn_payment, 
+        ipn_status,  
+        parking_status,  
+        entry_time,  
+        exit_time, 
+        ip,  
+        upark, 
+        lot_row, 
+        lot_number,  
+        my_timer1, 
+        qrcode,  
+        change_defaults, 
+        township_rules,  
+        pl_state,  
+        token,
       },
       resetForm,
       submitting,
@@ -145,33 +157,39 @@ export default class TownshipPanelParkingRulesEdit extends React.Component {
   tempInputsDuplicate(initialValues) {
      const {
       fields: {  
-        id,
-        date_time, 
-        location_code, 
+        id,  
+        expiry_time, 
+        user_id, 
+        user_name, 
+        location_address,  
+        google_map,  
+        parking_scheme,  
+        rate,  
+        payment_method,  
         location_name, 
-        time_rule, 
-        day_rule,  
-        max_time,  
-        enforced,  
-        date_special_enforce,  
-        custom_notice, 
-        active,
-        date,  
-        city,  
-        state, 
-        pricing, 
-        pricing_duration, 
-        zip_code,  
-        start_time,  
-        end_time,  
-        this_day,  
-        parking_times, 
-        no_parking_times,  
-        start_end_rule,  
-        this_hour, 
-        max_hours, 
-        start_hour,  
-        end_hour,
+        vehicle_image, 
+        township_code, 
+        scheme_type, 
+        my_permit, 
+        my_wallet, 
+        payment, 
+        ipn_txn_id,  
+        pay_method,  
+        ipn_payment, 
+        ipn_status,  
+        parking_status,  
+        entry_time,  
+        exit_time, 
+        ip,  
+        upark, 
+        lot_row, 
+        lot_number,  
+        my_timer1, 
+        qrcode,  
+        change_defaults, 
+        township_rules,  
+        pl_state,  
+        token,
       },
       resetForm,
       submitting,
@@ -201,13 +219,13 @@ export default class TownshipPanelParkingRulesEdit extends React.Component {
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-          <div id="modal-township-parking-rules-edit" className="modal modal-fixed-footer">
+          <div id="modal-inspector-parking-field-edit" className="modal modal-fixed-footer">
             <div className="modal-content">
 
               <div className="row">
                 <div className="center-align">
-                  <h4>Edit a Parking Rule</h4>
-                  <p className="center-align">Edit a Parking Rule by filling out the fields.</p>
+                  <h4>Edit a Parking Field</h4>
+                  <p className="center-align">Edit a Parking Field by filling out the fields.</p>
                 </div>
               </div>
 
@@ -222,10 +240,10 @@ export default class TownshipPanelParkingRulesEdit extends React.Component {
             <div className="modal-footer">
               <div className="row marginless-row">
                 <div className="col s12 center-align">
-                  <button fetchTownshipFacilitie
+                  <button 
                   type="submit" 
                   disabled={submitting} 
-                  className="waves-effect waves-light btn">Edit Parking Rule</button>
+                  className="waves-effect waves-light btn">Edit Parking Field</button>
                 </div>
               </div>
             </div>
@@ -233,13 +251,13 @@ export default class TownshipPanelParkingRulesEdit extends React.Component {
         </form>
 
         <form onSubmit={this.props.handleSubmit(this.handleDuplicateSubmit)} style={{margin: 0}}>
-          <div id="modal-township-parking-rules-duplicate" className="modal modal-fixed-footer">
+          <div id="modal-inspector-parking-field-duplicate" className="modal modal-fixed-footer">
             <div className="modal-content">
 
               <div className="row">
                 <div className="center-align">
-                  <h4>Duplicate a Parking Rule</h4>
-                  <p className="center-align">Duplicate a Parking Rule by filling out the fields.</p>
+                  <h4>Duplicate a Parking Field</h4>
+                  <p className="center-align">Duplicate a Parking Field by filling out the fields.</p>
                 </div>
               </div>
 
@@ -255,7 +273,7 @@ export default class TownshipPanelParkingRulesEdit extends React.Component {
                   <button fetchTownshipFacilitie
                   type="submit" 
                   disabled={submitting} 
-                  className="waves-effect waves-light btn">Duplicate Parking Rule</button>
+                  className="waves-effect waves-light btn">Duplicate Parking Field</button>
                 </div>
               </div>
             </div>
@@ -268,27 +286,27 @@ export default class TownshipPanelParkingRulesEdit extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    townshipParkingRulesFetched: state.townshipParkingRulesFetched,
-    townshipParkingRulesCreated: state.townshipParkingRulesCreated,
+    inspectorParkingFieldFetched: state.inspectorParkingFieldFetched,
+    inspectorParkingFieldCreated: state.inspectorParkingFieldCreated,
     townshipLocationsFetched: state.townshipLocationsFetched,
     townshipSchemeTypesFetched: state.townshipSchemeTypesFetched,
-    townshipParkingRulesEdited: state.townshipParkingRulesEdited,
+    inspectorParkingFieldEdited: state.inspectorParkingFieldEdited,
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    fetchParkingRules,
-    editParkingRules,
+    fetchInspectorParkingField,
+    editInspectorParkingField,
     fetchTownshipLocations,
     resetLoading,
     fetchTownshipSchemeTypes,
-    createParkingRules
+    createInspectorParkingField
   }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-  form: 'parking-rules-edit',
+  form: 'parking-field-edit',
   fields,
   overwriteOnInitialValuesChange : true
-})(TownshipPanelParkingRulesEdit));
+})(InspectorPanelParkingFieldEdit));

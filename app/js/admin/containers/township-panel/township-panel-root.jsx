@@ -23,6 +23,7 @@ let filteredTownship;
 class TownshipPanelRoot extends React.Component {
   constructor(props) {
     super(props);
+    
     // Scroll to the top of the page on construct.
     window.scrollTo(0, 0);
     this.state = {
