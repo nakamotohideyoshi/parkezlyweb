@@ -1,5 +1,17 @@
 .find-parking-container {
   height: calc(100% - 165px);
+
+  .modal {
+    &.modal-fixed-footer  {
+      height: 30%;
+      .modal-content {
+        height: 200px;
+      }
+      .modal-footer {
+        text-align: right;
+      }
+    }
+  }
 }
 .action-btn {
   margin: 0 auto;

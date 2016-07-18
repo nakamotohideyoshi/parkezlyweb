@@ -250,7 +250,7 @@ const poivRequest = (poivData) => {
   return dispatch => {
     return ParkingAPI.makePoivRequest(poivData)
       .then((response) => {
-        //console.log(response);
+        dispatch(setBookingStep(4));
       })
       .catch((response) => {
         //dispatch(fetchNearParkingLotFailed(response));
