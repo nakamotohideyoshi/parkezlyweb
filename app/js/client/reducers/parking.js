@@ -18,6 +18,7 @@ const initialState = {
   showFreeParkingModal: false,
   showPaidParkingModal: false,
   showManagedParkingModal: false,
+  isManagedFree: false,
   selectedMarkerItem: null,
   managedParkingLoading: false,
   lotsData: null,
@@ -215,6 +216,11 @@ const Parking = (state = initialState, action) => {
       return {
         ...state,
         loading: true
+      }
+    case "SET_MANAGED_PARKING_TYPE":
+      return {
+        ...state,
+        isManagedFree: action.parking_type === "free" ? true : false
       }
     default:
       return state;

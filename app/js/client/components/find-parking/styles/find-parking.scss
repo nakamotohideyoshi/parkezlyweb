@@ -340,4 +340,11 @@
       width: 100%;
     }
   }
+
+  .react-selectize {
+    &.root-node {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+  }
 }

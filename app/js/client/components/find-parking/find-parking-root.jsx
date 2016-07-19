@@ -22,6 +22,7 @@ import {
   setSelectedLocation,
   setSelectedMarker,
   getParkingRules,
+  getSubscriptionStatus,
   setSelectedParking,
   hideSelectedParking,
   getParkingLot,
@@ -185,7 +186,10 @@ class FindParking extends Component {
     const { dispatch } = this.props;
     dispatch(setSelectedParking(parking_type, location_code));
     if(parking_type === "MANAGED") {
+      const userId = cookie.load('userId');
       //dispatch(getParkingLot(location_code));
+      //dispatch(getSubscriptionStatus(userId, location_code));
+      dispatch(getSubscriptionStatus(userId, "NY-FDV-L01"));
       dispatch(getParkingLot("NY-FDV-L01"));
     }
   }
@@ -549,7 +553,6 @@ class FindParking extends Component {
               ref="gMap"
               defaultZoom={10}
               defaultCenter={centerPos}
-              onClick={null}
               center={centerPos}>
                 {markersList}
             </GoogleMap>
@@ -765,13 +768,13 @@ class FindParking extends Component {
     );
   }
 
-  /* Booking Step 3 and 4 */
+  /* Booking Step 3 */
 
   renderPlateForm() {
-    const { selectedPlate, showPaidParkingModal } = this.props.parking;
+    const { selectedPlate, showPaidParkingModal, showManagedParkingModal, isManagedFree } = this.props.parking;
     const { registered_state, plate_no } = selectedPlate;
     const label = statesHash[registered_state];
-    const numHours = showPaidParkingModal ? this.renderHoursSelectionForm() : null;
+    const numHours = showPaidParkingModal || (showManagedParkingModal && !isManagedFree) ? this.renderHoursSelectionForm() : null;
     return (
       <form className="select-vehicle">
         <LicensePlateField
@@ -827,7 +830,7 @@ class FindParking extends Component {
   }
 
   renderParkingOverview() {
-    const { selectedPlate, parkingRules, selectedMarkerItem, showPaidParkingModal, bookingStep } = this.props.parking;
+    const { selectedPlate, parkingRules, selectedMarkerItem, showPaidParkingModal, showManagedParkingModal, isManagedFree, bookingStep } = this.props.parking;
     const { registered_state, plate_no } = selectedPlate;
     console.log(selectedMarkerItem);
 console.log(parkingRules);
@@ -835,9 +838,9 @@ console.log(parkingRules);
 
     const { parking_times, max_hours} = currentRules;
     const rateString = "Rate: $" + currentRules.pricing + "/" + currentRules.pricing_duration + "min";
-    const rate = showPaidParkingModal ? rateString : null;
+    const rate = showPaidParkingModal || (showManagedParkingModal && !isManagedFree) ? rateString : null;
     
-    const btns = showPaidParkingModal ? this.renderPaymentBtns() : this.renderVehicleFormButton();
+    const btns = showPaidParkingModal || (showManagedParkingModal && !isManagedFree) ? this.renderPaymentBtns() : this.renderVehicleFormButton();
     return (
       <div className="vehicle-form">
         <h4>Parking</h4>
@@ -921,7 +924,7 @@ console.log(parkingRules);
   }
 
   renderManagedParkingModal() {
-    const { bookingStep } = this.props.parking;
+    const { bookingStep, isManagedFree } = this.props.parking;
     let content = "";
     let heading = "";
     if(bookingStep == 1) {
@@ -931,6 +934,7 @@ console.log(parkingRules);
       heading = "Select Vehicle";
       content = this.renderVehicleList();
     } else if(bookingStep == 3) {
+      heading = "Park Now";
       content = this.renderParkingOverview();
     }
     return (

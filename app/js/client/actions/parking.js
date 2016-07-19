@@ -403,3 +403,33 @@ export const chargeWallet = (paymentObj, waypointData, poivData) => {
       });
   };
 };
+
+const setManagedParkingType = (parking_type) => {
+  return {
+    type: Actions.SET_MANAGED_PARKING_TYPE,
+    parking_type: parking_type
+  };
+};
+
+export const getSubscriptionStatus = (user_id, location_code) => {
+  return dispatch => {
+    return ParkingAPI.getSubscriptionStatus(user_id, location_code)
+      .then((response) => {
+        //dispatch(ppWaypointUpdate(waypointData, poivData));
+        let parking_type = null; //managed
+        const { data } = response;
+
+        const { resource } = data;
+        console.log(resource.length);
+        if (resource.length == 0) {
+          parking_type == "paid"; //guest managed
+        } else {
+          parking_type == "free";
+        }
+        dispatch(setManagedParkingType(parking_type));
+      })
+      .catch((response) => {
+        //dispatch(fetchChargesFailed());
+      });
+  };
+};
