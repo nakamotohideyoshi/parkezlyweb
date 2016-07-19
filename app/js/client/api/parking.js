@@ -102,3 +102,14 @@ export const getExtraFees = (township_code) => {
     )
   );
 };
+
+export const getSubscriptionStatus = (user_id, location_code) => {
+  return axios(
+    Object.assign(
+      {
+        method: "get",
+        url: "pzly01live7/_table/subscriptions?filter=user_name="+user_id+"&location_code="+location_code
+      }, APIConfig
+    )
+  );
+};
