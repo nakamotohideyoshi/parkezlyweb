@@ -26,7 +26,7 @@ import {
   setSelectedParking,
   hideSelectedParking,
   getParkingLot,
-  selectParking,
+  selectParkingAndTimeUnit,
   setSelectedPlate,
   setBookingStep,
   createBooking,
@@ -199,12 +199,12 @@ class FindParking extends Component {
     dispatch(hideSelectedParking());
   }
 
-  selectParkingandFetchVehicles(location_code) {
+  selectParkingandFetchVehicles(location_code, pricing_time_unit = 0) {
     this.getCharges();
     const { dispatch } = this.props;
     const userId = cookie.load('userId');
     dispatch(getVehicles(userId));
-    dispatch(selectParking(location_code));
+    dispatch(selectParkingAndTimeUnit(location_code, pricing_time_unit));
   }
 
   selectVehiclePlate(plate) {
@@ -213,9 +213,22 @@ class FindParking extends Component {
     dispatch(setSelectedPlate(plate));
   }
 
-  confirmBooking() {
+  getParkingData() {
     const { dispatch, location, parking } = this.props;
-    const { selectedMarkerItem, selectedPlate } = parking;
+    const {
+      selectedMarkerItem,
+      selectedPlate,
+      showFreeParkingModal,
+      showPaidParkingModal,
+      showManagedParkingModal,
+      isManagedFree,
+      selectedTownship,
+      paymentMethod,
+      priceToPay,
+      selectedTownshipCharges,
+      parkingRules,
+      selectedHours
+    } = parking;
     const {
       address,
       lat,
@@ -227,51 +240,71 @@ class FindParking extends Component {
       marker,
       category
     } = selectedMarkerItem;
+    const currentRules = parkingRules[location_code];
+    const { max_hours, pricing, pricing_duration, city, state, zip_code } = currentRules;
+    const { tr_fee, tr_percentage } = selectedTownshipCharges;
     const { plate_no, registered_state } = selectedPlate;
     const userLat = location.lat;
     const userLng = location.lon;
+    const userId = cookie.load('userId');
+    let parkingType = null;
+    if (showFreeParkingModal) {
+      parkingType = "free";
+    } else if (showPaidParkingModal) {
+      parkingType = "paid";
+    } else if (showManagedParkingModal) {
+      if (isManagedFree) {
+        parkingType = "managed";
+      } else {
+        parkingType = "guest";
+      }
+    }
+    return {
+      "parking_type" : parkingType,
+      "township_code" : selectedTownship,
+      "location_code" : location_code,
+      "entry_date_time" : "",
+      "exit_date_time" : "",
+      "expiry_time" : "",
+      "max_time" : max_hours,
+      "user_id" : userId,
+      "permit_id" : "",
+      "subscription_id" : "",
+      "plate_no" : plate_no,
+      "pl_state" : registered_state,
+      "lat" : userLat,
+      "lng" : userLng,
+      "address1" : "",
+      "address2" : "",
+      "city" : city,
+      "state" : state,
+      "zip" : zip_code,
+      "country" : "USA",
+      "lot_row" : "",
+      "lot_number" : "",
+      "ip" : "",
+      "token" : "",
+      "parking_status" : "",
+      "payment_method" : paymentMethod,
+      "parking_rate" : pricing,
+      "parking_units" : pricing_duration,
+      "parking_qty" : selectedHours,
+      "parking_subtotal" : selectedHours * pricing,
+      "wallet_trx_id" : "",
+      "tr_percent" : tr_percentage,
+      "tr_fee" : tr_fee,
+      "parking_total" : priceToPay,
+      "ipn_custom" : "",
+      "ipn_txn_id" : "",
+      "ipn_payment" : "",
+      "ipn_status" : "",
+      "ipn_address" : ""
+    };
+  }
 
-    const wayPointData = [{
-        "lat": userLat,
-        "lng": userLng,
-        "name": title,
-        "latlng": userLat +"," + userLng,
-        "address": address,
-        "audio_blog": "",
-        "plate_no": plate_no,
-        "entry_time": "",
-        "exit_time": "",
-        "parking_status": "ENTRY",
-        "city": "",
-        "state": "",
-        "zip": "",
-        "address1": "",
-        "address2": "",
-        "country": "",
-        "address0": "",
-        "max_time": "",
-        "alert": "",
-        "latlng2": "",
-        "expiry_time": "",
-        "token": "ezly",
-        "pi_state": "",
-        "date_difference": "",
-        "street_address": ""
-    }];
-    const poiv2Data = [{
-      "lat": lat,
-      "lng": lng,
-      "title": title,
-      "address": address,
-      "url": url,
-      "html": html,
-      "category": category,
-      "marker": marker,
-      "title_state": "",
-      "location_code": location_code
-    }];
-    dispatch(createBooking(wayPointData, poiv2Data));
-
+  confirmBooking() {
+    const parkingData = this.getParkingData();
+    dispatch(createBooking(parkingData));
   }
 
   goToPayment() {
@@ -288,6 +321,7 @@ class FindParking extends Component {
     const { dispatch, parking } = this.props;
     const { selectedMarkerItem } = parking;
     const { location_code } = selectedMarkerItem;
+
     dispatch(getTownship(location_code));
   }
 
@@ -318,96 +352,14 @@ class FindParking extends Component {
     );
   }
 
-  getPPWaypointAndPoivData() {
-    const { location, parking } = this.props;
-    const { selectedMarkerItem, selectedPlate } = parking;
-    const {
-      address,
-      lat,
-      lng,
-      title,
-      url,
-      html,
-      location_code,
-      marker,
-      category
-    } = selectedMarkerItem;
-    const { plate_no, registered_state } = selectedPlate;
-    const userLat = location.lat;
-    const userLng = location.lon;
-    const wayPointData = [{
-      "date_time": "",
-      "entry_time": "",
-      "plate_no": plate_no,
-      "exit_time": "",
-      "max_time": "",
-      "name": "",
-      "latlng": userLat+","+userLng,
-      "address": "",
-      "lng": userLng,
-      "audio_blog": "",
-      "address1": "",
-      "address2": "",
-      "city": "",
-      "state": "",
-      "zip": "",
-      "country": "USA",
-      "lat": userLat,
-      "parking_status": "ENTRY",
-      "ipn_custom": "",
-      "ipn_txn_id": "",
-      "ipn_payment": "",
-      "ipn_status": "",
-      "ipn_address": "",
-      "quantity": "",
-      "purchased_hours": "",
-      "pricing_duration": "",
-      "pricing": "",
-      "total_amt": "",
-      "amount": "",
-      "street_address": ""
-    }];
-
-    const poiv2Data = [{
-      "lat": lat,
-      "lng": lng,
-      "title": title,
-      "address": address,
-      "url": url,
-      "html": html,
-      "category": category,
-      "marker": marker,
-      "title_state": "",
-      "location_code": location_code
-    }];
-
-    return {
-      wayPoint: wayPointData,
-      poiv: poiv2Data
-    }
-  }
-
   payFromWallet() {
     const { dispatch, parking } = this.props;
     const { priceToPay, currentBalance } = parking;
-    const { wayPoint, poiv } = this.getPPWaypointAndPoivData();
+
     if(priceToPay < currentBalance) {
       const userId = cookie.load('userId');
-      const paymentObj = {
-        "ipn_status": "",
-        "ipn_txn_id":"",
-        "ipn_custom":"",
-        "date_time": "",
-        "paid_date": "",
-        "add_amt": "",
-        "ipn_address": "",
-        "user_id": userId,
-        "last_paid_amt": priceToPay,
-        "new_balance": currentBalance - priceToPay,
-        "current_balance": currentBalance,
-        "ip": "",
-      };
-      dispatch(chargeWallet(paymentObj, wayPoint, poiv));
+      const parkingData = this.getParkingData();
+      dispatch(createBooking(parkingData));
     }
   }
 
@@ -688,7 +640,7 @@ class FindParking extends Component {
     const { parkingRules, selectedMarkerItem } = this.props.parking;
     const currentRules = parkingRules[selectedMarkerItem.location_code];
     const pricing = currentRules.pricing == 0 ? "FREE" : "$" + currentRules.pricing + "/" + currentRules.pricing_duration + "min";
-    const parkNowAction = () => {this.selectParkingandFetchVehicles(selectedMarkerItem.location_code)};
+    const parkNowAction = () => {this.selectParkingandFetchVehicles(selectedMarkerItem.location_code, currentRules.pricing_duration)};
     return (
       <div className="row parking-details">
         <div className="col s12">
@@ -803,12 +755,31 @@ class FindParking extends Component {
   }
 
   renderHoursSelectionForm() {
+    const { parking } = this.props;
+    const { parkingRules, selectedMarkerItem } = parking;
+    const currentRules = parkingRules[selectedMarkerItem.location_code];
+    const pricingUnitTime = currentRules.pricing_duration;
+    const maxHrs = currentRules.max_hours;
+    const maxHrsMins = maxHrs * 60;
+    const maxTimeDivisions = parseInt(maxHrsMins/pricingUnitTime);
+    const hrsArr = [];
+    for (let i = 1; i <= maxTimeDivisions; i++) {
+      let time = pricingUnitTime * i;
+      let hrs = parseInt(time/60);
+      let mins = parseFloat((time%60)/60).toFixed(2);
+      let timeToDisplay = parseFloat(hrs) + parseFloat(mins);
+      let hrsString = hrs > 1.00 ? " Hours" : " Hour";
+      hrsArr.push({
+        label: timeToDisplay + hrsString,
+        value: timeToDisplay
+      });
+    }
     return (
       <SimpleSelect 
-        options = {hours} 
+        options = {hrsArr}
         placeholder = "Select Hours" 
         onValueChange={this.setParkingHours} //this.getCharges
-        defaultValue={{label: "1.0 Hrs", value: 1}}/>
+        defaultValue={hrsArr[0]}/>
     );
   }
 
@@ -906,8 +877,9 @@ console.log(parkingRules);
   }
 
   renderLots() {
-    const { lotsData, selectedMarkerItem } = this.props.parking;
-    const parkNowAction = () => {this.selectParkingandFetchVehicles(selectedMarkerItem.location_code)};
+    const { lotsData, parkingRules, selectedMarkerItem } = this.props.parking;
+    const currentRules = parkingRules[selectedMarkerItem.location_code];
+    const parkNowAction = () => {this.selectParkingandFetchVehicles(selectedMarkerItem.location_code, currentRules.pricing_duration)};
     const carList = lotsData.map(this.renderLot, this);
     return (
       <div>
@@ -936,6 +908,8 @@ console.log(parkingRules);
     } else if(bookingStep == 3) {
       heading = "Park Now";
       content = this.renderParkingOverview();
+    } else if (bookingStep == 4) {
+      content = this.renderConfirmationScreen();
     }
     return (
       <ParkingModal
