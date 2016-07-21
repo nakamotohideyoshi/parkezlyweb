@@ -113,3 +113,15 @@ export const getSubscriptionStatus = (user_id, location_code) => {
     )
   );
 };
+
+export const confirmBooking = (parking_data) => {
+  return axios(
+    Object.assign(
+      {
+        method: "post",
+        url: "pzly01live7/_table/parked_cars",
+        data : [parking_data]
+      }, APIConfig
+    )
+  );
+};

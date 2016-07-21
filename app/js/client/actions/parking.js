@@ -219,10 +219,11 @@ export const getParkingLot = (locationCode) => {
   };
 };
 
-export const selectParking = (locationCode) => {
+export const selectParkingAndTimeUnit = (locationCode, pricingTimeUnit) => {
   return {
     type: Actions.SELECT_PARKING,
-    location: locationCode
+    location: locationCode,
+    selectedHours: parseFloat(pricingTimeUnit/60).toFixed(2)
   };
 };
 
@@ -258,6 +259,7 @@ const poivRequest = (poivData) => {
   };
 };
 
+/*
 export const createBooking = (wayPointData, poivData) => {
   return dispatch => {
     dispatch(initiateBooking());
@@ -270,6 +272,7 @@ export const createBooking = (wayPointData, poivData) => {
       });
   };
 };
+*/
 
 const initiateGetCharges = () => {
   return {
@@ -291,13 +294,20 @@ const fetchChargesFailed = (error) => {
   };
 };
 
+const setSelectedTownship = (townshipCode) => {
+  return {
+    type: Actions.SET_SELECTED_TOWNSHIP,
+    townshipCode
+  };
+};
+
 const getCharges = (townshipCode) => {
   return dispatch => {
     return ParkingAPI.getExtraFees(townshipCode)
       .then((response) => {
         console.log(response);
         const { data } = response;
-        dispatch(fetchChargesSuccess(data.resource[0]));
+        dispatch(fetchChargesSuccess(data.resource[0], townshipCode));
       })
       .catch((response) => {
         dispatch(fetchChargesFailed());
@@ -310,9 +320,9 @@ export const getTownship = (locationCode) => {
     dispatch(initiateGetCharges());
     return ParkingAPI.getTownshipCode(locationCode)
       .then((response) => {
-        console.log(response);
         const { data } = response;
         dispatch(getCharges(data.resource[0].township_code));
+        dispatch(setSelectedTownship(data.resource[0].township_code));
       })
       .catch((response) => {
         dispatch(fetchChargesFailed());
@@ -389,14 +399,27 @@ const ppWaypointUpdate = (waypointData, poivData) => {
         //dispatch(fetchNearParkingLotFailed(response));
       });
   };
-}
+};
 
-export const chargeWallet = (paymentObj, waypointData, poivData) => {
+export const createBooking = (parkingData) => {
+  return dispatch => {
+    return ParkingAPI.confirmBooking(parkingData)
+      .then((response) => {
+        dispatch(setBookingStep(4));
+      })
+      .catch((response) => {
+        //dispatch(fetchNearParkingLotFailed(response));
+      });
+  };
+};
+
+export const chargeWallet = (paymentObj, parkingData) => {
   return dispatch => {
     dispatch(initiatePaymentWithWallet());
     return makePayment(paymentObj)
       .then((response) => {
-        dispatch(ppWaypointUpdate(waypointData, poivData));
+        //dispatch(ppWaypointUpdate(waypointData, poivData));
+        dispatch(confirmBooking(parkingData));
       })
       .catch((response) => {
         //dispatch(fetchChargesFailed());

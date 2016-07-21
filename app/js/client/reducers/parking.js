@@ -13,6 +13,8 @@ const initialState = {
   showOtherLocations: false,
   selectedMarker: null,
   selectedLocation: null,
+  selectedTownship: null,
+  selectedTownshipCharges: null,
   parkingRules: null,
   errorMessage: null,
   showFreeParkingModal: false,
@@ -26,7 +28,7 @@ const initialState = {
   bookingStep: 0,
   selectedPlate: null,
   error: null,
-  selectedHours: 1,
+  selectedHours: 0,
   currentBalance: 0,
   paymentMethod: null,
   priceToPay: 0
@@ -159,6 +161,7 @@ const Parking = (state = initialState, action) => {
       return {
         ...state,
         selectedParkingCode: action.location,
+        selectedHours: action.selectedHours,
         bookingStep: 2
       }
     case "SET_SELECTED_PLATE":
@@ -221,6 +224,11 @@ const Parking = (state = initialState, action) => {
       return {
         ...state,
         isManagedFree: action.parking_type === "free" ? true : false
+      }
+    case "SET_SELECTED_TOWNSHIP":
+      return {
+        ...state,
+        selectedTownship: action.townshipCode
       }
     default:
       return state;
