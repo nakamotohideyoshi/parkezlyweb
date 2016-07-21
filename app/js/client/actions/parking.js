@@ -456,3 +456,10 @@ export const getSubscriptionStatus = (user_id, location_code) => {
       });
   };
 };
+
+export const setPaymentMethod = (method) => {
+  return {
+    type: Actions.SET_PAYMENT_METHOD,
+    method
+  };
+};

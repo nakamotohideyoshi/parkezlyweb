@@ -100,6 +100,49 @@ exports.saveTransaction = function(req, res) {
   }
 };
 
+exports.payForParking = function(req, res) {
+  var paypalPayment = {
+      "intent": "sale",
+      "payer": {
+          "payment_method": "paypal"
+      },
+      "redirect_urls": {},
+      "transactions": [{
+        "amount": {
+          "currency": "USD"
+        }
+      }]
+    };
+
+    paypalPayment.transactions[0].amount.total = req.body.amount;
+    paypalPayment.transactions[0].description = "Pay for Parking";
+    paypalPayment.redirect_urls.return_url = "http://localhost:" + (config.port ? config.port : 3000) + "/finalize-payment";
+    paypalPayment.redirect_urls.cancel_url = "http://localhost:" + (config.port ? config.port : 3000) + "/payment-failure";
+
+    paypal.payment.create(paypalPayment, {}, function (err, resp) {
+      if (err) {
+        res.redirect('/payment-failure?errorcode=1010');
+      } else {
+        if(resp.payer.payment_method === 'paypal') {
+          req.session[resp.id] = {
+            amount: req.body.amount,
+            userId: req.body.userId,
+            currentBalance: req.body.currentBalance
+          };
+          console.log(req.session[resp.id]);
+          var redirectUrl;
+          for(var i=0; i < resp.links.length; i++) {
+            var link = resp.links[i];
+            if (link.method === 'REDIRECT') {
+              redirectUrl = link.href;
+            }
+          }
+          res.redirect(redirectUrl);
+        }
+      }
+    });
+};
+
 exports.init = function (c) {
   config = c;
   paypal.configure(c.api);
