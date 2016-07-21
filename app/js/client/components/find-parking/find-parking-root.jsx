@@ -34,7 +34,8 @@ import {
   setSelectedHours,
   getBalance,
   setPriceToPay,
-  chargeWallet
+  chargeWallet,
+  setPaymentMethod
 } from "../../actions/parking.js";
 import { setPosition, setInitialPosition, getLocationCoordinates } from "../../actions/location.js";
 import { getVehicles } from "../../actions/vehicle.js";
@@ -68,7 +69,9 @@ class FindParking extends Component {
     this.setParkingHours = this.setParkingHours.bind(this);
     this.showWalletBalance = this.showWalletBalance.bind(this);
     this.payFromWallet = this.payFromWallet.bind(this);
+    this.payWithPaypal = this.payWithPaypal.bind(this);
     this.closeWalletModal = this.closeWalletModal.bind(this);
+    this.calculateAmountToPay = this.calculateAmountToPay.bind(this);
   }
 
   componentDidMount() {
@@ -208,8 +211,11 @@ class FindParking extends Component {
   }
 
   selectVehiclePlate(plate) {
-    const { dispatch } = this.props;
-    console.log(plate);
+    const { dispatch, parking } = this.props;
+    const { showPaidParkingModal, showManagedParkingModal, isManagedFree } = parking;
+    if(showPaidParkingModal || (showManagedParkingModal && !isManagedFree )) {
+      this.calculateAmountToPay();
+    }
     dispatch(setSelectedPlate(plate));
   }
 
@@ -330,17 +336,23 @@ class FindParking extends Component {
     dispatch(setSelectedHours(hours.value));
   }
 
-  showWalletBalance() {
+  calculateAmountToPay() {
     const { dispatch, parking } = this.props;
     const { selectedTownshipCharges, selectedHours, parkingRules, selectedMarkerItem } = parking;
+    console.log(selectedHours);
     const { tr_fee, tr_percentage } = selectedTownshipCharges;
     const currentRules = parkingRules[selectedMarkerItem.location_code];
     const { pricing, pricing_duration } = currentRules;
     const hourlyPrice = parseFloat(pricing)*selectedHours;
     const totalPrice = hourlyPrice + (hourlyPrice*parseFloat(tr_percentage)) + parseFloat(tr_fee);
-
     dispatch(setPriceToPay(totalPrice.toFixed(2)));
+    return totalPrice.toFixed(2);
+  }
+
+  showWalletBalance() {
+    const { dispatch } = this.props;
     const userId = cookie.load('userId');
+    this.calculateAmountToPay();
     dispatch(getBalance(userId));
     $(this.refs["wallet-balance-modal"]).openModal();
   }
@@ -361,6 +373,14 @@ class FindParking extends Component {
       const parkingData = this.getParkingData();
       dispatch(createBooking(parkingData));
     }
+  }
+
+  payWithPaypal() {
+    const { dispatch } = this.props;
+    dispatch(setPaymentMethod("paypal"));
+    const paymentAmt = this.calculateAmountToPay();
+    this.refs["amount-to-pay"].value = paymentAmt;
+    this.refs["pay-with-paypal"].submit();
   }
 
   closeWalletModal(e) {
@@ -783,6 +803,16 @@ class FindParking extends Component {
     );
   }
 
+  renderPaypalPaymentForm() {
+    const { parking } = this.props;
+    const { priceToPay } = parking;
+    return (
+      <form method="post" action="/api/pay-for-parking" ref="pay-with-paypal">
+        <input type="hidden" name="amount" value={priceToPay} ref="amount-to-pay"/>
+      </form>
+    );
+  }
+
   renderPaymentBtns() {
     return (
       <div>
@@ -792,7 +822,7 @@ class FindParking extends Component {
           </GrayButton>
         </div>
         <div>
-          <GrayButton onClick={this.nextStep}>
+          <GrayButton onClick={this.payWithPaypal}>
             Make Payment
           </GrayButton>
         </div>
@@ -812,6 +842,7 @@ console.log(parkingRules);
     const rate = showPaidParkingModal || (showManagedParkingModal && !isManagedFree) ? rateString : null;
     
     const btns = showPaidParkingModal || (showManagedParkingModal && !isManagedFree) ? this.renderPaymentBtns() : this.renderVehicleFormButton();
+    const paypalPaymentForm = showPaidParkingModal || (showManagedParkingModal && !isManagedFree) ? this.renderPaypalPaymentForm() : null;
     return (
       <div className="vehicle-form">
         <h4>Parking</h4>
@@ -828,6 +859,7 @@ console.log(parkingRules);
           {rate}
         </div>
         {btns}
+        {paypalPaymentForm}
       </div>
     );
   }
@@ -920,6 +952,7 @@ console.log(parkingRules);
       </ParkingModal>
     );
   }
+
 
   renderPayWithWalletAlert() {
     const { parking } = this.props;

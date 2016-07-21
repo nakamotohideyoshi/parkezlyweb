@@ -230,6 +230,11 @@ const Parking = (state = initialState, action) => {
         ...state,
         selectedTownship: action.townshipCode
       }
+    case "SET_PAYMENT_METHOD":
+      return {
+        ...state,
+        paymentMethod: action.method
+      }
     default:
       return state;
   }
