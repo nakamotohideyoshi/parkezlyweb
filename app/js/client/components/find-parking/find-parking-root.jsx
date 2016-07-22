@@ -5,7 +5,7 @@ import cookie from 'react-cookie';
 import Body from "../../../common/components/body/body.jsx";
 import GrayButton from "../../../common/components/button/gray-button.jsx";
 import LicensePlateField from "../../../common/components/fields/license-plate-field.jsx";
-import Chooser from "../../../common/components/fields/chooser/chooser.jsx";
+import Chooser from "../../../common/components/fields/select.jsx";
 import ImageCheckbox from "../../../common/components/footer/utils/image-checkbox.jsx";
 import ParkingModal from "./parking-modal.jsx";
 import { GoogleMapLoader, GoogleMap, Marker } from "react-google-maps";
@@ -339,7 +339,6 @@ class FindParking extends Component {
   calculateAmountToPay() {
     const { dispatch, parking } = this.props;
     const { selectedTownshipCharges, selectedHours, parkingRules, selectedMarkerItem } = parking;
-    console.log(selectedHours);
     const { tr_fee, tr_percentage } = selectedTownshipCharges;
     const currentRules = parkingRules[selectedMarkerItem.location_code];
     const { pricing, pricing_duration } = currentRules;
@@ -349,12 +348,21 @@ class FindParking extends Component {
     return totalPrice.toFixed(2);
   }
 
+  validateFields() {
+    const licenseFieldStatus = this.refs["license-number"].validate();
+    const selectStateStatus = this.refs["select-state"].validate();
+    return licenseFieldStatus && selectStateStatus;
+  }
+
   showWalletBalance() {
     const { dispatch } = this.props;
     const userId = cookie.load('userId');
     this.calculateAmountToPay();
-    dispatch(getBalance(userId));
-    $(this.refs["wallet-balance-modal"]).openModal();
+
+    if(this.validateFields()) {
+      dispatch(getBalance(userId));
+      $(this.refs["wallet-balance-modal"]).openModal();
+    }
   }
 
   renderMyLocationIcon() {
@@ -377,10 +385,12 @@ class FindParking extends Component {
 
   payWithPaypal() {
     const { dispatch } = this.props;
-    dispatch(setPaymentMethod("paypal"));
-    const paymentAmt = this.calculateAmountToPay();
-    this.refs["amount-to-pay"].value = paymentAmt;
-    this.refs["pay-with-paypal"].submit();
+    if(this.validateFields()) {
+      dispatch(setPaymentMethod("paypal"));
+      const paymentAmt = this.calculateAmountToPay();
+      this.refs["amount-to-pay"].value = paymentAmt;
+      this.refs["pay-with-paypal"].submit();
+    }
   }
 
   closeWalletModal(e) {
@@ -747,6 +757,8 @@ class FindParking extends Component {
     const { registered_state, plate_no } = selectedPlate;
     const label = statesHash[registered_state];
     const numHours = showPaidParkingModal || (showManagedParkingModal && !isManagedFree) ? this.renderHoursSelectionForm() : null;
+    const selectedState = registered_state ? {label: label, value: registered_state} : null;
+
     return (
       <form className="select-vehicle">
         <LicensePlateField
@@ -754,11 +766,12 @@ class FindParking extends Component {
           placeholder="LICENSE PLATE #"
           className="license-no"
           defaultValue={plate_no}/>
-        <SimpleSelect 
-          options = {states} 
-          placeholder = "Select State" 
-          onValueChange={null}
-          defaultValue={{label: label, value: registered_state}}/>
+        <Chooser 
+          options={states}
+          ref="select-state"
+          selectionEntity="a State"
+          placeholder="Select State" 
+          defaultValue={selectedState}/>
         {numHours}
       </form>
     );
