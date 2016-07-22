@@ -138,7 +138,7 @@ const Parking = (state = initialState, action) => {
         selectedPlate: null,
         paymentMethod: null,
         currentBalance: 0,
-        selectedHours: 1
+        selectedHours: 0
       }
     case "FETCH_PARKING_LOT_INITIATE":
       return {
