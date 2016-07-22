@@ -6,10 +6,8 @@ import { reduxForm, change } from 'redux-form'
 import {SimpleSelect} from 'react-selectize'
 
 import {
-        fetchLocationsRateList, 
-        fetchTownshipFacilities,
-        fetchTownshipPermitTypes,
-        createTownshipLocationsRate,
+        fetchLocationsRate,
+        createLocationsRate,
         resetLoading
       } from '../../../../../actions/actions-township-panel.jsx'
 import {fetchTownshipSchemeTypes} from '../../../../../actions/actions-township-common.jsx'
@@ -43,11 +41,7 @@ class LocationsRate extends React.Component {
   }
 
   componentWillMount() {
-    this.props.fetchLocationsRateList();
-    this.props.fetchTownshipSchemeTypes();
-    this.props.fetchTownshipList();
-    this.props.fetchTownshipPermitTypes();
-    this.props.fetchTownshipFacilities(this.props.townshipCode);
+    this.props.fetchLocationsRate();
     this.props.dispatch(change('locations-rate', 'township_code', this.props.townshipCode));
   }
 
@@ -62,7 +56,7 @@ class LocationsRate extends React.Component {
   handleSuccess(){
     this.props.resetLoading();
     $('#modal-locations-rate-create').closeModal();
-    this.props.fetchLocationsRateList();
+    this.props.fetchLocationsRate();
   }
 
   handleSubmit(data) {
@@ -277,7 +271,7 @@ class LocationsRate extends React.Component {
   }
 
   renderPermitsData() {
-    let filteredPermits = this.props.townshipLocationsRateFetched.data.resource;
+    /* let filteredPermits = this.props.townshipLocationsRateFetched.data.resource;
     return filteredPermits.map((permit) => {
       return( 
         <tr key={permit.id}>
@@ -297,6 +291,7 @@ class LocationsRate extends React.Component {
         </tr>
       );
     });
+    */
   }
 
   renderPermitsTable() {
@@ -351,10 +346,8 @@ class LocationsRate extends React.Component {
               style={{margin: 10}}>Add New Location Rate</a>
           </div>
         </div>
-        { this.props.townshipSchemeTypesFetched.isLoading ||
-          this.props.townshipListFetched.isLoading ||
-          this.props.townshipPermitTypesFetched.isLoading ||
-          this.props.townshipFacilitiesFetched.isLoading ? 
+        { this.props.townshipLocationsRateFetched.isLoading
+          ? 
             <div> </div> : this.renderCreateModal()}
       </div>
     );
@@ -364,22 +357,14 @@ class LocationsRate extends React.Component {
 function mapStateToProps(state) {
   return {
     townshipLocationsRateFetched: state.townshipLocationsRateFetched,
-    townshipSchemeTypesFetched: state.townshipSchemeTypesFetched,
-    townshipListFetched: state.townshipListFetched,
-    townshipFacilitiesFetched: state.townshipFacilitiesFetched,
-    townshipPermitTypesFetched: state.townshipPermitTypesFetched,
     townshipLocationsRateCreated: state.townshipLocationsRateCreated,
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    fetchLocationsRateList,
-    fetchTownshipSchemeTypes,
-    fetchTownshipList,
-    fetchTownshipFacilities,
-    fetchTownshipPermitTypes,
-    createTownshipLocationsRate,
+    fetchLocationsRate,
+    createLocationsRate,
     resetLoading
   }, dispatch);
 }

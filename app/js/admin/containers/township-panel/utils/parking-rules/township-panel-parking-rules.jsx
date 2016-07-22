@@ -12,6 +12,7 @@ import Spinner from '../../../../common/components/spinner.jsx'
 import {optionsSelectize} from '../../../../common/components/options-selectize.js'
 
 import TownshipPanelParkingRulesEdit from './township-panel-parking-rules-edit.jsx'
+import TownshipPanelParkingRulesForm from './township-panel-parking-rules-form.jsx'
 
 import {
   fetchParkingRules, 
@@ -65,14 +66,17 @@ class customColumnComponent extends React.Component {
 
   render() {
     return (
-      <div onClick={() => this.props.metadata.customComponentMetadata.openEditModal(this.props.rowData.id)}>
+      <div onClick={() => this.props.metadata.customComponentMetadata.renderEditModal(
+        this.props.rowData.location_code, 
+        this.props.rowData)
+      }>
         {this.props.data}
       </div>
     );
   }
 }
 
-customColumnComponent.defaultProps = { "data": {}, "openEditModal": null};
+customColumnComponent.defaultProps = { "data": {}, "renderEditModal": null};
 
 class TownshipPanelParkingRules extends React.Component {
 
@@ -82,11 +86,9 @@ class TownshipPanelParkingRules extends React.Component {
     window.scrollTo(0, 0);
 
     this.state = {
+      showEditDuplicateButtons: false,
+      locationCode: null,
       showEditModal: false,
-      locationId: null,
-      filteredData: null,
-      showEditButton: false,
-      duplicateModal: false,
       rowData: null,
     }
 
@@ -95,6 +97,7 @@ class TownshipPanelParkingRules extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
     this.renderTable = this.renderTable.bind(this);
+    this.renderEditModal = this.renderEditModal.bind(this);
   }
 
   componentWillMount() {
@@ -116,6 +119,7 @@ class TownshipPanelParkingRules extends React.Component {
     $('#modal-township-parking-rules').closeModal();
     $('#modal-success').openModal();
     this.props.fetchParkingRules(this.props.locationCode);
+    window.scrollTo(0, 0);
   }
 
   handleSubmit(data) {
@@ -176,35 +180,16 @@ class TownshipPanelParkingRules extends React.Component {
     } = this.props
 
     return(
-      <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-        <div id="modal-township-parking-rules-create" className="modal modal-fixed-footer">
-          <div className="modal-content">
-
-            <div className="row">
-              <div className="center-align">
-                <h4>Create a Parking Rule</h4>
-                <p className="center-align">Create a Parking Rule by filling out the fields.</p>
-              </div>
-            </div>
-
-            <div className="row">
-              {this.tempInputs()}
-            </div>
-          </div>
-          
-
-          <div className="modal-footer">
-            <div className="row marginless-row">
-              <div className="col s12 center-align">
-                <button fetchTownshipFacilitie
-                type="submit" 
-                disabled={submitting} 
-                className="waves-effect waves-light btn">Add Parking Rule</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
+      <TownshipPanelParkingRulesForm
+        initialValues={this.state.rowData} 
+        handleSuccess={this.handleSuccess}
+        modalName="modal-township-parking-rules-create" 
+        modalText="Create a Parking Rule" 
+        submitType="CREATE"
+        initialValues={this.state.rowData} 
+        rowData={this.state.rowData}
+        handleSuccess={this.handleSuccess}
+      />
     );
 
   }
@@ -217,24 +202,15 @@ class TownshipPanelParkingRules extends React.Component {
     this.setState({locationId: locationId, filteredData: filteredData[0]});
   }
 
-  renderEditModal() {
-    const {
-      resetForm,
-      submitting,
-      dispatch
-    } = this.props
-
-    return (
-      <TownshipPanelParkingRulesEdit 
-      initialValues={this.state.filteredData} 
-      handleSuccess={this.handleSuccess} 
-      duplicateModal={this.state.duplicateModal}/>
-    );
+  renderEditModal(locationCode, rowData) {
+    window.scrollTo(0, document.body.scrollHeight);
+    this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true, locationCode: locationCode})
   }
+
   renderTable() {
     let parkingData = this.props.townshipParkingRulesFetched.data.resource;
 
-    var openEditModal = this.openEditModal;
+    var renderEditModal = this.renderEditModal;
     var metaDataFunction = () =>  {
       return fields.map((data) => {
         return( 
@@ -242,7 +218,7 @@ class TownshipPanelParkingRules extends React.Component {
             "columnName": data,
             "customComponent": customColumnComponent,
             'customComponentMetadata': {
-                'openEditModal': openEditModal
+                'renderEditModal': renderEditModal
             }
           }
         );
@@ -372,15 +348,37 @@ class TownshipPanelParkingRules extends React.Component {
                   </div>
                </div>
 
-               {this.state.showEditButton ? 
-                this.renderEditButtons(this.state.locationId) : <div> </div>}
+               {this.state.showEditDuplicateButtons ? 
+                this.renderEditButtons(this.state.locationCode) : <div> </div>}
             </div>
           </div>
         </Body>
         { this.props.townshipParkingRulesFetched.isLoading ? 
-          <div> </div> : this.renderCreateModal()}
-        { this.props.townshipParkingRulesFetched.isLoading ? 
-          <div> </div> : this.renderEditModal()}
+          <div> </div> : 
+          <div>
+            {this.renderCreateModal()}
+            <TownshipPanelParkingRulesForm
+              initialValues={this.state.rowData} 
+              handleSuccess={this.handleSuccess}
+              modalName="modal-township-parking-rules-edit" 
+              modalText="Edit a Parking Rule" 
+              submitType="EDIT"
+              initialValues={this.state.rowData} 
+              rowData={this.state.rowData}
+              handleSuccess={this.handleSuccess}
+            />
+            <TownshipPanelParkingRulesForm
+              initialValues={this.state.rowData} 
+              handleSuccess={this.handleSuccess}
+              modalName="modal-township-parking-rules-duplicate" 
+              modalText="Duplicate a Parking Rule" 
+              submitType="DUPLICATE"
+              initialValues={this.state.rowData} 
+              rowData={this.state.rowData}
+              handleSuccess={this.handleSuccess}
+            />
+          </div>
+          }
 
         <div id="modal-success" className="modal">
           <div className="modal-content">

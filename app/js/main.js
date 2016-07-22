@@ -9,6 +9,9 @@ import "../css/main.scss";
 
 require('script-loader!jquery/dist/jquery.js');
 require('script-loader!hammerjs/hammer.js');
+window.$ = window.jQuery = require('jquery');
+window.moment = window.moment = require('moment');
+require('script-loader!../js/admin/common/lib/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js');
 require('script-loader!materialize-css/dist/js/materialize.js');
 require('file?name=[name].[ext]!../index.html');
 

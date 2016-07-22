@@ -4,19 +4,7 @@ import {reset} from 'redux-form';
 
 import * as apiTownship from '../../api/api-township.js';
 import {createFilter} from 'react-search-input';
-
-const BASE_URL = 'http://108.30.248.212:8006/api/v2/pzly03live7/_table/';
-const APP_NAME = 'parkezly';
-const API_KEY = 'dbed451c5e4e1518d301c118ffe078ca16a2c287d5efff98515b938538abb5b5';
-
-export const API_CONFIG = {
-  baseURL: BASE_URL,
-  timeout: 20000,
-  headers: {
-    'X-DreamFactory-Application-Name': APP_NAME, 
-    'X-DreamFactory-Api-Key' : API_KEY 
-  }
-};
+import {API_CONFIG} from '../../config/api.js';
 
 const AXIOS_INSTANCE = axios.create(API_CONFIG);
 
