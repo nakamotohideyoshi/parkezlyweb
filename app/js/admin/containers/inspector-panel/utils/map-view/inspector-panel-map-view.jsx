@@ -17,10 +17,14 @@ export default class InspectorMapView extends React.Component {
     this.state = {
       markerData: null,
       showMarkers: false,
-      showInfo: false
+      showInfo: false,
+      yellowOff: false,
+      redOff: false,
+      greenOff: false,
     }
 
     this.ajaxGet = this.ajaxGet.bind(this);
+    this.renderFooterIcons = this.renderFooterIcons.bind(this);
   }
 
   componentWillMount() {
@@ -41,7 +45,6 @@ export default class InspectorMapView extends React.Component {
   }
 
   renderInfoWindow(ref, marker, title) {
-    
     return (
       <InfoWindow 
       key={`${ref}_info_window`}
@@ -53,11 +56,9 @@ export default class InspectorMapView extends React.Component {
         className="center-align">
           {title} 
           <div> - Click Here - </div>
-        </div>      
-        
+        </div>
       </InfoWindow>
     );
-    
   }
 
   handleMarkerClick(marker) {
@@ -75,31 +76,95 @@ export default class InspectorMapView extends React.Component {
     let markerData = this.state.markerData.data.resource;
     
     return markerData.map((data, index) => {
-
       let iconUrl;
       const ref = `marker_${index}`;
+      let renderMarker = true;
 
-      if(data.marker === "status-green") {
+      if(data.marker === "status-green" && this.state.greenOff == false) {
+        console.log("test")
         iconUrl = require('../../../../../../images/car_green@3x.png')
-      } else if (data.marker === "status-red") {
+      } else if (data.marker === "status-red" && this.state.redOff == false) {
         iconUrl = require('../../../../../../images/car_red@3x.png')
-      } else if (data.marker === "status-yellow") {
+      } else if (data.marker === "status-yellow" && this.state.yellowOff == false) {
         iconUrl = require('../../../../../../images/car_yellow@3x.png')
+      } else {
+        renderMarker = false;
       }
 
-      return (
-        <Marker 
-          key={index}
-          ref={ref}
-          position={{lat: data.lat, lng: data.lng}} 
-          icon={{url: iconUrl, scaledSize: new google.maps.Size(75,50)}} 
-          onClick={this.handleMarkerClick.bind(this, data)}
-          >
-          {data.showInfo ? this.renderInfoWindow(ref, data, data.title) : null}
-        </Marker>
-      );
+      if (renderMarker) {
+        return (
+          <Marker 
+            key={index}
+            ref={ref}
+            position={{lat: data.lat, lng: data.lng}} 
+            icon={{url: iconUrl, scaledSize: new google.maps.Size(75,50)}} 
+            onClick={this.handleMarkerClick.bind(this, data)}
+            >
+            {data.showInfo ? this.renderInfoWindow(ref, data, data.title) : null}
+          </Marker>
+        );
+      }
     });
 
+  }
+
+  renderFooterIcons() {
+    const { greenOff, yellowOff, redOff } = this.state;
+
+    let greenStyle = null;
+    let redStyle = null;
+    let yellowStyle = null;
+
+    if (this.state.greenOff == true) {
+      greenStyle = {opacity: "0.5"};
+    } 
+    if (this.state.redOff) {
+      redStyle = {opacity: "0.5"};
+    } 
+    if (this.state.yellowOff) {
+      yellowStyle = {opacity: "0.5"};
+    }
+
+    return (
+      <div className="footer row marginless-row">
+        <div className="col s4 footer-item">
+          <div className="img-checkbox-icon" style={{paddingBottom: 0, marginBottom: 0}}>
+            <img 
+            src={require('../../../../../../images/car_green@3x.png')} 
+            style={greenStyle}
+            onClick={() => this.setState({greenOff: !greenOff})} 
+            className="responsive-img"/>
+          </div>
+          <div className="img-checkbox-label">
+            Valid
+          </div>
+        </div>
+        <div className="col s4 footer-item">
+          <div className="img-checkbox-icon">
+            <img 
+            style={redStyle}
+            src={require('../../../../../../images/car_red@3x.png')} 
+            onClick={() => this.setState({redOff: !redOff})} 
+            className="responsive-img"/>
+          </div>
+          <div className="img-checkbox-label">
+            Expired
+          </div>
+        </div>
+        <div className="col s4 footer-item">
+          <div className="img-checkbox-icon">
+            <img 
+            style={yellowStyle}
+            src={require('../../../../../../images/car_yellow@3x.png')} 
+            onClick={() => this.setState({yellowOff: !yellowOff})} 
+            className="responsive-img"/>
+          </div>
+          <div className="img-checkbox-label">
+            Expiring
+          </div>
+        </div>
+      </div>
+    );
   }
 
   render() {
@@ -126,17 +191,7 @@ export default class InspectorMapView extends React.Component {
                   </GoogleMap>
                 }/>
               </section>
-              <div className="footer">
-                <div className="col s4 footer-item">
-                  <img src={require('../../../../../../images/car_red@3x.png')} className="responsive-img"/>
-                </div>
-                <div className="col s4 footer-item">
-                  <img src={require('../../../../../../images/car_red@3x.png')} className="responsive-img"/>
-                </div>
-                <div className="col s4 footer-item">
-                  <img src={require('../../../../../../images/car_red@3x.png')} className="responsive-img"/>
-                </div>
-              </div>
+              {this.renderFooterIcons()}
             </div>
         </Body>
       </div>

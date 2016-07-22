@@ -290,7 +290,13 @@ export default class CreateTicket extends React.Component {
         return (
           <div className="blue-body marginless-row" style={{backgroundColor: "#FBE6CB"}}>
             <Body showHeader={true}>
-              <h3 style={{border: "2px solid black", display: "block", padding: 20, margin: 0, borderBottom: "0px", fontWeight: "bold"}}> Hearing Locations: </h3>
+              <h3 style={{
+                border: "2px solid black", 
+              display: "block", 
+              padding: 20, 
+              margin: 0, 
+              borderBottom: "0px", 
+              fontWeight: "bold"}}> Hearing Locations: </h3>
               {this.renderHearingMenu()} 
             </Body>
             {this.renderSuccessModal()}
@@ -300,7 +306,13 @@ export default class CreateTicket extends React.Component {
           return (
             <div className="blue-body marginless-row" style={{backgroundColor: "#FBE6CB"}}>
               <Body showHeader={true}>
-                <h3 style={{border: "2px solid black", display: "block", padding: 20, margin: 0, borderBottom: "0px", fontWeight: "bold"}}> Violation Type: </h3>
+                <h3 style={{
+                border: "2px solid black", 
+                display: "block", 
+                padding: 20, 
+                margin: 0, 
+                borderBottom: "0px", 
+                fontWeight: "bold"}}> Violation Type: </h3>
                 {this.renderViolationMenu()} 
               </Body>
               {this.renderSuccessModal()}
@@ -353,17 +365,3 @@ export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   fields
 })(CreateTicket));
 
-
-/*
-
-<div className="row marginless-row" style={{marginTop: 40}}>
-  <div>
-    <Link to={{pathname: `/admin/inspector/vehicle-info/create-ticket/${this.props.vehicleCode}`}} 
-    className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12" style={{backgroundColor: "#cc0000"}}>
-      <i className="material-icons valign">receipt</i>
-      <h4> Create Ticket </h4>
-    </Link>
-  </div>
-</div>
-
-*/

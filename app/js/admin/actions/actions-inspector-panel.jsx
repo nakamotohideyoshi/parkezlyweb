@@ -3,9 +3,9 @@ import {reset} from 'redux-form';
 
 import * as types from '../constants/actionTypes.js';
 import * as apiTownship from '../api/api-township.js';
-import * as apiConfig from '../config/api.js';
+import {API_CONFIG} from '../config/api.js';
 
-const AXIOS_INSTANCE = axios.create(apiConfig.API_CONFIG);
+const AXIOS_INSTANCE = axios.create(API_CONFIG);
 
 export function fetchInspectorParkingField(locationCode) {
   const URL = 'park_now_regd__users';

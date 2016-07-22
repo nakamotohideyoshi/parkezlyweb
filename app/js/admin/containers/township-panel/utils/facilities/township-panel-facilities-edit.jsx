@@ -23,6 +23,9 @@ import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import Griddle from 'griddle-react'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 
+import { ajaxSelectizeGet, ajaxDelete } from '../../../../common/components/ajax-selectize.js'
+import AdminSelectize from '../../../../common/components/admin-selectize.jsx'
+
 export const fields = [ 
   'id',  
   'date_time', 
@@ -60,6 +63,10 @@ export default class TownshipPanelFacilitiesEdit extends React.Component {
 
   handleDuplicateSubmit(data) {
     this.props.createTownshipLocations(data);
+  }
+
+  componentWillMount() {
+    ajaxSelectizeGet('townships_manager', 'manager_id', this.selectizeOptionsUpdate);
   }
 
   componentDidUpdate() {
