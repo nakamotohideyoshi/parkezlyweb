@@ -12,7 +12,8 @@ import { GoogleMapLoader, GoogleMap, Marker } from "react-google-maps";
 import { default as MarkerClusterer } from "react-google-maps/lib/addons/MarkerClusterer";
 import { states } from "../../constants/states.js";
 import { statesHash } from "../../constants/states-hash.js";
-import { hours } from "../../constants/hours.js";
+import moment from "moment";
+
 import {
   updateGeolocation,
   getNearbyParking,
@@ -265,13 +266,15 @@ class FindParking extends Component {
         parkingType = "guest";
       }
     }
+    const currentTime = moment.utc().format("YYYY-MM-DD HH:mm");
+    const expiryTime = moment.utc().add(max_hours,'h').format("YYYY-MM-DD HH:mm");
     return {
       "parking_type" : parkingType,
       "township_code" : selectedTownship,
       "location_code" : location_code,
-      "entry_date_time" : "",
-      "exit_date_time" : "",
-      "expiry_time" : "",
+      "entry_date_time" : currentTime,
+      "exit_date_time" : expiryTime,
+      "expiry_time" : expiryTime,
       "max_time" : max_hours,
       "user_id" : userId,
       "permit_id" : "",
@@ -819,9 +822,11 @@ class FindParking extends Component {
   renderPaypalPaymentForm() {
     const { parking } = this.props;
     const { priceToPay } = parking;
+    const parkingData = JSON.stringify(this.getParkingData());
     return (
       <form method="post" action="/api/pay-for-parking" ref="pay-with-paypal">
         <input type="hidden" name="amount" value={priceToPay} ref="amount-to-pay"/>
+        <input type="hidden" name="parkingData" value={parkingData} ref="parking-data"/>
       </form>
     );
   }
@@ -999,6 +1004,9 @@ console.log(parkingRules);
   }
 
   renderConfirmationScreen() {
+    const { parking } = this.props;
+    const { bookingData } = parking;
+    const { plate_no, max_time, address1, address2, city, state, zip, country } = bookingData;
     return (
       <div className="parking-confirmation">
         <h3>3 : 59 : 28</h3>
@@ -1008,7 +1016,7 @@ console.log(parkingRules);
               Plate#:
             </div>
             <div className="col s8">
-              AAA1234 NY
+              {plate_no}
             </div>
           </div>
 
@@ -1035,7 +1043,7 @@ console.log(parkingRules);
               Max Time:
             </div>
             <div className="col s8">
-              4 Hours
+              {max_time}
             </div>
           </div>
 
@@ -1044,7 +1052,7 @@ console.log(parkingRules);
               Address:
             </div>
             <div className="col s8">
-              123 Down Street, NY..
+              {address1}, {address2}, {city}, {state}, {zip}, {country}
             </div>
           </div>
         </div>

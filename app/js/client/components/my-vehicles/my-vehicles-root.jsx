@@ -6,9 +6,9 @@ import { SimpleSelect } from "react-selectize";
 import Body from "../../../common/components/body/body.jsx";
 import GrayButton from "../../../common/components/button/gray-button.jsx";
 import LicensePlateField from "../../../common/components/fields/license-plate-field.jsx";
-import Chooser from "../../../common/components/fields/chooser/chooser.jsx";
+import Chooser from "../../../common/components/fields/select.jsx";
 import { addPlate, getVehicle } from "../../actions/vehicle.js";
-import { states } from "./constants/states.js";
+import { states } from "../../constants/states.js";
 
 class NewVehicleForm extends Component {
   constructor(props) {
@@ -103,10 +103,11 @@ class NewVehicleForm extends Component {
             ref="license-number"
             placeholder="LICENSE PLATE #"
             className="license-no"/>
-          <Chooser
+          <Chooser 
+            options={states}
             ref="select-state"
-            optionsData={states}
-            selectionEntity="a state"/>
+            selectionEntity="a State"
+            placeholder="Select State" />
         </form>
       </div>
     );

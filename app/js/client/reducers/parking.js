@@ -31,7 +31,9 @@ const initialState = {
   selectedHours: 0,
   currentBalance: 0,
   paymentMethod: null,
-  priceToPay: 0
+  priceToPay: 0,
+  bookingData: null,
+  confirmationId: null
 };
 
 const Parking = (state = initialState, action) => {
@@ -138,7 +140,9 @@ const Parking = (state = initialState, action) => {
         selectedPlate: null,
         paymentMethod: null,
         currentBalance: 0,
-        selectedHours: 0
+        selectedHours: 0,
+        bookingData: null,
+        confirmationId: null
       }
     case "FETCH_PARKING_LOT_INITIATE":
       return {
@@ -234,6 +238,16 @@ const Parking = (state = initialState, action) => {
       return {
         ...state,
         paymentMethod: action.method
+      }
+    case "SET_BOOKING_DATA":
+      return {
+        ...state,
+        bookingData: action.bookingData
+      }
+    case "SET_CONFIRMATION_ID":
+      return {
+        ...state,
+        confirmationId: action.confirmationId
       }
     default:
       return state;

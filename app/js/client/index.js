@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { Router, IndexRoute, Route, Link, browserHistory } from "react-router";
 
 import ParkingController from "./components/find-parking/find-parking-controller.jsx";
+import ParkingPaymentSuccessful from "./components/find-parking/finalize-parking-payment.jsx";
 import SignInController from "./components/sign-in/sign-in-controller.jsx";
 import NewVehicleController from "./components/my-vehicles/my-vehicles-controller.jsx";
 import EditVehicleController from "./components/my-vehicles/edit-vehicle-controller.jsx";
@@ -23,6 +24,7 @@ export default function ClientIndex() {
       <Route path="/" component={SignInController}/>
       <Route path="login" component={SignInController}/>
       <Route path="find-parking" component={ParkingController}/>
+      <Route path="finalize-parking-payment" component={ParkingPaymentSuccessful}/>
       <Route path="new-vehicle" component={NewVehicleController}/>
       <Route path="my-vehicles" component={VehicleListController}/>
       <Route path="edit-vehicle" component={EditVehicleController}/>
