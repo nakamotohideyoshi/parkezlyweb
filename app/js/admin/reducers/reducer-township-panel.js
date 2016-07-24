@@ -276,13 +276,13 @@ export function townshipLocationsRateCreated(state = initialState, action) {
   }
 };
 
-export function townshipLocationsRateFetched(state = initialState, action) {
+export function townshipLocationsRateEdited(state = initialState, action) {
   switch(action.type) {
-    case types.TOWNSHIP_LOCATIONS_RATE_GET_ERROR:
+    case types.TOWNSHIP_LOCATIONS_RATE_PUT_ERROR:
       return Object.assign({}, state, {isLoading: false, data: action.data, error: true});
-    case types.TOWNSHIP_LOCATIONS_RATE_GET_SUCCESS:
+    case types.TOWNSHIP_LOCATIONS_RATE_PUT_SUCCESS:
       return Object.assign({}, state, {isLoading: false, data: action.data, error: false });
-    case types.TOWNSHIP_LOCATIONS_RATE_GET_REQ:
+    case types.TOWNSHIP_LOCATIONS_RATE_PUT_REQ:
       return Object.assign({}, state, {isLoading: true, error: false });
     default:
       return state;

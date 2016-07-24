@@ -85,13 +85,7 @@ export default class TownshipPanelHearingPlaceForm extends React.Component {
   }
 
   componentWillMount() {
-    ajaxSelectizeGet('manage_locations', 'location_code', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('scheme_type', 'scheme_type', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('payment_type', 'pay_method', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('township_users', 'user_id', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('township_users', 'user_name', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('user_vehicles', 'plate_no', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('locations_rate', 'rate', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('townships_manager', 'manager_id', this.selectizeOptionsUpdate);
   }
 
   componentDidUpdate() {
@@ -143,7 +137,6 @@ export default class TownshipPanelHearingPlaceForm extends React.Component {
       'hearing_location',  
       'hearing_address', 
       'court_contact', 
-      'township_code',
     ]
 
     return fields.map((data) => {
@@ -182,80 +175,16 @@ export default class TownshipPanelHearingPlaceForm extends React.Component {
 
               <div className="row">
 
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'pay_method'} 
-                formName={'hearing-place-form'} 
-                fieldName={'pay_method'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'location_code'} 
-                formName={'hearing-place-form'} 
-                fieldName={'location_code'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'scheme_type'} 
-                formName={'hearing-place-form'} 
-                fieldName={'scheme_type'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'pay_method'} 
-                formName={'hearing-place-form'} 
-                fieldName={'pay_method'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'user_id'} 
-                formName={'hearing-place-form'} 
-                fieldName={'user_id'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'user_name'} 
-                formName={'hearing-place-form'} 
-                fieldName={'user_name'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'plate_no'} 
-                formName={'hearing-place-form'} 
-                fieldName={'plate_no'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'rate'} 
-                formName={'hearing-place-form'} 
-                fieldName={'rate'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
                 {this.tempInputsEdit(this.props.initialValues)}
+
+                <AdminSelectize 
+                options={this.state.selectizeOptions}
+                objectKey={'manager_id'} 
+                formName={'hearing-place-form'} 
+                fieldName={'township_code'}
+                defaultData={this.props.rowData}
+                dispatch={dispatch} 
+                />
 
               </div>
             </div>

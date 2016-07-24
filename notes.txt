@@ -1,0 +1,9 @@
+- Dreamfactory -
+username: millennialapps@gmail.com
+password: millennialdev
+
+
+- On Permits -
+
+The general flow is, a user requests a permit, the permit gets approved, 
+the user pays for the permit, after 1 year, the user has to pay again to renew the permit.

@@ -3,9 +3,9 @@ import {reset} from 'redux-form';
 
 import * as types from '../constants/actionTypes.js';
 import * as apiTownship from '../api/api-township.js';
-import * as apiConfig from '../config/api.js';
+import {API_CONFIG} from '../config/api.js';
 
-const AXIOS_INSTANCE = axios.create(apiConfig.API_CONFIG);
+const AXIOS_INSTANCE = axios.create(API_CONFIG);
 
 export function fetchTownshipUsers(townshipCode) {
   const URL = 'township_users?filter=township_code' + '%3D%22' + townshipCode + '%22';
@@ -283,7 +283,7 @@ export function createTownshipPermitsList(data) {
   }
 }
 
-export function fetchLocationsRateList(townshipCode) {
+export function fetchLocationsRate(townshipCode) {
   const URL = 'locations_rate';
 
   return function(dispatch) {
@@ -299,7 +299,7 @@ export function fetchLocationsRateList(townshipCode) {
   }
 }
 
-export function createTownshipLocationsRate(data) {
+export function createLocationsRate(data) {
   
   const URL = 'locations_rate';
   

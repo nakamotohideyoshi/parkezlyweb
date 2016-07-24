@@ -24,6 +24,7 @@ import Griddle from 'griddle-react'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 import { Link } from 'react-router';
 import TownshipPanelFacilitiesEdit from './township-panel-facilities-edit.jsx';
+import TownshipPanelFacilitiesForm from './township-panel-facilities-form.jsx';
 import {ajaxSelectizeGet, ajaxDelete} from '../../../../common/components/ajax-selectize.js'
 
 export const fields = [ 
@@ -149,35 +150,16 @@ class TownshipPanelFacilities extends React.Component {
     } = this.props
 
     return(
-      <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-        <div id="modal-facilities-create" className="modal modal-fixed-footer">
-          <div className="modal-content">
-
-            <div className="row">
-              <div className="center-align">
-                <h4>Create a Township Facility</h4>
-                <p className="center-align">Create a Township Facility by filling out the fields.</p>
-              </div>
-            </div>
-
-            <div className="row">
-              {this.tempInputs()}
-            </div>
-          </div>
-          
-
-          <div className="modal-footer">
-            <div className="row marginless-row">
-              <div className="col s12 center-align">
-                <button fetchTownshipFacilitie
-                type="submit" 
-                disabled={submitting} 
-                className="waves-effect waves-light btn">Create Township Facility</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
+      <TownshipPanelFacilitiesForm
+        initialValues={this.state.rowData} 
+        handleSuccess={this.handleSuccess}
+        modalName="modal-township-facilities-create" 
+        modalText="Create a Facility" 
+        submitType="CREATE"
+        initialValues={this.state.rowData} 
+        rowData={this.state.rowData}
+        handleSuccess={this.handleSuccess}
+      />
     );
   }
 
@@ -310,7 +292,7 @@ class TownshipPanelFacilities extends React.Component {
 
           <a
             className="modal-trigger waves-effect waves-light btn valign" 
-            onClick={() => $('#modal-facilities-create').openModal()}
+            onClick={() => $('#modal-township-facilities-create').openModal()}
             style={{margin: 10}}>Add New Facility</a>
 
         </div>
@@ -352,7 +334,29 @@ class TownshipPanelFacilities extends React.Component {
 
         { 
           !this.state.showEditModal ?
-          <div></div> : <TownshipPanelFacilitiesEdit initialValues={this.state.rowData} handleSuccess={this.handleSuccess}/>
+          <div></div> : 
+          <div>
+            <TownshipPanelFacilitiesForm
+              initialValues={this.state.rowData} 
+              handleSuccess={this.handleSuccess}
+              modalName="modal-township-facilities-edit" 
+              modalText="Edit a Facility" 
+              submitType="EDIT"
+              initialValues={this.state.rowData} 
+              rowData={this.state.rowData}
+              handleSuccess={this.handleSuccess}
+            />
+            <TownshipPanelFacilitiesForm
+              initialValues={this.state.rowData} 
+              handleSuccess={this.handleSuccess}
+              modalName="modal-township-facilities-duplicate" 
+              modalText="Duplicate a Facility" 
+              submitType="DUPLICATE"
+              initialValues={this.state.rowData} 
+              rowData={this.state.rowData}
+              handleSuccess={this.handleSuccess}
+            />
+          </div>
         }
 
         <div id="modal-success" className="modal">

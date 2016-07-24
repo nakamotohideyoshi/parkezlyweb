@@ -43,11 +43,6 @@ export default class TownshipPanelPermits extends React.Component {
                     <ParkingPermits townshipCode={this.props.townshipCode} />   
                   </div>
                 </Panel>
-                <Panel title={<span>Location Rate</span>}>
-                  <div className="row marginless-row">
-                    <LocationsRate townshipCode={this.props.townshipCode} />
-                  </div>
-                </Panel>
               </Tabbordion>
             </div>
           </div>
@@ -56,3 +51,11 @@ export default class TownshipPanelPermits extends React.Component {
     );
   }
 }
+
+/*
+<Panel title={<span>Location Rate</span>}>
+  <div className="row marginless-row">
+    <LocationsRate townshipCode={this.props.townshipCode} />
+  </div>
+</Panel>
+*/
