@@ -70,7 +70,7 @@ exports.saveTransaction = function(req, res) {
     });
 
     var options = {
-      hostname: '100.12.26.176',
+      hostname: '108.30.248.212',
       port: '8006',
       path: '/api/v2/pzly01live7/_table/user_wallet',
       method: 'post',
@@ -116,7 +116,7 @@ exports.payForParking = function(req, res) {
 
     paypalPayment.transactions[0].amount.total = req.body.amount;
     paypalPayment.transactions[0].description = "Pay for Parking";
-    paypalPayment.redirect_urls.return_url = "http://localhost:" + (config.port ? config.port : 3000) + "/finalize-payment";
+    paypalPayment.redirect_urls.return_url = "http://localhost:" + (config.port ? config.port : 3000) + "/finalize-parking-payment";
     paypalPayment.redirect_urls.cancel_url = "http://localhost:" + (config.port ? config.port : 3000) + "/payment-failure";
 
     paypal.payment.create(paypalPayment, {}, function (err, resp) {
@@ -126,8 +126,7 @@ exports.payForParking = function(req, res) {
         if(resp.payer.payment_method === 'paypal') {
           req.session[resp.id] = {
             amount: req.body.amount,
-            userId: req.body.userId,
-            currentBalance: req.body.currentBalance
+            paymentData: req.body.parkingData
           };
           console.log(req.session[resp.id]);
           var redirectUrl;
@@ -141,6 +140,48 @@ exports.payForParking = function(req, res) {
         }
       }
     });
+};
+
+exports.confirmParking = function(req, res) {
+  var paymentId = req.body.paymentId;
+  if(req.session[paymentId]) {
+    //var dateTime = (new Date()).toISOString().replace(/\.[\d]{3}Z$/, 'Z ');
+    //var ip = req.connection.remoteAddress;
+
+    var paymentData = JSON.parse(req.session[paymentId].paymentData);
+
+    var postData = JSON.stringify(paymentData);
+
+    var options = {
+      hostname: '108.30.248.212',
+      port: '8006',
+      path: '/api/v2/pzly01live7/_table/parked_cars',
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': postData.length,
+        'X-DreamFactory-Application-Name': 'parkezly',
+        'X-DreamFactory-Api-Key': 'dbed451c5e4e1518d301c118ffe078ca16a2c287d5efff98515b938538abb5b5'
+      }
+    };
+
+    var post_req = http.request(options, function(resp) {
+      resp.setEncoding('utf8');
+      resp.on('data', function (chunk) {
+        var data = JSON.parse(chunk);
+        delete req.session[paymentId];
+        res.redirect('/my-wallet?id='+data.resource[0].id);
+      });
+    });
+
+    post_req.on('error', function(e) {
+      res.redirect('/payment-failure?errorcode=1011&paymentId='+paymentId);
+      console.log('Could not save transaction : ' + e.message);
+    });
+
+    post_req.write(postData);
+    post_req.end();
+  }
 };
 
 exports.init = function (c) {

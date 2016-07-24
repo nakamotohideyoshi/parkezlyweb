@@ -99,6 +99,7 @@ app.post('/api/logout', function(req, res) {
 app.post('/api/add-funds', paypalRoutes.addFunds);
 app.post('/api/save-transaction', paypalRoutes.saveTransaction);
 app.post('/api/pay-for-parking', paypalRoutes.payForParking);
+app.post('/api/confirm-parking', paypalRoutes.confirmParking);
 
 /*Google Places API*/
 app.post('/api/nearby', mapRoutes.getNearbyPlaces);

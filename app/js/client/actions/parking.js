@@ -401,10 +401,28 @@ const ppWaypointUpdate = (waypointData, poivData) => {
   };
 };
 
+const setConfirmationId = (confirmationId) => {
+  return {
+    type: Actions.SET_CONFIRMATION_ID,
+    confirmationId
+  };
+};
+
+const setBookingData = (bookingData) => {
+  return {
+    type: Actions.SET_BOOKING_DATA,
+    bookingData
+  };
+};
+
 export const createBooking = (parkingData) => {
   return dispatch => {
     return ParkingAPI.confirmBooking(parkingData)
       .then((response) => {
+        const { data } = response;
+        const { resource } = data;
+        dispatch(setBookingData(parkingData));
+        dispatch(setConfirmationId(resource[0].id));
         dispatch(setBookingStep(4));
       })
       .catch((response) => {
