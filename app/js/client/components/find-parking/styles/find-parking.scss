@@ -82,19 +82,19 @@
   }
 
   .free-parking {
-    background: url('../images/park@3x.png');
+    background: url('../images/park_free_circle@3x.png');
     background-size: contain;
     background-repeat: no-repeat;
     padding-left: 75px;
   }
   .public-parking {
-    background: url('../images/paid_parking@3x.png');
+    background: url('../images/park_managed_circle@3x.png');
     background-size: contain;
     background-repeat: no-repeat;
     padding-left: 75px;
   }
   .managed-parking {
-    background: url('../images/managed@3x.png');
+    background: url('../images/park_paid_circle_pin@3x.png');
     background-size: contain;
     background-repeat: no-repeat;
     padding-left: 75px;

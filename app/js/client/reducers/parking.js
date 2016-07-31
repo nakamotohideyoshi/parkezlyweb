@@ -9,6 +9,7 @@ const initialState = {
   free: true,
   paid: true,
   managed: true,
+  locationAddress: null,
   showParkingOptions: false,
   showOtherLocations: false,
   selectedMarker: null,
@@ -26,7 +27,7 @@ const initialState = {
   lotsData: null,
   selectedParkingCode: null,
   bookingStep: 0,
-  selectedPlate: null,
+  selectedPlate: {},
   error: null,
   selectedHours: 0,
   currentBalance: 0,
@@ -39,15 +40,27 @@ const initialState = {
 const Parking = (state = initialState, action) => {
   console.log(action);
   switch(action.type) {
+    case "ENABLE_LOADING":
+      return {
+        ...state,
+        loading: true
+      };
+
+    case "DISABLE_LOADING":
+      return {
+        ...state,
+        loading: false
+      };
+
     case "FETCH_PARKING_INITIATE":
       return {
         ...state,
-        loading : true
+        loading: true
       };
     case "FETCH_PARKING_SUCCESS":
       return {
         ...state,
-        loading : false,
+        loading: false,
         markers: action.data
       }
     case "FETCH_PARKING_FAIL":
@@ -79,6 +92,11 @@ const Parking = (state = initialState, action) => {
       return {
         ...state,
         showOtherLocations: action.status
+      }
+    case "SET_LOCATION_ADDRESS":
+      return {
+        ...state,
+        locationAddress: action.location
       }
     case "SET_SELECTED_MARKER":
       return {
@@ -137,7 +155,7 @@ const Parking = (state = initialState, action) => {
         selectedParkingCode: null,
         selectedMarkerItem: null,
         bookingStep: 0,
-        selectedPlate: null,
+        selectedPlate: {},
         paymentMethod: null,
         currentBalance: 0,
         selectedHours: 0,
@@ -166,7 +184,7 @@ const Parking = (state = initialState, action) => {
         ...state,
         selectedParkingCode: action.location,
         selectedHours: action.selectedHours,
-        bookingStep: 2
+        bookingStep: action.bookingStep
       }
     case "SET_SELECTED_PLATE":
       return {
