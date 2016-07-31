@@ -6,7 +6,7 @@ import {
   RECEIVED_LAT_LNG,
   RECEIVE_LAT_LNG_FAILED
 } from "../constants/actions.js";
-import { getNearbyParking } from "./parking.js";
+import { getNearbyParking, getLocation, setLocationAddress, getParkingRules } from "./parking.js";
 
 export const setPosition = (lat, lon) => {
   return {
@@ -48,8 +48,12 @@ export const getLocationCoordinates = (address) => {
       .then((response) => {
         const { data } = response;
         const { results } = data;
-        dispatch(setPosition( results[0].geometry.location.lat, results[0].geometry.location.lng ));
-        dispatch(getNearbyParking( results[0].geometry.location ));
+        dispatch(setPosition(results[0].geometry.location.lat, results[0].geometry.location.lng));
+        dispatch(getNearbyParking(results[0].geometry.location));
+        const location = getLocation(response.data.results[0].address_components);
+        console.log(location);
+        dispatch(setLocationAddress(location));
+        dispatch(getParkingRules(location.city, location.state));
       })
       .catch((response) => {
         dispatch(receiveLatLngFailed(response));

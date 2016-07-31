@@ -27,12 +27,12 @@ export const getNearByParking = (position) => {
   );
 };
 
-export const getParkingRules = (city) => {
+export const getParkingRules = (city, state) => {
   return axios(
     Object.assign(
       {
         method: "get",
-        url: "/pzly01live7/_table/parking_rules?filter=City="+city
+        url: "/pzly01live7/_table/parking_rules?filter=City="+city+"&state="+state
       }, APIConfig
     )
   );
@@ -51,31 +51,6 @@ export const getParkingLot = (locationCode) => {
             "value": locationCode
           }]
         }
-      }, APIConfig
-    )
-  );
-};
-
-export const parkingWayPointUpdate = (waypointData) => {
-console.log(waypointData);
-  return axios(
-    Object.assign(
-      {
-        method: "post",
-        url: "pzly01live7/_table/waypoints",
-        data : waypointData
-      }, APIConfig
-    )
-  );
-};
-
-export const makePoivRequest = (poivData) => {
-  return axios(
-    Object.assign(
-      {
-        method: "post",
-        url: "pzly01live7/_table/poiv2",
-        data : poivData
       }, APIConfig
     )
   );
@@ -108,7 +83,7 @@ export const getSubscriptionStatus = (user_id, location_code) => {
     Object.assign(
       {
         method: "get",
-        url: "pzly01live7/_table/subscriptions?filter=user_name="+user_id+"&location_code="+location_code
+        url: "pzly01live7/_table/subscriptions?filter=user_name="+user_id+"&location_code="+location_code+"&order=expiry_date%20DESC"
       }, APIConfig
     )
   );
@@ -121,6 +96,31 @@ export const confirmBooking = (parking_data) => {
         method: "post",
         url: "pzly01live7/_table/parked_cars",
         data : [parking_data]
+      }, APIConfig
+    )
+  );
+};
+
+export const checkIfAlreadyParked = (plate_no, registered_state) => {
+  return axios(
+    Object.assign(
+      {
+        method: "get",
+        url: "pzly01live7/_table/parked_cars?filter=plate_no="+plate_no+"&pl_state="+registered_state+"&order=entry_date_time%20DESC"
+      }, APIConfig
+    )
+  );
+};
+
+export const exitVehicle = (confirmation_id, exit_date_time) => {
+  return axios(
+    Object.assign(
+      {
+        method: "put",
+        url: "pzly01live7/_table/parked_cars?filter=id="+confirmation_id,
+        data : {
+          exit_date_time: exit_date_time
+        }
       }, APIConfig
     )
   );

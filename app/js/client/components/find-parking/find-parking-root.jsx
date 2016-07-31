@@ -13,10 +13,12 @@ import { default as MarkerClusterer } from "react-google-maps/lib/addons/MarkerC
 import { states } from "../../constants/states.js";
 import { statesHash } from "../../constants/states-hash.js";
 import moment from "moment";
+import Timer from "../../../common/components/timer/timer.jsx";
 
 import {
   updateGeolocation,
   getNearbyParking,
+  getAddress,
   setParkingType,
   setParkingOptions,
   setOtherLocations,
@@ -36,7 +38,9 @@ import {
   getBalance,
   setPriceToPay,
   chargeWallet,
-  setPaymentMethod
+  setPaymentMethod,
+  checkAndBook,
+  exitVehicle
 } from "../../actions/parking.js";
 import { setPosition, setInitialPosition, getLocationCoordinates } from "../../actions/location.js";
 import { getVehicles } from "../../actions/vehicle.js";
@@ -73,6 +77,7 @@ class FindParking extends Component {
     this.payWithPaypal = this.payWithPaypal.bind(this);
     this.closeWalletModal = this.closeWalletModal.bind(this);
     this.calculateAmountToPay = this.calculateAmountToPay.bind(this);
+    this.exitVehicleFromParking = this.exitVehicleFromParking.bind(this);
   }
 
   componentDidMount() {
@@ -97,15 +102,19 @@ class FindParking extends Component {
 
   initializePosition(position) {
     const { dispatch } = this.props;
-    const lat = 40.7128; //position.coords.latitude;
-    const lng = -73.935242; //position.coords.longitude;
-    const demoPos = {
+    //const lat = position.coords.latitude;
+    //const lng = position.coords.longitude;
+
+    const lat = 40.7326;
+    const lng = -73.4454;
+    /*const demoPos = {
       lat: 40.7346687317,
       lng: -73.4461441040
-    };
+    };*/
     dispatch(setInitialPosition(lat, lng));
+    dispatch(getAddress(lat, lng));
     this.fetchNearbyParking();
-    dispatch(getParkingRules("New York"));
+    //dispatch(getParkingRules("New York"));
   }
 
   toggleParking(type) {
@@ -165,7 +174,7 @@ class FindParking extends Component {
     const { dispatch } = this.props;
     dispatch(getLocationCoordinates(address.value));
     dispatch(setSelectedLocation(address.value));
-    dispatch(getParkingRules(address.value));
+    //dispatch(getParkingRules(address.value));
     this.hideOtherLocationOptions();
   }
 
@@ -174,7 +183,7 @@ class FindParking extends Component {
     const address = this.refs["custom-location"].value;
     dispatch(getLocationCoordinates(address));
     dispatch(setSelectedLocation(address));
-    dispatch(getParkingRules(address.value));
+    //dispatch(getParkingRules(address.value));
     this.hideOtherLocationOptions();
   }
 
@@ -191,10 +200,10 @@ class FindParking extends Component {
     dispatch(setSelectedParking(parking_type, location_code));
     if(parking_type === "MANAGED") {
       const userId = cookie.load('userId');
-      //dispatch(getParkingLot(location_code));
-      //dispatch(getSubscriptionStatus(userId, location_code));
-      dispatch(getSubscriptionStatus(userId, "NY-FDV-L01"));
-      dispatch(getParkingLot("NY-FDV-L01"));
+      dispatch(getParkingLot(location_code));
+      dispatch(getSubscriptionStatus(userId, location_code));
+      //dispatch(getSubscriptionStatus(userId, "NY-FDV-L01"));
+      //dispatch(getParkingLot("NY-FDV-L01"));
     }
   }
 
@@ -207,8 +216,13 @@ class FindParking extends Component {
     this.getCharges();
     const { dispatch } = this.props;
     const userId = cookie.load('userId');
-    dispatch(getVehicles(userId));
-    dispatch(selectParkingAndTimeUnit(location_code, pricing_time_unit));
+    let bookingStep = 2;
+    if(userId) {
+      dispatch(getVehicles(userId));
+    } else {
+      bookingStep = 3;
+    }
+    dispatch(selectParkingAndTimeUnit(location_code, pricing_time_unit, bookingStep));
   }
 
   selectVehiclePlate(plate) {
@@ -312,8 +326,9 @@ class FindParking extends Component {
   }
 
   confirmBooking() {
+    const { dispatch } = this.props;
     const parkingData = this.getParkingData();
-    dispatch(createBooking(parkingData));
+    dispatch(checkAndBook(parkingData));
   }
 
   goToPayment() {
@@ -382,7 +397,7 @@ class FindParking extends Component {
     if(priceToPay < currentBalance) {
       const userId = cookie.load('userId');
       const parkingData = this.getParkingData();
-      dispatch(createBooking(parkingData));
+      dispatch(checkAndBook(parkingData));
     }
   }
 
@@ -399,6 +414,13 @@ class FindParking extends Component {
   closeWalletModal(e) {
     e.preventDefault();
     $(this.refs["wallet-balance-modal"]).closeModal();
+  }
+
+  exitVehicleFromParking() {
+    const { dispatch, parking } = this.props;
+    const { confirmationId } = parking;
+    const dateTimeNow = moment.utc().format("YYYY-MM-DD HH:mm");
+    dispatch(exitVehicle(confirmationId, dateTimeNow));
   }
 
   renderSearchLocations() {
@@ -480,7 +502,7 @@ class FindParking extends Component {
       }
       case "ez-managed": {
         iconUrl = MANAGED_MAP_MARKER;
-        clickHandler = () => {this.handleParkingSelection("MANAGED", markerItem)};
+        clickHandler = () => {this.handleParkingSelection("MANAGED", markerItem.location_code)};
         break;
       }
     }
@@ -617,6 +639,7 @@ class FindParking extends Component {
   }
 
   renderParkingOption(marker) {
+    console.log(marker);
     const validClass = classNames({
       "col": true,
       "s10": true,
@@ -673,6 +696,7 @@ class FindParking extends Component {
     const { parkingRules, selectedMarkerItem } = this.props.parking;
     const currentRules = parkingRules[selectedMarkerItem.location_code];
     const pricing = currentRules.pricing == 0 ? "FREE" : "$" + currentRules.pricing + "/" + currentRules.pricing_duration + "min";
+
     const parkNowAction = () => {this.selectParkingandFetchVehicles(selectedMarkerItem.location_code, currentRules.pricing_duration)};
     return (
       <div className="row parking-details">
@@ -1006,10 +1030,16 @@ console.log(parkingRules);
   renderConfirmationScreen() {
     const { parking } = this.props;
     const { bookingData } = parking;
-    const { plate_no, max_time, address1, address2, city, state, zip, country } = bookingData;
+    const { plate_no, max_time, exit_date_time, address1, address2, city, state, zip, country } = bookingData;
+    const exitTime = new Date(exit_date_time);
+    const dateTimeNow = new Date(moment.utc().format("YYYY-MM-DD HH:mm"));
+    const timeRemaining = exitTime - dateTimeNow;
+    console.log(timeRemaining);
     return (
       <div className="parking-confirmation">
-        <h3>3 : 59 : 28</h3>
+        <h3>
+          <Timer timeLeft={timeRemaining}/>
+        </h3>
         <div>
           <div className="row">
             <div className="col s4">
@@ -1043,7 +1073,7 @@ console.log(parkingRules);
               Max Time:
             </div>
             <div className="col s8">
-              {max_time}
+              {max_time} Hours
             </div>
           </div>
 
@@ -1057,18 +1087,13 @@ console.log(parkingRules);
           </div>
         </div>
 
-        <GrayButton onClick={null}>
+        <GrayButton onClick={this.exitVehicleFromParking}>
           EXIT
         </GrayButton>
 
         <GrayButton onClick={null}>
           FIND MY VEHICLE
         </GrayButton>
-
-        <GrayButton onClick={null}>
-          HIDE
-        </GrayButton>
-
       </div>
     );
   }

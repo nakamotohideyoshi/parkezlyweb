@@ -1,8 +1,22 @@
 import * as ParkingAPI from "../api/parking.js";
 import { getWalletBalance, makePayment } from "../api/wallet.js";
+import { getLocationDetails } from "../api/nearby.js";
 import * as Actions from "../constants/actions.js";
 import { GenericError } from "../constants/texts.js";
+import moment from "moment";
 
+
+const enableLoading = () => {
+  return {
+    type: Actions.ENABLE_LOADING
+  };
+};
+
+const disableLoading = () => {
+  return {
+    type: Actions.DISABLE_LOADING
+  };
+};
 
 const initiateParkingFetch = () => {
   return {
@@ -33,6 +47,56 @@ export const getNearbyParking = (position) => {
       })
       .catch((response) => {
         dispatch(fetchNearbyParkingFailed(response));
+      });
+  };
+};
+
+export const getLocation = (addressComponents) => {
+  let city = null, state = null, country = null, zip = null;
+  const length = addressComponents.length;
+
+  for (let i = 0; i < length; i++) {
+    if(addressComponents[i].types.indexOf("locality") !== -1 && !city) {
+      city = addressComponents[i].long_name;
+    }
+    if(addressComponents[i].types.indexOf("administrative_area_level_1") !== -1 && !state) {
+      state = addressComponents[i].long_name;
+    }
+    if(addressComponents[i].types.indexOf("country") !== -1 && !country) {
+      country = addressComponents[i].long_name;
+    }
+    if(addressComponents[i].types.indexOf("postal_code") !== -1 && !zip) {
+      zip = addressComponents[i].long_name;
+    }
+  }
+  return {
+    city: city,
+    state: state,
+    country: country,
+    zip: zip
+  };
+};
+
+export const setLocationAddress = (location) => {
+  return {
+    type: Actions.SET_LOCATION_ADDRESS,
+    location
+  };
+};
+
+export const getAddress = (lat, lng) => {
+  return dispatch => {
+    dispatch(initiateParkingFetch());
+    return getLocationDetails(lat, lng)
+      .then((response) => {
+        console.log(response.data);
+        const location = getLocation(response.data.results[0].address_components);
+        dispatch(setLocationAddress(location));
+        dispatch(getParkingRules(location.city, location.state));
+      })
+      .catch((response) => {
+        console.log("failed");
+        //dispatch(fetchNearbyParkingFailed(response));
       });
   };
 };
@@ -124,9 +188,9 @@ const fetchParkingRulesFailed = (error) => {
   };
 };
 
-export const getParkingRules = (city) => {
+export const getParkingRules = (city, state) => {
   return dispatch => {
-    return ParkingAPI.getParkingRules(city)
+    return ParkingAPI.getParkingRules(city, state)
       .then((response) => {
         const respArr = response.data.resource;
         const formattedArr = {};
@@ -207,6 +271,7 @@ const fetchNearParkingLotFailed = (error) => {
 };
 
 export const getParkingLot = (locationCode) => {
+  console.log(locationCode);
   return dispatch => {
     dispatch(initiateParkingLotFetch());
     return ParkingAPI.getParkingLot(locationCode)
@@ -219,11 +284,12 @@ export const getParkingLot = (locationCode) => {
   };
 };
 
-export const selectParkingAndTimeUnit = (locationCode, pricingTimeUnit) => {
+export const selectParkingAndTimeUnit = (locationCode, pricingTimeUnit, bookingStep) => {
   return {
     type: Actions.SELECT_PARKING,
     location: locationCode,
-    selectedHours: parseFloat(pricingTimeUnit/60).toFixed(2)
+    selectedHours: parseFloat(pricingTimeUnit/60).toFixed(2),
+    bookingStep
   };
 };
 
@@ -377,30 +443,6 @@ const initiatePaymentWithWallet = () => {
   };
 };
 
-const ppPoivRequest = (poivData) => {
-  return dispatch => {
-    return ParkingAPI.makePoivRequest(poivData)
-      .then((response) => {
-        dispatch(setBookingStep(4));
-      })
-      .catch((response) => {
-        //dispatch(fetchNearParkingLotFailed(response));
-      });
-  };
-};
-
-const ppWaypointUpdate = (waypointData, poivData) => {
-  return dispatch => {
-    return ParkingAPI.parkingWayPointUpdate(waypointData)
-      .then((response) => {
-        dispatch(ppPoivRequest(poivData));
-      })
-      .catch((response) => {
-        //dispatch(fetchNearParkingLotFailed(response));
-      });
-  };
-};
-
 const setConfirmationId = (confirmationId) => {
   return {
     type: Actions.SET_CONFIRMATION_ID,
@@ -412,6 +454,36 @@ const setBookingData = (bookingData) => {
   return {
     type: Actions.SET_BOOKING_DATA,
     bookingData
+  };
+};
+
+export const checkAndBook = (parkingData) => {
+  const { plate_no, pl_state } = parkingData;
+  return dispatch => {
+    dispatch(enableLoading());
+    return ParkingAPI.checkIfAlreadyParked(plate_no, pl_state)
+      .then((response) => {
+        const { data } = response;
+        const { resource } = data;
+        if(resource.length > 0) {
+          const { exit_date_time } = resource[0];
+          const exitTime = new Date(exit_date_time);
+          const dateTimeNow = new Date(moment.utc().format("YYYY-MM-DD HH:mm"));
+          console.log("exit time", exitTime);
+          console.log("now time", dateTimeNow);
+          if(exitTime > dateTimeNow) {
+            console.log("This car is already parked");
+          } else {
+            dispatch(createBooking(parkingData));
+          }
+        } else {
+          dispatch(createBooking(parkingData));
+        }
+        dispatch(disableLoading());
+      })
+      .catch((response) => {
+        //dispatch(fetchNearParkingLotFailed(response));
+      });
   };
 };
 
@@ -454,20 +526,30 @@ const setManagedParkingType = (parking_type) => {
 
 export const getSubscriptionStatus = (user_id, location_code) => {
   return dispatch => {
+    dispatch(enableLoading());
     return ParkingAPI.getSubscriptionStatus(user_id, location_code)
       .then((response) => {
-        //dispatch(ppWaypointUpdate(waypointData, poivData));
+
         let parking_type = null; //managed
         const { data } = response;
 
         const { resource } = data;
         console.log(resource.length);
-        if (resource.length == 0) {
+        const isEmpty = resource.length === 0;
+        if (isEmpty) {
           parking_type == "paid"; //guest managed
         } else {
-          parking_type == "free";
+          const expiryTime = new Date(resource[0].expiry_time);
+          const timeNow = new Date(moment.utc().format("YYYY-MM-DD HH:mm"));
+
+          if(expiryTime > timeNow) {
+            parking_type == "free";
+          } else {
+            parking_type == "paid";
+          }
         }
         dispatch(setManagedParkingType(parking_type));
+        dispatch(disableLoading());
       })
       .catch((response) => {
         //dispatch(fetchChargesFailed());
@@ -479,5 +561,28 @@ export const setPaymentMethod = (method) => {
   return {
     type: Actions.SET_PAYMENT_METHOD,
     method
+  };
+};
+
+const exitParkingFlow = () => {
+  return {
+    type: Actions.HIDE_SELECTED_PARKING
+  };
+};
+
+export const exitVehicle = (confirmationId, exit_date_time) => {
+  return dispatch => {
+    dispatch(enableLoading());
+    return ParkingAPI.exitVehicle(confirmationId, exit_date_time)
+      .then((response) => {
+        const { data } = response;
+        const { resource } = data;
+        console.log("Vehicle Exited");
+        dispatch(disableLoading());
+        dispatch(exitParkingFlow());
+      })
+      .catch((response) => {
+        //dispatch(fetchChargesFailed());
+      });
   };
 };
