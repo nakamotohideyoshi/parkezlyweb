@@ -1,5 +1,5 @@
 import React from 'react'
-import { reduxForm, change } from 'redux-form'
+import { reduxForm, change, reset } from 'redux-form'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import datetime from 'node-datetime'
@@ -135,7 +135,8 @@ class BursarPanelPermitPayment extends React.Component {
     return(
       <BursarPanelPermitPaymentForm 
         modalName="modal-bursar-permit-create" 
-        modalText="Create a Parking Payment" 
+        modalText="Create a Permit Payment" 
+        townshipCode={this.props.townshipCode}
         submitType="CREATE"
         initialValues={null}
         editMode={false}
@@ -288,7 +289,9 @@ class BursarPanelPermitPayment extends React.Component {
                 <div className="center-align">
                   <a
                     className="modal-trigger waves-effect waves-light btn valign" 
-                    onClick={() => $('#modal-bursar-permit-create').openModal()}
+                    onClick={() => {
+                      $('#modal-bursar-permit-create').openModal(); 
+                    }}
                     style={{margin: 10}}>Add New Permit Payment</a>
                 </div>
                </div>

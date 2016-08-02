@@ -1,11 +1,12 @@
 import React from 'react';
-import { reduxForm, change } from 'redux-form'
+import { reduxForm, change, reset } from 'redux-form'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import datetime from 'node-datetime'
 import {SimpleSelect} from "react-selectize"
 import { browserHistory } from 'react-router'
 import {createFilter} from 'react-search-input';
+import _ from 'lodash'
 
 import Body from "../../../../../common/components/body/body.jsx"
 import Spinner from '../../../../common/components/spinner.jsx'
@@ -16,13 +17,21 @@ import {
   editBursarPermitPayment, 
   createBursarPermitPayment,  
   resetLoading} from '../../../../actions/actions-bursar-panel.jsx'
+
+import {
+  fetchTownshipParkingPermits,
+  createTownshipParkingPermits,
+  fetchTownshipPermitRequests, 
+  editTownshipPermitRequests,
+} from '../../../../actions/actions-township-panel.jsx'
+
 import {fetchTownshipSchemeTypes} from '../../../../actions/actions-township-common.jsx'
 
 import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import Griddle from 'griddle-react'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 
-import {ajaxSelectizeGet, ajaxDelete} from '../../../../common/components/ajax-selectize.js'
+import {ajaxSelectizeGet, ajaxSelectizeFilteredGet, ajaxDelete, ajaxGet, ajaxPost} from '../../../../common/components/ajax-selectize.js'
 import AdminSelectize from '../../../../common/components/admin-selectize.jsx'
 
 export const fields = [ 
@@ -58,6 +67,9 @@ export default class BursarPanelPermitPaymentForm extends React.Component {
       parkingLocationCode: null,
       showEditModal: false,
       rowData: null,
+      permitData: null,
+      permitRequestData: null,
+      userData: null,
       selectizeOptions: {}
     }
 
@@ -71,6 +83,7 @@ export default class BursarPanelPermitPaymentForm extends React.Component {
     
     $('#' + this.props.modalName).closeModal();
     $('#modal-success').openModal();
+    ajaxPost('subscriptions', data);
 
     switch(this.props.submitType) {
       case "CREATE":
@@ -96,25 +109,53 @@ export default class BursarPanelPermitPaymentForm extends React.Component {
   }
 
   componentWillMount() {
-    ajaxSelectizeGet('manage_locations', 'location_code', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('scheme_type', 'scheme_type', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('payment_type', 'pay_method', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('township_users', 'user_id', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('township_users', 'user_name', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('user_vehicles', 'plate_no', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('locations_rate', 'rate', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('permit_type', 'permit_type', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('user_profile', 'user_id', this.selectizeOptionsUpdate);
+    ajaxSelectizeFilteredGet('parking_permits', 'permit_name', this.props.townshipCode, this.selectizeOptionsUpdate);
+
+    ajaxGet('parking_permits', (table) => {
+      this.setState({permitData: table.data.resource});
+    });
+    ajaxGet('permit_subscription', (table) => {
+      this.setState({permitRequestData: table.data.resource});
+    });
+    ajaxGet('user_profile', (table) => {
+      this.setState({userData: table.data.resource});
+    });
+  }
+
+  componentDidMount() {
+    const {
+      resetForm,
+      submitting,
+      dispatch
+    } = this.props
+
+    $('.date_expiry')
+    .bootstrapMaterialDatePicker({ time: false, format : 'YYYY-MM-DD HH:mm:ss' })
+    .on('change', function(event) {
+      console.log(event.target.value);
+      dispatch(change('permit-payment-form', 'date_expiry', event.target.value)); 
+    });
+
+    $('.date_payment')
+    .bootstrapMaterialDatePicker({ time: false, format : 'YYYY-MM-DD HH:mm:ss' })
+    .on('change', function(event) {
+      console.log(event.target.value);
+      dispatch(change('permit-payment-form', 'date_payment', event.target.value)); 
+    });
   }
 
   componentDidUpdate() {
     if (this.props.bursarPermitPaymentEdited.isLoading) {
-      } else if (!this.props.bursarPermitPaymentEdited.isLoading) {
-        this.handleSuccess();
-      }
+    } else if (!this.props.bursarPermitPaymentEdited.isLoading) {
+      this.handleSuccess();
+    }
 
     if (this.props.bursarPermitPaymentCreated.isLoading) {
-      } else if (!this.props.bursarPermitPaymentEdited.isLoading) {
-        this.handleSuccess();
-      }
+    } else if (!this.props.bursarPermitPaymentEdited.isLoading) {
+      this.handleSuccess();
+    }
   };
 
   handleSuccess(){
@@ -152,21 +193,22 @@ export default class BursarPanelPermitPaymentForm extends React.Component {
     } = this.props;
 
     const fields = [ 
-      'id',
-      'date_expiry',
-      'permit_approved',
-      'amount',
-      'twnship_code',
-      'twnshp_name',
-      'permit_name',
-      'permit_type',
-      'scheme_type',
-      'loc_code',
-      'loc_name',
-      'duration',
-      'duration_period',
-      'ip',
-      'date_payment'
+        'user_name',
+        'permit_approved',
+        'rate',
+        'pay_method',
+        'user_id',
+        'twnship_code',
+        'twnshp_name',
+        'permit_type',
+        'scheme_type',
+        'loc_code',
+        'loc_name',
+        'ip',
+        'amount',
+        'cashier_id',
+        'duration',
+        'duration_period',
     ]
 
     return fields.map((data) => {
@@ -203,79 +245,68 @@ export default class BursarPanelPermitPaymentForm extends React.Component {
               </div>
 
               <div className="row">
-
-
                 <AdminSelectize 
                 options={this.state.selectizeOptions}
-                objectKey={'pay_method'} 
-                formName={'parking-payment-form'} 
-                fieldName={'pay_method'}
+                objectKey={'permit_name'} 
+                formName={'permit-payment-form'} 
+                fieldName={'permit_name'}
                 defaultData={this.props.rowData}
                 dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'location_code'} 
-                formName={'parking-payment-form'} 
-                fieldName={'location_code'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'scheme_type'} 
-                formName={'parking-payment-form'} 
-                fieldName={'scheme_type'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'pay_method'} 
-                formName={'parking-payment-form'} 
-                fieldName={'pay_method'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
+                onChange={
+                  (value) => {
+                    let permitObject = _.filter(this.state.permitData, {
+                      'permit_name': value, 
+                      'township_code': this.props.townshipCode 
+                    });
+                    console.log(permitObject);
+                    this.props.dispatch(change('permit-payment-form', 'permit_type', permitObject[0].permit_type));
+                    this.props.dispatch(change('permit-payment-form', 'scheme_type', permitObject[0].scheme_type));
+                    this.props.dispatch(change('permit-payment-form', 'twnship_code', permitObject[0].township_code));
+                    this.props.dispatch(change('permit-payment-form', 'twnshp_name', permitObject[0].township_name));
+                    this.props.dispatch(change('permit-payment-form', 'rate', permitObject[0].cost));
+                  }
+                }
                 />
 
                 <AdminSelectize 
                 options={this.state.selectizeOptions}
                 objectKey={'user_id'} 
-                formName={'parking-payment-form'} 
+                formName={'permit-payment-form'} 
                 fieldName={'user_id'}
                 defaultData={this.props.rowData}
                 dispatch={dispatch} 
+                onChange={
+                  (value) => {
+                    let permitRequestObject = _.filter(this.state.permitRequestData, {
+                      'user_id': parseInt(value), 
+                      'township_code': this.props.townshipCode 
+                    });
+                    let userObject = _.filter(this.state.userData, {
+                      'user_id': parseInt(value)
+                    });
+                    if(permitRequestObject.length === 0) {
+                      alert("Permit Subscription for this user doesn't exist.")
+                    }
+
+                    this.props.dispatch(change('permit-payment-form', 'ip', userObject[0].ip));
+                    this.props.dispatch(change('permit-payment-form', 'user_name', parseInt(userObject[0].user_name)));
+                    this.props.dispatch(change('permit-payment-form', 'permit_approved', permitRequestObject[0].approved));
+                  }
+                }
                 />
 
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'user_name'} 
-                formName={'parking-payment-form'} 
-                fieldName={'user_name'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'plate_no'} 
-                formName={'parking-payment-form'} 
-                fieldName={'plate_no'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'rate'} 
-                formName={'parking-payment-form'} 
-                fieldName={'rate'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
+                <div className="col s6 admin-form-input">
+                  <div className="form-group">
+                    <label htmlFor="date_expiry">date_expiry</label>
+                    <input id="date_expiry" className="date_expiry" type="text"/>
+                  </div>
+                </div>
+                <div className="col s6 admin-form-input">
+                  <div className="form-group">
+                    <label htmlFor="date_payment">date_payment</label>
+                    <input id="date_payment" className="date_payment" type="text"/>
+                  </div>
+                </div>
 
                 {this.tempInputsEdit(this.props.initialValues)}
 
@@ -305,6 +336,8 @@ function mapStateToProps(state) {
     bursarPermitPaymentFetched: state.bursarPermitPaymentFetched,
     bursarPermitPaymentCreated: state.bursarPermitPaymentCreated,
     bursarPermitPaymentEdited: state.bursarPermitPaymentEdited,
+    townshipParkingPermitsFetched: state.townshipParkingPermitsFetched,
+    townshipParkingPermitsCreated: state.townshipParkingPermitsCreated,
   }
 }
 
@@ -313,12 +346,18 @@ function mapDispatchToProps(dispatch) {
     fetchBursarPermitPayment, 
     editBursarPermitPayment, 
     createBursarPermitPayment, 
+
+    fetchTownshipParkingPermits,
+    createTownshipParkingPermits,
+    fetchTownshipPermitRequests,
+    editTownshipPermitRequests,
+
     resetLoading
   }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-  form: 'parking-payment-form',
+  form: 'permit-payment-form',
   fields,
   overwriteOnInitialValuesChange : true
 })(BursarPanelPermitPaymentForm));

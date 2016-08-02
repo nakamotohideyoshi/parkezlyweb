@@ -72,8 +72,6 @@ export default class TownshipPanelParkingRulesForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
     this.selectizeOptionsUpdate = this.selectizeOptionsUpdate.bind(this);
-    //this.props.dispatch(change('parking-rules-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
-    //this.props.dispatch(change('parking-rules-form', 'date_time', this.props.locationCode);
   }
 
   handleSubmit(data) {
@@ -295,6 +293,7 @@ export default class TownshipPanelParkingRulesForm extends React.Component {
                 defaultData={this.props.rowData}
                 dispatch={dispatch} 
                 />
+                
                 <AdminSelectize 
                 options={this.state.selectizeOptions}
                 objectKey={'rate'} 
@@ -303,6 +302,7 @@ export default class TownshipPanelParkingRulesForm extends React.Component {
                 defaultData={this.props.rowData}
                 dispatch={dispatch} 
                 />
+
                 <div className="col s6 admin-form-input">
                   <div className="form-group">
                     <label htmlFor="date_time">date_time</label>
@@ -316,19 +316,23 @@ export default class TownshipPanelParkingRulesForm extends React.Component {
                     <input id="date" className="date" type="text"/>
                   </div>
                 </div>
+
                 {this.tempInputsEdit(this.props.initialValues)}
+
                 <div className="col s6 admin-form-input">
                   <div className="form-group">
                     <label htmlFor="start_time">start_time</label>
                     <input id="start_time" className="start_time" type="text"/>
                   </div>
                 </div>
+
                 <div className="col s6 admin-form-input">
                   <div className="form-group">
                     <label htmlFor="end_time">end_time</label>
                     <input id="end_time" className="end_time" type="text"/>
                   </div>
                 </div>
+
               </div>
             </div>
 
@@ -371,3 +375,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   fields,
   overwriteOnInitialValuesChange : true
 })(TownshipPanelParkingRulesForm));
+
+    //this.props.dispatch(change('parking-rules-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
+    //this.props.dispatch(change('parking-rules-form', 'date_time', this.props.locationCode);

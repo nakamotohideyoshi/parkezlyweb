@@ -325,10 +325,10 @@ class ParkingPermits extends React.Component {
 function mapStateToProps(state) {
   return {
     townshipParkingPermitsFetched: state.townshipParkingPermitsFetched,
+    townshipParkingPermitsCreated: state.townshipParkingPermitsCreated,
     townshipUsersFetched: state.townshipUsersFetched,
     townshipPermitTypesFetched: state.townshipPermitTypesFetched,
     townshipSchemeTypesFetched: state.townshipSchemeTypesFetched,
-    townshipParkingPermitsCreated: state.townshipParkingPermitsCreated,
     townshipFacilitiesFetched: state.townshipFacilitiesFetched,
     townshipPermitsListFetched: state.townshipPermitsListFetched,
     townshipListFetched: state.townshipListFetched
