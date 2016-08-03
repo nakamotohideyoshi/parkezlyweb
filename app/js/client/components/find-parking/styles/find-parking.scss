@@ -86,18 +86,21 @@
     background-size: contain;
     background-repeat: no-repeat;
     padding-left: 75px;
+    height: 55px;
   }
   .public-parking {
-    background: url('../images/park_managed_circle@3x.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    padding-left: 75px;
-  }
-  .managed-parking {
     background: url('../images/park_paid_circle_pin@3x.png');
     background-size: contain;
     background-repeat: no-repeat;
     padding-left: 75px;
+    height: 55px;
+  }
+  .managed-parking {
+    background: url('../images/park_managed_circle@3x.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding-left: 75px;
+    height: 55px;
   }
 }
 .selected-location {

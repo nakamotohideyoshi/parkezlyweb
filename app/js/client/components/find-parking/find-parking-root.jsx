@@ -8,7 +8,7 @@ import LicensePlateField from "../../../common/components/fields/license-plate-f
 import Chooser from "../../../common/components/fields/select.jsx";
 import ImageCheckbox from "../../../common/components/footer/utils/image-checkbox.jsx";
 import ParkingModal from "./parking-modal.jsx";
-import { GoogleMapLoader, GoogleMap, Marker } from "react-google-maps";
+import { GoogleMapLoader, GoogleMap, Marker, DirectionsRenderer } from "react-google-maps";
 import { default as MarkerClusterer } from "react-google-maps/lib/addons/MarkerClusterer";
 import { states } from "../../constants/states.js";
 import { statesHash } from "../../constants/states-hash.js";
@@ -40,7 +40,9 @@ import {
   chargeWallet,
   setPaymentMethod,
   checkAndBook,
-  exitVehicle
+  exitVehicle,
+  setDirections,
+  getStreetView
 } from "../../actions/parking.js";
 import { setPosition, setInitialPosition, getLocationCoordinates } from "../../actions/location.js";
 import { getVehicles } from "../../actions/vehicle.js";
@@ -78,6 +80,8 @@ class FindParking extends Component {
     this.closeWalletModal = this.closeWalletModal.bind(this);
     this.calculateAmountToPay = this.calculateAmountToPay.bind(this);
     this.exitVehicleFromParking = this.exitVehicleFromParking.bind(this);
+    this.showDirections = this.showDirections.bind(this);
+    this.showStreetView = this.showStreetView.bind(this);
   }
 
   componentDidMount() {
@@ -423,6 +427,35 @@ class FindParking extends Component {
     dispatch(exitVehicle(confirmationId, dateTimeNow));
   }
 
+  showDirections() {
+    const { dispatch, parking, location } = this.props;
+    const origin = new google.maps.LatLng(location.lat, location.lon);
+    const { selectedMarkerItem } = parking;
+    const { lat, lng } = selectedMarkerItem;
+    const destination = new google.maps.LatLng(lat, lng);
+
+    const DirectionsService = new google.maps.DirectionsService();
+
+    DirectionsService.route({
+      origin: origin,
+      destination: destination,
+      travelMode: google.maps.TravelMode.DRIVING,
+    }, (result, status) => {
+      if (status === google.maps.DirectionsStatus.OK) {
+        dispatch(setDirections(origin, destination, result))
+      } else {
+        console.error(`error fetching directions ${ result }`);
+      }
+    });
+  }
+
+  showStreetView() {
+    const { dispatch, parking } = this.props;
+    const { selectedMarkerItem } = parking;
+    const { lat, lng } = selectedMarkerItem;
+    dispatch(getStreetView(lat, lng));
+  }
+
   renderSearchLocations() {
     const options = [
       {
@@ -476,6 +509,7 @@ class FindParking extends Component {
   }
 
   renderMarker(markerItem, index) {
+    const { selectedMarker } = this.props.parking;
     const { lat, lng, marker } = markerItem;
     const parkingType = marker.split("-")[1];
     const parkingTypeVal = this.props.parking[parkingType];
@@ -486,7 +520,12 @@ class FindParking extends Component {
       lat: parseFloat(lat),
       lng: parseFloat(lng)
     });
-
+    let scale = 50;
+    if(selectedMarker) {
+      if(selectedMarker.location_code == markerItem.location_code) {
+        scale = 80;
+      }
+    }
     let iconUrl = "";
     let clickHandler = "";
     switch (marker) {
@@ -509,7 +548,7 @@ class FindParking extends Component {
 
     const icon = {
       url: iconUrl,
-      scaledSize: new google.maps.Size(50,50)
+      scaledSize: new google.maps.Size(scale, scale)
     };
 
     const markerProps = {
@@ -522,7 +561,7 @@ class FindParking extends Component {
   }
 
   renderGMap() {
-    const { markers, selectedMarker } = this.props.parking;
+    const { markers, selectedMarker, directions } = this.props.parking;
     let lat = this.props.location.lat || 40.7128;
     let lon = this.props.location.lon || -73.935242;
     const currentPos =  new google.maps.LatLng({
@@ -562,6 +601,7 @@ class FindParking extends Component {
               defaultCenter={centerPos}
               center={centerPos}>
                 {markersList}
+                {directions ? <DirectionsRenderer directions={directions} /> : null}
             </GoogleMap>
           }/>
       </section>
@@ -640,6 +680,20 @@ class FindParking extends Component {
 
   renderParkingOption(marker) {
     console.log(marker);
+    const { parkingRules } = this.props.parking;
+    const currentRules = parkingRules[marker.location_code];
+    let pricing = "";
+    let pricing_duration = "";
+    let pricingText ="";
+
+    if(currentRules) {
+      pricing = currentRules.pricing;
+      pricing_duration = currentRules.pricing_duration;
+    }
+    if(pricing && pricing_duration && marker.marker!="ez-free" ) {
+      pricingText = `$${pricing}/${pricing_duration}`;
+    }
+
     const validClass = classNames({
       "col": true,
       "s10": true,
@@ -664,7 +718,7 @@ class FindParking extends Component {
       <div className="row parking-type" onClick={this.selectMarker.bind(this, marker)}>
         <div className={validClass}>
           <div>{parkingTypeText}</div>
-          <div>{marker.html}</div>
+          <div>{pricingText}</div>
         </div>
         <div className="col s2">
           {distance} Miles
@@ -723,10 +777,10 @@ class FindParking extends Component {
           Max: {currentRules.max_hours} Hours
         </div>
         <div className="col s6 link">
-          <a href="javascript:void(0)">Street View</a>
+          <a href="javascript:void(0)" onClick={this.showStreetView}>Street View</a>
         </div>
         <div className="col s6 link">
-          <a href="javascript:void(0)">Directions</a>
+          <a href="javascript:void(0)" onClick={this.showDirections}>Directions</a>
         </div>
         <div className="col s12">
           <GrayButton onClick={parkNowAction}>

@@ -586,3 +586,27 @@ export const exitVehicle = (confirmationId, exit_date_time) => {
       });
   };
 };
+
+export const setDirections = (origin, destination, directions) => {
+  return {
+    type: Actions.SET_DIRECTIONS,
+    origin,
+    destination,
+    directions
+  };
+};
+
+export const getStreetView = (lat, lng) => {
+  return dispatch => {
+    dispatch(enableLoading());
+    return ParkingAPI.getStreetView(lat, lng)
+      .then((response) => {
+        console.log("Here");
+        dispatch(disableLoading());
+        //dispatch(exitParkingFlow());
+      })
+      .catch((response) => {
+        //dispatch(fetchChargesFailed());
+      });
+  };
+};
