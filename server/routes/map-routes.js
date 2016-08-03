@@ -1,11 +1,12 @@
 "use strict";
 var http = require('http');
 var https = require('https');
+var gMapsKey = "AIzaSyDtFlHY3zvCOq72mg6D4RPrw10PnZTTxpw";
 
 exports.getNearbyPlaces = function (req, res) {
   var lat = req.body.lat;
   var lng = req.body.lng;
-  var path = "/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=500&key=AIzaSyDtFlHY3zvCOq72mg6D4RPrw10PnZTTxpw";
+  var path = "/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=500&key="+gMapsKey;
   var options = {
     host: "maps.googleapis.com",
     path: path
@@ -49,7 +50,7 @@ exports.getLocationDetails = function (req, res) {
 exports.getLocationCoordinates = function (req, res) {
   console.log(req.body);
   var address = req.body.address;
-  var path = "/maps/api/geocode/json?address=" + address + "&key=AIzaSyDtFlHY3zvCOq72mg6D4RPrw10PnZTTxpw";
+  var path = "/maps/api/geocode/json?address=" + address + "&key=" + gMapsKey;
   var options = {
     host: "maps.googleapis.com",
     path: path
@@ -62,6 +63,29 @@ exports.getLocationCoordinates = function (req, res) {
     resp.on('end', function() {
       var locationData = JSON.parse(responseBody);
       res.send(locationData);
+    });
+  }).on("error", function(e){
+    console.log("Got error: " + e.message);
+  });
+};
+
+exports.getStreetView = function (req, res) {
+  var lat = req.body.lat;
+  var lng = req.body.lng;
+  console.log(lat);
+  console.log(lng);
+  var path = "maps/api/streetview?size=600x300&location="+lat+","+lng+"&key="+gMapsKey;
+  var options = {
+    host: "maps.googleapis.com",
+    path: path
+  };
+  http.get(options, function(resp){
+    var responseBody = "";
+    resp.on('data', function(chunk){
+      responseBody += chunk;
+    });
+    resp.on('end', function() {
+      res.send(responseBody);
     });
   }).on("error", function(e){
     console.log("Got error: " + e.message);

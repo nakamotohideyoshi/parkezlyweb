@@ -34,7 +34,10 @@ const initialState = {
   paymentMethod: null,
   priceToPay: 0,
   bookingData: null,
-  confirmationId: null
+  confirmationId: null,
+  origin: null,
+  destination: null,
+  directions: null
 };
 
 const Parking = (state = initialState, action) => {
@@ -266,6 +269,13 @@ const Parking = (state = initialState, action) => {
       return {
         ...state,
         confirmationId: action.confirmationId
+      }
+    case "SET_DIRECTIONS":
+      return {
+        ...state,
+        origin: action.origin,
+        destination: action.destination,
+        directions: action.directions
       }
     default:
       return state;

@@ -32,7 +32,7 @@ export const getParkingRules = (city, state) => {
     Object.assign(
       {
         method: "get",
-        url: "/pzly01live7/_table/parking_rules?filter=City="+city+"&state="+state
+        url: "/pzly01live7/_table/parking_rules" //"/pzly01live7/_table/parking_rules?filter=City="+city+"&state="+state
       }, APIConfig
     )
   );
@@ -122,6 +122,21 @@ export const exitVehicle = (confirmation_id, exit_date_time) => {
           exit_date_time: exit_date_time
         }
       }, APIConfig
+    )
+  );
+};
+
+export const getStreetView = (lat, lng) => {
+  return axios(
+    Object.assign(
+      {
+        method: "post",
+        url: "get-street-view",
+        data: {
+          lat: lat,
+          lng: lng
+        }
+      }, placesAPIConfig
     )
   );
 };
