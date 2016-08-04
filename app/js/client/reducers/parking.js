@@ -13,6 +13,7 @@ const initialState = {
   showParkingOptions: false,
   showOtherLocations: false,
   selectedMarker: null,
+  showTopOverview: false,
   selectedLocation: null,
   selectedTownship: null,
   selectedTownshipCharges: null,
@@ -105,6 +106,7 @@ const Parking = (state = initialState, action) => {
       return {
         ...state,
         selectedMarker: action.marker,
+        showTopOverview: true,
         showParkingOptions: false
       }
     case "SET_SELECTED_LOCATION":

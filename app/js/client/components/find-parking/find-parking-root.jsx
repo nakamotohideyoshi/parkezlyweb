@@ -14,6 +14,7 @@ import { states } from "../../constants/states.js";
 import { statesHash } from "../../constants/states-hash.js";
 import moment from "moment";
 import Timer from "../../../common/components/timer/timer.jsx";
+import ParkingOverview from "./parking-overview.jsx";
 
 import {
   updateGeolocation,
@@ -960,6 +961,27 @@ console.log(parkingRules);
     );
   }
 
+  renderTopParkingOverview() {
+    const { selectedMarker, parkingRules } = this.props.parking;
+    const { location_code, address } = selectedMarker;
+    const currentMarker = parkingRules[location_code];
+    const { marker_type, pricing_duration, pricing, this_day, time_rule } = currentMarker;
+    let rate = "";
+    if(marker_type == "ez-free") {
+      rate = "Free";
+    } else {
+      rate = `$${pricing}/${pricing_duration}`;
+    }
+    return (
+      <ParkingOverview
+        locationCode={location_code}
+        address={address}
+        rate={rate}
+        time={time_rule}
+        allowed={null} />
+    );
+  }
+
   renderFreePaidParkingModal() {
     const { bookingStep, showPaidParkingModal, showFreeParkingModal } = this.props.parking;
     let content = "";
@@ -1166,6 +1188,7 @@ console.log(parkingRules);
       showFreeParkingModal,
       showPaidParkingModal,
       showManagedParkingModal,
+      showTopOverview,
       lotsData
     } = this.props.parking;
     const parkNowBtn = !showParkingOptions && !showOtherLocations && !selectedLocation ? this.renderFindNearbyBtn() : null;
@@ -1176,6 +1199,7 @@ console.log(parkingRules);
     const selectedLocationLabel = selectedLocation ? this.renderLocationLabel() : null;
     const backBtn = selectedLocation ? this.renderBackBtn() : null;
     const parkingInfoBtn = selectedLocation ? this.renderParkingInfoBtn() : null;
+    const topParkingOverview = showTopOverview ? this.renderTopParkingOverview() : null;
 
     //After marker is selected
     const freeParkingModal = showFreeParkingModal || showPaidParkingModal ? this.renderFreePaidParkingModal() : null;
@@ -1190,6 +1214,7 @@ console.log(parkingRules);
         loading={loading}>
           <div className="find-parking-container">
             {parkingOptions}
+            {topParkingOverview}
             {otherLocations}
             {parkNowBtn}
             {searchBtn}

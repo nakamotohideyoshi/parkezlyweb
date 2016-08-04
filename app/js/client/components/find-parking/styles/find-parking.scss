@@ -351,3 +351,24 @@
     }
   }
 }
+.parking-overview {
+  position: absolute;
+  top: 54px;
+  right: 0;
+  width: 355px;
+  font-size: 12px;
+  z-index: 3001;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.85) !important;
+  color: $white;
+  border-radius: 0px 0px 0 5px;
+
+  .parking-details {
+    .title {
+      text-align: right;
+    }
+    .value {
+      text-align: left;
+    }
+  }
+}
