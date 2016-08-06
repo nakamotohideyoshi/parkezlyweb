@@ -52,8 +52,12 @@ if (isDeveloping) {
 }
 
 //Paypal Configuration
+var paypalConfig = "paypal.dev.config.json";
+if (isProduction) {
+  paypalConfig = "paypal.prod.config.json";
+}
 try {
-  var configJSON = fs.readFileSync(__dirname + "/server/config/config.json");
+  var configJSON = fs.readFileSync(__dirname + "/server/config/" + paypalConfig);
   var config = JSON.parse(configJSON.toString());
 } catch(e) {
   console.error("File config.json not found or is invalid: " + e.message);
@@ -64,7 +68,7 @@ paypalRoutes.init(config);
 //  RESTful API
 const publicPath = path.resolve('./dist/');
 app.use(bodyParser({limit: '500mb'}));
-app.use(bodyParser.json({ type: 'application/json' }))
+app.use(bodyParser.json({ type: 'application/json' }));
 app.use(express.static(publicPath));
 app.use(session({secret: '876345'}));
 
