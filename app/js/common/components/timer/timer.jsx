@@ -27,15 +27,13 @@ class Timer extends Component {
     let mins = Math.floor((timeLeft / 1000 / 60) % 60);
     let hrs = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
 
-    console.log(secs);
-
     this.setState({
       timeLeft: timeLeft - 1000,
       hrs: hrs,
       mins: mins,
       secs: secs
     });
-    console.log(this.state);
+
     if(timeLeft == 0) {
       clearInterval(this.interval);
     }
@@ -45,8 +43,19 @@ class Timer extends Component {
     const { timeLeft, hrs, mins, secs } = this.state;
 
     return (
-      <div className='timer'>
-        {hrs} : {mins} : {secs}
+      <div className="timer row">
+        <div className="col s4">
+          <h3>{hrs} :</h3>
+          <div>Hours</div>
+        </div>
+        <div className="col s4">
+          <h3>{mins} :</h3>
+          <div>Minutes</div>
+        </div>
+        <div className="col s4">
+          <h3>{secs}</h3>
+          <div>Seconds</div>
+        </div>
       </div>
     );
   }
