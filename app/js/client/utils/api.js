@@ -8,7 +8,7 @@ export const APIConfig = {
 
 export const paypalAPIConfig = {
   //Replace this later with actual
-  baseURL: "http://localhost:3000/api"
+  baseURL: "/api"
 };
 
 export const weatherAPIConfig = {
@@ -16,7 +16,7 @@ export const weatherAPIConfig = {
 };
 
 export const placesAPIConfig = {
-  baseURL: "http://localhost:3000/api"
+  baseURL: "/api"
 };
 
 export const locationAPIConfig = {

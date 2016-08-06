@@ -4,6 +4,7 @@ var paypal = require('paypal-rest-sdk');
 var querystring = require('querystring');
 var http = require('http');
 var config = {};
+import { routes } from '../config/routes.config.js';
 
 exports.addFunds = function (req, res) {
 
@@ -22,8 +23,8 @@ exports.addFunds = function (req, res) {
 
     paypalPayment.transactions[0].amount.total = req.body.amount;
     paypalPayment.transactions[0].description = "Add funds to ParkEzly Wallet";
-    paypalPayment.redirect_urls.return_url = "http://localhost:" + (config.port ? config.port : 3000) + "/finalize-payment";
-    paypalPayment.redirect_urls.cancel_url = "http://localhost:" + (config.port ? config.port : 3000) + "/payment-failure";
+    paypalPayment.redirect_urls.return_url = routes.addFundsSuccess; // + (config.port ? config.port : 3000) + "/finalize-payment";
+    paypalPayment.redirect_urls.cancel_url = routes.addFundsFail; // + (config.port ? config.port : 3000) + "/payment-failure";
 
     paypal.payment.create(paypalPayment, {}, function (err, resp) {
       if (err) {
@@ -116,8 +117,8 @@ exports.payForParking = function(req, res) {
 
     paypalPayment.transactions[0].amount.total = req.body.amount;
     paypalPayment.transactions[0].description = "Pay for Parking";
-    paypalPayment.redirect_urls.return_url = "http://localhost:" + (config.port ? config.port : 3000) + "/finalize-parking-payment";
-    paypalPayment.redirect_urls.cancel_url = "http://localhost:" + (config.port ? config.port : 3000) + "/payment-failure";
+    paypalPayment.redirect_urls.return_url = routes.parkingPaymentSuccess;
+    paypalPayment.redirect_urls.cancel_url = routes.parkingPaymentFail;
 
     paypal.payment.create(paypalPayment, {}, function (err, resp) {
       if (err) {

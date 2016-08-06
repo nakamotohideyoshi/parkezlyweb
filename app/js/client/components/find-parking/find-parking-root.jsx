@@ -268,7 +268,11 @@ class FindParking extends Component {
     } = selectedMarkerItem;
     const currentRules = parkingRules[location_code];
     const { max_hours, pricing, pricing_duration, city, state, zip_code } = currentRules;
-    const { tr_fee, tr_percentage } = selectedTownshipCharges;
+    let tr_fee = 0, tr_percentage = 0;
+    if(selectedTownshipCharges) {
+      tr_fee = selectedTownshipCharges.tr_fee;
+      tr_percentage = selectedTownshipCharges.tr_percentage;
+    }
     const { plate_no, registered_state } = selectedPlate;
     const userLat = location.lat;
     const userLng = location.lon;
