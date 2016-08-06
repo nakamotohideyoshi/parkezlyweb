@@ -32,6 +32,7 @@ import {
   getParkingLot,
   selectParkingAndTimeUnit,
   setSelectedPlate,
+  updatePlate,
   setBookingStep,
   createBooking,
   getTownship,
@@ -273,6 +274,7 @@ class FindParking extends Component {
       tr_fee = selectedTownshipCharges.tr_fee;
       tr_percentage = selectedTownshipCharges.tr_percentage;
     }
+    console.log(selectedPlate);
     const { plate_no, registered_state } = selectedPlate;
     const userLat = location.lat;
     const userLng = location.lon;
@@ -334,10 +336,34 @@ class FindParking extends Component {
     };
   }
 
+  validateandUpdatePlate() {
+    const { dispatch } = this.props;
+
+    this.refs["license-number"].invalidate();
+    this.refs["select-state"].invalidate();
+    const isLicenseValid = this.refs["license-number"].validate();
+    const isStateValid = this.refs["select-state"].validate();
+
+    if(isLicenseValid && isStateValid) {
+      const plate_no = this.refs["license-number"].getValue();
+      const registered_state = this.refs["select-state"].getValue();
+
+      dispatch(updatePlate({
+        plate_no : plate_no,
+        registered_state : registered_state.value
+      }));
+
+      return true;
+    }
+    return false;
+  }
+
   confirmBooking() {
     const { dispatch } = this.props;
-    const parkingData = this.getParkingData();
-    dispatch(checkAndBook(parkingData));
+    // Update Plate No.
+    if(this.validateandUpdatePlate()){
+      dispatch(checkAndBook(this.getParkingData()));
+    }
   }
 
   goToPayment() {
@@ -1117,12 +1143,10 @@ console.log(parkingRules);
     console.log(timeRemaining);
     return (
       <div className="parking-confirmation">
-        <h3>
-          <Timer timeLeft={timeRemaining}/>
-        </h3>
+        <Timer timeLeft={timeRemaining}/>
         <div>
           <div className="row">
-            <div className="col s4">
+            <div className="col s4 header">
               Plate#:
             </div>
             <div className="col s8">
@@ -1131,7 +1155,7 @@ console.log(parkingRules);
           </div>
 
           <div className="row">
-            <div className="col s4">
+            <div className="col s4 header">
               Parked At:
             </div>
             <div className="col s8">
@@ -1140,7 +1164,7 @@ console.log(parkingRules);
           </div>
 
           <div className="row">
-            <div className="col s4">
+            <div className="col s4 header">
               Expires At:
             </div>
             <div className="col s8">
@@ -1149,7 +1173,7 @@ console.log(parkingRules);
           </div>
 
           <div className="row">
-            <div className="col s4">
+            <div className="col s4 header">
               Max Time:
             </div>
             <div className="col s8">
@@ -1158,11 +1182,13 @@ console.log(parkingRules);
           </div>
 
           <div className="row">
-            <div className="col s4">
+            <div className="col s4 header">
               Address:
             </div>
             <div className="col s8">
-              {address1}, {address2}, {city}, {state}, {zip}, {country}
+              <div>{address1}</div>
+              <div>{address2}</div>
+              <div>{city}, {state}, {zip}, {country}</div>
             </div>
           </div>
         </div>

@@ -300,6 +300,13 @@ export const setSelectedPlate = (plate) => {
   };
 };
 
+export const updatePlate = (plate) => {
+  return {
+    type: Actions.UPDATE_PLATE,
+    plate
+  };
+};
+
 export const setBookingStep = (step) => {
   return {
     type: Actions.SET_BOOKING_STEP,

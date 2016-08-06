@@ -197,6 +197,11 @@ const Parking = (state = initialState, action) => {
         selectedPlate: action.plate,
         bookingStep: 3
       }
+    case "UPDATE_PLATE":
+      return {
+        ...state,
+        selectedPlate: action.plate
+      }
     case "SET_BOOKING_STEP":
       return {
         ...state,
