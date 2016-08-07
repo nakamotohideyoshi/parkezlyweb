@@ -197,14 +197,16 @@
   border-radius: 8px;
 
   .heading {
-    border-bottom: 1px solid $black;
+    border-bottom: 1px solid $light-grey;
     padding: 0 0 10px;
+    text-align: center;
   }
 
   h4 {
     font-size: 20px;
     padding: 0;
     margin: 0;
+    font-weight: bold;
   }
 
   .close-btn {
@@ -239,7 +241,11 @@
 
     .plate {
       border-bottom: 1px solid $light-grey;
-      padding: 5px 0;
+      padding: 5px 10px;
+
+      &.even {
+        background: $lighter-grey;
+      }
     }
   }
 
@@ -307,6 +313,12 @@
   }
   .car-list {
     min-height: 240px;
+    padding: 0 20px;
+    .car {
+      width: 80px;
+      float: left;
+      margin-bottom: 10px;
+    }
   }
   .car-icon {
     &.occupied {
@@ -335,6 +347,10 @@
     .plate {
       border-bottom: 1px solid $light-grey;
       padding: 5px 0;
+
+      &.even {
+        background: $lighter-grey;
+      }
     }
   }
 
@@ -355,11 +371,11 @@
   position: absolute;
   top: 54px;
   right: 0;
-  width: 355px;
+  width: 100%;
   font-size: 12px;
   z-index: 3001;
   text-align: center;
-  background: rgba(0, 0, 0, 0.85) !important;
+  background: rgba(0, 0, 0, 0.95) !important;
   color: $white;
   border-radius: 0px 0px 0 5px;
 
@@ -392,4 +408,13 @@
     font-weight: bold;
     text-align: right;
   }
+  .field-value {
+    text-align: left;
+  }
+}
+.font-bold {
+  font-weight: bold;
+}
+.margin-bottom-10 {
+  margin-bottom: 10px
 }

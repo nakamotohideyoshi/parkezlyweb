@@ -108,11 +108,11 @@ class FindParking extends Component {
 
   initializePosition(position) {
     const { dispatch } = this.props;
-    //const lat = position.coords.latitude;
-    //const lng = position.coords.longitude;
+    const lat = position.coords.latitude;
+    const lng = position.coords.longitude;
 
-    const lat = 40.7326;
-    const lng = -73.4454;
+    //const lat = 40.7326;
+    //const lng = -73.4454;
     /*const demoPos = {
       lat: 40.7346687317,
       lng: -73.4461441040
@@ -201,13 +201,16 @@ class FindParking extends Component {
     dispatch(setSelectedLocation(null));
   }
 
-  handleParkingSelection(parking_type, location_code) {
+  handleParkingSelection(parking_type, marker) {
     const { dispatch } = this.props;
-    dispatch(setSelectedParking(parking_type, location_code));
+    dispatch(setSelectedParking(parking_type, marker));
     if(parking_type === "MANAGED") {
       const userId = cookie.load('userId');
-      dispatch(getParkingLot(location_code));
-      dispatch(getSubscriptionStatus(userId, location_code));
+      dispatch(getParkingLot(marker.location_code));
+      if(userId) {
+        dispatch(getSubscriptionStatus(userId, marker.location_code));
+      }
+      
       //dispatch(getSubscriptionStatus(userId, "NY-FDV-L01"));
       //dispatch(getParkingLot("NY-FDV-L01"));
     }
@@ -453,9 +456,13 @@ class FindParking extends Component {
 
   exitVehicleFromParking() {
     const { dispatch, parking } = this.props;
-    const { confirmationId } = parking;
+    const { confirmationId, isAlreadyParked, alreadyParkedId } = parking;
     const dateTimeNow = moment.utc().format("YYYY-MM-DD HH:mm");
-    dispatch(exitVehicle(confirmationId, dateTimeNow));
+    if(!isAlreadyParked) {
+      dispatch(exitVehicle("new", confirmationId, dateTimeNow));
+    } else {
+      dispatch(exitVehicle("existing", alreadyParkedId, dateTimeNow));
+    }
   }
 
   showDirections() {
@@ -485,6 +492,14 @@ class FindParking extends Component {
     const { selectedMarkerItem } = parking;
     const { lat, lng } = selectedMarkerItem;
     dispatch(getStreetView(lat, lng));
+  }
+
+  goToParkingList() {
+
+  }
+
+  showParkingDetail() {
+
   }
 
   renderSearchLocations() {
@@ -547,6 +562,9 @@ class FindParking extends Component {
     if ( !parkingTypeVal ) {
       return;
     }
+    if (!markerItem.location_code) {
+      return;
+    }
     const position = new google.maps.LatLng({
       lat: parseFloat(lat),
       lng: parseFloat(lng)
@@ -572,7 +590,7 @@ class FindParking extends Component {
       }
       case "ez-managed": {
         iconUrl = MANAGED_MAP_MARKER;
-        clickHandler = () => {this.handleParkingSelection("MANAGED", markerItem.location_code)};
+        clickHandler = () => {this.handleParkingSelection("MANAGED", markerItem)};
         break;
       }
     }
@@ -709,8 +727,44 @@ class FindParking extends Component {
     )
   }
 
+  renderBackToParkingList() {
+    return (
+      <div className="back-btn">
+        <a href="javascript:void(0)" onClick={this.showParkingOptions}>Back</a>
+      </div>
+    )
+  }
+
+  renderParkingDetailsBtn() {
+    const { selectedMarker } = this.props.parking;
+    const { marker } = selectedMarker;
+    let clickHandler = "";
+    switch (marker) {
+      case "ez-free": {
+        clickHandler = () => {this.handleParkingSelection("FREE", selectedMarker)};
+        break;
+      }
+      case "ez-paid": {
+        clickHandler = () => {this.handleParkingSelection("PAID", selectedMarker)};
+        break;
+      }
+      case "ez-managed": {
+        clickHandler = () => {this.handleParkingSelection("MANAGED", selectedMarker)};
+        break;
+      }
+    }
+    return (
+      <div className="parking-info-btn">
+        <a href="javascript:void(0)" onClick={clickHandler}>Parking Info</a>
+      </div>
+    )
+  }
+
   renderParkingOption(marker) {
     console.log(marker);
+    if(!marker || !marker.location_code) {
+      return;
+    }
     const { parkingRules } = this.props.parking;
     const currentRules = parkingRules[marker.location_code];
     let pricing = "";
@@ -722,7 +776,7 @@ class FindParking extends Component {
       pricing_duration = currentRules.pricing_duration;
     }
     if(pricing && pricing_duration && marker.marker!="ez-free" ) {
-      pricingText = `$${pricing}/${pricing_duration}`;
+      pricingText = `$${pricing}/${pricing_duration} min.`;
     }
 
     const validClass = classNames({
@@ -785,8 +839,8 @@ class FindParking extends Component {
     const parkNowAction = () => {this.selectParkingandFetchVehicles(selectedMarkerItem.location_code, currentRules.pricing_duration)};
     return (
       <div className="row parking-details">
-        <div className="col s12">
-          Public Parking: {pricing}
+        <div className="col s12 margin-bottom-10">
+          <span className="font-bold">Public Parking:</span> {pricing}
         </div>
         <div className="col s12">
           {selectedMarkerItem.title}
@@ -796,16 +850,15 @@ class FindParking extends Component {
         </div>
         <div className="col s12">
           {selectedMarkerItem.html}
-          <hr/>
         </div>
-        <div className="col s12">
-          Today: {currentRules.this_day}
+        <div className="col s12 margin-bottom-10">
+          <span className="font-bold">Today:</span> {currentRules.this_day}
         </div>
-        <div className="col s12">
-          Time: {currentRules.time_rule}
+        <div className="col s12 margin-bottom-10">
+          <span className="font-bold">Time:</span> {currentRules.time_rule}
         </div>
-        <div className="col s12">
-          Max: {currentRules.max_hours} Hours
+        <div className="col s12 margin-bottom-10">
+          <span className="font-bold">Max:</span> {currentRules.max_hours} Hours
         </div>
         <div className="col s6 link">
           <a href="javascript:void(0)" onClick={this.showStreetView}>Street View</a>
@@ -824,11 +877,12 @@ class FindParking extends Component {
 
   /* Booking Step 2 */
 
-  renderPlate(plate) {
+  renderPlate(plate, index) {
     const { plate_no, registered_state } = plate;
     const clickHandler = () => {this.selectVehiclePlate(plate)};
+    const colorClass = index%2 == 0 ? "even" : "odd";
     return (
-      <div className="plate">
+      <div className={`plate ${colorClass}`}>
         <a href="javascript:void(0)" onClick={clickHandler}>
           <div>
             License Plate #: {plate_no}
@@ -892,7 +946,7 @@ class FindParking extends Component {
   renderVehicleFormButton() {
     return (
       <div>
-        <GrayButton onClick={this.confirmBooking}>
+        <GrayButton className="green-btn" onClick={this.confirmBooking}>
           Park Now
         </GrayButton>
       </div>
@@ -957,34 +1011,46 @@ class FindParking extends Component {
     );
   }
 
+  renderAlreadyParkedMsg() {
+    return (
+      <div className="alert alert-danger">
+        This vehicle is already parked. Please <a href="javascript:void(0)" onClick={this.exitVehicleFromParking}> exit this vehicle</a> before proceeding.
+      </div>
+    );
+  }
+
   renderParkingOverview() {
-    const { selectedPlate, parkingRules, selectedMarkerItem, showPaidParkingModal, showManagedParkingModal, isManagedFree, bookingStep } = this.props.parking;
+    const { selectedPlate, parkingRules, selectedMarkerItem, showPaidParkingModal, showManagedParkingModal, isManagedFree, bookingStep, isAlreadyParked } = this.props.parking;
     const { registered_state, plate_no } = selectedPlate;
     console.log(selectedMarkerItem);
 console.log(parkingRules);
     const currentRules = parkingRules[selectedMarkerItem.location_code];
 
-    const { parking_times, max_hours} = currentRules;
+    const { parking_times, max_hours, time_rule } = currentRules;
     const rateString = "Rate: $" + currentRules.pricing + "/" + currentRules.pricing_duration + "min";
     const rate = showPaidParkingModal || (showManagedParkingModal && !isManagedFree) ? rateString : null;
     
     const btns = showPaidParkingModal || (showManagedParkingModal && !isManagedFree) ? this.renderPaymentBtns() : this.renderVehicleFormButton();
     const paypalPaymentForm = showPaidParkingModal || (showManagedParkingModal && !isManagedFree) ? this.renderPaypalPaymentForm() : null;
+    const alreadyParked = isAlreadyParked ? this.renderAlreadyParkedMsg() : null;
+
     return (
       <div className="vehicle-form">
         <h4>Parking</h4>
         <div className="row">
           <div className="col s6">
-            {parking_times}
+            {time_rule}
           </div>
           <div className="col s6">
             Max: {max_hours} Hours
           </div>
         </div>
+        <h4>My Vehicle</h4>
         {this.renderPlateForm()}
         <div className="parking-rate">
           {rate}
         </div>
+        {alreadyParked}
         {btns}
         {paypalPaymentForm}
       </div>
@@ -1022,9 +1088,11 @@ console.log(parkingRules);
       content = this.renderVehicleList();
       heading = "Select Vehicle";
     } else if(bookingStep == 3) {
+      heading = "Select Vehicle";
       content = this.renderParkingOverview();
     } else if(bookingStep == 4) {
       content = this.renderConfirmationScreen();
+      heading = "Parking Confirmation";
     }
     return (
       <ParkingModal
@@ -1046,7 +1114,7 @@ console.log(parkingRules);
       "available": occupied.toUpperCase() === "NO"
     });
     return (
-      <div className="col s2 car">
+      <div className="car">
         <div className={carClasses}>
         </div>
         <div className="lot-number">
@@ -1058,12 +1126,14 @@ console.log(parkingRules);
 
   renderLots() {
     const { lotsData, parkingRules, selectedMarkerItem } = this.props.parking;
+
     const currentRules = parkingRules[selectedMarkerItem.location_code];
+    console.log(currentRules);
     const parkNowAction = () => {this.selectParkingandFetchVehicles(selectedMarkerItem.location_code, currentRules.pricing_duration)};
     const carList = lotsData.map(this.renderLot, this);
     return (
       <div>
-        <div className="row car-list">
+        <div className="car-list">
           {carList}
         </div>
         <div className="park-here-btn">
@@ -1149,7 +1219,7 @@ console.log(parkingRules);
             <div className="col s4 header">
               Plate#:
             </div>
-            <div className="col s8">
+            <div className="col s8 field-value">
               {plate_no}
             </div>
           </div>
@@ -1158,7 +1228,7 @@ console.log(parkingRules);
             <div className="col s4 header">
               Parked At:
             </div>
-            <div className="col s8">
+            <div className="col s8 field-value">
               July 17, 2016
             </div>
           </div>
@@ -1167,7 +1237,7 @@ console.log(parkingRules);
             <div className="col s4 header">
               Expires At:
             </div>
-            <div className="col s8">
+            <div className="col s8 field-value">
               July 17, 2016
             </div>
           </div>
@@ -1176,7 +1246,7 @@ console.log(parkingRules);
             <div className="col s4 header">
               Max Time:
             </div>
-            <div className="col s8">
+            <div className="col s8 field-value">
               {max_time} Hours
             </div>
           </div>
@@ -1185,7 +1255,7 @@ console.log(parkingRules);
             <div className="col s4 header">
               Address:
             </div>
-            <div className="col s8">
+            <div className="col s8 field-value">
               <div>{address1}</div>
               <div>{address2}</div>
               <div>{city}, {state}, {zip}, {country}</div>
@@ -1193,12 +1263,12 @@ console.log(parkingRules);
           </div>
         </div>
 
-        <GrayButton onClick={this.exitVehicleFromParking}>
-          EXIT
+        <GrayButton className="yellow-btn margin-bottom-10" onClick={this.exitVehicleFromParking}>
+          Exit Parking
         </GrayButton>
 
-        <GrayButton onClick={null}>
-          FIND MY VEHICLE
+        <GrayButton className="blue-btn" onClick={null}>
+          Directions to my vehicle
         </GrayButton>
       </div>
     );
@@ -1230,6 +1300,8 @@ console.log(parkingRules);
     const backBtn = selectedLocation ? this.renderBackBtn() : null;
     const parkingInfoBtn = selectedLocation ? this.renderParkingInfoBtn() : null;
     const topParkingOverview = showTopOverview ? this.renderTopParkingOverview() : null;
+    const backToParkingListBtn = showTopOverview ? this.renderBackToParkingList() : null;
+    const parkingDetailBtn = showTopOverview ? this.renderParkingDetailsBtn() : null;
 
     //After marker is selected
     const freeParkingModal = showFreeParkingModal || showPaidParkingModal ? this.renderFreePaidParkingModal() : null;
@@ -1245,6 +1317,8 @@ console.log(parkingRules);
           <div className="find-parking-container">
             {parkingOptions}
             {topParkingOverview}
+            {backToParkingListBtn}
+            {parkingDetailBtn}
             {otherLocations}
             {parkNowBtn}
             {searchBtn}

@@ -464,6 +464,14 @@ const setBookingData = (bookingData) => {
   };
 };
 
+export const setAlreadyParked = (status, id) => {
+  return {
+    type: Actions.SET_ALREADY_PARKED,
+    status,
+    id
+  };
+};
+
 export const checkAndBook = (parkingData) => {
   const { plate_no, pl_state } = parkingData;
   return dispatch => {
@@ -473,13 +481,12 @@ export const checkAndBook = (parkingData) => {
         const { data } = response;
         const { resource } = data;
         if(resource.length > 0) {
-          const { exit_date_time } = resource[0];
+          const { id, exit_date_time } = resource[0];
           const exitTime = new Date(exit_date_time);
           const dateTimeNow = new Date(moment.utc().format("YYYY-MM-DD HH:mm"));
-          console.log("exit time", exitTime);
-          console.log("now time", dateTimeNow);
+
           if(exitTime > dateTimeNow) {
-            console.log("This car is already parked");
+            dispatch(setAlreadyParked(true, id));
           } else {
             dispatch(createBooking(parkingData));
           }
@@ -577,7 +584,7 @@ const exitParkingFlow = () => {
   };
 };
 
-export const exitVehicle = (confirmationId, exit_date_time) => {
+export const exitVehicle = (type, confirmationId, exit_date_time) => {
   return dispatch => {
     dispatch(enableLoading());
     return ParkingAPI.exitVehicle(confirmationId, exit_date_time)
@@ -586,7 +593,12 @@ export const exitVehicle = (confirmationId, exit_date_time) => {
         const { resource } = data;
         console.log("Vehicle Exited");
         dispatch(disableLoading());
-        dispatch(exitParkingFlow());
+        
+        if(type == "existing") {
+          dispatch(setAlreadyParked(false, null));
+        } else {
+          dispatch(exitParkingFlow());
+        }
       })
       .catch((response) => {
         //dispatch(fetchChargesFailed());
