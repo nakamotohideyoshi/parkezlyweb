@@ -4,7 +4,7 @@ const ParkingOverview = (props) => {
   const { locationCode, address, rate, time, allowed } = props;
   return (
     <div className="parking-overview">
-      <h5>{locationCode}</h5>
+      <h4>{locationCode}</h4>
       <div>{address}</div>
       <div className="row parking-details">
         <div className="col s6 title">Rate:</div>

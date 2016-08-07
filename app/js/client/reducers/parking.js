@@ -38,7 +38,9 @@ const initialState = {
   confirmationId: null,
   origin: null,
   destination: null,
-  directions: null
+  directions: null,
+  isAlreadyParked: false,
+  alreadyParkedId : null
 };
 
 const Parking = (state = initialState, action) => {
@@ -90,7 +92,8 @@ const Parking = (state = initialState, action) => {
     case "SET_PARKING_OPTIONS":
       return {
         ...state,
-        showParkingOptions: action.status
+        showParkingOptions: action.status,
+        showTopOverview: false
       }
     case "SET_OTHER_LOCATIONS":
       return {
@@ -131,7 +134,8 @@ const Parking = (state = initialState, action) => {
         showPaidParkingModal: false,
         showManagedParkingModal: false,
         bookingStep: 1,
-        selectedMarkerItem: action.markerItem
+        selectedMarkerItem: action.markerItem,
+        showTopOverview: false
       }
     case "SHOW_PAID_PARKING":
       return {
@@ -140,7 +144,8 @@ const Parking = (state = initialState, action) => {
         showPaidParkingModal: true,
         showManagedParkingModal: false,
         bookingStep: 1,
-        selectedMarkerItem: action.markerItem
+        selectedMarkerItem: action.markerItem,
+        showTopOverview: false
       }
     case "SHOW_MANAGED_PARKING":
       return {
@@ -149,7 +154,8 @@ const Parking = (state = initialState, action) => {
         showPaidParkingModal: false,
         showManagedParkingModal: true,
         bookingStep: 1,
-        selectedMarkerItem: action.markerItem
+        selectedMarkerItem: action.markerItem,
+        showTopOverview: false
       }
     case "HIDE_SELECTED_PARKING":
       return {
@@ -283,6 +289,13 @@ const Parking = (state = initialState, action) => {
         origin: action.origin,
         destination: action.destination,
         directions: action.directions
+      }
+    case "SET_ALREADY_PARKED":
+      return {
+        ...state,
+        isAlreadyParked: action.status,
+        loading: false,
+        alreadyParkedId: action.id
       }
     default:
       return state;

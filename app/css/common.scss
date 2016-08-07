@@ -97,18 +97,32 @@ a {
 
 /* Buttons */
 .btn{
+  font-size: 18px;
+  font-weight: 300;
+  display: block;
+  padding: 7px;
+  border: 1px solid #B2BABB;
+  border-radius: 5px;
+  text-align: center;
+  height: auto;
+
   &.gray-btn {
     background: #6D6E6E !important;
-    color: $white;
-    font-size: 18px;
-    font-weight: 300;
-    display: block;
-    padding: 7px;
-    border: 1px solid #B2BABB;
-    border-radius: 5px;
-    text-align: center;
-    height: auto;
+    color: $white; 
   }
+  &.green-btn {
+    background: #38A103 !important;
+    color: $white; 
+  }
+  &.yellow-btn {
+    background: $yellow !important;
+    color: $red; 
+  }
+  &.blue-btn {
+    background: $blue !important;
+    color: $white; 
+  }
+
 }
 
 /* Menu Icon Classes */
