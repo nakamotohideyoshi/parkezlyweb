@@ -1004,14 +1004,22 @@ class FindParking extends Component {
     );
   }
 
+  renderWalletOption() {
+    return (
+      <div className="margin-bottom-10">
+        <GrayButton className="blue-btn" onClick={this.showWalletBalance}>
+          Pay with Wallet
+        </GrayButton>
+      </div>
+    );
+  }
+
   renderPaymentBtns() {
+    const userId = cookie.load('userId');
+    const walletOption = userId ? this.renderWalletOption() : null;
     return (
       <div>
-        <div className="margin-bottom-10">
-          <GrayButton className="blue-btn" onClick={this.showWalletBalance}>
-            Pay with Wallet
-          </GrayButton>
-        </div>
+        
         <div>
           <GrayButton className="green-btn" onClick={this.payWithPaypal}>
             Make Payment
