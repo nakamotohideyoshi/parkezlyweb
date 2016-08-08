@@ -99,7 +99,6 @@ a {
 .btn{
   font-size: 18px;
   font-weight: 300;
-  display: block;
   padding: 7px;
   border: 1px solid #B2BABB;
   border-radius: 5px;
@@ -109,18 +108,22 @@ a {
   &.gray-btn {
     background: #6D6E6E !important;
     color: $white; 
+    display: block;
   }
   &.green-btn {
     background: #38A103 !important;
     color: $white; 
+    display: block;
   }
   &.yellow-btn {
     background: $yellow !important;
     color: $red; 
+    display: block;
   }
   &.blue-btn {
     background: $blue !important;
     color: $white; 
+    display: block;
   }
 
 }

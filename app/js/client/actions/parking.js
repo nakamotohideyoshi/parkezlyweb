@@ -629,3 +629,10 @@ export const getStreetView = (lat, lng) => {
       });
   };
 };
+
+export const showLots = (status) => {
+  return {
+    type: Actions.SHOW_LOTS,
+    status
+  };
+};

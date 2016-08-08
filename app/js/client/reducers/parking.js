@@ -40,7 +40,8 @@ const initialState = {
   destination: null,
   directions: null,
   isAlreadyParked: false,
-  alreadyParkedId : null
+  alreadyParkedId : null,
+  showLots: false
 };
 
 const Parking = (state = initialState, action) => {
@@ -296,6 +297,11 @@ const Parking = (state = initialState, action) => {
         isAlreadyParked: action.status,
         loading: false,
         alreadyParkedId: action.id
+      }
+    case "SHOW_LOTS":
+      return {
+        ...state,
+        showLots: action.status
       }
     default:
       return state;
