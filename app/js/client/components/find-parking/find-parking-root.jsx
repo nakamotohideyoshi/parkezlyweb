@@ -44,7 +44,8 @@ import {
   checkAndBook,
   exitVehicle,
   setDirections,
-  getStreetView
+  getStreetView,
+  showLots
 } from "../../actions/parking.js";
 import { setPosition, setInitialPosition, getLocationCoordinates } from "../../actions/location.js";
 import { getVehicles } from "../../actions/vehicle.js";
@@ -84,6 +85,7 @@ class FindParking extends Component {
     this.exitVehicleFromParking = this.exitVehicleFromParking.bind(this);
     this.showDirections = this.showDirections.bind(this);
     this.showStreetView = this.showStreetView.bind(this);
+    this.showLotsModal = this.showLotsModal.bind(this);
   }
 
   componentDidMount() {
@@ -231,6 +233,7 @@ class FindParking extends Component {
     } else {
       bookingStep = 3;
     }
+    dispatch(showLots(false));
     dispatch(selectParkingAndTimeUnit(location_code, pricing_time_unit, bookingStep));
   }
 
@@ -494,12 +497,9 @@ class FindParking extends Component {
     dispatch(getStreetView(lat, lng));
   }
 
-  goToParkingList() {
-
-  }
-
-  showParkingDetail() {
-
+  showLotsModal() {
+    const { dispatch } = this.props;
+    dispatch(showLots(true));
   }
 
   renderSearchLocations() {
@@ -831,12 +831,21 @@ class FindParking extends Component {
 
   /* Booking Step 1 */
 
+  renderLotOccupancyLink() {
+    return (
+      <div className="col s12 lot-link">
+        <a href="javascript:void(0)" onClick={this.showLotsModal}>View Lot Occupancy</a>
+      </div>
+    );
+  }
+
   renderFreePaidParkingModalContent() {
     const { parkingRules, selectedMarkerItem } = this.props.parking;
     const currentRules = parkingRules[selectedMarkerItem.location_code];
     const pricing = currentRules.pricing == 0 ? "FREE" : "$" + currentRules.pricing + "/" + currentRules.pricing_duration + "min";
 
     const parkNowAction = () => {this.selectParkingandFetchVehicles(selectedMarkerItem.location_code, currentRules.pricing_duration)};
+    const lotOccupancyLink = selectedMarkerItem.marker === "ez-managed" ? this.renderLotOccupancyLink() : null;
     return (
       <div className="row parking-details">
         <div className="col s12 margin-bottom-10">
@@ -860,6 +869,7 @@ class FindParking extends Component {
         <div className="col s12 margin-bottom-10">
           <span className="font-bold">Max:</span> {currentRules.max_hours} Hours
         </div>
+        {lotOccupancyLink}
         <div className="col s6 link">
           <a href="javascript:void(0)" onClick={this.showStreetView}>Street View</a>
         </div>
@@ -997,13 +1007,13 @@ class FindParking extends Component {
   renderPaymentBtns() {
     return (
       <div>
-        <div>
-          <GrayButton onClick={this.showWalletBalance}>
+        <div className="margin-bottom-10">
+          <GrayButton className="blue-btn" onClick={this.showWalletBalance}>
             Pay with Wallet
           </GrayButton>
         </div>
         <div>
-          <GrayButton onClick={this.payWithPaypal}>
+          <GrayButton className="green-btn" onClick={this.payWithPaypal}>
             Make Payment
           </GrayButton>
         </div>
@@ -1036,7 +1046,7 @@ console.log(parkingRules);
 
     return (
       <div className="vehicle-form">
-        <h4>Parking</h4>
+        <h4 className="font-bold">Parking</h4>
         <div className="row">
           <div className="col s6">
             {time_rule}
@@ -1045,7 +1055,7 @@ console.log(parkingRules);
             Max: {max_hours} Hours
           </div>
         </div>
-        <h4>My Vehicle</h4>
+        <h4 className="font-bold">My Vehicle</h4>
         {this.renderPlateForm()}
         <div className="parking-rate">
           {rate}
@@ -1074,7 +1084,7 @@ console.log(parkingRules);
         address={address}
         rate={rate}
         time={time_rule}
-        allowed={null} />
+        allowed={this_day} />
     );
   }
 
@@ -1146,10 +1156,14 @@ console.log(parkingRules);
   }
 
   renderManagedParkingModal() {
-    const { bookingStep, isManagedFree } = this.props.parking;
+    const { bookingStep, isManagedFree, showLots } = this.props.parking;
     let content = "";
     let heading = "";
-    if(bookingStep == 1) {
+    if(bookingStep == 1 && !showLots) {
+      heading = "Parking Info";
+      content = this.renderFreePaidParkingModalContent();
+    } else if (bookingStep == 1 && showLots) {
+      console.log("here");
       heading = "Current Parking Lot Status";
       content = this.renderLots();
     } else if(bookingStep == 2) {
@@ -1159,6 +1173,7 @@ console.log(parkingRules);
       heading = "Park Now";
       content = this.renderParkingOverview();
     } else if (bookingStep == 4) {
+      heading = "Parking Confirmation";
       content = this.renderConfirmationScreen();
     }
     return (
