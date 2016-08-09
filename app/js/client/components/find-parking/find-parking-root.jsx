@@ -45,7 +45,8 @@ import {
   exitVehicle,
   setDirections,
   getStreetView,
-  showLots
+  showLots,
+  checkIfAlreadyParked
 } from "../../actions/parking.js";
 import { setPosition, setInitialPosition, getLocationCoordinates } from "../../actions/location.js";
 import { getVehicles } from "../../actions/vehicle.js";
@@ -86,6 +87,8 @@ class FindParking extends Component {
     this.showDirections = this.showDirections.bind(this);
     this.showStreetView = this.showStreetView.bind(this);
     this.showLotsModal = this.showLotsModal.bind(this);
+    this.changePlateNo = this.changePlateNo.bind(this);
+    this.changeState = this.changeState.bind(this);
   }
 
   componentDidMount() {
@@ -243,7 +246,35 @@ class FindParking extends Component {
     if(showPaidParkingModal || (showManagedParkingModal && !isManagedFree )) {
       this.calculateAmountToPay();
     }
+    dispatch(checkIfAlreadyParked(plate));
     dispatch(setSelectedPlate(plate));
+  }
+
+  changePlateNo() {
+    const { dispatch } = this.props;
+    const plate_no = this.refs["license-number"].getValue();
+    const registered_state = this.refs["select-state"].getValue();
+    if(plate_no) {
+      const plate = {
+        plate_no : plate_no,
+        registered_state : registered_state.value
+      };
+      dispatch(updatePlate(plate));
+      dispatch(checkIfAlreadyParked(plate));
+    }
+  }
+
+  changeState(state) {
+    const { dispatch } = this.props;
+    console.log(state);
+    const plate_no = this.refs["license-number"].getValue();
+    const registered_state = state.value;
+    const plate = {
+      plate_no : plate_no,
+      registered_state : registered_state
+    };
+    dispatch(updatePlate(plate));
+    dispatch(checkIfAlreadyParked(plate));
   }
 
   getParkingData() {
@@ -941,13 +972,15 @@ class FindParking extends Component {
           ref="license-number"
           placeholder="LICENSE PLATE #"
           className="license-no"
-          defaultValue={plate_no}/>
+          defaultValue={plate_no}
+          onBlur={this.changePlateNo}/>
         <Chooser 
           options={states}
           ref="select-state"
           selectionEntity="a State"
           placeholder="Select State" 
-          defaultValue={selectedState}/>
+          defaultValue={selectedState}
+          onValueChange={this.changeState}/>
         {numHours}
       </form>
     );
@@ -1005,9 +1038,14 @@ class FindParking extends Component {
   }
 
   renderWalletOption() {
+    const { isAlreadyParked } = this.props.parking;
+    const walletBtnClasses = classNames({
+      "blue-btn": true,
+      "disabled": isAlreadyParked
+    });
     return (
       <div className="margin-bottom-10">
-        <GrayButton className="blue-btn" onClick={this.showWalletBalance}>
+        <GrayButton className={walletBtnClasses} disabled={isAlreadyParked} onClick={this.showWalletBalance}>
           Pay with Wallet
         </GrayButton>
       </div>
@@ -1015,13 +1053,18 @@ class FindParking extends Component {
   }
 
   renderPaymentBtns() {
+    const { isAlreadyParked } = this.props.parking;
     const userId = cookie.load('userId');
     const walletOption = userId ? this.renderWalletOption() : null;
+    const paymentBtnClasses = classNames({
+      "green-btn": true,
+      "disabled": isAlreadyParked
+    });
     return (
       <div>
-        
+        {walletOption}
         <div>
-          <GrayButton className="green-btn" onClick={this.payWithPaypal}>
+          <GrayButton className={paymentBtnClasses} onClick={this.payWithPaypal}>
             Make Payment
           </GrayButton>
         </div>
