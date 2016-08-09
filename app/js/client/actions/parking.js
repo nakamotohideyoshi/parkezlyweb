@@ -636,3 +636,34 @@ export const showLots = (status) => {
     status
   };
 };
+
+
+export const checkIfAlreadyParked = (plate) => {
+  const { plate_no, registered_state } = plate;
+  return dispatch => {
+    dispatch(enableLoading());
+    return ParkingAPI.checkIfAlreadyParked(plate_no, registered_state)
+      .then((response) => {
+        const { data } = response;
+        const { resource } = data;
+        if(resource.length > 0) {
+          const { id, exit_date_time } = resource[0];
+          const exitTime = new Date(exit_date_time);
+          const dateTimeNow = new Date(moment.utc().format("YYYY-MM-DD HH:mm"));
+          console.log(exitTime);
+          console.log(dateTimeNow);
+          if(exitTime > dateTimeNow) {
+            dispatch(setAlreadyParked(true, id));
+          } else {
+            dispatch(setAlreadyParked(false, null));
+          }
+        } else {
+          dispatch(setAlreadyParked(false, null));
+        }
+        dispatch(disableLoading());
+      })
+      .catch((response) => {
+        //dispatch(fetchNearParkingLotFailed(response));
+      });
+  };
+};

@@ -106,7 +106,7 @@ export const checkIfAlreadyParked = (plate_no, registered_state) => {
     Object.assign(
       {
         method: "get",
-        url: "pzly01live7/_table/parked_cars?filter=plate_no="+plate_no+"&pl_state="+registered_state+"&order=entry_date_time%20DESC"
+        url: "pzly01live7/_table/parked_cars?filter=plate_no="+plate_no+"&pl_state="+registered_state+"&order=id%20DESC"
       }, APIConfig
     )
   );

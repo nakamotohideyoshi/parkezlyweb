@@ -109,21 +109,37 @@ a {
     background: #6D6E6E !important;
     color: $white; 
     display: block;
+
+    &.disabled {
+      background: #DFDFDF !important;
+    }
   }
   &.green-btn {
     background: #38A103 !important;
     color: $white; 
     display: block;
+
+    &.disabled {
+      background: #DFDFDF !important;
+    }
   }
   &.yellow-btn {
     background: $yellow !important;
     color: $red; 
     display: block;
+
+    &.disabled {
+      background: #DFDFDF !important;
+    }
   }
   &.blue-btn {
     background: $blue !important;
     color: $white; 
     display: block;
+
+    &.disabled {
+      background: #DFDFDF !important;
+    }
   }
 
 }
