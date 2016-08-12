@@ -26,15 +26,46 @@ import { ajaxSelectizeGet, ajaxDelete } from '../../../../common/components/ajax
 import AdminSelectize from '../../../../common/components/admin-selectize.jsx'
 
 export const fields = [ 
-  'id',  
-  'date_time', 
-  'user_name', 
-  'vehicle_type',  
-  'plate_no',  
-  'registered_state',  
-  'user_id', 
-  'ip',  
-  'vehicle_image',
+  'id',
+  'parking_type',
+  'township_code',
+  'location_code',
+  'entry_date_time',
+  'exit_date_time',
+  'expiry_time',
+  'max_time',
+  'user_id',
+  'permit_id',
+  'subscription_id',
+  'plate_no',
+  'pl_state',
+  'lat',
+  'lng',
+  'address1',
+  'address2',
+  'city',
+  'state',
+  'zip',
+  'country',
+  'lot_row',
+  'lot_number',
+  'ip',
+  'parking_token',
+  'parking_status',
+  'payment_method',
+  'parking_rate',
+  'parking_units',
+  'parking_qty',
+  'parking_subtotal',
+  'wallet_trx_id',
+  'tr_percent',
+  'tr_fee',
+  'parking_total',
+  'ipn_custom',
+  'ipn_txn_id',
+  'ipn_payment',
+  'ipn_status',
+  'ipn_address',
 ]
 
 export default class InspectorSearchPlateForm extends React.Component {
@@ -85,13 +116,7 @@ export default class InspectorSearchPlateForm extends React.Component {
   }
 
   componentWillMount() {
-    ajaxSelectizeGet('manage_locations', 'location_code', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('scheme_type', 'scheme_type', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('payment_type', 'pay_method', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('township_users', 'user_id', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('township_users', 'user_name', this.selectizeOptionsUpdate);
     ajaxSelectizeGet('user_vehicles', 'plate_no', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('locations_rate', 'rate', this.selectizeOptionsUpdate);
   }
 
   componentDidUpdate() {
@@ -114,31 +139,55 @@ export default class InspectorSearchPlateForm extends React.Component {
   tempInputsEdit(initialValues) {
      const {
       fields: {  
-        id,  
-        date_time, 
-        user_name, 
-        vehicle_type,  
-        plate_no,  
-        registered_state,  
-        user_id, 
-        ip,  
-        vehicle_image,
+        id,
+        parking_type,
+        township_code,
+        location_code,
+        entry_date_time,
+        exit_date_time,
+        expiry_time,
+        max_time,
+        user_id,
+        permit_id,
+        subscription_id,
+        plate_no,
+        pl_state,
+        lat,
+        lng,
+        address1,
+        address2,
+        city,
+        state,
+        zip,
+        country,
+        lot_row,
+        lot_number,
+        ip,
+        parking_token,
+        parking_status,
+        payment_method,
+        parking_rate,
+        parking_units,
+        parking_qty,
+        parking_subtotal,
+        wallet_trx_id,
+        tr_percent,
+        tr_fee,
+        parking_total,
+        ipn_custom,
+        ipn_txn_id,
+        ipn_payment,
+        ipn_status,
+        ipn_address,
       },
       resetForm,
       submitting,
       dispatch
     } = this.props;
 
+    /*
     const fields = [ 
-      'id',  
-      'date_time', 
-      'user_name', 
-      'vehicle_type',  
-      'plate_no',  
-      'registered_state',  
-      'user_id', 
-      'ip',  
-      'vehicle_image',
+      'plate_no',
     ]
 
     return fields.map((data) => {
@@ -151,6 +200,7 @@ export default class InspectorSearchPlateForm extends React.Component {
         </div>
       );
     }); 
+    */
   }
 
   render() {
@@ -176,75 +226,11 @@ export default class InspectorSearchPlateForm extends React.Component {
 
               <div className="row">
 
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'pay_method'} 
-                formName={'search-plate-form'} 
-                fieldName={'pay_method'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'location_code'} 
-                formName={'search-plate-form'} 
-                fieldName={'location_code'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'scheme_type'} 
-                formName={'search-plate-form'} 
-                fieldName={'scheme_type'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'pay_method'} 
-                formName={'search-plate-form'} 
-                fieldName={'pay_method'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'user_id'} 
-                formName={'search-plate-form'} 
-                fieldName={'user_id'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'user_name'} 
-                formName={'search-plate-form'} 
-                fieldName={'user_name'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
                 <AdminSelectize 
                 options={this.state.selectizeOptions}
                 objectKey={'plate_no'} 
                 formName={'search-plate-form'} 
                 fieldName={'plate_no'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'rate'} 
-                formName={'search-plate-form'} 
-                fieldName={'rate'}
                 defaultData={this.props.rowData}
                 dispatch={dispatch} 
                 />
@@ -294,3 +280,15 @@ export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   fields,
   overwriteOnInitialValuesChange : true
 })(InspectorSearchPlateForm));
+
+/*
+
+ajaxSelectizeGet('manage_locations', 'location_code', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('scheme_type', 'scheme_type', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('payment_type', 'pay_method', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('township_users', 'user_id', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('township_users', 'user_name', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('user_vehicles', 'plate_no', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('locations_rate', 'rate', this.selectizeOptionsUpdate);
+
+*/

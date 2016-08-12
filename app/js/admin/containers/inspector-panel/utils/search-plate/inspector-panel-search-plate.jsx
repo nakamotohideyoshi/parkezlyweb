@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import datetime from 'node-datetime'
 import {SimpleSelect} from "react-selectize"
+import { browserHistory } from 'react-router'
 
 import Body from "../../../../../common/components/body/body.jsx"
 import Spinner from '../../../../common/components/spinner.jsx'
@@ -21,16 +22,49 @@ import { ajaxSelectizeGet, ajaxDelete } from '../../../../common/components/ajax
 
 import InspectorPanelSearchPlateForm from './inspector-panel-search-plate-form.jsx'
 
+import _ from 'lodash';
+
 export const fields = [ 
-  'id',  
-  'date_time', 
-  'user_name', 
-  'vehicle_type',  
-  'plate_no',  
-  'registered_state',  
-  'user_id', 
-  'ip',  
-  'vehicle_image',
+  'id',
+  'parking_type',
+  'township_code',
+  'location_code',
+  'entry_date_time',
+  'exit_date_time',
+  'expiry_time',
+  'max_time',
+  'user_id',
+  'permit_id',
+  'subscription_id',
+  'plate_no',
+  'pl_state',
+  'lat',
+  'lng',
+  'address1',
+  'address2',
+  'city',
+  'state',
+  'zip',
+  'country',
+  'lot_row',
+  'lot_number',
+  'ip',
+  'parking_token',
+  'parking_status',
+  'payment_method',
+  'parking_rate',
+  'parking_units',
+  'parking_qty',
+  'parking_subtotal',
+  'wallet_trx_id',
+  'tr_percent',
+  'tr_fee',
+  'parking_total',
+  'ipn_custom',
+  'ipn_txn_id',
+  'ipn_payment',
+  'ipn_status',
+  'ipn_address',
 ]
 
 class customColumnComponent extends React.Component {
@@ -130,6 +164,7 @@ class InspectorSearchPlate extends React.Component {
   renderTable() {
     console.log(this.props.inspectorPlateFetched)
     let parkingData = this.props.inspectorPlateFetched.data.resource;
+    let filteredData = _.filter(parkingData, {"township_code": this.props.townshipId});
 
     var renderEditModal = this.renderEditModal;
     var metaDataFunction = () =>  {
@@ -153,7 +188,7 @@ class InspectorSearchPlate extends React.Component {
           tableClassName={'table table-bordered table-striped table-hover'}
           filterClassName={''}
           useGriddleStyles={false}
-          results={parkingData}
+          results={filteredData}
           showFilter={true}
           showSettings={true}
           settingsToggleClassName='btn btn-default'
@@ -162,34 +197,36 @@ class InspectorSearchPlate extends React.Component {
           useCustomFilterComponent={true} customFilterComponent={customFilterComponent}
           useCustomFilterer={true} customFilterer={customFilterFunction}
           columnMetadata={columnMeta}
+          initialSort={'entry_time'}
+          initialSortAscending={false}
+          columns={[
+                  'id',
+                  'township_code',
+                  'plate_no',
+                  'expiry_time',
+                  'parking_status',
+                  'ticket_status'
+                  ]}
         />
 
-        <div className="divider"/> 
-
-        <div className="center-align">
-
-          <a
-            className="modal-trigger waves-effect waves-light btn valign" 
-            onClick={() => $('#modal-bursar-payment-create').openModal()}
-            style={{margin: 10}}>Add New Plate</a>
-
-        </div>
+        
       </div>
     );
   }
 
-  renderEditDuplicateButtons(recordId) {
+  renderEditDuplicateButtons(rowData) {
     return (
       <div className="container">
+
         <a
         style={{marginTop: 20}}
         onClick={() => {
           this.setState({showEditModal: true})
-          $('#modal-bursar-ticket-edit').openModal(); 
+          browserHistory.push(`admin/inspector/vehicle-info/${rowData.plate_no}`);
         }}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
-          <i className="material-icons valign">edit</i>
-          <h4> Edit - Plate ID: {recordId} </h4>
+          <i className="material-icons valign">directions_car</i>
+          <h4> Vehicle Info - Plate No: {rowData.plate_no} </h4>
         </a>
 
         <a
@@ -248,9 +285,20 @@ class InspectorSearchPlate extends React.Component {
     this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true, parkingLocationCode: recordId})
   }
 
-    renderEditDuplicateButtons(recordId) {
+  renderEditDuplicateButtons(rowData) {
     return (
       <div className="container">
+        <a
+        style={{marginTop: 20}}
+        onClick={() => {
+          this.setState({showEditModal: true})
+          browserHistory.push(`admin/inspector/vehicle-info/${rowData.plate_no}`);
+        }}
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">directions_car</i>
+          <h4> Vehicle Info - Plate No: {rowData.plate_no} </h4>
+        </a>
+
         <a
         style={{marginTop: 20}}
         onClick={() => {
@@ -259,7 +307,7 @@ class InspectorSearchPlate extends React.Component {
         }}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">edit</i>
-          <h4> Edit - Plate ID: {recordId} </h4>
+          <h4> Edit - Plate ID: {rowData.id} </h4>
         </a>
 
         <a
@@ -269,14 +317,14 @@ class InspectorSearchPlate extends React.Component {
         }}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">content_copy</i>
-          <h4> Duplicate - Plate ID: {recordId} </h4>
+          <h4> Duplicate - Plate ID: {rowData.id} </h4>
         </a>
 
         <a
         onClick={() => $('#modal-delete').openModal() }
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">delete</i>
-          <h4> Delete - Plate ID: {recordId} </h4>
+          <h4> Delete - Plate ID: {rowData.id} </h4>
         </a>
 
         <div id="modal-delete" className="modal" style={{overflowX: "hidden"}}>
@@ -301,7 +349,7 @@ class InspectorSearchPlate extends React.Component {
                 <a className="waves-effect waves-light btn btn-green" 
                 onClick={() => {
                   $('#modal-delete').closeModal()
-                  ajaxDelete('user_vehicles', recordId, this.handleSuccess);
+                  ajaxDelete('user_vehicles', rowData.id, this.handleSuccess);
                   this.setState({showEditDuplicateButtons: false});
                   window.scrollTo(0, 0);
                 }}>Yes</a>
@@ -334,7 +382,7 @@ class InspectorSearchPlate extends React.Component {
                </div>
 
                {this.state.showEditDuplicateButtons ? 
-                this.renderEditDuplicateButtons(this.state.parkingLocationCode) : <div> </div>}
+                this.renderEditDuplicateButtons(this.state.rowData) : <div> </div>}
             </div>
           </div>
         </Body>
@@ -408,3 +456,16 @@ export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   form: 'search-plate-edit',
   fields
 })(InspectorSearchPlate));
+
+/*
+<div className="divider"/> 
+
+<div className="center-align">
+
+  <a
+    className="modal-trigger waves-effect waves-light btn valign" 
+    onClick={() => $('#modal-bursar-payment-create').openModal()}
+    style={{margin: 10}}>Add New Plate</a>
+
+</div>
+*/

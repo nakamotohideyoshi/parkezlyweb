@@ -26,15 +26,41 @@ import { ajaxSelectizeGet, ajaxDelete } from '../../../../common/components/ajax
 import AdminSelectize from '../../../../common/components/admin-selectize.jsx'
 
 export const fields = [ 
-  'id',  
-  'date_time', 
-  'user_name', 
-  'vehicle_type',  
-  'plate_no',  
-  'registered_state',  
+  'id',
+  'town_logo', 
+  'plate_no',
+  'violation_fee', 
+  'violation_detail',  
+  'respond_date',  
+  'hearing_date',  
+  'hearing_location',  
+  'date_ticket', 
+  'plead_guilty_no_guilty',  
+  'v_user_name', 
+  'address', 
+  'email', 
+  'phone', 
+  'officer_name',  
+  'officer_id',  
   'user_id', 
-  'ip',  
-  'vehicle_image',
+  'ticket_no', 
+  'violation_code',  
+  'violation_description', 
+  'violation_location',  
+  'court_id',  
+  'hearing_address', 
+  'township_code', 
+  'v_user_id', 
+  'tkt_status',  
+  'signature', 
+  'penalty_adjustment',  
+  'adjustment_reference',  
+  'hearing_hour',  
+  'hearing_time',  
+  'am_pm', 
+  'twp_payment', 
+  'paid_amount', 
+  'paid_date',
 ]
 
 export default class InspectorSearchTicketForm extends React.Component {
@@ -85,13 +111,7 @@ export default class InspectorSearchTicketForm extends React.Component {
   }
 
   componentWillMount() {
-    ajaxSelectizeGet('manage_locations', 'location_code', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('scheme_type', 'scheme_type', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('payment_type', 'pay_method', this.selectizeOptionsUpdate);
     ajaxSelectizeGet('township_users', 'user_id', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('township_users', 'user_name', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('user_vehicles', 'plate_no', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('locations_rate', 'rate', this.selectizeOptionsUpdate);
   }
 
   componentDidUpdate() {
@@ -114,15 +134,41 @@ export default class InspectorSearchTicketForm extends React.Component {
   tempInputsEdit(initialValues) {
      const {
       fields: {  
-        id,  
-        date_time, 
-        user_name, 
-        vehicle_type,  
-        plate_no,  
-        registered_state,  
+        id,
+        town_logo, 
+        plate_no,
+        violation_fee, 
+        violation_detail,  
+        respond_date,  
+        hearing_date,  
+        hearing_location,  
+        date_ticket, 
+        plead_guilty_no_guilty,  
+        v_user_name, 
+        address, 
+        email, 
+        phone, 
+        officer_name,  
+        officer_id,  
         user_id, 
-        ip,  
-        vehicle_image,
+        ticket_no, 
+        violation_code,  
+        violation_description, 
+        violation_location,  
+        court_id,  
+        hearing_address, 
+        township_code, 
+        v_user_id, 
+        tkt_status,  
+        signature, 
+        penalty_adjustment,  
+        adjustment_reference,  
+        hearing_hour,  
+        hearing_time,  
+        am_pm, 
+        twp_payment, 
+        paid_amount, 
+        paid_date,
       },
       resetForm,
       submitting,
@@ -130,15 +176,40 @@ export default class InspectorSearchTicketForm extends React.Component {
     } = this.props;
 
     const fields = [ 
-      'id',  
-      'date_time', 
-      'user_name', 
-      'vehicle_type',  
-      'plate_no',  
-      'registered_state',  
+      'town_logo', 
+      'plate_no',
+      'violation_fee', 
+      'violation_detail',  
+      'respond_date',  
+      'hearing_date',  
+      'hearing_location',  
+      'date_ticket', 
+      'plead_guilty_no_guilty',  
+      'v_user_name', 
+      'address', 
+      'email', 
+      'phone', 
+      'officer_name',  
+      'officer_id',  
       'user_id', 
-      'ip',  
-      'vehicle_image',
+      'ticket_no', 
+      'violation_code',  
+      'violation_description', 
+      'violation_location',  
+      'court_id',  
+      'hearing_address', 
+      'township_code', 
+      'v_user_id', 
+      'tkt_status',  
+      'signature', 
+      'penalty_adjustment',  
+      'adjustment_reference',  
+      'hearing_hour',  
+      'hearing_time',  
+      'am_pm', 
+      'twp_payment', 
+      'paid_amount', 
+      'paid_date',
     ]
 
     return fields.map((data) => {
@@ -178,9 +249,9 @@ export default class InspectorSearchTicketForm extends React.Component {
 
                 <AdminSelectize 
                 options={this.state.selectizeOptions}
-                objectKey={'user_name'} 
+                objectKey={'user_id'} 
                 formName={'search-plate-form'} 
-                fieldName={'user_name'}
+                fieldName={'user_id'}
                 defaultData={this.props.rowData}
                 dispatch={dispatch} 
                 />
@@ -226,7 +297,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-  form: 'search-plate-form',
+  form: 'create-ticket-form',
   fields,
   overwriteOnInitialValuesChange : true
 })(InspectorSearchTicketForm));

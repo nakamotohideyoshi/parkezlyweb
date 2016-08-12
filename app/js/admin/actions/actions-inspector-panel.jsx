@@ -8,7 +8,7 @@ import {API_CONFIG} from '../config/api.js';
 const AXIOS_INSTANCE = axios.create(API_CONFIG);
 
 export function fetchInspectorParkingField(locationCode) {
-  const URL = 'park_now_regd__users';
+  const URL = 'parked_cars';
 
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.INSPECTOR_PARKING_FIELD_GET_REQ));
@@ -23,7 +23,7 @@ export function fetchInspectorParkingField(locationCode) {
 }
 
 export function editInspectorParkingField(data, id) {
-  const URL = 'park_now_regd__users?ids=' + id;
+  const URL = 'parked_cars?ids=' + id;
 
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.INSPECTOR_PARKING_FIELD_PUT_REQ));
@@ -41,7 +41,7 @@ export function editInspectorParkingField(data, id) {
 
 export function createInspectorParkingField(data) {
   
-  const URL = 'park_now_regd__users';
+  const URL = 'parked_cars';
   
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.INSPECTOR_PARKING_FIELD_POST_REQ));
@@ -57,7 +57,7 @@ export function createInspectorParkingField(data) {
 }
 
 export function fetchInspectorPlate(locationCode) {
-  const URL = 'user_vehicles';
+  const URL = 'parked_cars';
 
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.INSPECTOR_PLATE_GET_REQ));
@@ -72,7 +72,7 @@ export function fetchInspectorPlate(locationCode) {
 }
 
 export function editInspectorPlate(data, id) {
-  const URL = 'user_vehicles?ids=' + id;
+  const URL = 'parked_cars?ids=' + id;
 
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.INSPECTOR_PLATE_PUT_REQ));
@@ -90,7 +90,7 @@ export function editInspectorPlate(data, id) {
 
 export function createInspectorPlate(data) {
   
-  const URL = 'user_vehicles';
+  const URL = 'parked_cars';
   
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.INSPECTOR_PLATE_POST_REQ));

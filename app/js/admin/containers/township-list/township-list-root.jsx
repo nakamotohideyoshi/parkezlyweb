@@ -14,6 +14,7 @@ import {fetchTownshipList, updateTownshipDetails} from '../../actions/actions-to
 const KEYS_TO_FILTERS = ['city']
 
 import {SchemaFilterTest} from '../../common/components/schema-filter-test.jsx'
+import {transferImages} from '../../common/temp-scripts/transfer-s3-urls.js'
 
 class TownshipListRoot extends React.Component {
   constructor(props) {

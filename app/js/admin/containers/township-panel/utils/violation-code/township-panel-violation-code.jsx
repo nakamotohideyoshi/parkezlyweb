@@ -116,7 +116,7 @@ class TownshipPanelViolationCode extends React.Component {
 
   renderTable() {
     console.log(this.props.townshipViolationCodeFetched)
-    let parkingData = this.props.townshipViolationCodeFetched.data.resource;
+    let parkingData = _.filter(this.props.townshipViolationCodeFetched.data.resource, {'township_code': this.props.townshipCode});
 
     var renderEditModal = this.renderEditModal
     var metaDataFunction = () =>  {

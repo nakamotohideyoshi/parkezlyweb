@@ -21,10 +21,6 @@ export const fields = [
 'permit_name',
 'name']
 
-var options = ["apple", "mango", "grapes", "melon", "strawberry"].map(function(fruit){
-    return {label: fruit, value: fruit}
-});
-
 class TownshipPermits extends React.Component {
 
   constructor(props) {

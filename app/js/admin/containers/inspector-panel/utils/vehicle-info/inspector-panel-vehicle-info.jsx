@@ -2,6 +2,7 @@ import React from 'react';
 
 import Body from "../../../../../common/components/body/body.jsx"
 import Spinner from '../../../../common/components/spinner.jsx'
+import moment from 'moment'
 import { Link, browserHistory } from 'react-router'
 import {createFilter} from 'react-search-input';
 import { ajaxGet, ajaxDelete } from '../../../../common/components/ajax-selectize.js';
@@ -10,7 +11,7 @@ export default class InspectorVehicleInfo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      markerData: null, 
+      parkedCarData: null, 
       dataLoading: true,
       color: "green"
     }
@@ -18,14 +19,14 @@ export default class InspectorVehicleInfo extends React.Component {
   }
 
   componentWillMount() {
-    ajaxGet('poiv2', this.ajaxGet);
+    ajaxGet('parked_cars', this.ajaxGet);
   }
 
-  ajaxGet(markerData) {
-    let markerArray = markerData.data.resource;
-    let filteredData = markerArray.filter(createFilter(this.props.vehicleCode, ['title']))
+  ajaxGet(parkedCarData) {
+    let markerArray = parkedCarData.data.resource;
+    let filteredData = markerArray.filter(createFilter(this.props.vehicleCode, ['plate_no']))
     console.log(filteredData)
-    this.setState({markerData: filteredData[0], dataLoading: false});
+    this.setState({parkedCarData: filteredData[0], dataLoading: false});
   }
 
   render() {
@@ -46,11 +47,15 @@ export default class InspectorVehicleInfo extends React.Component {
                         <div> Loading... </div>
                         :
                         (() => {
-                          switch (this.state.markerData.marker) {
-                            case "status-red":     return <img src={require('../../../../../../images/car_red@3x.png')} />;
-                            case "status-green":   return <img src={require('../../../../../../images/car_green@3x.png')} />;
-                            case "status-yellow":  return <img src={require('../../../../../../images/car_yellow@3x.png')} />;
-                            default:               return <img src={require('../../../../../../images/car_green@3x.png')} />;
+                          let currentTime = moment().diff(moment(this.state.parkedCarData.expiry_time), 'hours');
+                          if(currentTime > 0 && this.state.greenOff == false) {
+                            return <img src={require('../../../../../../images/car_red@3x.png')} />
+                          } else if (currentTime < 0 && this.state.redOff == false) {
+                            return <img src={require('../../../../../../images/car_green@3x.png')} />
+                          } else if (currentTime == 0 && this.state.yellowOff == false) {
+                            return <img src={require('../../../../../../images/car_yellow@3x.png')} />
+                          } else {
+                            return <img src={require('../../../../../../images/car_green@3x.png')} />
                           }
                         })()
                       }
@@ -59,8 +64,15 @@ export default class InspectorVehicleInfo extends React.Component {
                 </div>
 
                 <div className="row">
-                  <h5 className="col s6">State - </h5>
-                  <h5 className="col s6">Row - 555 </h5>
+                { 
+                  this.state.dataLoading ? 
+                  <div> Loading... </div>
+                  :
+                  <div>
+                  <h5 className="col s6">State - {this.state.parkedCarData.state}</h5>
+                  <h5 className="col s6">City - {this.state.parkedCarData.city}</h5>
+                  </div>
+                }
                 </div>
                   </div>
               </div>
@@ -73,7 +85,14 @@ export default class InspectorVehicleInfo extends React.Component {
           display: "block", }}>
               <div className="township-userlist-container" style={{backgroundColor: "#4C4B49"}}>
                 <div className="row marginless-row center-align">
-                  <span className="col s12" style={{color: "white", fontSize: 50, margin: 0, fontWeight: "bold"}}> 0:0:0 </span>
+                  { 
+                    this.state.dataLoading ? 
+                    <div> Loading... </div>
+                    :
+                    <span className="col s12" style={{color: "white", fontSize: 50, margin: 0, fontWeight: "bold"}}> 
+                      {moment(this.state.parkedCarData.expiry_time).format('HH:mm:ss')} 
+                    </span>
+                  }
                 </div>
                 <div className="row marginless-row center-align">
                   <span className="col s12" style={{color: "white", margin: 0}}>Hours : Minutes : Seconds </span>
@@ -85,63 +104,76 @@ export default class InspectorVehicleInfo extends React.Component {
           style={{
           backgroundColor: "#313131", 
           display: "block", }}>
+            { 
+              this.state.dataLoading ? 
+              <div> Loading... </div>
+              :
               <div className="township-userlist-container" style={{backgroundColor: "#313131", color: "white",}}>
                 <div className="row">
                   <div className="right-align">
                     <h5 className="col s6">Plate #:</h5> 
                   </div>
                   <div className="left-align">
-                    <h5 className="col s6">TypeError</h5>
+                    <h5 className="col s6">{this.props.vehicleCode}</h5>
                   </div>
                   <div className="right-align">
                     <h5 className="col s6">Violation Fee:</h5> 
                   </div>
                   <div className="left-align">
-                    <h5 className="col s6">Test</h5>
+                    <h5 className="col s6">{this.state.parkedCarData.tr_fee}</h5>
                   </div>
                   <div className="right-align">
-                    <h5 className="col s6">Description:</h5>  
+                    <h5 className="col s6">Row:</h5>  
                   </div>
                   <div className="left-align">
-                    <h5 className="col s6">Test</h5>
+                    <h5 className="col s6">{this.state.parkedCarData.lot_row}</h5>
                   </div>
                 </div>
               </div>
+            }
+              
           </div>
 
-          <Link 
-            to={{pathname: `/admin/inspector/search-plate/${this.props.vehicleCode}`}} 
-            className="card waves-effect waves-light center-align" 
-            style={{
-            backgroundColor: "#0d53cf", 
-            border: "2px solid black", 
-            borderBottom: "0", 
-            display: "block", 
-            }}>
-            <div 
-            className="township-userlist-container center-align" 
-            style={{backgroundColor: "#0d53cf"}}>
-              <i style={{color: "white", fontSize: "80", marginTop: 10}} className="material-icons valign">search</i>
-              <h4 style={{color: "white", paddingTop: 0, marginTop: 0, marginBottom: 10}}> Find this Vehicle </h4>
-            </div>
-          </Link>
+          { 
+            this.state.dataLoading ? 
+            <div> Loading... </div>
+            :
+            <div>
+              <Link 
+                to={{pathname: `/admin/inspector/search-plate/${this.state.parkedCarData.township_code}`}} 
+                className="card waves-effect waves-light center-align" 
+                style={{
+                backgroundColor: "#0d53cf", 
+                border: "2px solid black", 
+                borderBottom: "0", 
+                display: "block", 
+                }}>
+                <div 
+                className="township-userlist-container center-align" 
+                style={{backgroundColor: "#0d53cf"}}>
+                  <i style={{color: "white", fontSize: "80", marginTop: 10}} className="material-icons valign">search</i>
+                  <h4 style={{color: "white", paddingTop: 0, marginTop: 0, marginBottom: 10}}> Find this Vehicle </h4>
+                </div>
+              </Link>
 
-          <Link  
-            to={{pathname: `/admin/inspector/vehicle-info/create-ticket/:${this.props.vehicleCode}`}} 
-            className="card waves-effect waves-light center-align" 
-            style={{
-            backgroundColor: "#CC0000", 
-            border: "2px solid black",
-            borderBottom: "0",  
-            display: "block", 
-            }}>
-            <div 
-            className="township-userlist-container center-align" 
-            style={{backgroundColor: "#CC0000"}}>
-              <i style={{color: "white", fontSize: "80", marginTop: 10}} className="material-icons valign">receipt</i>
-              <h4 style={{color: "white", paddingTop: 0, marginTop: 0, marginBottom: 10}}> Create Ticket </h4>
+              <Link  
+                to={{pathname: `/admin/inspector/vehicle-info/create-ticket/:${this.state.parkedCarData.township_code}`}} 
+                className="card waves-effect waves-light center-align" 
+                style={{
+                backgroundColor: "#CC0000", 
+                border: "2px solid black",
+                borderBottom: "0",  
+                display: "block", 
+                }}>
+                <div 
+                className="township-userlist-container center-align" 
+                style={{backgroundColor: "#CC0000"}}>
+                  <i style={{color: "white", fontSize: "80", marginTop: 10}} className="material-icons valign">receipt</i>
+                  <h4 style={{color: "white", paddingTop: 0, marginTop: 0, marginBottom: 10}}> Create Ticket </h4>
+                </div>
+              </Link>
             </div>
-          </Link>
+          }
 
           <div 
             onClick={() => this.context.router.goBack()}
