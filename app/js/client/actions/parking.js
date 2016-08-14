@@ -667,3 +667,10 @@ export const checkIfAlreadyParked = (plate) => {
       });
   };
 };
+
+export const showStreetView = (status) => {
+  return {
+    type: Actions.SHOW_STREET_VIEW,
+    status
+  };
+};

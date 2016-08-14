@@ -41,7 +41,8 @@ const initialState = {
   directions: null,
   isAlreadyParked: false,
   alreadyParkedId : null,
-  showLots: false
+  showLots: false,
+  showStreetView: false
 };
 
 const Parking = (state = initialState, action) => {
@@ -302,6 +303,11 @@ const Parking = (state = initialState, action) => {
       return {
         ...state,
         showLots: action.status
+      }
+    case "SHOW_STREET_VIEW":
+      return {
+        ...state,
+        showStreetView: action.status
       }
     default:
       return state;

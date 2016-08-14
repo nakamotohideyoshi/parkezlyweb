@@ -6,13 +6,13 @@ export const addPlate = (plateInfo) => {
   const requestMethod = id ? "put" : "post";
   const newPlatePayload = {
     plate_no: plate_no,
-    registered_state: registered_state,
+    registered_state: registered_state.value,
     user_id: user_id,
     date_time: ""
   };
   const updatePlatePayload = {
     plate_no: plate_no,
-    registered_state: registered_state,
+    registered_state: registered_state.value,
     id: id,
     date_time: ""
   };

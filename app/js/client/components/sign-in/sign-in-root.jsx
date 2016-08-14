@@ -17,6 +17,7 @@ class SignIn extends Component {
 
     this.loginUser = this.loginUser.bind(this);
     this.registerUser = this.registerUser.bind(this);
+    this.goToParking = this.goToParking.bind(this);
   }
 
   componentWillMount() {
@@ -81,6 +82,10 @@ class SignIn extends Component {
     }
   }
 
+  goToParking() {
+    window.location = "/find-parking";
+  }
+
   renderNotice() {
     const {
       mode,
@@ -142,7 +147,7 @@ class SignIn extends Component {
   renderSkipLink() {
     return (
       <div className="skip-link">
-        <a href="#">SKIP THIS</a>
+        <a href="javascript:void(0)" onClick={this.goToParking}>SKIP THIS</a>
       </div>
     );
   }

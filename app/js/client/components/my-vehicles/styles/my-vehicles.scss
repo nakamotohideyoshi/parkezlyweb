@@ -32,4 +32,13 @@
     padding-right: 0px;
     margin-right: 0px;
   }
+
+  .form-new-vehicle {
+    .react-selectize {
+      &.root-node {
+        width: auto;
+      }
+    }
+
+  }
 }

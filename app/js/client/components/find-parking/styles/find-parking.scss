@@ -453,3 +453,32 @@
     }
   }
 }
+
+#pano {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  z-index: 0;
+
+  &.inactive {
+    visibility: hidden;
+  }
+
+  &.active {
+    display: block;
+    z-index: 100;
+  }
+}
+
+.close-street-view {
+  position: absolute;
+  top: 65px;
+  color: $white;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  z-index: 999;
+  text-align: center;
+}
