@@ -46,7 +46,8 @@ import {
   setDirections,
   getStreetView,
   showLots,
-  checkIfAlreadyParked
+  checkIfAlreadyParked,
+  showStreetView
 } from "../../actions/parking.js";
 import { setPosition, setInitialPosition, getLocationCoordinates } from "../../actions/location.js";
 import { getVehicles } from "../../actions/vehicle.js";
@@ -89,6 +90,7 @@ class FindParking extends Component {
     this.showLotsModal = this.showLotsModal.bind(this);
     this.changePlateNo = this.changePlateNo.bind(this);
     this.changeState = this.changeState.bind(this);
+    this.hideStreetView = this.hideStreetView.bind(this);
   }
 
   componentDidMount() {
@@ -514,7 +516,8 @@ class FindParking extends Component {
       travelMode: google.maps.TravelMode.DRIVING,
     }, (result, status) => {
       if (status === google.maps.DirectionsStatus.OK) {
-        dispatch(setDirections(origin, destination, result))
+        dispatch(setDirections(origin, destination, result));
+        dispatch(hideSelectedParking());
       } else {
         console.error(`error fetching directions ${ result }`);
       }
@@ -525,7 +528,25 @@ class FindParking extends Component {
     const { dispatch, parking } = this.props;
     const { selectedMarkerItem } = parking;
     const { lat, lng } = selectedMarkerItem;
-    dispatch(getStreetView(lat, lng));
+    console.log(lat);
+    //dispatch(getStreetView(lat, lng));
+    dispatch(showStreetView(true));
+    const map = this.refs["gMap"];
+    console.log(map);
+    var panorama = new google.maps.StreetViewPanorama(
+      document.getElementById('pano'), {
+        position: { lat: parseFloat(lat), lng: parseFloat(lng) },
+        pov: {
+          heading: 34,
+          pitch: 10
+        }
+      });
+    //map.setStreetView(panorama);
+  }
+
+  hideStreetView() {
+    const { dispatch } = this.props;
+    dispatch(showStreetView(false));
   }
 
   showLotsModal() {
@@ -1340,6 +1361,31 @@ console.log(parkingRules);
     );
   }
 
+  renderStreetView() {
+    const { showStreetView } = this.props.parking;
+    const panoStyles = {
+      width: 500,
+      height: 530
+    };
+    const panoClass = showStreetView ? "active" : "inactive";
+
+    return (
+      <div id="pano" style={panoStyles} className={panoClass}></div>
+    );
+  }
+
+  renderCloseStreetView(){
+    const { showStreetView } = this.props.parking;
+    return showStreetView ? (
+      <a
+        href="javascript:void(0)"
+        className="close-street-view"
+        onClick={this.hideStreetView}>
+          Close
+      </a>
+    ) : null;
+  }
+
   render() {
     console.log(this.props);
     const gMap = this.renderGMap();
@@ -1372,7 +1418,8 @@ console.log(parkingRules);
     //After marker is selected
     const freeParkingModal = showFreeParkingModal || showPaidParkingModal ? this.renderFreePaidParkingModal() : null;
     const managedParkingModal = showManagedParkingModal && lotsData ? this.renderManagedParkingModal() : null;
-
+    const streetView = showStreetView ? this.renderStreetView() : null;
+    const closeStreetViewBtn = this.renderCloseStreetView();
     return (
       <Body
         ref="find-parking-body"
@@ -1396,6 +1443,8 @@ console.log(parkingRules);
             {parkingInfoBtn}
             {myLocationIcon}
             {payWithWalletAlert}
+            {streetView}
+            {closeStreetViewBtn}
           </div>
       </Body>
     );

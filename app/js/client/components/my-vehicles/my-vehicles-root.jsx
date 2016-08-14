@@ -15,6 +15,7 @@ class NewVehicleForm extends Component {
     super(props);
 
     this.addVehicle = this.addVehicle.bind(this);
+    this.onSkip = this.onSkip.bind(this);
   }
 
   componentWillMount() {
@@ -30,9 +31,8 @@ class NewVehicleForm extends Component {
   componentWillReceiveProps(nextProps) {
     const { plateId } = nextProps.vehicle;
     if(plateId) {
-      setTimeout(() =>  {
-        window.location = "/my-vehicles"
-      }, 2000);
+      //window.location = "/my-vehicles"
+      this.onSkip();
     }
 
     if (this.props.vehicleId) {
@@ -76,6 +76,10 @@ class NewVehicleForm extends Component {
     }
   }
 
+  onSkip() {
+    document.getElementsByClassName("hamburger-trigger")[0].click();
+  }
+
   renderNotice() {
     const { errorMessage } = this.props.vehicle;
     return errorMessage ? (
@@ -116,7 +120,7 @@ class NewVehicleForm extends Component {
   renderSkipLink() {
     return (
       <div className="skip-link">
-        <a href="/my-vehicles">SKIP THIS</a>
+        <a href="javascript:void(0)" onClick={this.onSkip}>SKIP THIS</a>
       </div>
     );
   }
