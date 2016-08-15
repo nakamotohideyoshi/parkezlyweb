@@ -1,6 +1,7 @@
 import * as ParkingAPI from "../api/parking.js";
 import { getWalletBalance, makePayment } from "../api/wallet.js";
 import { getLocationDetails } from "../api/nearby.js";
+import * as VehicleAPI from "../api/vehicle.js"
 import * as Actions from "../constants/actions.js";
 import { GenericError } from "../constants/texts.js";
 import moment from "moment";
@@ -429,7 +430,12 @@ export const getBalance = (user_id) => {
     return getWalletBalance(user_id)
       .then((response) => {
         const { data } = response;
-        dispatch(updateWalletBalance(data.resource[0].new_balance));
+        const { resource } = data;
+        if(resource.length == 0) {
+          dispatch(updateWalletBalance(0));
+        } else {
+          dispatch(updateWalletBalance(data.resource[0].new_balance));
+        }
       })
       .catch((response) => {
         //dispatch(fetchChargesFailed());
@@ -674,3 +680,47 @@ export const showStreetView = (status) => {
     status
   };
 };
+
+const retrievedVehicles = (data) => {
+  return {
+    type: Actions.FETCH_VEHICLES_SUCCESS,
+    data
+  }
+};
+
+const retrievalFailure = (error) => {
+  return {
+    type: Actions.FETCH_VEHICLES_FAIL,
+    error
+  }
+};
+
+export const getVehicles = (user_id, location_code, pricing_time_unit) => {
+  return dispatch => {
+    dispatch(enableLoading());
+    return VehicleAPI.getVehicles(user_id)
+      .then((response) => {
+        console.log(response);
+        const { resource } = response.data;
+        if(resource.length == 0) {
+          dispatch(selectParkingAndTimeUnit(location_code, pricing_time_unit, 3));
+        } else if(resource.length == 1) {
+          dispatch(setSelectedPlate(resource[0]));
+          dispatch(selectParkingAndTimeUnit(location_code, pricing_time_unit, 3));
+        } else if (resource.length > 1) {
+          dispatch(retrievedVehicles({
+            vehicles: resource
+          }));
+          dispatch(selectParkingAndTimeUnit(location_code, pricing_time_unit, 2));
+        }
+        
+        dispatch(disableLoading());
+      })
+      .catch((response) => {
+        dispatch(retrievalFailure({
+          errorCode: "503",
+          errorMessage: GenericError
+        }));
+      });
+  }
+}

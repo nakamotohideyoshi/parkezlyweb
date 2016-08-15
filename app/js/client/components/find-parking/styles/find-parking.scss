@@ -157,13 +157,14 @@
   bottom: 160px;
   left: 50px;
   z-index: 10;
-  padding: 20px 15px 20px;
   background: rgba(0,0,0,0.7) !important;
   border-radius: 3px;
   text-align: center;
 
   a {
     color: $white;
+    display: block;
+    padding: 20px 15px 20px;
   }
 }
 
