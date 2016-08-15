@@ -47,10 +47,11 @@ import {
   getStreetView,
   showLots,
   checkIfAlreadyParked,
-  showStreetView
+  showStreetView,
+  getVehicles
 } from "../../actions/parking.js";
 import { setPosition, setInitialPosition, getLocationCoordinates } from "../../actions/location.js";
-import { getVehicles } from "../../actions/vehicle.js";
+//import { getVehicles } from "../../actions/vehicle.js";
 import { FREE_MAP_MARKER, PAID_MAP_MARKER, MANAGED_MAP_MARKER } from "./constants/texts.js";
 import { SimpleSelect } from "react-selectize";
 import { throttle } from "lodash";
@@ -234,12 +235,13 @@ class FindParking extends Component {
     const userId = cookie.load('userId');
     let bookingStep = 2;
     if(userId) {
-      dispatch(getVehicles(userId));
+      dispatch(getVehicles(userId, location_code, pricing_time_unit));
     } else {
       bookingStep = 3;
+      dispatch(selectParkingAndTimeUnit(location_code, pricing_time_unit, 3));
     }
     dispatch(showLots(false));
-    dispatch(selectParkingAndTimeUnit(location_code, pricing_time_unit, bookingStep));
+    //dispatch(selectParkingAndTimeUnit(location_code, pricing_time_unit, bookingStep));
   }
 
   selectVehiclePlate(plate) {
@@ -472,6 +474,7 @@ class FindParking extends Component {
       const userId = cookie.load('userId');
       const parkingData = this.getParkingData();
       dispatch(checkAndBook(parkingData));
+      this.closeWalletModal();
     }
   }
 
@@ -485,8 +488,8 @@ class FindParking extends Component {
     }
   }
 
-  closeWalletModal(e) {
-    e.preventDefault();
+  closeWalletModal() {
+    //e.preventDefault();
     $(this.refs["wallet-balance-modal"]).closeModal();
   }
 
@@ -1258,6 +1261,36 @@ console.log(parkingRules);
     );
   }
 
+  renderNotNowAndYesButtons() {
+    return (
+      <div className="modal-footer">
+        <a href="javascript:void(0)"
+          onClick={this.closeWalletModal}
+          className="waves-effect waves-green btn btn-flat">
+            Not Now
+        </a>
+
+        <a href="javascript:void(0)"
+          onClick={this.payFromWallet}
+          className="modal-action modal-close waves-effect waves-green btn-flat">
+            Yes
+        </a>
+      </div>
+    );
+  }
+
+  renderCloseBtn() {
+    return (
+      <div className="modal-footer">
+        <a href="javascript:void(0)"
+          onClick={this.closeWalletModal}
+          className="waves-effect waves-green btn btn-flat">
+           Close
+        </a>
+      </div>
+    );
+  }
+
 
   renderPayWithWalletAlert() {
     const { parking } = this.props;
@@ -1267,25 +1300,14 @@ console.log(parkingRules);
     ) : (
       <div>Would you like to pay ${priceToPay} from your ParkEZly wallet?</div>
     );
+    const btns  = currentBalance == 0 ? this.renderCloseBtn() : this.renderNotNowAndYesButtons();
     return (
       <div className="modal modal-fixed-footer wallet-balance-modal" ref="wallet-balance-modal">
         <div className="modal-content">
           <h3>Wallet Balance: ${currentBalance}</h3>
-          {messsage} 
+          {messsage}
         </div>
-        <div className="modal-footer">
-          <a href="javascript:void(0)"
-            onClick={this.closeWalletModal}
-            className="waves-effect waves-green btn btn-flat">
-              Not Now
-          </a>
-
-          <a href="javascript:void(0)"
-            onClick={this.payFromWallet}
-            className="modal-action modal-close waves-effect waves-green btn-flat">
-              Yes
-          </a>
-        </div>
+        {btns}
       </div>
     );
   }
