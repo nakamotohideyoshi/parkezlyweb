@@ -98,6 +98,27 @@ class FindParking extends Component {
     this.getGeolocation();
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { location } = this.props;
+    const { selectedMarker } = nextProps.parking;
+    const currentMarker = this.props.parking.selectedMarker;
+    if((!currentMarker && selectedMarker) || (currentMarker && (currentMarker.location_code != selectedMarker.location_code))) {
+
+      const { lat, lon } = location;
+      const userLocation = new google.maps.LatLng(lat, lon);
+      const markerSelected = new google.maps.LatLng(selectedMarker.lat, selectedMarker.lng);
+
+      //Set zoom level
+      const map = this.refs["gMap"];
+      const currentZoom = map.getZoom();
+      console.log("currentZoom", currentZoom);
+      let bounds = new google.maps.LatLngBounds();
+      bounds.extend(userLocation);
+      bounds.extend(markerSelected);
+      map.fitBounds(bounds);
+    }
+  }
+
   getGeolocation() {
     if (canUseDOM && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(this.initializePosition.bind(this));
@@ -211,6 +232,7 @@ class FindParking extends Component {
 
   handleParkingSelection(parking_type, marker) {
     const { dispatch } = this.props;
+
     dispatch(setSelectedParking(parking_type, marker));
     if(parking_type === "MANAGED") {
       const userId = cookie.load('userId');
@@ -1376,8 +1398,12 @@ console.log(parkingRules);
           Exit Parking
         </GrayButton>
 
-        <GrayButton className="blue-btn" onClick={null}>
+        <GrayButton className="blue-btn margin-bottom-10" onClick={null}>
           Directions to my vehicle
+        </GrayButton>
+
+        <GrayButton onClick={this.hideParkingModal}>
+          HIDE
         </GrayButton>
       </div>
     );
