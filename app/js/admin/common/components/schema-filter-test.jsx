@@ -19,7 +19,7 @@ const API_CONFIG = {
 };
 
 const AXIOS_INSTANCE = axios.create(API_CONFIG);
-const NAME_TO_SEARCH = 'ip';
+const NAME_TO_SEARCH = 'plate_no';
 
 export const SchemaFilterTest = function() {
   AXIOS_INSTANCE.get('_table').then(function(response) {

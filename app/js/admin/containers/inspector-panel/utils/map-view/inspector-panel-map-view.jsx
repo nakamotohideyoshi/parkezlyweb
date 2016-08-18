@@ -42,7 +42,7 @@ export default class InspectorMapView extends React.Component {
     this.setState({showInfo: false});
   }
 
-  renderInfoWindow(ref, marker, plate_no) {
+  renderInfoWindow(ref, marker, plate_no, plate_id) {
     var plateNull = false;
     if (plate_no == null) {
       plateNull = true;
@@ -55,7 +55,7 @@ export default class InspectorMapView extends React.Component {
       className="center-align"
       >
         <div 
-        onClick={() => browserHistory.push(`admin/inspector/vehicle-info/${plate_no}`)} 
+        onClick={() => browserHistory.push(`admin/inspector/vehicle-info/${plate_id}`)} 
         className="center-align">
           {plateNull ? "Plate # N/A" : plate_no} 
           <div> - Click Here - </div>
@@ -103,7 +103,7 @@ export default class InspectorMapView extends React.Component {
             icon={{url: iconUrl, scaledSize: new google.maps.Size(75,50)}} 
             onClick={this.handleMarkerClick.bind(this, data)}
             >
-            {data.showInfo ? this.renderInfoWindow(ref, data, data.plate_no) : null}
+            {data.showInfo ? this.renderInfoWindow(ref, data, data.plate_no, data.id) : null}
           </Marker>
         );
       }

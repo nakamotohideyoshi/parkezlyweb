@@ -24,9 +24,13 @@ export default class InspectorVehicleInfo extends React.Component {
 
   ajaxGet(parkedCarData) {
     let markerArray = parkedCarData.data.resource;
-    let filteredData = markerArray.filter(createFilter(this.props.vehicleCode, ['plate_no']))
-    console.log(filteredData)
-    this.setState({parkedCarData: filteredData[0], dataLoading: false});
+    //let filteredData = markerArray.filter(createFilter(this.props.vehicleCode, ['id']))
+    let filteredData = markerArray.find((element, index) => {
+      if (element.id == this.props.vehicleCode) {
+        return (element);
+      }
+    });
+    this.setState({parkedCarData: filteredData, dataLoading: false});
   }
 
   render() {
@@ -60,7 +64,14 @@ export default class InspectorVehicleInfo extends React.Component {
                         })()
                       }
                     <div className="row" style={{marginTop: 30}}>
-                  <h5 className="col s12">Plate Number - {this.props.vehicleCode}</h5>
+                    { 
+                      this.state.dataLoading ? 
+                      <div> Loading... </div>
+                      :
+                      <div>
+                        <h5 className="col s12">Plate Number - {this.state.parkedCarData.plate_no}</h5>
+                      </div>
+                    }  
                 </div>
 
                 <div className="row">
@@ -114,7 +125,7 @@ export default class InspectorVehicleInfo extends React.Component {
                     <h5 className="col s6">Plate #:</h5> 
                   </div>
                   <div className="left-align">
-                    <h5 className="col s6">{this.props.vehicleCode}</h5>
+                    <h5 className="col s6">{this.state.parkedCarData.plate_no}</h5>
                   </div>
                   <div className="right-align">
                     <h5 className="col s6">Violation Fee:</h5> 
