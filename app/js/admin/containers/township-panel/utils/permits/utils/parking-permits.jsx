@@ -46,13 +46,6 @@ class ParkingPermits extends React.Component {
 
   componentWillMount() {
     this.props.fetchTownshipParkingPermits();
-    this.props.fetchTownshipPermitTypes();
-    this.props.fetchTownshipSchemeTypes();
-    this.props.fetchTownshipFacilities(this.props.townshipCode);
-    this.props.fetchTownshipPermitsList();
-    this.props.fetchTownshipList();
-    this.props.dispatch(change('parking-permits', 'township_code', this.props.townshipCode));
-    this.props.dispatch(change('parking-permits', 'township_name', this.props.townshipCode));
 
     var dt = datetime.create();
     var formattedDate = dt.format('m-d-Y H:M:S');
@@ -76,6 +69,117 @@ class ParkingPermits extends React.Component {
     this.props.createTownshipParkingPermits(data);
   }
 
+  renderPermitsData() {
+    let filteredPermits = this.props.townshipParkingPermitsFetched.data.resource;
+    return filteredPermits.map((permit) => {
+      return( 
+        <tr key={permit.id}>
+          <td>{permit.township_code}</td>
+          <td>{permit.township_name}</td>
+          <td>{permit.permit_type}</td>
+          <td>{permit.permit_name}</td>
+          <td>{permit.covered_locations}</td>
+          <td>{permit.cost}</td>
+          <td>{permit.year}</td>
+          <td>{permit.location_address}</td>
+          <td>{permit.active}</td>
+          <td>{permit.scheme_type}</td>
+        </tr>
+      );
+    });
+  }
+
+  renderPermitsTable() {
+    return (
+      <div className="township-userlist-container">
+        <table className="highlight">
+          <thead>
+            <tr>
+              <th data-field="id">Township Code</th>
+              <th data-field="name">Township Name</th>
+              <th data-field="price">Permit Type</th>
+              <th data-field="price">Permit Name</th>
+              <th data-field="price">Covered Locations</th>
+              <th data-field="price">Cost</th>
+              <th data-field="price">Year</th>
+              <th data-field="price">Location Address</th>
+              <th data-field="price">Active</th>
+              <th data-field="price">Scheme Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.renderPermitsData()}
+          </tbody>
+        </table>
+      </div>
+    ); 
+  }
+
+  render() {
+    return (
+      <div className="col s12" style={{marginTop: 40, marginBottom: 40}}>
+        <nav>
+          <div className="nav-wrapper nav-admin z-depth-2">
+            <a className="brand-logo center">Parking Permits</a>
+          </div>
+        </nav>
+        <div className="card">
+          {this.props.townshipParkingPermitsFetched.isLoading ? 
+              <div className="center-align"> <Spinner /> </div> : this.renderPermitsTable()}   
+
+          <div className="divider"/> 
+
+          <div className="center-align">
+            <a
+              className="modal-trigger waves-effect waves-light btn valign" 
+              onClick={() => $('#modal-parking-permit-create').openModal()}
+              style={{margin: 10}}>Add New Parking Permit</a>
+          </div>
+           {this.props.townshipPermitTypesFetched.isLoading ||
+            this.props.townshipSchemeTypesFetched.isLoading || 
+            this.props.townshipFacilitiesFetched.isLoading ||
+            this.props.townshipPermitsListFetched.isLoading ||
+            this.props.townshipListFetched.isLoading ? 
+            <div> </div> : this.renderCreateModal()}
+        </div>
+      </div>
+    );
+  }
+}
+
+function mapStateToProps(state) {
+  return {
+    townshipParkingPermitsFetched: state.townshipParkingPermitsFetched,
+    townshipParkingPermitsCreated: state.townshipParkingPermitsCreated,
+    townshipUsersFetched: state.townshipUsersFetched,
+    townshipPermitTypesFetched: state.townshipPermitTypesFetched,
+    townshipSchemeTypesFetched: state.townshipSchemeTypesFetched,
+    townshipFacilitiesFetched: state.townshipFacilitiesFetched,
+    townshipPermitsListFetched: state.townshipPermitsListFetched,
+    townshipListFetched: state.townshipListFetched
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    fetchTownshipParkingPermits,
+    fetchTownshipUsers,
+    fetchTownshipPermitTypes,
+    createTownshipParkingPermits,
+    fetchTownshipSchemeTypes,
+    fetchTownshipFacilities,
+    fetchTownshipPermitsList,
+    fetchTownshipList,
+    resetLoading
+  }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
+  form: 'parking-permits',
+  fields
+})(ParkingPermits));
+
+/*
 
   renderCreateModal() {
     const {
@@ -243,115 +347,5 @@ class ParkingPermits extends React.Component {
       </form>
     );
   }
-
-  renderPermitsData() {
-    let filteredPermits = this.props.townshipParkingPermitsFetched.data.resource;
-    return filteredPermits.map((permit) => {
-      return( 
-        <tr key={permit.id}>
-          <td>{permit.township_code}</td>
-          <td>{permit.township_name}</td>
-          <td>{permit.permit_type}</td>
-          <td>{permit.permit_name}</td>
-          <td>{permit.covered_locations}</td>
-          <td>{permit.cost}</td>
-          <td>{permit.year}</td>
-          <td>{permit.location_address}</td>
-          <td>{permit.active}</td>
-          <td>{permit.scheme_type}</td>
-        </tr>
-      );
-    });
-  }
-
-  renderPermitsTable() {
-    return (
-      <div className="township-userlist-container">
-        <table className="highlight">
-          <thead>
-            <tr>
-              <th data-field="id">Township Code</th>
-              <th data-field="name">Township Name</th>
-              <th data-field="price">Permit Type</th>
-              <th data-field="price">Permit Name</th>
-              <th data-field="price">Covered Locations</th>
-              <th data-field="price">Cost</th>
-              <th data-field="price">Year</th>
-              <th data-field="price">Location Address</th>
-              <th data-field="price">Active</th>
-              <th data-field="price">Scheme Type</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.renderPermitsData()}
-          </tbody>
-        </table>
-      </div>
-    ); 
-  }
-
-  render() {
-    return (
-      <div className="col s12" style={{marginTop: 40, marginBottom: 40}}>
-        <nav>
-          <div className="nav-wrapper nav-admin z-depth-2">
-            <a className="brand-logo center">Parking Permits</a>
-          </div>
-        </nav>
-        <div className="card">
-          {this.props.townshipParkingPermitsFetched.isLoading ? 
-              <div className="center-align"> <Spinner /> </div> : this.renderPermitsTable()}   
-
-          <div className="divider"/> 
-
-          <div className="center-align">
-            <a
-              className="modal-trigger waves-effect waves-light btn valign" 
-              onClick={() => $('#modal-parking-permit-create').openModal()}
-              style={{margin: 10}}>Add New Parking Permit</a>
-          </div>
-           {this.props.townshipPermitTypesFetched.isLoading ||
-            this.props.townshipSchemeTypesFetched.isLoading || 
-            this.props.townshipFacilitiesFetched.isLoading ||
-            this.props.townshipPermitsListFetched.isLoading ||
-            this.props.townshipListFetched.isLoading ? 
-            <div> </div> : this.renderCreateModal()}
-        </div>
-      </div>
-    );
-  }
-}
-
-function mapStateToProps(state) {
-  return {
-    townshipParkingPermitsFetched: state.townshipParkingPermitsFetched,
-    townshipParkingPermitsCreated: state.townshipParkingPermitsCreated,
-    townshipUsersFetched: state.townshipUsersFetched,
-    townshipPermitTypesFetched: state.townshipPermitTypesFetched,
-    townshipSchemeTypesFetched: state.townshipSchemeTypesFetched,
-    townshipFacilitiesFetched: state.townshipFacilitiesFetched,
-    townshipPermitsListFetched: state.townshipPermitsListFetched,
-    townshipListFetched: state.townshipListFetched
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    fetchTownshipParkingPermits,
-    fetchTownshipUsers,
-    fetchTownshipPermitTypes,
-    createTownshipParkingPermits,
-    fetchTownshipSchemeTypes,
-    fetchTownshipFacilities,
-    fetchTownshipPermitsList,
-    fetchTownshipList,
-    resetLoading
-  }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-  form: 'parking-permits',
-  fields
-})(ParkingPermits));
-
+*/
 

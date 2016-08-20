@@ -20,6 +20,7 @@ import {
 } from '../../../../../actions/actions-township-panel.jsx'
 
 import {fetchInspectorTicket, createInspectorTicket} from '../../../../../actions/actions-inspector-panel.jsx'
+import { ajaxGet, ajaxDelete } from '../../../../../common/components/ajax-selectize.js';
 
 import { Link } from 'react-router';
 
@@ -72,17 +73,31 @@ export default class CreateTicket extends React.Component {
       hearingSelected: false,
       violationSelected: false,
       tableMenu: false,
+      parkedCarData: null,
     }
 
     this.handleHearingData = this.handleHearingData.bind(this)
+    this.handleViolationData = this.handleViolationData.bind(this)
+    this.handleParkingData = this.handleParkingData.bind(this)
     this.renderHearingLocation = this.renderHearingLocation.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.ajaxGet = this.ajaxGet.bind(this);
   }
 
   componentWillMount() {
     this.props.fetchHearingPlace();
     this.props.fetchViolationCode();
+    ajaxGet('parked_cars', this.ajaxGet);
+  }
 
+  ajaxGet(parkedCarData) {
+    let markerArray = parkedCarData.data.resource;
+    let filteredData = markerArray.find((element, index) => {
+      if (element.id == this.props.vehicleCode) {
+        return (element);
+      }
+    });
+    this.setState({parkedCarData: filteredData});
   }
 
   componentDidUpdate() {
@@ -159,7 +174,7 @@ export default class CreateTicket extends React.Component {
       console.log(data[key]);
       this.props.dispatch(change('map-create-ticket-form', key, data[key]));
     }
-
+    this.handleParkingData(this.state.parkedCarData);
     this.setState({tableMenu: false, hearingSelected: true})
   }
 
@@ -186,8 +201,19 @@ export default class CreateTicket extends React.Component {
       console.log(data[key]);
       this.props.dispatch(change('map-create-ticket-form', key, data[key]));
     }
-
+    this.handleParkingData(this.state.parkedCarData);
     this.setState({tableMenu: false, violationSelected: true})
+    
+  }
+
+  handleParkingData(data) {
+    console.log(data);
+    console.log(this.props.fields)
+
+    for (var key in data) {
+      console.log(data[key]);
+      this.props.dispatch(change('map-create-ticket-form', key, data[key]));
+    }
   }
 
   renderViolationMenu() {
@@ -247,40 +273,48 @@ export default class CreateTicket extends React.Component {
               display: "block", 
               borderBottom: "0px"}}>
               <div style={{backgroundColor: "#F6EADF"}} className="township-userlist-container center-align">
-                <div style={{marginTop: 20, fontSize: 50}}> Vehicle Info. </div>
-                <img src={require('../../../../../../../images/car_red@3x.png')} className="responsive-img"/>
+              {
+                this.state.parkedCarData == null ? <div> Loading... </div> : 
+                <div>
+                  <div style={{marginTop: 20, fontSize: 50}}> Vehicle Info. </div>
+                  <img src={require('../../../../../../../images/car_red@3x.png')} className="responsive-img"/>
 
-                <div className="row" style={{marginTop: 30}}>
-                  <h5 className="col s12">Plate Number - {this.props.vehicleCode}</h5>
+                  <div className="row" style={{marginTop: 30}}>
+                    <h5 className="col s12">Plate Number - {this.state.parkedCarData.plate_no}</h5>
+                  </div>
+
+                  <div className="row">
+                    <h5 className="col s6">State - {this.state.parkedCarData.state}</h5>
+                    <h5 className="col s6">Row - {this.state.parkedCarData.lot_row} </h5>
+                  </div>
                 </div>
 
-                <div className="row">
-                  <h5 className="col s6">State - </h5>
-                  <h5 className="col s6">Row - 555 </h5>
-                </div>
-
+              }
               </div>
             </div>
             { this.props.townshipHearingPlaceFetched.isLoading ? 
               <div>Loading... </div> : this.renderHearingLocation()}
             { this.props.townshipViolationCodeFetched.isLoading ? 
               <div>Loading... </div> : this.renderViolationCode()}
-
-            <div className="card waves-effect waves-light" 
-              onClick={this.props.handleSubmit(this.handleSubmit)} 
-              style={{
-              backgroundColor: "#CC0000", 
-              border: "2px solid black", 
-              display: "block", 
-              marginTop: 150
-              }}>
-              <div 
-              className="township-userlist-container center-align" 
-              style={{backgroundColor: "#CC0000"}}>
-                <i style={{color: "white", fontSize: "80"}} className="material-icons valign">receipt</i>
-                <h4 style={{color: "white"}}> Create Ticket </h4>
-              </div>
-            </div>
+            {
+                this.state.parkedCarData == null ? <div> Loading... </div> : 
+                <div className="card waves-effect waves-light" 
+                  onClick={this.props.handleSubmit(this.handleSubmit)} 
+                  style={{
+                  backgroundColor: "#CC0000", 
+                  border: "2px solid black", 
+                  display: "block", 
+                  marginTop: 150
+                  }}>
+                  <div 
+                  className="township-userlist-container center-align" 
+                  style={{backgroundColor: "#CC0000"}}>
+                    <i style={{color: "white", fontSize: "80"}} className="material-icons valign">receipt</i>
+                    <h4 style={{color: "white"}}> Create Ticket </h4>
+                  </div>
+                </div>
+            }
+            
           </Body>
           {this.renderSuccessModal()}
         </div>

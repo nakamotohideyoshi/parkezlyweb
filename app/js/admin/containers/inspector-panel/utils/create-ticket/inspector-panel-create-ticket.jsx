@@ -154,7 +154,6 @@ class InspectorCreateTicket extends React.Component {
     console.log(this.props.inspectorTicketFetched)
     let parkingData = this.props.inspectorTicketFetched.data.resource;
 
-
     var renderEditModal = this.renderEditModal;
     var metaDataFunction = () =>  {
       return fields.map((data) => {

@@ -106,6 +106,8 @@ export default class TownshipPanelParkingRulesForm extends React.Component {
   componentWillMount() {
     ajaxSelectizeGet('townships_manager', 'manager_id', this.selectizeOptionsUpdate);
     ajaxSelectizeGet('locations_rate', 'rate', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('location_lot', 'location_code', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('location_lot', 'location_name', this.selectizeOptionsUpdate);
   }
 
   componentDidMount() {
@@ -118,28 +120,24 @@ export default class TownshipPanelParkingRulesForm extends React.Component {
     $('.start_time')
     .bootstrapMaterialDatePicker({ date: false, format : 'HH:mm:ss' })
     .on('change', function(event) {
-      console.log(event.target.value);
       dispatch(change('parking-rules-form', 'start_time', event.target.value)); 
     });
 
     $('.end_time')
     .bootstrapMaterialDatePicker({ date: false, format : 'HH:mm:ss' })
     .on('change', function(event) {
-      console.log(event.target.value);
       dispatch(change('parking-rules-form', 'end_time', event.target.value)); 
     });
 
     $('.date')
     .bootstrapMaterialDatePicker({ time: false, format : 'YYYY-MM-DD' })
     .on('change', function(event) {
-      console.log(event.target.value);
       dispatch(change('parking-rules-form', 'date', event.target.value)); 
     });
 
     $('.date_time')
-    .bootstrapMaterialDatePicker({ time: false, format : 'YYYY-MM-DD HH:mm:ss' })
+    .bootstrapMaterialDatePicker({ time: true, format : 'YYYY-MM-DD HH:mm:ss' })
     .on('change', function(event) {
-      console.log(event.target.value);
       dispatch(change('parking-rules-form', 'date_time', event.target.value)); 
     });
   }
@@ -202,9 +200,6 @@ export default class TownshipPanelParkingRulesForm extends React.Component {
     } = this.props;
 
     const fields = [ 
-    'date_time', 
-    'location_code', 
-    'location_name', 
     'time_rule', 
     'day_rule',  
     'max_time',  
@@ -301,6 +296,24 @@ export default class TownshipPanelParkingRulesForm extends React.Component {
                 fieldName={'parking_rate'}
                 defaultData={this.props.rowData}
                 dispatch={dispatch} 
+                />
+
+                <AdminSelectize 
+                options={this.state.selectizeOptions}
+                objectKey={'location_code'} 
+                formName={'parking-rules-form'} 
+                fieldName={'location_code'}
+                defaultData={this.props.rowData}
+                dispatch={dispatch} 
+                />
+
+                <AdminSelectize 
+                  options={this.state.selectizeOptions}
+                  objectKey={'location_name'} 
+                  formName={'parking-rules-form'} 
+                  fieldName={'location_name'}
+                  defaultData={this.props.rowData}
+                  dispatch={dispatch} 
                 />
 
                 <div className="col s6 admin-form-input">

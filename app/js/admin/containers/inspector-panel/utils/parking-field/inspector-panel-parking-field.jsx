@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import datetime from 'node-datetime'
 import {SimpleSelect} from "react-selectize"
+import { browserHistory } from 'react-router'
 
 import Body from "../../../../../common/components/body/body.jsx"
 import Spinner from '../../../../common/components/spinner.jsx'
@@ -21,47 +22,51 @@ import {ajaxSelectizeGet, ajaxDelete} from '../../../../common/components/ajax-s
 import AdminSelectize from '../../../../common/components/admin-selectize.jsx'
 
 import InspectorPanelParkingFieldForm from './inspector-panel-parking-field-form.jsx'
+import _ from 'lodash';
+
+
 
 export const fields = [ 
   'id',
-  'expiry_time',
-  'user_id',
-  'user_name',
-  'plate_no',
-  'location_code',
-  'location_address',
-  'google_map',
-  'parking_scheme',
-  'rate',
-  'payment_method',
-  'location_name',
-  'vehicle_image',
+  'parking_type',
   'township_code',
-  'scheme_type',
-  'my_permit',
-  'my_wallet',
-  'sub_usable',
-  'wallet_usable',
-  'payment',
+  'location_code',
+  'entry_date_time',
+  'exit_date_time',
+  'expiry_time',
+  'max_time',
+  'user_id',
+  'permit_id',
+  'subscription_id',
+  'plate_no',
+  'pl_state',
+  'lat',
+  'lng',
+  'address1',
+  'address2',
+  'city',
+  'state',
+  'zip',
+  'country',
+  'lot_row',
+  'lot_number',
+  'ip',
+  'parking_token',
+  'parking_status',
+  'payment_method',
+  'parking_rate',
+  'parking_units',
+  'parking_qty',
+  'parking_subtotal',
+  'wallet_trx_id',
+  'tr_percent',
+  'tr_fee',
+  'parking_total',
+  'ipn_custom',
   'ipn_txn_id',
-  'pay_method',
   'ipn_payment',
   'ipn_status',
   'ipn_address',
-  'ipn_custom',
-  'parking_status',
-  'entry_time',
-  'exit_time',
-  'ip',
-  'upark',
-  'lot_row',
-  'lot_number',
-  'my_timer1',
-  'qrcode',
-  'change_defaults',
-  'township_rules',
-  'pl_state',
-  'token',
 ]
 
 class customColumnComponent extends React.Component {
@@ -106,7 +111,7 @@ class InspectorParkingField extends React.Component {
   componentWillMount() {
     this.props.fetchInspectorParkingField();
     this.props.fetchTownshipSchemeTypes();
-    this.props.fetchTownshipLocations(this.props.townshipCode);
+    this.props.fetchTownshipLocations(this.props.townshipId);
     ajaxSelectizeGet('payment_type', 'pay_method', this.selectizeOptionsUpdate);
   }
 
@@ -142,8 +147,10 @@ class InspectorParkingField extends React.Component {
   }
 
   renderTable() {
+    //"township_code": this.props.townshipId,
     let parkingData = this.props.inspectorParkingFieldFetched.data.resource;
-
+    let filteredData = _.filter(parkingData, {"parking_status": "ENTRY", "ticket_status": "TICKETED"});
+    console.log(filteredData);
     var renderEditModal = this.renderEditModal;
     var metaDataFunction = () =>  {
       return fields.map((data) => {
@@ -166,7 +173,7 @@ class InspectorParkingField extends React.Component {
           tableClassName={'table table-bordered table-striped table-hover'}
           filterClassName={''}
           useGriddleStyles={false}
-          results={parkingData}
+          results={filteredData}
           showFilter={true}
           showSettings={true}
           settingsToggleClassName='btn btn-default'
@@ -175,16 +182,20 @@ class InspectorParkingField extends React.Component {
           useCustomFilterComponent={true} customFilterComponent={customFilterComponent}
           useCustomFilterer={true} customFilterer={customFilterFunction}
           columnMetadata={columnMeta}
+          initialSort={'entry_date_time'}
+          initialSortAscending={false}
           columns={[
                   'id',
-                  'expiry_time', 
-                  'plate_no',
+                  'township_code',
+                  'parking_type',
+                  'location_code',
+                  'entry_date_time',
+                  'country',
+                  'city',
+                  'state',
                   'user_id', 
-                  'user_name', 
-                  'parking_scheme',  
-                  'rate',
-                  'lot_row', 
-                  'lot_number',
+                  'parking_status',
+                  'ticket_status'
                   ]}
         />
 
@@ -195,7 +206,7 @@ class InspectorParkingField extends React.Component {
         <a
           className="modal-trigger waves-effect waves-light btn valign" 
           onClick={() => $('#modal-inspector-parking-field-create').openModal()}
-          style={{margin: 10}}>Add Parking Payment</a>
+          style={{margin: 10}}>Add New Parking Field</a>
 
         </div>
       </div>
@@ -207,9 +218,20 @@ class InspectorParkingField extends React.Component {
     this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true, parkingLocationCode: recordId})
   }
 
-  renderEditDuplicateButtons(recordId) {
+  renderEditDuplicateButtons(rowData) {
     return (
       <div className="container">
+        <a
+        style={{marginTop: 20}}
+        onClick={() => {
+          this.setState({showEditModal: true})
+          browserHistory.push(`admin/inspector/vehicle-info/${rowData.id}`);
+        }}
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">directions_car</i>
+          <h4> Vehicle Info - Plate No: {rowData.plate_no} </h4>
+        </a>
+
         <a
         style={{marginTop: 20}}
         onClick={() => {
@@ -218,7 +240,7 @@ class InspectorParkingField extends React.Component {
         }}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">edit</i>
-          <h4> Edit - Parking Field ID: {recordId} </h4>
+          <h4> Edit - Parking Field ID: {rowData.id} </h4>
         </a>
 
         <a
@@ -228,14 +250,14 @@ class InspectorParkingField extends React.Component {
         }}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">content_copy</i>
-          <h4> Duplicate - Parking Field ID: {recordId} </h4>
+          <h4> Duplicate - Parking Field ID: {rowData.id} </h4>
         </a>
 
         <a
         onClick={() => $('#modal-delete').openModal() }
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">delete</i>
-          <h4> Delete - Parking Payment ID: {recordId} </h4>
+          <h4> Delete - Parking Payment ID: {rowData.id} </h4>
         </a>
       </div>
     );
@@ -260,7 +282,7 @@ class InspectorParkingField extends React.Component {
                   </div>
                </div>
                {this.state.showEditDuplicateButtons ? 
-                this.renderEditDuplicateButtons(this.state.parkingLocationCode) : <div> </div>}
+                this.renderEditDuplicateButtons(this.state.rowData) : <div> </div>}
             </div>
           </div>
         </Body>

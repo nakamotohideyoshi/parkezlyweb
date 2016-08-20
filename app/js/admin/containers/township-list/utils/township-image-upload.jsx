@@ -159,5 +159,3 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TownshipImageUpload);
-
-//<img src={file.preview} />
