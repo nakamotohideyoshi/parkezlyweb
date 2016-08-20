@@ -126,6 +126,20 @@ export default class InspectorSearchTicketForm extends React.Component {
       }
   };
 
+  componentDidMount() {
+    const {
+      resetForm,
+      submitting,
+      dispatch
+    } = this.props
+
+    $('.paid_date')
+    .bootstrapMaterialDatePicker({ time: true, format : 'YYYY-MM-DD HH:mm:ss' })
+    .on('change', function(event) {
+      dispatch(change('parking-rules-form', 'paid_date', event.target.value)); 
+    });
+  }
+
   handleSuccess(){
     this.props.resetLoading();
     this.props.handleSuccess();
@@ -209,7 +223,6 @@ export default class InspectorSearchTicketForm extends React.Component {
       'am_pm', 
       'twp_payment', 
       'paid_amount', 
-      'paid_date',
     ]
 
     return fields.map((data) => {
@@ -247,6 +260,8 @@ export default class InspectorSearchTicketForm extends React.Component {
 
               <div className="row">
 
+                
+
                 <AdminSelectize 
                 options={this.state.selectizeOptions}
                 objectKey={'user_id'} 
@@ -257,6 +272,13 @@ export default class InspectorSearchTicketForm extends React.Component {
                 />
                 
                 {this.tempInputsEdit(this.props.initialValues)}
+
+                <div className="col s6 admin-form-input">
+                  <div className="form-group">
+                    <label htmlFor="paid_date">paid_date</label>
+                    <input id="paid_date" className="paid_date" type="text"/>
+                  </div>
+                </div>
 
               </div>
             </div>

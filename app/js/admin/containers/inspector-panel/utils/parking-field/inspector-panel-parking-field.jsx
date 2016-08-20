@@ -24,6 +24,8 @@ import AdminSelectize from '../../../../common/components/admin-selectize.jsx'
 import InspectorPanelParkingFieldForm from './inspector-panel-parking-field-form.jsx'
 import _ from 'lodash';
 
+
+
 export const fields = [ 
   'id',
   'parking_type',
@@ -145,8 +147,9 @@ class InspectorParkingField extends React.Component {
   }
 
   renderTable() {
+    //"township_code": this.props.townshipId,
     let parkingData = this.props.inspectorParkingFieldFetched.data.resource;
-    let filteredData = _.filter(parkingData, {"township_code": this.props.townshipId});
+    let filteredData = _.filter(parkingData, {"parking_status": "ENTRY", "ticket_status": "TICKETED"});
     console.log(filteredData);
     var renderEditModal = this.renderEditModal;
     var metaDataFunction = () =>  {
@@ -191,6 +194,8 @@ class InspectorParkingField extends React.Component {
                   'city',
                   'state',
                   'user_id', 
+                  'parking_status',
+                  'ticket_status'
                   ]}
         />
 
@@ -220,7 +225,7 @@ class InspectorParkingField extends React.Component {
         style={{marginTop: 20}}
         onClick={() => {
           this.setState({showEditModal: true})
-          browserHistory.push(`admin/inspector/vehicle-info/${rowData.plate_no}`);
+          browserHistory.push(`admin/inspector/vehicle-info/${rowData.id}`);
         }}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">directions_car</i>

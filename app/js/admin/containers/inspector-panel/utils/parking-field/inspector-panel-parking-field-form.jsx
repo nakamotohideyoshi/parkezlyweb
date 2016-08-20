@@ -26,6 +26,8 @@ import {customFilterComponent, customFilterFunction} from '../../../../common/co
 import {ajaxSelectizeGet, ajaxDelete} from '../../../../common/components/ajax-selectize.js'
 import AdminSelectize from '../../../../common/components/admin-selectize.jsx'
 
+import {countries, states} from '../../../../constants/countries.js'
+
 export const fields = [   
   'id',
   'parking_type',
@@ -253,7 +255,13 @@ export default class InspectorPanelParkingFieldEdit extends React.Component {
       dispatch
     } = this.props
 
-    console.log(this.props.modalName)
+    const countriesList = countries.map((data) => {
+      return {label: data, value: data}
+    })
+    const statesList = states.map((data) => {
+      return {label: data, value: data}
+    })
+
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
@@ -269,8 +277,40 @@ export default class InspectorPanelParkingFieldEdit extends React.Component {
 
               <div className="row">
 
-                {this.tempInputsEdit(this.props.initialValues)}
+                <div className="col s6 admin-form-input">
+                  <div className="form-group">
+                    <label>Country</label>
+                    <div clasName="input-field col s12">
+                      <SimpleSelect 
+                        options = {countriesList} 
+                        placeholder = "Country"
+                        theme = "material"
+                        style={{marginTop: 5}}
+                        transitionEnter = {true} 
+                        onValueChange = {(value) => {
+                          dispatch(change('facilities-form', 'country', value.value)); 
+                        }}/>
+                    </div>
+                  </div>
+                </div>
+                <div className="col s6 admin-form-input">
+                  <div className="form-group">
+                    <label>State</label>
+                    <div clasName="input-field col s12">
+                      <SimpleSelect 
+                        options = {statesList} 
+                        placeholder = "State"
+                        theme = "material"
+                        style={{marginTop: 5}}
+                        transitionEnter = {true} 
+                        onValueChange = {(value) => {
+                          dispatch(change('facilities-form', 'state', value.value)); 
+                        }}/>
+                    </div>
+                  </div>
+                </div>
 
+                {this.tempInputsEdit(this.props.initialValues)}
               </div>
             </div>
             

@@ -95,6 +95,20 @@ export default class InspectorSearchTicketForm extends React.Component {
     ajaxSelectizeGet('townships_manager', 'manager_id', this.selectizeOptionsUpdate);
   }
 
+  componentDidMount() {
+    const {
+      resetForm,
+      submitting,
+      dispatch
+    } = this.props
+
+    $('.date_time')
+    .bootstrapMaterialDatePicker({ time: true, format : 'YYYY-MM-DD HH:mm:ss' })
+    .on('change', function(event) {
+      dispatch(change('facilities-form', 'date_time', event.target.value)); 
+    });
+  }
+
   componentDidUpdate() {
     if (this.props.townshipViolationCodeEdited.isLoading) {
       } else if (!this.props.townshipViolationCodeEdited.isLoading) {
@@ -132,12 +146,9 @@ export default class InspectorSearchTicketForm extends React.Component {
     } = this.props;
 
     const fields = [ 
-      'id',
-      'date_time', 
       'violation_code',  
       'violation_description', 
       'violation_fee', 
-      'township_code', 
       'violation_detail',  
       'section_law', 
       'section_num', 
@@ -198,7 +209,12 @@ export default class InspectorSearchTicketForm extends React.Component {
                 dispatch={dispatch} 
                 />
 
-
+                <div className="col s6 admin-form-input">
+                  <div className="form-group">
+                    <label htmlFor="date_time">date_time</label>
+                    <input id="date_time" className="date_time" type="text"/>
+                  </div>
+                </div>
                 {this.tempInputsEdit(this.props.initialValues)}
 
                 <div className="col s6 admin-form-input">
