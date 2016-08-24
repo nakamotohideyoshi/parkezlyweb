@@ -31,7 +31,9 @@ export default class AdminSelectize extends React.Component {
               defaultValue = {{label: defaultValue, value: defaultValue}}
               onValueChange = {(value) => {
                 dispatch(change(this.props.formName, this.props.fieldName, value.value)); 
-                this.props.onChange(value.value);
+                if(this.props.onChange !== null && this.props.onChange !== undefined) {
+                  this.props.onChange(value.value);
+                }
               }}></SimpleSelect>
             </div>
           </div>
@@ -50,7 +52,9 @@ export default class AdminSelectize extends React.Component {
               theme = "material" 
               style={{marginTop: 5}}
               onValueChange = {(value) => {
-                this.props.onChange(value.value);
+                if(this.props.onChange !== null && this.props.onChange !== undefined) {
+                  this.props.onChange(value.value);
+                }
               }}></SimpleSelect>
             </div>
           </div>

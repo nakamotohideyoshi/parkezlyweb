@@ -6,7 +6,6 @@
 
 /* CSS Libraries in /node_modules folder */
 @import "~animate.css/animate.css";
-@import "~react-selectize/themes/index.css";
 
 /* Global Overwrites */
 @import "./materialize-overwrite.scss";
@@ -25,3 +24,4 @@
 @import "../js/client/components/my-locations/styles/my-locations.scss";
 @import "../js/client/components/my-wallet/styles/my-wallet.scss";
 @import "../js/admin/common/styles/admin-common.scss";
+@import "../js/admin/common/styles/react-selectize-overwrite.scss";

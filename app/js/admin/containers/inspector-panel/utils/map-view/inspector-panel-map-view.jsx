@@ -1,10 +1,8 @@
 import React from 'react';
-
 import Body from "../../../../../common/components/body/body.jsx"
 import Spinner from '../../../../common/components/spinner.jsx'
-
 import { browserHistory } from 'react-router'
-
+import moment from 'moment'
 import { GoogleMapLoader, GoogleMap, Marker, InfoWindow } from "react-google-maps";
 import { ajaxGet, ajaxDelete } from '../../../../common/components/ajax-selectize.js';
 import ImageCheckbox from '../../../../../common/components/footer/utils/image-checkbox.jsx';
@@ -28,7 +26,7 @@ export default class InspectorMapView extends React.Component {
   }
 
   componentWillMount() {
-    ajaxGet('poiv2', this.ajaxGet);
+    ajaxGet('parked_cars', this.ajaxGet);
   }
 
   ajaxGet(markerData) {
@@ -44,7 +42,12 @@ export default class InspectorMapView extends React.Component {
     this.setState({showInfo: false});
   }
 
-  renderInfoWindow(ref, marker, title) {
+  renderInfoWindow(ref, marker, plate_no, plate_id) {
+    var plateNull = false;
+    if (plate_no == null) {
+      plateNull = true;
+    }
+
     return (
       <InfoWindow 
       key={`${ref}_info_window`}
@@ -52,9 +55,9 @@ export default class InspectorMapView extends React.Component {
       className="center-align"
       >
         <div 
-        onClick={() => browserHistory.push(`admin/inspector/vehicle-info/${title}`)} 
+        onClick={() => browserHistory.push(`admin/inspector/vehicle-info/${plate_id}`)} 
         className="center-align">
-          {title} 
+          {plateNull ? "Plate # N/A" : plate_no} 
           <div> - Click Here - </div>
         </div>
       </InfoWindow>
@@ -76,16 +79,16 @@ export default class InspectorMapView extends React.Component {
     let markerData = this.state.markerData.data.resource;
     
     return markerData.map((data, index) => {
-      let iconUrl;
       const ref = `marker_${index}`;
+      let iconUrl;
       let renderMarker = true;
+      let currentTime = moment().diff(moment(data.expiry_time), 'hours');
 
-      if(data.marker === "status-green" && this.state.greenOff == false) {
-        console.log("test")
+      if(currentTime > 0 && this.state.greenOff == false) {
         iconUrl = require('../../../../../../images/car_green@3x.png')
-      } else if (data.marker === "status-red" && this.state.redOff == false) {
+      } else if (currentTime < 0 && this.state.redOff == false) {
         iconUrl = require('../../../../../../images/car_red@3x.png')
-      } else if (data.marker === "status-yellow" && this.state.yellowOff == false) {
+      } else if (currentTime == 0 && this.state.yellowOff == false) {
         iconUrl = require('../../../../../../images/car_yellow@3x.png')
       } else {
         renderMarker = false;
@@ -96,11 +99,11 @@ export default class InspectorMapView extends React.Component {
           <Marker 
             key={index}
             ref={ref}
-            position={{lat: data.lat, lng: data.lng}} 
+            position={{lat: parseInt(data.lat), lng: parseInt(data.lng)}} 
             icon={{url: iconUrl, scaledSize: new google.maps.Size(75,50)}} 
             onClick={this.handleMarkerClick.bind(this, data)}
             >
-            {data.showInfo ? this.renderInfoWindow(ref, data, data.title) : null}
+            {data.showInfo ? this.renderInfoWindow(ref, data, data.plate_no, data.id) : null}
           </Marker>
         );
       }

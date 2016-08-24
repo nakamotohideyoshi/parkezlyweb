@@ -20,6 +20,7 @@ import {customFilterComponent, customFilterFunction} from '../../../../common/co
 import TownshipPanelHearingPlaceForm from './township-panel-hearing-place-form.jsx'
 import customColumnComponent from '../../../../common/components/custom-column-component.jsx'
 import {ajaxSelectizeGet, ajaxDelete} from '../../../../common/components/ajax-selectize.js'
+import _ from 'lodash';
 
 export const fields = [ 
   'id',  
@@ -131,7 +132,7 @@ class TownshipPanelHearingPlace extends React.Component {
 
   renderTable() {
     console.log(this.props.townshipHearingPlaceFetched)
-    let parkingData = this.props.townshipHearingPlaceFetched.data.resource;
+    let parkingData = _.filter(this.props.townshipHearingPlaceFetched.data.resource, {'township_code': this.props.townshipCode});
 
     var renderEditModal = this.renderEditModal
     var metaDataFunction = () =>  {
@@ -148,6 +149,8 @@ class TownshipPanelHearingPlace extends React.Component {
       });
     }
     var columnMeta = metaDataFunction()
+
+
 
     return (
       <div>

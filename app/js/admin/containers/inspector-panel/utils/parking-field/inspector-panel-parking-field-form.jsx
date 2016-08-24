@@ -26,45 +26,49 @@ import {customFilterComponent, customFilterFunction} from '../../../../common/co
 import {ajaxSelectizeGet, ajaxDelete} from '../../../../common/components/ajax-selectize.js'
 import AdminSelectize from '../../../../common/components/admin-selectize.jsx'
 
+import {countries, states} from '../../../../constants/countries.js'
+
 export const fields = [   
   'id',
-  'expiry_time',
-  'user_id',
-  'user_name',
-  'plate_no',
-  'location_code',
-  'location_address',
-  'google_map',
-  'parking_scheme',
-  'rate',
-  'payment_method',
-  'location_name',
-  'vehicle_image',
+  'parking_type',
   'township_code',
-  'scheme_type',
-  'my_permit',
-  'my_wallet',
-  'sub_usable',
-  'wallet_usable',
-  'payment',
+  'location_code',
+  'entry_date_time',
+  'exit_date_time',
+  'expiry_time',
+  'max_time',
+  'user_id',
+  'permit_id',
+  'subscription_id',
+  'plate_no',
+  'pl_state',
+  'lat',
+  'lng',
+  'address1',
+  'address2',
+  'city',
+  'state',
+  'zip',
+  'country',
+  'lot_row',
+  'lot_number',
+  'ip',
+  'parking_token',
+  'parking_status',
+  'payment_method',
+  'parking_rate',
+  'parking_units',
+  'parking_qty',
+  'parking_subtotal',
+  'wallet_trx_id',
+  'tr_percent',
+  'tr_fee',
+  'parking_total',
+  'ipn_custom',
   'ipn_txn_id',
-  'pay_method',
   'ipn_payment',
   'ipn_status',
   'ipn_address',
-  'ipn_custom',
-  'parking_status',
-  'entry_time',
-  'exit_time',
-  'ip',
-  'upark',
-  'lot_row',
-  'lot_number',
-  'my_timer1',
-  'qrcode',
-  'change_defaults',
-  'township_rules',
-  'pl_state',
 ]
 
 export default class InspectorPanelParkingFieldEdit extends React.Component {
@@ -120,13 +124,7 @@ export default class InspectorPanelParkingFieldEdit extends React.Component {
   }
 
   componentWillMount() {
-    ajaxSelectizeGet('manage_locations', 'location_code', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('scheme_type', 'scheme_type', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('payment_type', 'pay_method', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('township_users', 'user_id', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('township_users', 'user_name', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('user_vehicles', 'plate_no', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('locations_rate', 'rate', this.selectizeOptionsUpdate);
+    
   }
 
   componentDidUpdate() {
@@ -150,49 +148,92 @@ export default class InspectorPanelParkingFieldEdit extends React.Component {
      const {
       fields: {  
         id,
-        expiry_time,
-        user_id,
-        user_name,
-        plate_no,
-        location_code,
-        location_address,
-        google_map,
-        parking_scheme,
-        rate,
-        payment_method,
-        location_name,
-        vehicle_image,
+        parking_type,
         township_code,
-        scheme_type,
-        my_permit,
-        my_wallet,
-        sub_usable,
-        wallet_usable,
-        payment,
+        location_code,
+        entry_date_time,
+        exit_date_time,
+        expiry_time,
+        max_time,
+        user_id,
+        permit_id,
+        subscription_id,
+        plate_no,
+        pl_state,
+        lat,
+        lng,
+        address1,
+        address2,
+        city,
+        state,
+        zip,
+        country,
+        lot_row,
+        lot_number,
+        ip,
+        parking_token,
+        parking_status,
+        payment_method,
+        parking_rate,
+        parking_units,
+        parking_qty,
+        parking_subtotal,
+        wallet_trx_id,
+        tr_percent,
+        tr_fee,
+        parking_total,
+        ipn_custom,
         ipn_txn_id,
-        pay_method,
         ipn_payment,
         ipn_status,
         ipn_address,
-        ipn_custom,
-        parking_status,
-        entry_time,
-        exit_time,
-        ip,
-        upark,
-        lot_row,
-        lot_number,
-        my_timer1,
-        qrcode,
-        change_defaults,
-        township_rules,
-        pl_state,
-        token,
       },
       resetForm,
       submitting,
       dispatch
     } = this.props;
+
+    const fields = [   
+      'parking_type',
+      'township_code',
+      'location_code',
+      'entry_date_time',
+      'exit_date_time',
+      'expiry_time',
+      'max_time',
+      'user_id',
+      'permit_id',
+      'subscription_id',
+      'plate_no',
+      'pl_state',
+      'lat',
+      'lng',
+      'address1',
+      'address2',
+      'city',
+      'state',
+      'zip',
+      'country',
+      'lot_row',
+      'lot_number',
+      'ip',
+      'parking_token',
+      'parking_status',
+      'payment_method',
+      'parking_rate',
+      'parking_units',
+      'parking_qty',
+      'parking_subtotal',
+      'wallet_trx_id',
+      'tr_percent',
+      'tr_fee',
+      'parking_total',
+      'ipn_custom',
+      'ipn_txn_id',
+      'ipn_payment',
+      'ipn_status',
+      'ipn_address',
+    ]
 
     return fields.map((data) => {
       return( 
@@ -214,7 +255,13 @@ export default class InspectorPanelParkingFieldEdit extends React.Component {
       dispatch
     } = this.props
 
-    console.log(this.props.modalName)
+    const countriesList = countries.map((data) => {
+      return {label: data, value: data}
+    })
+    const statesList = states.map((data) => {
+      return {label: data, value: data}
+    })
+
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
@@ -230,8 +277,40 @@ export default class InspectorPanelParkingFieldEdit extends React.Component {
 
               <div className="row">
 
-                {this.tempInputsEdit(this.props.initialValues)}
+                <div className="col s6 admin-form-input">
+                  <div className="form-group">
+                    <label>Country</label>
+                    <div clasName="input-field col s12">
+                      <SimpleSelect 
+                        options = {countriesList} 
+                        placeholder = "Country"
+                        theme = "material"
+                        style={{marginTop: 5}}
+                        transitionEnter = {true} 
+                        onValueChange = {(value) => {
+                          dispatch(change('facilities-form', 'country', value.value)); 
+                        }}/>
+                    </div>
+                  </div>
+                </div>
+                <div className="col s6 admin-form-input">
+                  <div className="form-group">
+                    <label>State</label>
+                    <div clasName="input-field col s12">
+                      <SimpleSelect 
+                        options = {statesList} 
+                        placeholder = "State"
+                        theme = "material"
+                        style={{marginTop: 5}}
+                        transitionEnter = {true} 
+                        onValueChange = {(value) => {
+                          dispatch(change('facilities-form', 'state', value.value)); 
+                        }}/>
+                    </div>
+                  </div>
+                </div>
 
+                {this.tempInputsEdit(this.props.initialValues)}
               </div>
             </div>
             

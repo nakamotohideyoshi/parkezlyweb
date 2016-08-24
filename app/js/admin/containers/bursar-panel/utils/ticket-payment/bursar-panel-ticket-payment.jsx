@@ -74,7 +74,8 @@ class BursarPanelTicketPayment extends React.Component {
       parkingLocationCode: null,
       showEditModal: false,
       rowData: null,
-      selectizeOptions: {}
+      selectizeOptions: {},
+      paymentTypeClicked: false
     }
 
     this.renderCreateModal = this.renderCreateModal.bind(this);
@@ -82,6 +83,8 @@ class BursarPanelTicketPayment extends React.Component {
     this.handleSuccess = this.handleSuccess.bind(this);
     this.renderTable = this.renderTable.bind(this);
     this.renderEditModal = this.renderEditModal.bind(this);
+    this.renderPage = this.renderPage.bind(this);
+    this.renderButtonsPage = this.renderButtonsPage.bind(this);
   }
 
   componentWillMount() {
@@ -318,8 +321,7 @@ class BursarPanelTicketPayment extends React.Component {
     this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true, parkingLocationCode: recordId})
   }
 
-  render() {
-    console.log(this.props.bursarTicketPaymentFetched)
+  renderPage() {
     return (
       <div className="blue-body marginless-row">
         <Body showHeader={true}>
@@ -388,6 +390,39 @@ class BursarPanelTicketPayment extends React.Component {
           </div>
         </div>
 
+      </div>
+    );
+  }
+
+  renderButtonsPage() {
+    return (
+      <div className="blue-body marginless-row">
+        <Body showHeader={true}>
+          <div className="row marginless-row" style={{marginTop: 40}}>
+            <div className="col s12">
+              <button 
+              onClick={() => this.setState({paymentTypeClicked: true})}
+              className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12">
+                <i className="material-icons valign">payment</i>
+                <h4> Credit Card / Paypal </h4>
+              </button>
+              <button 
+              onClick={() => this.setState({paymentTypeClicked: true})}
+              className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12">
+                <i className="material-icons valign">attach_money</i>
+                <h4> Cash / Check / Other </h4>
+              </button>
+            </div>
+          </div>
+        </Body>
+      </div>
+    );
+  }
+
+  render() {
+    return(
+      <div>
+        {this.state.paymentTypeClicked ? this.renderPage() : this.renderButtonsPage()}
       </div>
     );
   }

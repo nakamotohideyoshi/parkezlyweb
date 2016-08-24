@@ -1,410 +1,122 @@
 import React from 'react'
-import { reduxForm, change } from 'redux-form'
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
-import datetime from 'node-datetime'
-import {SimpleSelect} from "react-selectize"
-
 import Body from "../../../../../common/components/body/body.jsx"
-import Spinner from '../../../../common/components/spinner.jsx'
-import {optionsSelectize} from '../../../../common/components/options-selectize.js'
+import {fetchInspectorPlate, createInspectorPlate, resetLoading} from '../../../../actions/actions-inspector-panel.jsx';
+import { ajaxGet, ajaxDelete } from '../../../../common/components/ajax-selectize.js';
+import {SimpleSelect} from "react-selectize"
+import { browserHistory } from 'react-router'
 
-import {fetchInspectorPlate, createInspectorPlate, resetLoading} from '../../../../actions/actions-inspector-panel.jsx'
-import {fetchTownshipLocations} from '../../../../actions/actions-township-panel.jsx'
-import {fetchTownshipSchemeTypes} from '../../../../actions/actions-township-common.jsx'
 
-import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
-import Griddle from 'griddle-react'
-import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
-
-import { ajaxSelectizeGet, ajaxDelete } from '../../../../common/components/ajax-selectize.js'
-
-import InspectorPanelSearchPlateForm from './inspector-panel-search-plate-form.jsx'
-
-export const fields = [ 
-  'id',  
-  'date_time', 
-  'user_name', 
-  'vehicle_type',  
-  'plate_no',  
-  'registered_state',  
-  'user_id', 
-  'ip',  
-  'vehicle_image',
+const fields = [ 
+      'id',  
+      'date_time',  
+      'dd',  
+      'location_name', 
+      'location_type', 
+      'full_address',  
+      'intersect_road1', 
+      'intersect_road2', 
+      'rows',  
+      'lots_per_rows', 
+      'total_lots',   
+      'show_location', 
+      'ff',  
+      'location_code', 
 ]
 
-class customColumnComponent extends React.Component {
-
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <div onClick={() => this.props.metadata.customComponentMetadata.renderEditModal(
-        this.props.rowData.id, 
-        this.props.rowData)}>
-        {this.props.data}
-      </div>
-    );
-  }
-}
-
-customColumnComponent.defaultProps = { "data": {}, "renderEditModal": null};
-
-
-class InspectorSearchPlate extends React.Component {
-
+export default class InspectorPanelSearchPlate extends React.Component {
+  
   constructor(props) {
     super(props);
 
+    this.ajaxGet = this.ajaxGet.bind(this);
+    this.renderSearchBar = this.renderSearchBar.bind(this);
     this.state = {
-      showEditDuplicateButtons: false,
-      parkingLocationCode: null,
-      showEditModal: false,
-      rowData: null,
-      selectizeOptions: {}
+      parkingData: null
     }
-
-    this.renderCreateModal = this.renderCreateModal.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleSuccess = this.handleSuccess.bind(this);
-    this.renderTable = this.renderTable.bind(this);
-    this.renderEditModal = this.renderEditModal.bind(this);
   }
 
   componentWillMount() {
-    this.props.fetchInspectorPlate();
-    this.props.fetchTownshipSchemeTypes();
-    this.props.fetchTownshipLocations(this.props.townshipCode);
+    ajaxGet('parked_cars', this.ajaxGet);
   }
 
-  componentDidUpdate() {
-    if (this.props.inspectorPlateCreated.isLoading) {
-    } else if (!this.props.inspectorPlateCreated.isLoading) {
-      this.handleSuccess();
-    }
-  };
-
-  handleSuccess(){
-    this.props.resetLoading();
-    $('#modal-inspector-ticket-create').closeModal();
-    $('#modal-success').openModal();
-    this.props.fetchInspectorPlate();
+  ajaxGet(parkingData) {
+    this.setState({parkingData: parkingData.data.resource});
+    console.log(parkingData)
   }
 
-  handleSubmit(data) {
-    this.props.createInspectorPlate(data);
-  }
-
-  tempInputs() {
-    const {dispatch} = this.props;
-
-    return fields.map((data) => {
-      return( 
-        <div className="col s6 admin-form-input">
-          <div className="form-group">
-            <label>{data}</label>
-            <input type="text" placeholder={data} onChange={(event) => 
-              dispatch(change('create-ticket', data, event.target.value))
-            }/>
-          </div>
-        </div>
-      );
+  renderSearchBar() {
+    var nullString = "N/A no data in field.";
+    const parkedList = this.state.parkingData.map((data) => {
+      if(data.plate_no != null && (data.location_code == null || data.location_code == "")) {
+        return {label: "id: " + data.id + ", plate: " + data.plate_no + ", location code: " + nullString, value: data.id} 
+      } else if (data.plate_no != null && data.location_code != null) {
+        return {label: "id: " + data.id + ", plate: " + data.plate_no + ", location code: " + data.location_code, value: data.id} 
+      } else {
+        return {label: "id: " + data.id + ", plate: " + nullString, value: null  }
+      }
     });
-  }
-
-  renderCreateModal() {
+    let selectedPlate;
     return(
-      <InspectorPanelSearchPlateForm 
-        modalName="modal-bursar-payment-create" 
-        modalText="Create a Plate" 
-        submitType="CREATE"
-        initialValues={null}
-        editMode={false}
-        handleSuccess={this.handleSuccess}
-      />
-    );
-  }
-
-  renderTable() {
-    console.log(this.props.inspectorPlateFetched)
-    let parkingData = this.props.inspectorPlateFetched.data.resource;
-
-    var renderEditModal = this.renderEditModal;
-    var metaDataFunction = () =>  {
-      return fields.map((data) => {
-        return(
-          {
-            "columnName": data,
-            "customComponent": customColumnComponent,
-            'customComponentMetadata': {
-                'renderEditModal': renderEditModal
-            }
-          }
-        );
-      });
-    }
-    var columnMeta = metaDataFunction()
-
-    return (
       <div>
-        <Griddle
-          tableClassName={'table table-bordered table-striped table-hover'}
-          filterClassName={''}
-          useGriddleStyles={false}
-          results={parkingData}
-          showFilter={true}
-          showSettings={true}
-          settingsToggleClassName='btn btn-default'
-          useCustomPagerComponent={true}
-          customPagerComponent={ BootstrapPager }
-          useCustomFilterComponent={true} customFilterComponent={customFilterComponent}
-          useCustomFilterer={true} customFilterer={customFilterFunction}
-          columnMetadata={columnMeta}
-        />
-
-        <div className="divider"/> 
-
-        <div className="center-align">
-
-          <a
-            className="modal-trigger waves-effect waves-light btn valign" 
-            onClick={() => $('#modal-bursar-payment-create').openModal()}
-            style={{margin: 10}}>Add New Plate</a>
-
+        <div className="col s12 m9" style={{margin: 0, padding: 0}}>
+          <SimpleSelect 
+            options={parkedList} 
+            theme="default"
+            style={{marginTop: 0}}
+            transitionEnter={true} 
+            onValueChange={(value) => {
+              selectedPlate = value.value;
+            }}/>
         </div>
-      </div>
-    );
-  }
-
-  renderEditDuplicateButtons(recordId) {
-    return (
-      <div className="container">
-        <a
-        style={{marginTop: 20}}
-        onClick={() => {
-          this.setState({showEditModal: true})
-          $('#modal-bursar-ticket-edit').openModal(); 
-        }}
-        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
-          <i className="material-icons valign">edit</i>
-          <h4> Edit - Plate ID: {recordId} </h4>
-        </a>
-
-        <a
-        onClick={() => {
-          this.setState({showEditModal: true})
-          $('#modal-bursar-ticket-duplicate').openModal(); 
-        }}
-        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
-          <i className="material-icons valign">content_copy</i>
-          <h4> Duplicate - Plate ID: {recordId} </h4>
-        </a>
-
-        <a
-        onClick={() => $('#modal-delete').openModal() }
-        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
-          <i className="material-icons valign">delete</i>
-          <h4> Delete - Plate ID: {recordId} </h4>
-        </a>
-
-        <div id="modal-delete" className="modal" style={{overflowX: "hidden"}}>
-          <div className="modal-content">
-            <h4>Delete</h4>
-            <p>Are you sure you want to delete this record?</p>
-          </div>
-          <div className="modal-footer">
-            <div className="row marginless-row">
-              <div className="col s6 left">
-                <button 
-                  href="#" 
-                  className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
-              </div>
-              <div className="col s3">
-                <a className="waves-effect waves-light btn btn-red" 
-                onClick={() => {
-                  $('#modal-delete').closeModal()
-                }}>No</a>
-              </div>
-              <div className="col s3">
-                <a className="waves-effect waves-light btn btn-green" 
-                onClick={() => {
-                  $('#modal-delete').closeModal()
-                  ajaxDelete('user_vehicles', recordId, this.handleSuccess);
-                  this.setState({showEditDuplicateButtons: false});
-                  window.scrollTo(0, 0);
-                }}>Yes</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  renderEditModal(recordId, rowData) {
-    window.scrollTo(0, document.body.scrollHeight);
-    this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true, parkingLocationCode: recordId})
-  }
-
-    renderEditDuplicateButtons(recordId) {
-    return (
-      <div className="container">
-        <a
-        style={{marginTop: 20}}
-        onClick={() => {
-          this.setState({showEditModal: true})
-          $('#modal-bursar-ticket-edit').openModal(); 
-        }}
-        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
-          <i className="material-icons valign">edit</i>
-          <h4> Edit - Plate ID: {recordId} </h4>
-        </a>
-
-        <a
-        onClick={() => {
-          this.setState({showEditModal: true})
-          $('#modal-bursar-ticket-duplicate').openModal(); 
-        }}
-        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
-          <i className="material-icons valign">content_copy</i>
-          <h4> Duplicate - Plate ID: {recordId} </h4>
-        </a>
-
-        <a
-        onClick={() => $('#modal-delete').openModal() }
-        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
-          <i className="material-icons valign">delete</i>
-          <h4> Delete - Plate ID: {recordId} </h4>
-        </a>
-
-        <div id="modal-delete" className="modal" style={{overflowX: "hidden"}}>
-          <div className="modal-content">
-            <h4>Delete</h4>
-            <p>Are you sure you want to delete this record?</p>
-          </div>
-          <div className="modal-footer">
-            <div className="row marginless-row">
-              <div className="col s6 left">
-                <button 
-                  href="#" 
-                  className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
-              </div>
-              <div className="col s3">
-                <a className="waves-effect waves-light btn btn-red" 
-                onClick={() => {
-                  $('#modal-delete').closeModal()
-                }}>No</a>
-              </div>
-              <div className="col s3">
-                <a className="waves-effect waves-light btn btn-green" 
-                onClick={() => {
-                  $('#modal-delete').closeModal()
-                  ajaxDelete('user_vehicles', recordId, this.handleSuccess);
-                  this.setState({showEditDuplicateButtons: false});
-                  window.scrollTo(0, 0);
-                }}>Yes</a>
-              </div>
-            </div>
-          </div>
+        <div className="col s12 m3" style={{margin: 0, padding: 0}}>
+          <button 
+            onClick={() => browserHistory.push(`admin/inspector/vehicle-info/${selectedPlate}`)} 
+            className="waves-effect waves-light btn-large btn btn-blue valign-wrapper col s12 m12 l12 left"
+            style={{height: 105, margin: 0, padding: 0, minWidth: 0}}
+            >
+            <i className="material-icons valign" style={{fontSize: 100}}>search</i>
+          </button>
         </div>
       </div>
     );
   }
 
   render() {
-    console.log(this.props.townshipLocationsFetched)
     return (
-      <div className="blue-body marginless-row">
+      <div className="blue-body marginless-row" style={{minHeight: "100%"}}>
         <Body showHeader={true}>
-          <div className="row marginless-row" style={{marginTop: 40}}>
-            <div className="col s12">
-              <nav>
-                <div className="nav-wrapper nav-admin z-depth-2">
-                  <a className="brand-logo center">Search Plate</a>
-                </div>
-              </nav>
-               <div className="card">
-                  <div className="township-userlist-container">
-                    { this.props.inspectorPlateFetched.isLoading ||
-                      this.props.townshipLocationsFetched.isLoading ? 
-                      <div> </div> : this.renderTable()}
+          <div className="row marginless-row animated fadeInUp center-align" style={{marginTop: "15vh", marginLeft: 30, marginRight: 30}}>
+            <h2 style={{color: "#FFF", fontWeight: "bold", marginBottom: 30}}> Search Plate # </h2>
+            {
+              this.state.parkingData != null ? this.renderSearchBar() : 
+              <div className="center-align">
+                <div>
+                  <div className="col s12 m9" style={{margin: 0, padding: 0}}>
+                    <SimpleSelect 
+                      options={[{label: "Loading...", value: "Loading..."}]} 
+                      theme="default"
+                      style={{marginTop: 0}}
+                      transitionEnter={true} 
+                      onKeyPress={() => this.handleKeyPress()}
+                      onValueChange={(value) => {
+                        selectedPlate = value.value;
+                      }}/>
                   </div>
-               </div>
-
-               {this.state.showEditDuplicateButtons ? 
-                this.renderEditDuplicateButtons(this.state.parkingLocationCode) : <div> </div>}
-            </div>
+                  <div className="col s12 m3" style={{margin: 0, padding: 0, minWidth: 0}}>
+                    <button 
+                      onClick={() => alert("Results haven't loaded yet.")} 
+                      className="waves-effect waves-light btn-large btn btn-blue valign-wrapper col s12 m12 l12 left"
+                      style={{height: 105, margin: 0, padding: 0}}
+                      >
+                      <i className="material-icons valign" style={{fontSize: 100}}>search</i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            }
           </div>
         </Body>
-        { this.props.inspectorPlateFetched.isLoading ? 
-          <div> </div> : this.renderCreateModal()}
-
-        { 
-          !this.state.showEditModal ?
-          <div></div> : 
-          <div>
-            <InspectorPanelSearchPlateForm
-              initialValues={this.state.rowData} 
-              handleSuccess={this.handleSuccess}
-              modalName="modal-bursar-ticket-edit" 
-              modalText="Edit a Plate" 
-              submitType="EDIT"
-              initialValues={this.state.rowData} 
-              rowData={this.state.rowData}
-              handleSuccess={this.handleSuccess}
-              />
-            <InspectorPanelSearchPlateForm 
-              initialValues={this.state.rowData} 
-              handleSuccess={this.handleSuccess}
-              modalName="modal-bursar-ticket-duplicate" 
-              modalText="Duplicate a Plate" 
-              submitType="DUPLICATE"
-              initialValues={this.state.rowData} 
-              rowData={this.state.rowData}
-              handleSuccess={this.handleSuccess}
-              />
-          </div>
-        }
-
-        <div id="modal-success" className="modal">
-          <div className="modal-content">
-            <h4>Success!</h4>
-            <p>You've successfully sent the request!</p>
-          </div>
-          <div className="modal-footer">
-            <button 
-            href="#" 
-            className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
-          </div>
-        </div>
-
       </div>
     );
   }
 }
-
-function mapStateToProps(state) {
-  return {
-    inspectorPlateFetched: state.inspectorPlateFetched,
-    inspectorPlateCreated: state.inspectorPlateCreated,
-    townshipLocationsFetched: state.townshipLocationsFetched,
-    townshipSchemeTypesFetched: state.townshipSchemeTypesFetched,
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    fetchInspectorPlate,
-    fetchTownshipLocations,
-    resetLoading,
-    fetchTownshipSchemeTypes,
-    createInspectorPlate
-  }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-  form: 'search-plate-edit',
-  fields
-})(InspectorSearchPlate));

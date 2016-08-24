@@ -64,7 +64,7 @@ export default class TownshipPanelFacilitiesForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
     this.selectizeOptionsUpdate = this.selectizeOptionsUpdate.bind(this);
-    this.props.dispatch(change('facilities-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
+
   }
 
   handleSubmit(data) {
@@ -99,6 +99,24 @@ export default class TownshipPanelFacilitiesForm extends React.Component {
   componentWillMount() {
     ajaxSelectizeGet('townships_manager', 'manager_id', this.selectizeOptionsUpdate);
     ajaxSelectizeGet('locations_rate', 'rate', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('location_lot', 'location_code', this.selectizeOptionsUpdate);
+
+    this.props.dispatch(change('facilities-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
+    this.props.dispatch(change('facilities-form', 'township_code', this.props.townshipCode));
+  }
+
+  componentDidMount() {
+    const {
+      resetForm,
+      submitting,
+      dispatch
+    } = this.props
+
+    $('.date_time')
+    .bootstrapMaterialDatePicker({ time: true, format : 'YYYY-MM-DD HH:mm:ss' })
+    .on('change', function(event) {
+      dispatch(change('facilities-form', 'date_time', event.target.value)); 
+    });
   }
 
   componentDidUpdate() {
@@ -150,11 +168,8 @@ export default class TownshipPanelFacilitiesForm extends React.Component {
       dispatch
     } = this.props;
 
-    const fields = [ 
-      'id',  
-      'date_time',  
-      'dd',  
-      'location_name', 
+    const fields = [     
+      'dd',   
       'location_type', 
       'full_address',  
       'intersect_road1', 
@@ -164,7 +179,6 @@ export default class TownshipPanelFacilitiesForm extends React.Component {
       'total_lots',   
       'show_location', 
       'ff',  
-      'location_code', 
     ]
 
     return fields.map((data) => {
@@ -240,14 +254,7 @@ export default class TownshipPanelFacilitiesForm extends React.Component {
                     </div>
                   </div>
                 </div>
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'manager_id'} 
-                formName={'facilities-form'} 
-                fieldName={'township_code'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
+                
                 {this.tempInputsEdit(this.props.initialValues)}
                 <AdminSelectize 
                 options={this.state.selectizeOptions}
@@ -257,6 +264,20 @@ export default class TownshipPanelFacilitiesForm extends React.Component {
                 defaultData={this.props.rowData}
                 dispatch={dispatch} 
                 />
+                <AdminSelectize 
+                options={this.state.selectizeOptions}
+                objectKey={'location_code'} 
+                formName={'parking-rules-form'} 
+                fieldName={'location_code'}
+                defaultData={this.props.rowData}
+                dispatch={dispatch} 
+                />
+                <div className="col s6 admin-form-input">
+                  <div className="form-group">
+                    <label htmlFor="date_time">date_time</label>
+                    <input id="date_time" className="date_time" type="text"/>
+                  </div>
+                </div>
               </div>
             </div>
 
