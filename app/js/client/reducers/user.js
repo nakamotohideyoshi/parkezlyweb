@@ -7,10 +7,13 @@ const initialState = {
   sessionToken: null,
   errorCode: null,
   errorMessage: null,
-  subErrorMessage: null
+  subErrorMessage: null,
+  regEmail: null,
+  regPass: null,
+  registrationHasError: false
 };
 
-const User = (state = {}, action) => {
+const User = (state = initialState, action) => {
   switch(action.type) {
     case "AUTH_INITIATE":
       return {
@@ -22,7 +25,7 @@ const User = (state = {}, action) => {
         mode: "LOGIN",
         loading : false,
         ...action.data
-      };
+      }
     case "AUTH_FAIL":
       return {
         mode: "LOGIN",
@@ -39,12 +42,26 @@ const User = (state = {}, action) => {
         mode: "REGISTER",
         loading : false,
         userId: action.data
-      };
+      }
     case "REG_FAIL":
       return {
         mode: "REGISTER",
         loading : false,
         ...action.error
+      }
+    case "SAVE_USER_INFO":
+      console.log(action);
+      return {
+        ...state,
+        mode: "REGISTER",
+        loading: false,
+        regEmail: action.userInfo.email,
+        regPass: action.userInfo.password,
+      }
+    case "REGISTER_VALIDATION_FAILED":
+      return {
+        ...state,
+        registrationHasError: action.status
       }
     default:
       return state;

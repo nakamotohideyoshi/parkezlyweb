@@ -36,7 +36,9 @@ export const checkUser = (userInfo) => {
 };
 
 export const registerUser = (userInfo) => {
-  const { email, password } = userInfo;
+  console.log("--------------");
+  console.log(userInfo);
+  const { email, password, mobile, address, city, state, zip } = userInfo;
 
   //Check if user exists
 
@@ -48,6 +50,11 @@ export const registerUser = (userInfo) => {
         data : {
           email: email,
           password: password,
+          mobile: mobile,
+          address: address,
+          city: city,
+          state: state,
+          zip: zip,
           timestamp: "2016-05-03 04:00:00"
         }
       }, Config.APIConfig

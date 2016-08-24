@@ -75,4 +75,20 @@
   :-ms-input-placeholder {  
     color: $dark-grey;
   }
+
+  .react-selectize {
+    &.root-node {
+      width: auto;
+    }
+  }
+
+  .help-text {
+    font-size: 12px;
+  }
+
+  .continue-registration {
+    text-align: right;
+    font-size: 22px;
+    padding: 10px;
+  }
 }
