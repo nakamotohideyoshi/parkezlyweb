@@ -259,9 +259,7 @@ export default class InspectorSearchTicketForm extends React.Component {
               </div>
 
               <div className="row">
-
-                
-
+              
                 <AdminSelectize 
                 options={this.state.selectizeOptions}
                 objectKey={'user_id'} 

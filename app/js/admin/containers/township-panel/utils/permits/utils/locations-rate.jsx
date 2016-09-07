@@ -16,7 +16,17 @@ import {fetchTownshipList} from '../../../../../actions/actions-township.js';
 import Spinner from '../../../../../common/components/spinner.jsx';
 import {optionsSelectize} from '../../../../../common/components/options-selectize.js';
 
-export const fields = [ 
+import Griddle from 'griddle-react'
+import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
+import {customFilterComponent, customFilterFunction} from '../../../../../common/components/griddle-custom-filter.jsx'
+import {ajaxSelectizeGet, ajaxSelectizeFilteredGet, ajaxDelete, ajaxGet, ajaxPost} from '../../../../../common/components/ajax-selectize.js'
+
+import LocationsRateForm from './locations-rate-form'
+
+
+const fields = [ 
+'id',
+'date_time',
 'exact_address',
 'township_id',
 'township_code',
@@ -29,15 +39,43 @@ export const fields = [
 'max_period',
 'township_name',
 'scheme_type',
-'permit_type']
+'permit_type',
+]
+
+class customColumnComponent extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div onClick={() => this.props.metadata.customComponentMetadata.renderEditModal(
+        this.props.rowData)}>
+        {this.props.data}
+      </div>
+    );
+  }
+}
+
+customColumnComponent.defaultProps = { "data": {}, "renderEditModal": null};
 
 class LocationsRate extends React.Component {
 
   constructor(props) {
     super(props);
 
+     this.state = {
+      showEditDuplicateButtons: false,
+      parkingLocationCode: null,
+      showEditModal: false,
+      rowData: null,
+      selectizeOptions: {}
+    }
+
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
+    this.renderEditModal = this.renderEditModal.bind(this);
   }
 
   componentWillMount() {
@@ -63,271 +101,124 @@ class LocationsRate extends React.Component {
     this.props.createTownshipLocationsRate(data);
   }
 
+  renderEditModal(rowData) {
+    window.scrollTo(0, document.body.scrollHeight);
+    this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true})
+  }
 
-  renderCreateModal() {
-     const {
-      fields: {
-        exact_address,
-        township_id,
-        township_code,
-        location_id,
-        location_code,
-        scheme,
-        rate,
-        location_name,
-        location_map,
-        max_period,
-        township_name,
-        scheme_type,
-        permit_type,
-      },
-      resetForm,
-      submitting,
-      dispatch
-    } = this.props
+  renderPermitsTable() {
+    let filteredData = this.props.townshipLocationsRateFetched.data.resource;
+    console.log(filteredData)
 
-    var optionsSchemeTypes = optionsSelectize(this.props.townshipSchemeTypesFetched.data.resource, 'scheme_type');
-
-    var optionsExactAddress = optionsSelectize(this.props.townshipListFetched.data.resource, 'address');
-
-    var optionsTownshipName = optionsSelectize(this.props.townshipListFetched.data.resource, 'lot_manager');
-
-    var optionsLocationCode = optionsSelectize(this.props.townshipFacilitiesFetched.data.resource, 'location_code');
-
-    var optionsLocationName = optionsSelectize(this.props.townshipFacilitiesFetched.data.resource, 'location_name');
-
-    var optionsPermitTypes = optionsSelectize(this.props.townshipPermitTypesFetched.data.resource, 'permit_type');
-
+     var renderEditModal = this.renderEditModal;
+    var metaDataFunction = () =>  {
+      return fields.map((data) => {
+        return(
+          {
+            "columnName": data,
+            "customComponent": customColumnComponent,
+            'customComponentMetadata': {
+                'renderEditModal': renderEditModal
+            }
+          }
+        );
+      });
+    }
+    var columnMeta = metaDataFunction()
+    
     return (
-       <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
-        <div id="modal-locations-rate-create" className="modal modal-fixed-footer">
+       <Griddle
+          tableClassName={'table table-bordered table-striped table-hover'}
+          filterClassName={''}
+          useGriddleStyles={false}
+          results={filteredData}
+          showFilter={true}
+          showSettings={true}
+          settingsToggleClassName='btn btn-default'
+          useCustomPagerComponent={true}
+          customPagerComponent={ BootstrapPager }
+          useCustomFilterComponent={true} customFilterComponent={customFilterComponent}
+          useCustomFilterer={true} customFilterer={customFilterFunction}
+          columnMetadata={columnMeta}
+          columns={[
+          'id', 
+          "rate",
+          "scheme_type",
+          'township_id',
+          'township_code',
+          'location_id',
+          'location_code',]}
+        />
+    ); 
+    
+  }
+
+  renderEditDuplicateButtons(locationCode) {
+    return (
+      <div className="container" style={{marginTop: 40}}>
+        <a
+        onClick={() => {
+          this.setState({showEditModal: true})
+          $('#modal-locations-rate-edit').openModal(); 
+        }}
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">edit</i>
+          <h4> Edit Location Rate: {locationCode} </h4>
+        </a>
+        <a
+        onClick={() => {
+          this.setState({showEditModal: true})
+          $('#modal-locations-rate-duplicate').openModal(); 
+        }}
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">content_copy</i>
+          <h4> Duplicate Location Rate: {locationCode} </h4>
+        </a>
+
+        <a
+        onClick={() => $('#modal-delete').openModal() }
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">delete</i>
+          <h4> Delete Location Rate: {locationCode} </h4>
+        </a>
+        <div id="modal-delete" className="modal" style={{overflowX: "hidden"}}>
           <div className="modal-content">
-
-            <div className="row">
-              <div className="center-align">
-                <h4>Create a Location Rate</h4>
-                <p className="center-align">Create a location rate by filling out the fields.</p>
-              </div>
-            </div>
-
-            <div className="row">
-
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Scheme Type</label>
-                  <div clasName="input-field col s12">
-                    <SimpleSelect 
-                    options = {optionsSchemeTypes} 
-                    placeholder = "Select Scheme Type" 
-                    theme = "material" 
-                    style={{marginTop: 5}}
-                    onValueChange = {(value) => {
-                      dispatch(change('locations-rate', 'scheme_type', value.value)); 
-                    }}></SimpleSelect>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Permit Type</label>
-                  <div clasName="input-field col s12">
-                    <SimpleSelect 
-                    options = {optionsPermitTypes} 
-                    placeholder = "Select Permit Type" 
-                    theme = "material" 
-                    style={{marginTop: 5}}
-                    onValueChange = {(value) => {
-                      dispatch(change('parking-permits', 'permit_type', value.value)); 
-                    }}></SimpleSelect>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Location Code</label>
-                  <div clasName="input-field col s12">
-                    <SimpleSelect 
-                    options = {optionsLocationCode} 
-                    placeholder = "Select Location Code" 
-                    theme = "material" 
-                    style={{marginTop: 5}}
-                    onValueChange = {(value) => {
-                      dispatch(change('locations-rate', 'location_code', value.value)); 
-                    }}></SimpleSelect>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Location Name</label>
-                  <div clasName="input-field col s12">
-                    <SimpleSelect 
-                    options = {optionsLocationName} 
-                    placeholder = "Select Name" 
-                    theme = "material" 
-                    style={{marginTop: 5}}
-                    onValueChange = {(value) => {
-                      dispatch(change('locations-rate', 'location_name', value.value)); 
-                    }}></SimpleSelect>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Exact Address</label>
-                  <div clasName="input-field col s12">
-                    <SimpleSelect 
-                    options = {optionsExactAddress} 
-                    placeholder = "Select Exact Address" 
-                    theme = "material" 
-                    style={{marginTop: 5}}
-                    onValueChange = {(value) => {
-                      dispatch(change('locations-rate', 'exact_address', value.value)); 
-                    }}></SimpleSelect>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Township Name</label>
-                  <div clasName="input-field col s12">
-                    <SimpleSelect 
-                    options = {optionsTownshipName} 
-                    placeholder = "Select Township Name" 
-                    theme = "material" 
-                    style={{marginTop: 5}}
-                    onValueChange = {(value) => {
-                      dispatch(change('locations-rate', 'township_name', value.value)); 
-                    }}></SimpleSelect>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Max Period</label>
-                  <input type="text" placeholder="Max Period" {...max_period}/>
-                </div>
-              </div>
-
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Location ID</label>
-                  <input type="text" placeholder="Location ID" {...location_id}/>
-                </div>
-              </div>
-
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Scheme</label>
-                  <input type="text" placeholder="Scheme" {...scheme}/>
-                </div>
-              </div>
-
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Location Map (lat / long)</label>
-                  <input type="text" placeholder="Location Map (lat / long)" {...location_map}/>
-                </div>
-              </div>
-
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Rate</label>
-                  <div className="row marginless-row">
-                    <div className="col s1 left-align">
-                      <p>$</p>
-                    </div>
-                    <div className="col s11">
-                      <input style={{maxWidth: 250, minWidth: 250}} 
-                      id="icon_telephone" type="number" step="any" placeholder="Cost" onChange={(value) => {
-                        dispatch(change('locations-rate', 'rate', '$' + value.target.value.toString())); }}/>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
+            <h4>Delete</h4>
+            <p>Are you sure you want to delete this record?</p>
           </div>
-
           <div className="modal-footer">
             <div className="row marginless-row">
-              <div className="col s8">
+              <div className="col s6 left">
                 <button 
-                type="submit" 
-                disabled={submitting} 
-                className="waves-effect waves-light btn">Create Location Rate</button>
+                  href="#" 
+                  className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
+              </div>
+              <div className="col s3">
+                <a className="waves-effect waves-light btn btn-red" 
+                onClick={() => {
+                  $('#modal-delete').closeModal()
+                }}>No</a>
+              </div>
+              <div className="col s3">
+                <a className="waves-effect waves-light btn btn-green" 
+                onClick={() => {
+                  $('#modal-delete').closeModal()
+                  ajaxDelete('locations_rate', this.state.rowData.id, this.handleSuccess);
+                  this.setState({showEditDuplicateButtons: false});
+                  window.scrollTo(0, 0);
+                }}>Yes</a>
               </div>
             </div>
           </div>
         </div>
-      </form>
+
+      </div>
     );
   }
 
-  renderPermitsData() {
-    /* let filteredPermits = this.props.townshipLocationsRateFetched.data.resource;
-    return filteredPermits.map((permit) => {
-      return( 
-        <tr key={permit.id}>
-          <td>{permit.exact_address}</td>
-          <td>{permit.township_id}</td>
-          <td>{permit.township_code}</td>
-          <td>{permit.location_id}</td>
-          <td>{permit.location_code}</td>
-          <td>{permit.scheme}</td>
-          <td>{permit.rate}</td>
-          <td>{permit.location_name}</td>
-          <td>{permit.location_map}</td>
-          <td>{permit.max_period}</td>
-          <td>{permit.township_name}</td>
-          <td>{permit.scheme_type}</td>
-          <td>{permit.permit_type}</td>
-        </tr>
-      );
-    });
-    */
-  }
-
-  renderPermitsTable() {
-    return (
-      <div className="township-userlist-container">
-        <table className="highlight">
-          <thead>
-            <tr>
-              <th data-field="id">Exact Address</th>
-              <th data-field="id">Township ID</th>
-              <th data-field="id">Township Code </th>
-              <th data-field="id">Location ID</th>
-              <th data-field="id">Location Code</th>
-              <th data-field="id">Scheme</th>
-              <th data-field="id">Rate</th>
-              <th data-field="id">Location Name</th>
-              <th data-field="id">Location Map</th>
-              <th data-field="id">Max Period</th>
-              <th data-field="id">Township Name</th>
-              <th data-field="id">Scheme Type</th>
-              <th data-field="id">Permit Type</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.renderPermitsData()}
-          </tbody>
-        </table>
-      </div>
-    ); 
-  }
-
   render() {
-    console.log('test')
-    console.log(this.props.townshipLocationsRateCreated)
     return (
-      <div style={{marginTop: 40, marginBottom: 40}} className="col s12">
+      <div className="col s12" style={{marginBottom: 40}}>
         <nav>
           <div className="nav-wrapper nav-admin z-depth-2">
             <a className="brand-logo center">Locations Rate</a>
@@ -345,10 +236,48 @@ class LocationsRate extends React.Component {
               onClick={() => $('#modal-locations-rate-create').openModal()}
               style={{margin: 10}}>Add New Location Rate</a>
           </div>
+          
         </div>
-        { this.props.townshipLocationsRateFetched.isLoading
-          ? 
-            <div> </div> : this.renderCreateModal()}
+        {this.state.showEditDuplicateButtons ? 
+                this.renderEditDuplicateButtons(this.state.rowData.id) : <div> </div>}
+        { 
+          !this.state.showEditModal ?
+          <div></div> : 
+          <div>
+            <LocationsRateForm
+              initialValues={this.state.rowData} 
+              handleSuccess={this.handleSuccess}
+              modalName="modal-locations-rate-edit" 
+              modalText="Edit a Location Rate" 
+              submitType="EDIT"
+              initialValues={this.state.rowData} 
+              rowData={this.state.rowData}
+              handleSuccess={this.handleSuccess}
+            />
+            <LocationsRateForm
+              initialValues={this.state.rowData} 
+              handleSuccess={this.handleSuccess}
+              modalName="modal-locations-rate-duplicate" 
+              modalText="Duplicate a Location Rate" 
+              submitType="DUPLICATE"
+              initialValues={this.state.rowData} 
+              rowData={this.state.rowData}
+              handleSuccess={this.handleSuccess}
+            />
+          </div>
+        }
+
+        <div id="modal-success" className="modal">
+          <div className="modal-content">
+            <h4>Success!</h4>
+            <p>You've successfully sent the request!</p>
+          </div>
+          <div className="modal-footer">
+            <button 
+            href="#" 
+            className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
+          </div>
+        </div>
       </div>
     );
   }
@@ -375,3 +304,12 @@ export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
 })(LocationsRate));
 
 
+/*
+
+{ 
+this.props.townshipLocationsRateFetched.isLoading
+? 
+<div> </div> : this.renderCreateModal()
+}
+
+*/

@@ -23,19 +23,20 @@ import {
   townshipLocationsCreated,
 
   townshipPermitRequestsFetched,
-  townshipPermitTypesFetched,
+  townshipPermitRequestsEdited,
 
   townshipParkingPermitsFetched,
-  townshipPermitRequestsEdited,
-  
   townshipParkingPermitsCreated,
 
   townshipPermitsListFetched,
   townshipPermitsListCreated,
 
   townshipLocationsRateFetched,
+  townshipLocationsRateEdited,
   townshipLocationsRateCreated,
 
+  townshipPermitTypesFetched,
+  townshipPermitTypesEdited,
   townshipPermitTypesCreated,
 
   townshipViolationCodeFetched,
@@ -119,6 +120,8 @@ var townshipPanelReducers = {
   townshipPermitRequestsEdited: townshipPermitRequestsEdited,
 
   townshipPermitTypesFetched: townshipPermitTypesFetched,
+  townshipPermitTypesCreated: townshipPermitTypesCreated,
+  townshipPermitTypesEdited: townshipPermitTypesCreated,
 
   townshipParkingPermitsFetched: townshipParkingPermitsFetched,
   townshipParkingPermitsCreated: townshipParkingPermitsCreated,
@@ -127,9 +130,8 @@ var townshipPanelReducers = {
   townshipPermitsListCreated: townshipPermitsListCreated,
 
   townshipLocationsRateFetched: townshipLocationsRateFetched,
+  townshipLocationsRateEdited: townshipLocationsRateEdited,
   townshipLocationsRateCreated: townshipLocationsRateCreated,
-  
-  townshipPermitTypesCreated: townshipPermitTypesCreated,
 
   townshipViolationCodeFetched: townshipViolationCodeFetched,
   townshipViolationCodeEdited: townshipViolationCodeEdited,
