@@ -487,11 +487,13 @@ export const checkAndBook = (parkingData) => {
         const { data } = response;
         const { resource } = data;
         if(resource.length > 0) {
-          const { id, exit_date_time } = resource[0];
-          const exitTime = new Date(exit_date_time);
-          const dateTimeNow = new Date(moment.utc().format("YYYY-MM-DD HH:mm"));
+          const { id, exit_date_time, parking_status } = resource[0];
+          //const exitTime = new Date(exit_date_time);
+          //const dateTimeNow = new Date(moment.utc().format("YYYY-MM-DD HH:mm"));
 
-          if(exitTime > dateTimeNow) {
+          //if(exitTime > dateTimeNow) {
+            console.log("parking_status", parking_status);
+          if(parking_status === "ENTRY") {
             dispatch(setAlreadyParked(true, id));
           } else {
             dispatch(createBooking(parkingData));
@@ -653,12 +655,12 @@ export const checkIfAlreadyParked = (plate) => {
         const { data } = response;
         const { resource } = data;
         if(resource.length > 0) {
-          const { id, exit_date_time } = resource[0];
-          const exitTime = new Date(exit_date_time);
-          const dateTimeNow = new Date(moment.utc().format("YYYY-MM-DD HH:mm"));
-          console.log(exitTime);
-          console.log(dateTimeNow);
-          if(exitTime > dateTimeNow) {
+          const { id, exit_date_time, parking_status } = resource[0];
+          //const exitTime = new Date(exit_date_time);
+          //const dateTimeNow = new Date(moment.utc().format("YYYY-MM-DD HH:mm"));
+
+          //if(exitTime > dateTimeNow) {
+          if(parking_status === "ENTRY") {
             dispatch(setAlreadyParked(true, id));
           } else {
             dispatch(setAlreadyParked(false, null));
@@ -669,7 +671,7 @@ export const checkIfAlreadyParked = (plate) => {
         dispatch(disableLoading());
       })
       .catch((response) => {
-        //dispatch(fetchNearParkingLotFailed(response));
+        //dispatch(fetchNearParkingLotFaileexitd(response));
       });
   };
 };

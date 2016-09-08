@@ -33,6 +33,11 @@ export const mainUserLinks = [
     icon: "find-parking-icon"
   },
   {
+    text: "Find My Vehicle",
+    link: "/find-vehicle",
+    icon: "find-vehicle-icon"
+  },
+  {
     text: "My Account",
     link: "",
     icon: "my-account-icon",

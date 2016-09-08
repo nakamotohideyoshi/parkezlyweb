@@ -55,12 +55,14 @@ class FindVehicle extends Component {
     //const parkedVehicleData = parkedVehicleList ? parkedVehicleList : [];
     const notice = this.renderNotice();
     const vehicles = parkedVehicleList.map(this.renderParkedVehicle);
+    const noVehicleMessage = parkedVehicleList.length == 0 ? "No vehicles parked." : "";
     return (
       <div className="parked-vehicles-list">
         {notice}
         <h4>Select Vehicle</h4>
         <div className="row">
-          {vehicles} 
+          {noVehicleMessage}
+          {vehicles}
         </div>
       </div>
     );

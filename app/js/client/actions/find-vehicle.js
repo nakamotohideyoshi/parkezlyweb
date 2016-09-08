@@ -1,4 +1,5 @@
 import * as FindVehicleAPI from "../api/find-vehicle.js";
+import * as ParkingAPI from "../api/parking.js";
 import * as Actions from "../constants/actions.js";
 
 const setLoading = (status) => {
@@ -52,6 +53,28 @@ export const getParkedVehicle = (recordId) => {
       .catch((response) => {
         console.log("failed");
         //dispatch(fetchNearbyParkingFailed(response));
+      });
+  };
+};
+
+export const exitVehicle = (confirmationId, exit_date_time) => {
+  return dispatch => {
+    dispatch(setLoading(true));
+    return ParkingAPI.exitVehicle(confirmationId, exit_date_time)
+      .then((response) => {
+        const { data } = response;
+        const { resource } = data;
+        console.log("Vehicle Exited");
+        dispatch(setLoading(false));
+        
+        if(type == "existing") {
+          dispatch(setAlreadyParked(false, null));
+        } else {
+          dispatch(exitParkingFlow());
+        }
+      })
+      .catch((response) => {
+        //dispatch(fetchChargesFailed());
       });
   };
 };
