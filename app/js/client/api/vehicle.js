@@ -67,3 +67,14 @@ export const saveVehicle = (plateInfo) => {
     )
   );
 };
+
+export const deleteVehicle = (vehicleId) => {
+  return axios(
+    Object.assign(
+      {
+        method: "delete",
+        url: "/pzly01live7/_table/user_vehicles?filter=id="+vehicleId
+      }, Config.APIConfig
+    )
+  );
+}; 

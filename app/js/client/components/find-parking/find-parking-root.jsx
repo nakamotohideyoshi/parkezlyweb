@@ -48,7 +48,8 @@ import {
   showLots,
   checkIfAlreadyParked,
   showStreetView,
-  getVehicles
+  getVehicles,
+  getHoursRemaining
 } from "../../actions/parking.js";
 import { setPosition, setInitialPosition, getLocationCoordinates } from "../../actions/location.js";
 //import { getVehicles } from "../../actions/vehicle.js";
@@ -278,20 +279,29 @@ class FindParking extends Component {
 
   changePlateNo() {
     const { dispatch } = this.props;
+    const { showPaidParkingModal, showManagedParkingModal, selectedMarkerItem } = this.props.parking;
+    const { lat, lng } = selectedMarkerItem;
     const plate_no = this.refs["license-number"].getValue();
     const registered_state = this.refs["select-state"].getValue();
     if(plate_no) {
       const plate = {
         plate_no : plate_no,
-        registered_state : registered_state.value
+        registered_state : registered_state ? registered_state.value : null
       };
       dispatch(updatePlate(plate));
-      dispatch(checkIfAlreadyParked(plate));
+      if(plate_no && registered_state) {
+        dispatch(checkIfAlreadyParked(plate));
+        if(showPaidParkingModal || showManagedParkingModal) {
+          dispatch(getHoursRemaining(lat, lng, plate_no, registered_state));
+        }
+      }
     }
   }
 
   changeState(state) {
     const { dispatch } = this.props;
+    const { showPaidParkingModal, showManagedParkingModal, selectedMarkerItem } = this.props.parking;
+    const { lat, lng } = selectedMarkerItem;
     console.log(state);
     const plate_no = this.refs["license-number"].getValue();
     const registered_state = state.value;
@@ -300,7 +310,12 @@ class FindParking extends Component {
       registered_state : registered_state
     };
     dispatch(updatePlate(plate));
-    dispatch(checkIfAlreadyParked(plate));
+    if(plate_no && registered_state) {
+      dispatch(checkIfAlreadyParked(plate));
+      if(showPaidParkingModal || showManagedParkingModal) {
+        dispatch(getHoursRemaining(lat, lng, plate_no, registered_state));
+      }
+    }
   }
 
   getParkingData() {
@@ -381,7 +396,7 @@ class FindParking extends Component {
       "lot_number" : "",
       "ip" : "",
       "token" : "",
-      "parking_status" : "",
+      "parking_status" : "ENTRY",
       "payment_method" : paymentMethod,
       "parking_rate" : pricing,
       "parking_units" : pricing_duration,
@@ -1089,9 +1104,10 @@ class FindParking extends Component {
       "blue-btn": true,
       "disabled": isAlreadyParked
     });
+    const clickAction = !isAlreadyParked ? this.showWalletBalance : null;
     return (
       <div className="margin-bottom-10">
-        <GrayButton className={walletBtnClasses} disabled={isAlreadyParked} onClick={this.showWalletBalance}>
+        <GrayButton className={walletBtnClasses} disabled={isAlreadyParked} onClick={clickAction}>
           Pay with Wallet
         </GrayButton>
       </div>
@@ -1106,11 +1122,12 @@ class FindParking extends Component {
       "green-btn": true,
       "disabled": isAlreadyParked
     });
+    const clickAction = !isAlreadyParked ? this.payWithPaypal : null;
     return (
       <div>
         {walletOption}
         <div>
-          <GrayButton className={paymentBtnClasses} onClick={this.payWithPaypal}>
+          <GrayButton className={paymentBtnClasses} onClick={clickAction}>
             Make Payment
           </GrayButton>
         </div>

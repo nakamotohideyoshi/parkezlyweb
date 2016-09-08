@@ -723,4 +723,34 @@ export const getVehicles = (user_id, location_code, pricing_time_unit) => {
         }));
       });
   }
-}
+};
+
+const registrationSucceded = (data) => {
+  return {
+    type: Actions.REG_SUCCESS,
+    data
+  };
+};
+
+const registrationFailed = (error) => {
+  return {
+    type: Actions.REG_FAIL,
+    error
+  };
+};
+
+export const getHoursRemaining = (lat, lng, plate_no, pl_state) => {
+  return dispatch => {
+    //dispatch(initiateRegistration());
+    return ParkingAPI.getTotalHoursParkedToday(lat, lng, plate_no, pl_state)
+      .then((response) => {
+        console.log(response);
+        //const userId = response.data.resource[0].id;
+        //dispatch(registrationSucceded(userId));
+      })
+      .catch((response) => {
+        //dispatch(registrationFailed());
+        console.log(response);
+      });
+  }
+};

@@ -108,7 +108,7 @@ const vehicleRetrievalFailure = (error) => {
     type: Actions.FETCH_VEHICLE_FAIL,
     error
   }
-}
+};
 
 export const getVehicle = (vehicle_id) => {
   return dispatch => {
@@ -129,4 +129,29 @@ export const getVehicle = (vehicle_id) => {
         }));
       });
   }
-}
+};
+
+const deletingVehicle = (status) => {
+  return {
+    type: Actions.DELETING_VEHICLE,
+    status
+  }
+};
+
+export const deleteVehicle = (vehicle_id) => {
+  return dispatch => {
+    dispatch(deletingVehicle(true));
+    return VehicleAPI.deleteVehicle(vehicle_id)
+      .then((response) => {
+        dispatch(deletingVehicle(false));
+        window.location = "/my-vehicles";
+      })
+      .catch((response) => {
+        dispatch(deletingVehicle(false));
+        dispatch(vehicleDeletionFailure({
+          errorCode: "503",
+          errorMessage: GenericError
+        }));
+      });
+  }
+};

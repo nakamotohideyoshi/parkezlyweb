@@ -119,7 +119,8 @@ export const exitVehicle = (confirmation_id, exit_date_time) => {
         method: "put",
         url: "pzly01live7/_table/parked_cars?filter=id="+confirmation_id,
         data : {
-          exit_date_time: exit_date_time
+          exit_date_time: exit_date_time,
+          parking_status: "EXIT"
         }
       }, APIConfig
     )
@@ -137,6 +138,26 @@ export const getStreetView = (lat, lng) => {
           lng: lng
         }
       }, placesAPIConfig
+    )
+  );
+};
+
+export const getTotalHoursParkedToday = (lat, lng, plate_no, pl_state) => {
+  return axios(
+    Object.assign(
+      {
+        method: "post",
+        url: "pzly01live7/_proc/get_total_hours_parked_today",
+        data: {
+          "params": 
+          [
+            [{"name":"in_lat","value":lat}],
+            [{"name":"in_lng","value":lng}],
+            [{"name":"in_plate_no","value":plate_no}],
+            [{"name":"in_pl_state","value":pl_state}]
+          ]
+        }
+      }, APIConfig
     )
   );
 };
