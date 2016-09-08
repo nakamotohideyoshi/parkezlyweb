@@ -57,7 +57,8 @@ exports.saveTransaction = function(req, res) {
     var ip = req.connection.remoteAddress;
     var userId = req.session[paymentId].userId;
     var amt = req.session[paymentId].amount;
-    var currentBalance = parseFloat(req.session[paymentId].currentBalance) + parseFloat(amt);
+    var currentBalance = req.session[paymentId].currentBalance;
+    var newBalance = parseFloat(req.session[paymentId].currentBalance) + parseFloat(amt);
 
     var postData = JSON.stringify({
       resource : {
@@ -66,6 +67,7 @@ exports.saveTransaction = function(req, res) {
         user_id: userId,
         add_amt: amt,
         current_balance: currentBalance,
+        new_balance: newBalance,
         ip: ip
       }
     });
@@ -171,7 +173,7 @@ exports.confirmParking = function(req, res) {
       resp.on('data', function (chunk) {
         var data = JSON.parse(chunk);
         delete req.session[paymentId];
-        res.redirect('/my-wallet?id='+data.resource[0].id);
+        res.redirect('/find-vehicle/'+data.resource[0].id);
       });
     });
 

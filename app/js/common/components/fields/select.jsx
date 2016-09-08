@@ -11,6 +11,10 @@ class Chooser extends Component {
     };
   }
 
+  setValue(val) {
+    this.refs["simple-select"].value(val);
+  }
+
   getValue() {
     console.log(this.refs["simple-select"]);
     const { value } = this.refs["simple-select"];
@@ -68,6 +72,7 @@ class Chooser extends Component {
           placeholder ={placeholder} 
           onValueChange={onValueChange}
           defaultValue={defaultValue}
+          //value={defaultValue}
           {...otherProps}/>
         <div className="error-msg row">
           <i className="material-icons tiny">error</i> {errorText}

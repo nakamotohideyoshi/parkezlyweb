@@ -13,6 +13,17 @@ class Timer extends Component {
     this.setRemainingTime = this.setRemainingTime.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { timeLeft } = nextProps;
+
+    this.setState({
+      timeLeft: timeLeft,
+      hrs: 0,
+      mins: 0,
+      secs: 0
+    });
+  }
+
   componentDidMount() {
     this.interval = setInterval(this.setRemainingTime, 1000);
   }
@@ -22,19 +33,24 @@ class Timer extends Component {
   }
 
   setRemainingTime() {
+    console.log(this.state);
     const { timeLeft } = this.state;
-    let secs = Math.floor((timeLeft / 1000) % 60);
-    let mins = Math.floor((timeLeft / 1000 / 60) % 60);
-    let hrs = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
 
-    this.setState({
-      timeLeft: timeLeft - 1000,
-      hrs: hrs,
-      mins: mins,
-      secs: secs
-    });
+    if ( typeof timeLeft === "number") {
+       let secs = Math.floor((timeLeft / 1000) % 60);
+      let mins = Math.floor((timeLeft / 1000 / 60) % 60);
+      let hrs = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
 
-    if(timeLeft == 0) {
+      this.setState({
+        timeLeft: timeLeft - 1000,
+        hrs: hrs,
+        mins: mins,
+        secs: secs
+      });
+    }
+   
+
+    if(timeLeft === 0) {
       clearInterval(this.interval);
     }
   }
