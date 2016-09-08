@@ -2,16 +2,17 @@ import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 import classNames from "classnames";
 import cookie from 'react-cookie';
-
+import moment from "moment";
 import Body from "../../../common/components/body/body.jsx";
 
-import { getParkedVehicle } from "../../actions/find-vehicle.js";
+import { getParkedVehicle, exitVehicle } from "../../actions/find-vehicle.js";
 import ConfirmationScreen from "./ConfirmationScreen.jsx";
 
 
 class FindVehicleDetail extends Component {
   constructor(props) {
     super(props);
+    this.onExit = this.onExit.bind(this);
   }
 
   componentWillMount() {
@@ -29,6 +30,12 @@ class FindVehicleDetail extends Component {
     if(userId) {
       return true;
     }
+  }
+
+  onExit() {
+    const { dispatch, parkingId } = this.props;
+    const dateTimeNow = moment.utc().format("YYYY-MM-DD HH:mm");
+    dispatch(exitVehicle(parkingId, dateTimeNow));
   }
 
   renderNotice() {
@@ -53,13 +60,18 @@ class FindVehicleDetail extends Component {
       city,
       state,
       zip,
-      country
+      country,
+      parking_status
     } = vehicleData;
     const expiryTime = new Date(expiry_time);
     const dateTimeNow = new Date(moment.utc().format("YYYY-MM-DD HH:mm"));
     let timeRemaining = expiryTime - dateTimeNow;
     const parkedTime = moment(entry_date_time).local().format("dddd, MMMM Do YYYY, h:mm:ss a");
     const expiresAt = moment(exit_date_time).local().format("dddd, MMMM Do YYYY, h:mm:ss a");
+
+    if(parking_status === "EXIT") {
+      timeRemaining = 0;
+    }
 
     return (
       <ConfirmationScreen
@@ -73,7 +85,8 @@ class FindVehicleDetail extends Component {
         zip={zip}
         country={country}
         parkedTime={parkedTime}
-        expiresAt={expiresAt} />
+        expiresAt={expiresAt}
+        onExit={this.onExit} />
     );
   }
 

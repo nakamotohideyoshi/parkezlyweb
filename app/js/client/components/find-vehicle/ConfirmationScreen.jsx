@@ -16,7 +16,8 @@ const ConfirmationScreen = (props) => {
     zip,
     country,
     parkedTime,
-    expiresAt
+    expiresAt,
+    onExit
   } = props;
 
   return (
@@ -71,7 +72,7 @@ const ConfirmationScreen = (props) => {
         </div>
       </div>
 
-      <GrayButton className="yellow-btn margin-bottom-10" onClick={null}>
+      <GrayButton className="yellow-btn margin-bottom-10" onClick={onExit}>
         Exit Parking
       </GrayButton>
 

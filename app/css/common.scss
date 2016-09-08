@@ -158,6 +158,10 @@ a {
   background-image: url('../images/menu/car_parking@3x.png');
   @extend .menu-icon;
 }
+.find-vehicle-icon {
+  background-image: url('../images/menu/view@3x.png');
+  @extend .menu-icon;
+}
 .drive-ezly-icon {
   background-image: url('../images/menu/drive_ezly@3x.png');
   @extend .menu-icon;
