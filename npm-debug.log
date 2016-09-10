@@ -7,7 +7,7 @@
 6 silly lifecycle parkezlyweb@0.0.1~predev: no script for predev, continuing
 7 info lifecycle parkezlyweb@0.0.1~dev: parkezlyweb@0.0.1
 8 verbose lifecycle parkezlyweb@0.0.1~dev: unsafe-perm in lifecycle true
-9 verbose lifecycle parkezlyweb@0.0.1~dev: PATH: /usr/lib/node_modules/npm/bin/node-gyp-bin:/home/rou/Documents/freelance_dev/parkezlyweb/node_modules/.bin:/usr/bin:/home/rou/bin:/home/rou/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+9 verbose lifecycle parkezlyweb@0.0.1~dev: PATH: /usr/lib/node_modules/npm/bin/node-gyp-bin:/home/rou/Documents/freelance_dev/parkezlyweb/node_modules/.bin:/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 10 verbose lifecycle parkezlyweb@0.0.1~dev: CWD: /home/rou/Documents/freelance_dev/parkezlyweb
 11 silly lifecycle parkezlyweb@0.0.1~dev: Args: [ '-c', 'NODE_ENV=development && babel-node server.js' ]
 12 silly lifecycle parkezlyweb@0.0.1~dev: Returned: code: 1  signal: null

@@ -31,6 +31,7 @@ class TownshipListRoot extends React.Component {
 
     this.handleFetch = this.handleFetch.bind(this);
     this.renderTownshipList = this.renderTownshipList.bind(this);
+    console.log("Testing new build")
   }
 
   componentWillMount() {
