@@ -1,9 +1,7 @@
-import webpack from 'webpack';
-import webpackMiddleware from 'webpack-dev-middleware';
-import webpackHotMiddleware from 'webpack-hot-middleware';
-
 import express from 'express';
 import path from 'path';
+<<<<<<< HEAD
+=======
 import http from 'http';
 import https from 'https';
 import fs from 'fs';
@@ -18,13 +16,25 @@ import paypalRoutes from './server/routes/paypal-routes.js';
 import mapRoutes from './server/routes/map-routes.js';
 
 var dataUriToBuffer = require('data-uri-to-buffer');
+>>>>>>> remotes/origin/master
 
-const isProduction = process.env.NODE_ENV === 'production';
-const isDeveloping = !isProduction;
+import connect from './server/http-server';
+import apiConfig from './server/api/api-config'
+import apiRoutes from './server/api/api-routes'
+import s3Config from './server/aws/s3.config.js'
 
+/* Express */
 const app = express();
 
+/* Server */
+connect(app);
 
+<<<<<<< HEAD
+/*  RESTful API */
+apiConfig(app);
+apiRoutes(app);
+s3Config(app);
+=======
 // Webpack dev server
 if (isDeveloping) {
   const WEBPACK_PORT = 3001;
@@ -204,17 +214,9 @@ ACL:'public-read'
 
 
 
+>>>>>>> remotes/origin/master
 
-// We need to use basic HTTP service to proxy
-// websocket requests from webpack
-const server = http.createServer(app);
 
-server.listen(port, function (err, result) {
-  if(err){
-    console.log(err);
-  }
-  console.log('Server running on port ' + port);
-}); 
 
 
 
