@@ -19,7 +19,7 @@ import {transferImages} from '../../common/temp-scripts/transfer-s3-urls.js'
 class TownshipListRoot extends React.Component {
   constructor(props) {
     super(props);
-
+    
     SchemaFilterTest();
 
     this.state = {
