@@ -1,41 +1,37 @@
 import React from 'react';
-import { reduxForm, change } from 'redux-form'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import moment from 'moment'
-import {SimpleSelect} from "react-selectize"
-import { browserHistory } from 'react-router'
-import {createFilter} from 'react-search-input';
+import { reduxForm, change } from 'redux-form'
 
-import Body from "../../../../../common/components/body/body.jsx"
-import Spinner from '../../../../common/components/spinner.jsx'
-import {optionsSelectize} from '../../../../common/components/options-selectize.js'
+import {SimpleSelect} from 'react-selectize'
 
 import {
-  fetchHearingPlace, 
-  editHearingPlace, 
-  createHearingPlace,  
-  resetLoading} from '../../../../actions/actions-township-panel.jsx'
-import {fetchTownshipSchemeTypes} from '../../../../actions/actions-township-common.jsx'
+        fetchTownshipPermitTypes, 
+        editTownshipPermitTypes,
+        createTownshipPermitTypes,
+        resetLoading
+      } from '../../../../../actions/actions-township-panel.jsx'
+import {fetchTownshipSchemeTypes} from '../../../../../actions/actions-township-common.jsx'
+import {fetchTownshipList} from '../../../../../actions/actions-township.js';
 
-import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
+import Spinner from '../../../../../common/components/spinner.jsx';
+import {optionsSelectize} from '../../../../../common/components/options-selectize.js';
+
 import Griddle from 'griddle-react'
-import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
-
-import { ajaxSelectizeGet, ajaxDelete } from '../../../../common/components/ajax-selectize.js'
-import AdminSelectize from '../../../../common/components/admin-selectize.jsx'
+import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
+import {customFilterComponent, customFilterFunction} from '../../../../../common/components/griddle-custom-filter.jsx'
+import {ajaxSelectizeGet, ajaxSelectizeFilteredGet, ajaxDelete, ajaxGet, ajaxPost} from '../../../../../common/components/ajax-selectize.js'
+import AdminSelectize from '../../../../../common/components/admin-selectize.jsx'
 
 export const fields = [ 
-  'id',  
-  'date_time', 
-  'court_id',  
-  'hearing_location',  
-  'hearing_address', 
-  'court_contact', 
-  'township_code',
+  'id',
+  'permit_type', 
+  'date_time'
 ]
 
-class TownshipPanelHearingPlaceForm extends React.Component {
+
+
+export default class PermitTypesForm extends React.Component {
 
   constructor(props) {
     super(props);
@@ -45,31 +41,26 @@ class TownshipPanelHearingPlaceForm extends React.Component {
       parkingLocationCode: null,
       showEditModal: false,
       rowData: null,
-      selectizeOptions: {}
     }
 
     this.tempInputsEdit = this.tempInputsEdit.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
     this.selectizeOptionsUpdate = this.selectizeOptionsUpdate.bind(this);
-    this.props.dispatch(change('hearing-place-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
   }
 
   handleSubmit(data) {
-    
     $('#' + this.props.modalName).closeModal();
-    $('#modal-success').openModal();
-    this.props.dispatch(change('hearing-place-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
-
     switch(this.props.submitType) {
       case "CREATE":
-        this.props.createHearingPlace(data);
+        this.props.createTownshipPermitTypes(data);
         break;
       case "EDIT":
-        this.props.editHearingPlace(data, data.id);
+      console.log(data)
+        this.props.editTownshipPermitTypes(data, data.id);
         break;
       case "DUPLICATE":
-        this.props.createHearingPlace(data);
+        this.props.createTownshipPermitTypes(data);
         break;
       default:
         console.log("No valid submit type was provided.");
@@ -85,7 +76,7 @@ class TownshipPanelHearingPlaceForm extends React.Component {
   }
 
   componentWillMount() {
-    ajaxSelectizeGet('townships_manager', 'manager_id', this.selectizeOptionsUpdate);
+    this.props.dispatch(change('permit-types-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
   }
 
   componentDidMount() {
@@ -103,41 +94,49 @@ class TownshipPanelHearingPlaceForm extends React.Component {
   }
 
   componentDidUpdate() {
-    if (this.props.townshipHearingPlaceCreated.isLoading) {
-      } else if (!this.props.townshipHearingPlaceCreated.isLoading) {
+    console.log(this.props.townshipPermitTypesEdited)
+    if (this.props.townshipPermitTypesCreated.isLoading) {
+      } else if (!this.props.townshipPermitTypesCreated.isLoading) {
         this.handleSuccess();
       }
 
-    if (this.props.townshipHearingPlaceEdited.isLoading) {
-      } else if (!this.props.townshipHearingPlaceEdited.isLoading) {
+    if (this.props.townshipPermitTypesEdited.isLoading) {
+      } else if (!this.props.townshipPermitTypesEdited.isLoading) {
         this.handleSuccess();
       }
 
-    if (this.props.townshipHearingPlaceCreated.isLoading) {
-      } else if (!this.props.townshipHearingPlaceEdited.isLoading) {
+    if (this.props.townshipPermitTypesCreated.isLoading) {
+      } else if (!this.props.townshipPermitTypesEdited.isLoading) {
         this.handleSuccess();
       }
   };
 
   handleSuccess(){
-    this.props.resetLoading();
     this.props.handleSuccess();
+    this.props.resetLoading();
   }
 
   tempInputsEdit(initialValues) {
      const {
       fields: {  
-        id,
-        vehicle_id,
-        user_name,
-        date,
-        location_id,
-        scheme_type,
-        rate,
-        pay_method,
-        amount,
-        cashier_id,
-        user_id,
+        id,  
+        date_time, 
+        township_code, 
+        dd,  
+        location_name, 
+        location_type, 
+        full_address,  
+        intersect_road1, 
+        intersect_road2, 
+        rows,  
+        lots_per_rows, 
+        total_lots,  
+        parking_rate,  
+        show_location, 
+        country, 
+        ff,  
+        location_code, 
+        state,
       },
       resetForm,
       submitting,
@@ -145,10 +144,7 @@ class TownshipPanelHearingPlaceForm extends React.Component {
     } = this.props;
 
     const fields = [ 
-      'court_id',  
-      'hearing_location',  
-      'hearing_address', 
-      'court_contact', 
+      'permit_type'
     ]
 
     return fields.map((data) => {
@@ -171,7 +167,6 @@ class TownshipPanelHearingPlaceForm extends React.Component {
       dispatch
     } = this.props
 
-
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
@@ -185,29 +180,10 @@ class TownshipPanelHearingPlaceForm extends React.Component {
                 </div>
               </div>
 
-              <div className="row">
-
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label htmlFor="date_time">date_time</label>
-                    <input id="date_time" className="date_time" type="text"/>
-                  </div>
-                </div>
-
+              <div className="row"> 
                 {this.tempInputsEdit(this.props.initialValues)}
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'manager_id'} 
-                formName={'hearing-place-form'} 
-                fieldName={'township_code'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
               </div>
             </div>
-            
 
             <div className="modal-footer">
               <div className="row marginless-row">
@@ -228,23 +204,23 @@ class TownshipPanelHearingPlaceForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    townshipHearingPlaceFetched: state.townshipHearingPlaceFetched,
-    townshipHearingPlaceCreated: state.townshipHearingPlaceCreated,
-    townshipHearingPlaceEdited: state.townshipHearingPlaceEdited,
+    townshipPermitTypesFetched: state.townshipPermitTypesFetched,
+    townshipPermitTypesCreated: state.townshipPermitTypesCreated,
+    townshipPermitTypesEdited: state.townshipPermitTypesEdited,
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    fetchHearingPlace, 
-    editHearingPlace, 
-    createHearingPlace, 
+    fetchTownshipPermitTypes, 
+    editTownshipPermitTypes, 
+    createTownshipPermitTypes, 
     resetLoading
   }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-  form: 'hearing-place-form',
+  form: 'permit-types-form',
   fields,
   overwriteOnInitialValuesChange : true
-})(TownshipPanelHearingPlaceForm));
+})(PermitTypesForm));

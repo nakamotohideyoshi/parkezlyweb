@@ -38,7 +38,7 @@ export const fields = [
   'cbalance',
 ]
 
-export default class BursarPanelWalletPaymentForm extends React.Component {
+class BursarPanelWalletPaymentForm extends React.Component {
 
   constructor(props) {
     super(props);

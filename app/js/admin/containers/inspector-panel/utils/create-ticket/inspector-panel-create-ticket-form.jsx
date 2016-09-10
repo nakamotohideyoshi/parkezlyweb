@@ -63,7 +63,7 @@ export const fields = [
   'paid_date',
 ]
 
-export default class InspectorSearchTicketForm extends React.Component {
+class InspectorSearchTicketForm extends React.Component {
 
   constructor(props) {
     super(props);

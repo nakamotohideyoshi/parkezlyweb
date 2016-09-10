@@ -63,7 +63,7 @@ export const fields = [
   'plead_guilty_no_guilty',
 ]
 
-export default class BursarPanelTicketRatesForm extends React.Component {
+class BursarPanelTicketRatesForm extends React.Component {
 
   constructor(props) {
     super(props);

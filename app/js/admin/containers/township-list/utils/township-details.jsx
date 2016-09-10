@@ -45,7 +45,7 @@ const validate = values => {
 
 export let townshipData;
 
-export default class TownshipDetails extends React.Component {
+export class TownshipDetails extends React.Component {
   constructor(props) {
     super(props);
 

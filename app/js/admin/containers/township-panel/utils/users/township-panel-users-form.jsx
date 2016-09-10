@@ -35,7 +35,7 @@ export const fields = [
   'status'
 ]
 
-export default class TownshipPanelUsersForm extends React.Component {
+class TownshipPanelUsersForm extends React.Component {
 
   constructor(props) {
     super(props);

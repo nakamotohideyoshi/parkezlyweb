@@ -42,7 +42,7 @@ export const fields = [
   'state',
 ]
 
-export default class InspectorSearchTicketForm extends React.Component {
+class InspectorSearchTicketForm extends React.Component {
 
   constructor(props) {
     super(props);

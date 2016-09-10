@@ -19,7 +19,7 @@ import {transferImages} from '../../common/temp-scripts/transfer-s3-urls.js'
 class TownshipListRoot extends React.Component {
   constructor(props) {
     super(props);
-
+    
     SchemaFilterTest();
 
     this.state = {
@@ -31,6 +31,7 @@ class TownshipListRoot extends React.Component {
 
     this.handleFetch = this.handleFetch.bind(this);
     this.renderTownshipList = this.renderTownshipList.bind(this);
+    console.log("Testing new build")
   }
 
   componentWillMount() {

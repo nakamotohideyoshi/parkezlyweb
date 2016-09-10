@@ -65,7 +65,7 @@ export const fields = [
   'cheque_no',
 ]
 
-export default class BursarPanelTicketPaymentForm extends React.Component {
+class BursarPanelTicketPaymentForm extends React.Component {
 
   constructor(props) {
     super(props);
