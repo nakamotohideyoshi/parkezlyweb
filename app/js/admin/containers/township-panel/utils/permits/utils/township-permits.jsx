@@ -14,36 +14,12 @@ import {
 import Spinner from '../../../../../common/components/spinner.jsx';
 import {optionsSelectize} from '../../../../../common/components/options-selectize.js';
 
-import Griddle from 'griddle-react'
-import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
-import {customFilterComponent, customFilterFunction} from '../../../../../common/components/griddle-custom-filter.jsx'
-
-
 
 export const fields = [ 
 'user_id',
 'township_code',
 'permit_name',
 'name']
-
-class customColumnComponent extends React.Component {
-
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <div onClick={() => this.props.metadata.customComponentMetadata.renderEditModal(
-        this.props.rowData)}>
-        {this.props.data}
-      </div>
-    );
-  }
-}
-
-customColumnComponent.defaultProps = { "data": {}, "renderEditModal": null};
-
 
 class TownshipPermits extends React.Component {
 
@@ -53,19 +29,10 @@ class TownshipPermits extends React.Component {
     this.renderCreateModal = this.renderCreateModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
-    this.renderEditModal = this.renderEditModal.bind(this);
-
-    this.state = {
-      showEditDuplicateButtons: false,
-      parkingLocationCode: null,
-      showEditModal: false,
-      rowData: null,
-      selectizeOptions: {}
-    }
 
     var dt = datetime.create();
     var formattedDate = dt.format('m-d-Y H:M:S');
-    this.props.dispatch(change('township-permits', 'date_time', formattedDate));
+    this.props.dispatch(change('permit-types', 'date_time', formattedDate));
   }
 
   componentWillMount() {
@@ -91,9 +58,18 @@ class TownshipPermits extends React.Component {
     this.props.createTownshipPermitsList(data);
   }
 
-  renderEditModal(rowData) {
-    window.scrollTo(0, document.body.scrollHeight);
-    this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true})
+  renderPermitsData() {
+    let filteredPermits = this.props.townshipPermitsListFetched.data.resource;
+    return filteredPermits.map((permit) => {
+      return( 
+        <tr key={permit.id}>
+          <td>{permit.user_id}</td>
+          <td>{permit.township_code}</td>
+          <td>{permit.permit_name}</td>
+          <td>{permit.name}</td>
+        </tr>
+      );
+    });
   }
 
   renderCreateModal() {
@@ -183,108 +159,28 @@ class TownshipPermits extends React.Component {
   }
 
   renderPermitsTable() {
-    let filteredPermits = this.props.townshipPermitsListFetched.data.resource;
-
-    var renderEditModal = this.renderEditModal;
-    var metaDataFunction = () =>  {
-      return fields.map((data) => {
-        return(
-          {
-            "columnName": data,
-            "customComponent": customColumnComponent,
-            'customComponentMetadata': {
-                'renderEditModal': renderEditModal
-            }
-          }
-        );
-      });
-    }
-    var columnMeta = metaDataFunction()
-    
     return (
-      <Griddle
-          tableClassName={'table table-bordered table-striped table-hover'}
-          filterClassName={''}
-          useGriddleStyles={false}
-          results={filteredPermits}
-          showFilter={true}
-          showSettings={true}
-          settingsToggleClassName='btn btn-default'
-          useCustomPagerComponent={true}
-          customPagerComponent={ BootstrapPager }
-          useCustomFilterComponent={true} customFilterComponent={customFilterComponent}
-          useCustomFilterer={true} customFilterer={customFilterFunction}
-          columnMetadata={columnMeta}
-          />
-    ); 
-  }
-
-  renderEditDuplicateButtons(locationCode) {
-    return (
-      <div className="container" style={{marginTop: 40}}>
-        <a
-        onClick={() => {
-          this.setState({showEditModal: true})
-          $('#modal-township-facilities-edit').openModal(); 
-        }}
-        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
-          <i className="material-icons valign">edit</i>
-          <h4> Edit Township Permit: {locationCode} </h4>
-        </a>
-        <a
-        onClick={() => {
-          this.setState({showEditModal: true})
-          $('#modal-township-facilities-duplicate').openModal(); 
-        }}
-        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
-          <i className="material-icons valign">content_copy</i>
-          <h4> Duplicate Township Permit: {locationCode} </h4>
-        </a>
-
-        <a
-        onClick={() => $('#modal-delete').openModal() }
-        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
-          <i className="material-icons valign">delete</i>
-          <h4> Delete Township Permit: {locationCode} </h4>
-        </a>
-        <div id="modal-delete" className="modal" style={{overflowX: "hidden"}}>
-          <div className="modal-content">
-            <h4>Delete</h4>
-            <p>Are you sure you want to delete this record?</p>
-          </div>
-          <div className="modal-footer">
-            <div className="row marginless-row">
-              <div className="col s6 left">
-                <button 
-                  href="#" 
-                  className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
-              </div>
-              <div className="col s3">
-                <a className="waves-effect waves-light btn btn-red" 
-                onClick={() => {
-                  $('#modal-delete').closeModal()
-                }}>No</a>
-              </div>
-              <div className="col s3">
-                <a className="waves-effect waves-light btn btn-green" 
-                onClick={() => {
-                  $('#modal-delete').closeModal()
-                  ajaxDelete('manage_locations', this.state.rowData.id, this.handleSuccess);
-                  this.setState({showEditDuplicateButtons: false});
-                  window.scrollTo(0, 0);
-                }}>Yes</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
+      <div className="township-userlist-container">
+        <table className="highlight">
+          <thead>
+            <tr>
+              <th data-field="id">User ID</th>
+              <th data-field="id">Township Code</th>
+              <th data-field="price">Permit Name</th>
+              <th data-field="id">Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.renderPermitsData()}
+          </tbody>
+        </table>
       </div>
-    );
+    ); 
   }
 
   render() {
     return (
-      <div>
+      <div className="col s6">
         <nav>
           <div className="nav-wrapper nav-admin z-depth-2">
             <a className="brand-logo center">Township Permits</a>
@@ -304,8 +200,6 @@ class TownshipPermits extends React.Component {
           </div>
           {this.props.townshipUsersFetched.isLoading ? <div> </div> : this.renderCreateModal()}
         </div>
-         {this.state.showEditDuplicateButtons ? 
-                this.renderEditDuplicateButtons(this.state.rowData.id) : <div> </div>}
       </div>
     );
   }

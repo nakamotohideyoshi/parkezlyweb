@@ -11,35 +11,11 @@ import {
 } from '../../../../../actions/actions-township-panel.jsx'
 
 import Spinner from '../../../../../common/components/spinner.jsx';
-import Griddle from 'griddle-react'
-import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
-import {customFilterComponent, customFilterFunction} from '../../../../../common/components/griddle-custom-filter.jsx'
-import {ajaxSelectizeGet, ajaxSelectizeFilteredGet, ajaxDelete, ajaxGet, ajaxPost} from '../../../../../common/components/ajax-selectize.js'
-import PermitTypesForm from './permit-types-form'
+
+const potentialColors = [ 'Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Indigo', 'Violet' ]
 
 export const fields = [ 
-  'id',
-  'permit_type', 
-  'date_time'
-]
-
-class customColumnComponent extends React.Component {
-
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <div onClick={() => this.props.metadata.customComponentMetadata.renderEditModal(
-        this.props.rowData)}>
-        {this.props.data}
-      </div>
-    );
-  }
-}
-
-customColumnComponent.defaultProps = { "data": {}, "renderEditModal": null};
+  'permit_type', 'date_time']
 
 class PermitTypes extends React.Component {
 
@@ -49,24 +25,10 @@ class PermitTypes extends React.Component {
     this.renderPermitList = this.renderPermitList.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
-    this.renderEditModal = this.renderEditModal.bind(this);
-
-    this.state = {
-      showEditDuplicateButtons: false,
-      parkingLocationCode: null,
-      showEditModal: false,
-      rowData: null,
-      selectizeOptions: {}
-    }
 
     var dt = datetime.create();
     var formattedDate = dt.format('m-d-Y H:M:S');
     this.props.dispatch(change('permit-types', 'date_time', formattedDate));
-  }
-
-  renderEditModal(rowData) {
-    window.scrollTo(0, document.body.scrollHeight);
-    this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true})
   }
 
   componentWillMount() {
@@ -84,7 +46,6 @@ class PermitTypes extends React.Component {
     this.props.resetLoading();
     $('#modal-permit-type-create').closeModal();
     this.props.fetchTownshipPermitTypes();
-    $('#modal-success').openModal();
   }
 
   handleSubmit(data) {
@@ -115,7 +76,7 @@ class PermitTypes extends React.Component {
             </div>
 
             <div className="row">
-              <div className="col s6 admin-form-input">
+              <div className="col s12 admin-form-input">
                 <div className="form-group">
                   <label>Permit Type</label>
                   <input type="text" placeholder="Permit Type" {...permit_type}/>
@@ -126,7 +87,7 @@ class PermitTypes extends React.Component {
 
           <div className="modal-footer">
             <div className="row marginless-row">
-              <div className="col s12 center-align">
+              <div className="col s8">
                 <button 
                 type="submit" 
                 disabled={submitting} 
@@ -140,144 +101,25 @@ class PermitTypes extends React.Component {
 
   }
 
-  renderEditDuplicateButtons(locationCode) {
-    return (
-      <div className="container">
-        <a
-        onClick={() => {
-          this.setState({showEditModal: true})
-          $('#modal-permit-types-edit').openModal(); 
-        }}
-        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
-          <i className="material-icons valign">edit</i>
-          <h4> Edit Permit Type: {locationCode} </h4>
-        </a>
-        <a
-        onClick={() => {
-          this.setState({showEditModal: true})
-          $('#modal-permit-types-duplicate').openModal(); 
-        }}
-        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
-          <i className="material-icons valign">content_copy</i>
-          <h4> Duplicate Permit Type: {locationCode} </h4>
-        </a>
-
-        <a
-        onClick={() => $('#modal-delete').openModal() }
-        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
-          <i className="material-icons valign">delete</i>
-          <h4> Delete Permit Type: {locationCode} </h4>
-        </a>
-        <div id="modal-delete" className="modal" style={{overflowX: "hidden"}}>
-          <div className="modal-content">
-            <h4>Delete</h4>
-            <p>Are you sure you want to delete this record?</p>
-          </div>
-          <div className="modal-footer">
-            <div className="row marginless-row">
-              <div className="col s6 left">
-                <button 
-                  href="#" 
-                  className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
-              </div>
-              <div className="col s3">
-                <a className="waves-effect waves-light btn btn-red" 
-                onClick={() => {
-                  $('#modal-delete').closeModal()
-                }}>No</a>
-              </div>
-              <div className="col s3">
-                <a className="waves-effect waves-light btn btn-green" 
-                onClick={() => {
-                  $('#modal-delete').closeModal()
-                  ajaxDelete('permit_type', this.state.rowData.id, this.handleSuccess);
-                  this.setState({showEditDuplicateButtons: false});
-                  window.scrollTo(0, 0);
-                }}>Yes</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        { 
-          !this.state.showEditModal ?
-          <div></div> : 
-          <div>
-            <PermitTypesForm
-              initialValues={this.state.rowData} 
-              handleSuccess={this.handleSuccess}
-              modalName="modal-permit-types-edit" 
-              modalText="Edit a Permit Type" 
-              submitType="EDIT"
-              initialValues={this.state.rowData} 
-              rowData={this.state.rowData}
-              handleSuccess={this.handleSuccess}
-            />
-            <PermitTypesForm
-              initialValues={this.state.rowData} 
-              handleSuccess={this.handleSuccess}
-              modalName="modal-permit-types-duplicate" 
-              modalText="Duplicate a Permit Type" 
-              submitType="DUPLICATE"
-              initialValues={this.state.rowData} 
-              rowData={this.state.rowData}
-              handleSuccess={this.handleSuccess}
-            />
-          </div>
-        }
-
-      </div>
-    );
-  }
-
   renderPermitList() {
     let filteredTypes = this.props.townshipPermitTypesFetched.data.resource;
-
-    var renderEditModal = this.renderEditModal;
-    var metaDataFunction = () =>  {
-      return fields.map((data) => {
-        return(
-          {
-            "columnName": data,
-            "customComponent": customColumnComponent,
-            'customComponentMetadata': {
-                'renderEditModal': renderEditModal
-            }
-          }
-        );
-      });
-    }
-    var columnMeta = metaDataFunction()
+    return filteredTypes.map((type) => {
       return( 
-        <div>
-          <Griddle
-          tableClassName={'table table-bordered table-striped table-hover'}
-          filterClassName={''}
-          useGriddleStyles={false}
-          results={filteredTypes}
-          showFilter={true}
-          showSettings={true}
-          settingsToggleClassName='btn btn-default'
-          useCustomPagerComponent={true}
-          customPagerComponent={ BootstrapPager }
-          useCustomFilterComponent={true} customFilterComponent={customFilterComponent}
-          useCustomFilterer={true} customFilterer={customFilterFunction}
-          columnMetadata={columnMeta}
-          columns={[
-          'id', 
-          'permit_type', 
-          'date_time']}
-          />
+        <div key={type.id}>
+          <a className="collection-item waves-effect waves-dark">
+            <span className="title">PERMIT TYPE - {type.permit_type}</span>
+          </a>
         </div>
       );
+    });
   }
 
   render() {
     return (
-      <div className="col s12">
+      <div className="col s6">
         <nav>
           <div className="nav-wrapper nav-admin z-depth-2">
-            <a className="brand-logo center">Permit Types</a>
+            <a className="brand-logo center">Township Permit Types</a>
           </div>
         </nav>
         <div className="card">
@@ -298,19 +140,6 @@ class PermitTypes extends React.Component {
               style={{margin: 10}}>Add New Permit Type</a>
           </div>
             {this.renderCreateModal()}
-        </div>
-        {this.state.showEditDuplicateButtons ? 
-                this.renderEditDuplicateButtons(this.state.rowData.id) : <div> </div>}
-         <div id="modal-success" className="modal">
-          <div className="modal-content">
-            <h4>Success!</h4>
-            <p>You've successfully sent the request!</p>
-          </div>
-          <div className="modal-footer">
-            <button 
-            href="#" 
-            className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
-          </div>
         </div>
       </div>
     );
@@ -337,3 +166,33 @@ export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   fields
 })(PermitTypes));
 
+
+/*
+  var today = new Date();
+  var dd = today.getDate();
+  var mm = today.getMonth()+1; //January is 0!
+
+  var yyyy = today.getFullYear();
+  if(dd<10){
+      dd='0'+dd
+  } 
+  if(mm<10){
+      mm='0'+mm
+  } 
+  var today = yyyy + '-' + mm + '-' + dd + ' ' + time;
+
+  console.log(today);
+  console.log(today);
+
+  formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+  }
+*/

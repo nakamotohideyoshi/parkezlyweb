@@ -28,8 +28,9 @@ class LicensePlateField extends Component {
         hasError: true,
         errorType: "EMPTY"
       });
-      return;
+      return false;
     }
+    this.invalidate();
     return true;
   }
 

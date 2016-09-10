@@ -62,7 +62,7 @@ export const fields = [
   'paid_date',
 ]
 
-export default class CreateTicket extends React.Component {
+class CreateTicket extends React.Component {
 
   constructor(props) {
     super(props);

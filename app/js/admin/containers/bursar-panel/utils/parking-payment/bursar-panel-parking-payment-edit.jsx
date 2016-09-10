@@ -34,7 +34,7 @@ export const fields = [
 ]
 
 
-export default class BursarPanelParkingPaymentEdit extends React.Component {
+class BursarPanelParkingPaymentEdit extends React.Component {
 
   constructor(props) {
     super(props);

@@ -158,7 +158,7 @@ class TownshipPanelViolationCode extends React.Component {
           <a
             className="modal-trigger waves-effect waves-light btn valign" 
             onClick={() => $('#modal-violation-code-create').openModal()}
-            style={{margin: 10}}>Add New Violation Type</a>
+            style={{margin: 10}}>Add New Violation Type 123</a>
         </div>
       </div>
     );

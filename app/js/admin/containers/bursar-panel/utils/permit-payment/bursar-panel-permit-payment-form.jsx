@@ -57,7 +57,7 @@ export const fields = [
   'date_payment'
 ]
 
-export default class BursarPanelPermitPaymentForm extends React.Component {
+class BursarPanelPermitPaymentForm extends React.Component {
 
   constructor(props) {
     super(props);

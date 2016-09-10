@@ -7,13 +7,13 @@ class GrayButton extends Component {
   }
 
   render() {
-    const { link, children, ...otherProps } = this.props;
+    const { link, children, className, ...otherProps } = this.props;
     const validClassNames = classNames({
       "btn": true,
-      "gray-btn": true,
+      "gray-btn": !className,
       "waves-effect": true,
       "waves-light": true
-    });
+    }, className);
     return (
       <a
         href={link}
@@ -28,6 +28,7 @@ class GrayButton extends Component {
 
 GrayButton.PropTypes = {
   link: PropTypes.bool,
+  className: PropTypes.string,
   children: PropTypes.node
 };
 

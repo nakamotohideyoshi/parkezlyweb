@@ -14,6 +14,7 @@ const Wallet = (state = initialState, action) => {
         loading: true
       }
     case "FETCH_TRANSACTION_SUCCESS":
+    console.log(action);
       return {
         ...state,
         loading : false,

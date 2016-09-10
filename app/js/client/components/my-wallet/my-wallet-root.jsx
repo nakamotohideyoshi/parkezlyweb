@@ -63,8 +63,9 @@ class MyWallet extends Component {
     const { transactionsList } = this.props.wallet;
     let current_balance = 0;
     if(transactionsList.length > 0) {
-      current_balance = transactionsList[0].current_balance;
+      current_balance = transactionsList[0].new_balance;
     }
+
     return (
       <div className="modal modal-fixed-footer add-funds-modal" ref="add-funds-modal">
         <form method="post" action="/api/add-funds" ref="add-funds-form">
@@ -133,7 +134,7 @@ class MyWallet extends Component {
     const { transactionsList } = this.props.wallet;
     let current_balance = 0;
     if(transactionsList.length > 0) {
-      current_balance = transactionsList[0].current_balance;
+      current_balance = transactionsList[0].new_balance;
     }
     const notice = this.renderNotice();
     const transactions = transactionsList.map(this.renderTransaction);

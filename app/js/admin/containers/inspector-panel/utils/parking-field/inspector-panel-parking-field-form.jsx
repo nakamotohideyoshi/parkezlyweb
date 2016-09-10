@@ -71,7 +71,7 @@ export const fields = [
   'ipn_address',
 ]
 
-export default class InspectorPanelParkingFieldEdit extends React.Component {
+class InspectorPanelParkingFieldEdit extends React.Component {
 
   constructor(props) {
     super(props);
@@ -211,7 +211,9 @@ export default class InspectorPanelParkingFieldEdit extends React.Component {
       'address1',
       'address2',
       'city',
-      'zip',,
+      'state',
+      'zip',
+      'country',
       'lot_row',
       'lot_number',
       'ip',
@@ -286,7 +288,7 @@ export default class InspectorPanelParkingFieldEdit extends React.Component {
                         style={{marginTop: 5}}
                         transitionEnter = {true} 
                         onValueChange = {(value) => {
-                          dispatch(change('parking-field-form', 'country', value.value)); 
+                          dispatch(change('facilities-form', 'country', value.value)); 
                         }}/>
                     </div>
                   </div>
@@ -302,7 +304,7 @@ export default class InspectorPanelParkingFieldEdit extends React.Component {
                         style={{marginTop: 5}}
                         transitionEnter = {true} 
                         onValueChange = {(value) => {
-                          dispatch(change('parking-field-form', 'state', value.value)); 
+                          dispatch(change('facilities-form', 'state', value.value)); 
                         }}/>
                     </div>
                   </div>

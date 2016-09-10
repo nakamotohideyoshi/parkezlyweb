@@ -35,7 +35,7 @@ export const fields = [
   'township_code',
 ]
 
-export default class TownshipPanelHearingPlaceForm extends React.Component {
+class TownshipPanelHearingPlaceForm extends React.Component {
 
   constructor(props) {
     super(props);

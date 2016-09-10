@@ -33,7 +33,7 @@ export const fields = [
   'user_id',
 ]
 
-export default class BursarPanelParkingPaymentForm extends React.Component {
+class BursarPanelParkingPaymentForm extends React.Component {
   constructor(props) {
     super(props);
   }

@@ -8,7 +8,8 @@ import Body from "../../../common/components/body/body.jsx";
 import GrayButton from "../../../common/components/button/gray-button.jsx";
 import EmailField from "../../../common/components/fields/email-field.jsx";
 import PasswordField from "../../../common/components/fields/password-field.jsx";
-import { getUser, checkUser } from "../../actions/user.js";
+import Registration from "./registration-root.jsx";
+import { getUser, checkUser, registerValidationFail, completeRegistration } from "../../actions/user.js";
 import * as Texts from "./constants/texts.js";
 
 class SignIn extends Component {
@@ -17,6 +18,8 @@ class SignIn extends Component {
 
     this.loginUser = this.loginUser.bind(this);
     this.registerUser = this.registerUser.bind(this);
+    this.goToParking = this.goToParking.bind(this);
+    this.onRegistrationContinue = this.onRegistrationContinue.bind(this);
   }
 
   componentWillMount() {
@@ -81,6 +84,28 @@ class SignIn extends Component {
     }
   }
 
+  onRegistrationContinue() {
+    const { dispatch } = this.props;
+    const { regEmail, regPass } = this.props.user;
+    const isValid = this.refs["registration-form"].validate();
+    if(isValid) {
+
+      let userInfo = this.refs["registration-form"].getUserInfo();
+      userInfo.email = regEmail;
+      userInfo.password = regPass;
+      console.log(userInfo);
+      dispatch(registerValidationFail(false));
+      dispatch(completeRegistration(userInfo));
+    } else {
+      //console.log(" ----here ----- ");
+      dispatch(registerValidationFail(true));
+    }
+  }
+
+  goToParking() {
+    window.location = "/find-parking";
+  }
+
   renderNotice() {
     const {
       mode,
@@ -142,7 +167,7 @@ class SignIn extends Component {
   renderSkipLink() {
     return (
       <div className="skip-link">
-        <a href="#">SKIP THIS</a>
+        <a href="javascript:void(0)" onClick={this.goToParking}>SKIP THIS</a>
       </div>
     );
   }
@@ -155,6 +180,15 @@ class SignIn extends Component {
           <EmailField ref="email-address" placeholder="EMAIL ADDRESS"/>
           <PasswordField ref="user-password" placeholder="PASSWORD"/>
         </form>
+      </div>
+    );
+  }
+
+  renderRegistrationForm() {
+    const { registrationHasError } = this.props.user;
+    return (
+      <div className="sign-in-content">
+        <Registration onContinue={this.onRegistrationContinue} hasError={registrationHasError} ref="registration-form"/>
       </div>
     );
   }
@@ -178,8 +212,8 @@ class SignIn extends Component {
 
   render() {
     const authStatus = this.checkAuthStatus();
-    const { loading } = this.props.user;
-    const signInForm = this.renderSignInContent();
+    const { loading, regEmail } = this.props.user;
+    const signInForm = !regEmail ? this.renderSignInContent() : this.renderRegistrationForm();
     return !authStatus ? (
       <Body showHeader={true} loading={loading}>
         <div className="sign-in-root">

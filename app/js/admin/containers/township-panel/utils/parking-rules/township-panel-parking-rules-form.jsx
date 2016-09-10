@@ -55,7 +55,7 @@ export const fields = [
   'end_hour',
 ]
 
-export default class TownshipPanelParkingRulesForm extends React.Component {
+class TownshipPanelParkingRulesForm extends React.Component {
 
   constructor(props) {
     super(props);

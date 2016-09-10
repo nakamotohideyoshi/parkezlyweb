@@ -90,7 +90,7 @@ class customColumnComponent extends React.Component {
 
 customColumnComponent.defaultProps = { "data": {}, "renderEditModal": null, "approvedField": false};
 
-export default class TownshipPanelPermitRequests extends React.Component {
+class TownshipPanelPermitRequests extends React.Component {
 
   constructor(props) {
     super(props);

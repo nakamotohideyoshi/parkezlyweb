@@ -7,7 +7,7 @@ const initialState = {
   vehicleList: [],
   errorCode: null,
   errorMessage: null,
-  subErrorMessage: null
+  subErrorMessage: null,
 };
 
 const Vehicle = (state = {}, action) => {
@@ -54,6 +54,11 @@ const Vehicle = (state = {}, action) => {
       return {
         loading: false,
         ...action.error
+      }
+    case "DELETING_VEHICLE":
+      return {
+        ...state,
+        loading: action.status
       }
     default:
       return state;

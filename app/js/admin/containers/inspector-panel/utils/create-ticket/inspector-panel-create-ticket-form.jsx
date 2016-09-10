@@ -63,7 +63,7 @@ export const fields = [
   'paid_date',
 ]
 
-export default class InspectorSearchTicketForm extends React.Component {
+class InspectorSearchTicketForm extends React.Component {
 
   constructor(props) {
     super(props);
@@ -259,7 +259,9 @@ export default class InspectorSearchTicketForm extends React.Component {
               </div>
 
               <div className="row">
-              
+
+                
+
                 <AdminSelectize 
                 options={this.state.selectizeOptions}
                 objectKey={'user_id'} 

@@ -43,7 +43,7 @@ const validate = values => {
   return errors
 }
 
-export default class TownshipDetails extends React.Component {
+class TownshipDetails extends React.Component {
   constructor(props) {
     super(props);
 

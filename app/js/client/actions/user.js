@@ -75,7 +75,7 @@ const registrationFailed = (error) => {
   };
 };
 
-const registerUser = (userInfo) => {
+export const completeRegistration = (userInfo) => {
   return dispatch => {
     dispatch(initiateRegistration());
     return AuthAPI.registerUser(userInfo)
@@ -89,12 +89,20 @@ const registerUser = (userInfo) => {
   }
 };
 
+const saveUserInfo = (userInfo) => {
+  return {
+    type: Actions.SAVE_USER_INFO,
+    userInfo
+  };
+};
+
 export const checkUser = (userInfo) => {
   return dispatch => {
     dispatch(initiateRegistration());
     return AuthAPI.checkUser(userInfo)
       .then((response) => {
-        dispatch(registerUser(userInfo));
+        //dispatch(registerUser(userInfo));
+        dispatch(saveUserInfo(userInfo));
       })
       .catch((response) => {
         let errorCode = "503";
@@ -103,7 +111,6 @@ export const checkUser = (userInfo) => {
         if (response && response.data) {
           const { error } = response.data;
           if (error) {
-            const { error } = data;
             errorCode = error.code;
             errorMessage = error.message;
             subErrorMessage += error.context.email ?  error.context.email[0] : "";
@@ -118,4 +125,11 @@ export const checkUser = (userInfo) => {
         }));
       });
   }
-}
+};
+
+export const registerValidationFail = (status) => {
+  return {
+    type: Actions.REGISTER_VALIDATION_FAILED,
+    status
+  };
+};

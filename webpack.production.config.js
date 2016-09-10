@@ -14,9 +14,8 @@ module.exports = {
     inline: true
   },
   output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js',
-    publicPath: '/dist'
+    path: path.join(__dirname, 'dist/'),
+    filename: 'bundle.js'
   },
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
@@ -57,8 +56,8 @@ module.exports = {
         loaders: ['style', 'css', 'sass'],
         include: path.resolve(__dirname, 'app/')
       },
-      { test: /\.(jpe?g|png|gif|svg)$/, 
-        loader: 'url', 
+      { test: /\.(jpe?g|png|gif|svg)$/,
+        loader: "url",
         query: {limit: 10240} 
       }, {
         test: /\.woff(2)?$/,
