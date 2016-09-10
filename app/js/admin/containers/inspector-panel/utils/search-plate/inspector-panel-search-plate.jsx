@@ -61,7 +61,7 @@ export default class InspectorPanelSearchPlate extends React.Component {
         <div className="col s12 m9" style={{margin: 0, padding: 0}}>
           <SimpleSelect 
             options={parkedList} 
-            theme="default"
+            theme="searchbar"
             style={{marginTop: 0}}
             transitionEnter={true} 
             onValueChange={(value) => {
@@ -94,7 +94,7 @@ export default class InspectorPanelSearchPlate extends React.Component {
                   <div className="col s12 m9" style={{margin: 0, padding: 0}}>
                     <SimpleSelect 
                       options={[{label: "Loading...", value: "Loading..."}]} 
-                      theme="default"
+                      theme="searchbar"
                       style={{marginTop: 0}}
                       transitionEnter={true} 
                       onKeyPress={() => this.handleKeyPress()}

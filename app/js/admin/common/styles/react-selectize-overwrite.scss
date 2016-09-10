@@ -676,9 +676,169 @@
   margin: 4px 3px 3px 2px;
 }
 
-.react-selectize.default.root-node .react-selectize-control .react-selectize-search-field-and-selected-values {
+
+//Searchbar
+.react-selectize.searchbar.root-node .react-selectize-control .react-selectize-search-field-and-selected-values {
   overflow: hidden;
   width: calc(100% - 50px);
   height: 100px;
   font-size: 30px;
 }
+.react-selectize.searchbar {
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.react-selectize.searchbar.root-node .react-selectize-control {
+  background-color: #fff;
+  border: 1px solid;
+  border-color: #d9d9d9 #ccc #b3b3b3;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  font-size: 1em;
+
+}
+.react-selectize.searchbar.root-node .react-selectize-control .react-selectize-placeholder {
+  color: #aaa;
+  text-indent: 8px;
+}
+.react-selectize.searchbar.root-node .react-selectize-control .react-selectize-search-field-and-selected-values {
+  padding-left: 5px;
+
+}
+.react-selectize.searchbar.root-node.open.flipped .react-selectize-control {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+}
+.react-selectize.searchbar.root-node.open:not(.flipped) .react-selectize-control {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+.react-selectize.dropdown-menu-wrapper.searchbar {
+  overflow: hidden;
+}
+.react-selectize.dropdown-menu-wrapper.searchbar .dropdown-menu.custom-enter-active,
+.react-selectize.dropdown-menu-wrapper.searchbar .dropdown-menu.custom-leave-active {
+  -webkit-transition: -webkit-transform 0.2s 0s ease;
+  -moz-transition: -moz-transform 0.2s 0s ease;
+  -o-transition: -o-transform 0.2s 0s ease;
+  -ms-transition: -ms-transform 0.2s 0s ease;
+  transition: transform 0.2s 0s ease;
+}
+.react-selectize.dropdown-menu-wrapper.searchbar .dropdown-menu.flipped.custom-enter {
+  -webkit-transform: translateY(100%);
+  -moz-transform: translateY(100%);
+  -o-transform: translateY(100%);
+  -ms-transform: translateY(100%);
+  transform: translateY(100%);
+}
+.react-selectize.dropdown-menu-wrapper.searchbar .dropdown-menu.flipped.custom-enter-active {
+  -webkit-transform: translateY(0%);
+  -moz-transform: translateY(0%);
+  -o-transform: translateY(0%);
+  -ms-transform: translateY(0%);
+  transform: translateY(0%);
+}
+.react-selectize.dropdown-menu-wrapper.searchbar .dropdown-menu.flipped.custom-leave {
+  -webkit-transform: translateY(0%);
+  -moz-transform: translateY(0%);
+  -o-transform: translateY(0%);
+  -ms-transform: translateY(0%);
+  transform: translateY(0%);
+}
+.react-selectize.dropdown-menu-wrapper.searchbar .dropdown-menu.flipped.custom-leave-active {
+  -webkit-transform: translateY(100%);
+  -moz-transform: translateY(100%);
+  -o-transform: translateY(100%);
+  -ms-transform: translateY(100%);
+  transform: translateY(100%);
+}
+.react-selectize.dropdown-menu-wrapper.searchbar .dropdown-menu:not(.flipped).custom-enter {
+  -webkit-transform: translateY(-100%);
+  -moz-transform: translateY(-100%);
+  -o-transform: translateY(-100%);
+  -ms-transform: translateY(-100%);
+  transform: translateY(-100%);
+}
+.react-selectize.dropdown-menu-wrapper.searchbar .dropdown-menu:not(.flipped).custom-enter-active {
+  -webkit-transform: translateY(0%);
+  -moz-transform: translateY(0%);
+  -o-transform: translateY(0%);
+  -ms-transform: translateY(0%);
+  transform: translateY(0%);
+}
+.react-selectize.dropdown-menu-wrapper.searchbar .dropdown-menu:not(.flipped).custom-leave {
+  -webkit-transform: translateY(0%);
+  -moz-transform: translateY(0%);
+  -o-transform: translateY(0%);
+  -ms-transform: translateY(0%);
+  transform: translateY(0%);
+}
+.react-selectize.dropdown-menu-wrapper.searchbar .dropdown-menu:not(.flipped).custom-leave-active {
+  -webkit-transform: translateY(-100%);
+  -moz-transform: translateY(-100%);
+  -o-transform: translateY(-100%);
+  -ms-transform: translateY(-100%);
+  transform: translateY(-100%);
+}
+.react-selectize.dropdown-menu.searchbar {
+  background: #fff;
+  border: 1px solid #ccc;
+  margin-top: -1px;
+}
+.react-selectize.dropdown-menu.searchbar.flipped {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+.react-selectize.dropdown-menu.searchbar:not(.flipped) {
+  border-color: #b3b3b3 #ccc #d9d9d9;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+.react-selectize.dropdown-menu.searchbar .no-results-found {
+  color: #aaa !important;
+  font-style: oblique;
+  padding: 8px 10px;
+}
+.react-selectize.dropdown-menu.searchbar .simple-group-title {
+  background-color: #fafafa;
+  padding: 8px 8px;
+}
+.react-selectize.dropdown-menu.searchbar .option-wrapper.highlight {
+  background: #f2f9fc;
+  color: #333;
+}
+.react-selectize.dropdown-menu.searchbar .option-wrapper .simple-option {
+  color: #666;
+  cursor: pointer;
+  padding: 8px 10px;
+}
+.react-selectize.dropdown-menu.searchbar .option-wrapper .simple-option.not-selectable {
+  background-color: #f8f8f8;
+  color: #999;
+  cursor: default;
+  font-style: oblique;
+  text-shadow: 0px 1px 0px #fff;
+}
+.multi-select.react-selectize.searchbar.root-node .simple-value {
+  background: #f2f9fc;
+  border: 1px solid #c9e6f2;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  color: #08c;
+}
+.simple-select.react-selectize.searchbar.root-node.open .react-selectize-control {
+  background-color: #fff;
+  width: 100%;
+}
+.simple-select.react-selectize.searchbar.root-node:not(.open) .react-selectize-control {
+  background-color: #f9f9f9;
+  background-image: -webkit-linear-gradient(top, #fefefe, #f2f2f2);
+  background-image: -moz-linear-gradient(top, #fefefe, #f2f2f2);
+  background-image: -o-linear-gradient(top, #fefefe, #f2f2f2);
+  background-image: -ms-linear-gradient(top, #fefefe, #f2f2f2);
+  background-image: linear-gradient(to bottom, #fefefe, #f2f2f2);
+}
+//searchbar
