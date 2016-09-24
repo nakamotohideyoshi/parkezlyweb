@@ -17,7 +17,9 @@ const ConfirmationScreen = (props) => {
     country,
     parkedTime,
     expiresAt,
-    onExit
+    onExit,
+    onPrint,
+    onRenew
   } = props;
 
   return (
@@ -76,13 +78,22 @@ const ConfirmationScreen = (props) => {
         Exit Parking
       </GrayButton>
 
+      <GrayButton className="gray-btn margin-bottom-10" onClick={onRenew}>
+        Renew
+      </GrayButton>
+
       <GrayButton className="blue-btn margin-bottom-10" onClick={null}>
         Directions to my vehicle
+      </GrayButton>
+
+      <GrayButton className="red-btn margin-bottom-10" onClick={onPrint}>
+        Print Entry Ticket
       </GrayButton>
 
       <GrayButton onClick={null}>
         Hide
       </GrayButton>
+
     </div>
   );
 };

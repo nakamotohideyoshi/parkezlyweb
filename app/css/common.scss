@@ -142,6 +142,16 @@ a {
     }
   }
 
+  &.red-btn {
+    background: $red !important;
+    color: $white; 
+    display: block;
+
+    &.disabled {
+      background: #DFDFDF !important;
+    }
+  }
+
 }
 
 /* Menu Icon Classes */
