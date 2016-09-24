@@ -50,7 +50,7 @@ export const fields = [
 
 
 
-export default class TownshipPermitsForm extends React.Component {
+class TownshipPermitsForm extends React.Component {
 
   constructor(props) {
     super(props);

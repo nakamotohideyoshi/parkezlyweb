@@ -31,7 +31,7 @@ export const fields = [
 
 
 
-export default class PermitTypesForm extends React.Component {
+class PermitTypesForm extends React.Component {
 
   constructor(props) {
     super(props);
