@@ -113,13 +113,7 @@ class BursarPanelTicketPaymentForm extends React.Component {
   }
 
   componentWillMount() {
-    ajaxSelectizeGet('manage_locations', 'location_code', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('scheme_type', 'scheme_type', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('payment_type', 'pay_method', this.selectizeOptionsUpdate);
     ajaxSelectizeGet('township_users', 'user_id', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('township_users', 'user_name', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('user_vehicles', 'plate_no', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('locations_rate', 'rate', this.selectizeOptionsUpdate);
   }
 
   componentDidUpdate() {
@@ -243,75 +237,11 @@ class BursarPanelTicketPaymentForm extends React.Component {
 
               <div className="row">
 
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'pay_method'} 
-                formName={'ticket-payment-form'} 
-                fieldName={'pay_method'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'location_code'} 
-                formName={'ticket-payment-form'} 
-                fieldName={'location_code'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'scheme_type'} 
-                formName={'ticket-payment-form'} 
-                fieldName={'scheme_type'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'pay_method'} 
-                formName={'ticket-payment-form'} 
-                fieldName={'pay_method'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
                 <AdminSelectize 
                 options={this.state.selectizeOptions}
                 objectKey={'user_id'} 
                 formName={'ticket-payment-form'} 
                 fieldName={'user_id'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'user_name'} 
-                formName={'ticket-payment-form'} 
-                fieldName={'user_name'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'plate_no'} 
-                formName={'ticket-payment-form'} 
-                fieldName={'plate_no'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'rate'} 
-                formName={'ticket-payment-form'} 
-                fieldName={'rate'}
                 defaultData={this.props.rowData}
                 dispatch={dispatch} 
                 />

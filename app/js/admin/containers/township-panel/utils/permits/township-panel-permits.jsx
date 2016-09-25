@@ -9,6 +9,7 @@ import PermitTypes from './utils/permit-types.jsx'
 import ParkingPermits from './utils/parking-permits.jsx'
 import TownshipPermits from './utils/township-permits.jsx'
 import LocationsRate from './utils/locations-rate.jsx'
+import Subscriptions from './utils/subscriptions.jsx'
 
 import {Tabbordion, Panel} from 'react-tabbordion'
 
@@ -32,16 +33,25 @@ export default class TownshipPanelPermits extends React.Component {
           <div style={{marginTop: 40}}>
             <div className="row marginless-row">
               <Tabbordion className="traditional-tab col s12 z-depth-2" classNames={classNames} initialIndex={0} name="tabs">
-                <Panel title={<span>Township Permits</span>}>
+                <Panel title={<span>Permit Types</span>}>
                   <div className="row marginless-row" style={{marginTop: 40}}>
-                    <PermitTypes className="col s6" townshipCode={this.props.townshipCode} />
-                    <TownshipPermits className="col s6" townshipCode={this.props.townshipCode} />
+                    <PermitTypes className="col s12" townshipCode={this.props.townshipCode} />
                   </div>  
                 </Panel>
-                <Panel title={<span>Parking Permits</span>}>
-                  <div className="row marginless-row">
-                    <ParkingPermits townshipCode={this.props.townshipCode} />   
-                  </div>
+                <Panel title={<span>Township Permits</span>}>
+                    <div className="row marginless-row" style={{marginTop: 40}}>
+                      <TownshipPermits className="col s12" townshipCode={this.props.townshipCode} />
+                    </div>
+                </Panel>
+                <Panel title={<span>Locations Rate</span>}>
+                    <div className="row marginless-row" style={{marginTop: 40}}>
+                      <LocationsRate className="col s12" townshipCode={this.props.townshipCode} />
+                    </div>
+                </Panel>
+                <Panel title={<span>Subscriptions</span>}>
+                    <div className="row marginless-row" style={{marginTop: 40}}>
+                      <Subscriptions className="col s12" townshipCode={this.props.townshipCode} />
+                    </div>
                 </Panel>
               </Tabbordion>
             </div>

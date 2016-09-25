@@ -1,65 +1,50 @@
 import React from 'react';
-import { reduxForm, change } from 'redux-form'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
+import { reduxForm, change } from 'redux-form'
 import moment from 'moment'
-import {SimpleSelect} from "react-selectize"
-import { browserHistory } from 'react-router'
-import {createFilter} from 'react-search-input';
 
-import Body from "../../../../../common/components/body/body.jsx"
-import Spinner from '../../../../common/components/spinner.jsx'
-import {optionsSelectize} from '../../../../common/components/options-selectize.js'
+import {SimpleSelect} from 'react-selectize'
 
 import {
-  fetchTownshipTownshipPermits, 
-  createTownshipTownshipPermits,  
-  resetLoading
-} from '../../../../actions/actions-township-panel.jsx'
+        fetchTownshipPermitsList, 
+        editTownshipPermitsList,
+        createTownshipPermitsList,
+        resetLoading
+      } from '../../../../../actions/actions-township-panel.jsx'
+import {fetchTownshipSchemeTypes} from '../../../../../actions/actions-township-common.jsx'
+import {fetchTownshipList} from '../../../../../actions/actions-township.js';
 
-import {fetchTownshipSchemeTypes} from '../../../../actions/actions-township-common.jsx'
+import Spinner from '../../../../../common/components/spinner.jsx';
+import {optionsSelectize} from '../../../../../common/components/options-selectize.js';
 
-import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import Griddle from 'griddle-react'
-import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
+import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
+import {customFilterComponent, customFilterFunction} from '../../../../../common/components/griddle-custom-filter.jsx'
+import {ajaxSelectizeGet, ajaxSelectizeFilteredGet, ajaxDelete, ajaxGet, ajaxPost} from '../../../../../common/components/ajax-selectize.js'
+import AdminSelectize from '../../../../../common/components/admin-selectize.jsx'
 
-import { ajaxSelectizeGet, ajaxDelete } from '../../../../common/components/ajax-selectize.js'
-import AdminSelectize from '../../../../common/components/admin-selectize.jsx'
-import {countries, states} from '../../../../constants/countries.js'
-
-export const fields = [ 
-  'id',  
-  'date_time', 
-  'township_code', 
-  'dd',  
-  'location_name', 
-  'location_type', 
-  'full_address',  
-  'intersect_road1', 
-  'intersect_road2', 
-  'rows',  
-  'lots_per_rows', 
-  'total_lots',  
-  'parking_rate',  
-  'show_location', 
-  'country', 
-  'ff',  
-  'location_code', 
-  'state',
+const fields = [
+'id',
+'date_time',
+'user_id',
+'township_code',
+'permit_name',
+'name',
+'user_name',
 ]
 
-
-
-export default class TownshipPermitsForm extends React.Component {
+class TownshipPermitsForm extends React.Component {
 
   constructor(props) {
     super(props);
 
-    this.state = {
+     this.state = {
       showEditDuplicateButtons: false,
       parkingLocationCode: null,
       showEditModal: false,
       rowData: null,
+      selectizeOptions: {}
     }
 
     this.tempInputsEdit = this.tempInputsEdit.bind(this);
@@ -72,18 +57,17 @@ export default class TownshipPermitsForm extends React.Component {
   handleSubmit(data) {
     
     $('#' + this.props.modalName).closeModal();
-    $('#modal-success').openModal();
-    this.props.dispatch(change('facilities-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
+    this.props.dispatch(change('township-permits-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
 
     switch(this.props.submitType) {
       case "CREATE":
-        this.props.createTownshipTownshipPermits(data);
+        this.props.createTownshipPermitsList(data);
         break;
       case "EDIT":
-        this.props.editTownshipTownshipPermits(data, data.id);
+        this.props.editTownshipPermitsList(data, data.id);
         break;
       case "DUPLICATE":
-        this.props.createTownshipTownshipPermits(data);
+        this.props.createTownshipPermitsList(data);
         break;
       default:
         console.log("No valid submit type was provided.");
@@ -92,19 +76,18 @@ export default class TownshipPermitsForm extends React.Component {
   }
 
 
-  selectizeOptionsUpdate(test, keyName) {
-    var optionsDataObject = {[keyName]: test};
+  selectizeOptionsUpdate(valueName, keyName) {
+    var optionsDataObject = {[keyName]: valueName};
     Object.assign(this.state.selectizeOptions, optionsDataObject);
     this.forceUpdate();
   }
 
   componentWillMount() {
-    ajaxSelectizeGet('townships_manager', 'manager_id', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('locations_rate', 'rate', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('location_lot', 'location_code', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('township_users', 'user_id', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('township_users', 'user_name', this.selectizeOptionsUpdate);
 
-    this.props.dispatch(change('facilities-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
-    this.props.dispatch(change('facilities-form', 'township_code', this.props.townshipCode));
+    this.props.dispatch(change('township-permits-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
+    //ajaxSelectizeGet('townships_manager', 'manager_id', this.selectizeOptionsUpdate);
   }
 
   componentDidMount() {
@@ -117,23 +100,23 @@ export default class TownshipPermitsForm extends React.Component {
     $('.date_time')
     .bootstrapMaterialDatePicker({ time: true, format : 'YYYY-MM-DD HH:mm:ss' })
     .on('change', function(event) {
-      dispatch(change('facilities-form', 'date_time', event.target.value)); 
+      dispatch(change('township-permits-form', 'date_time', event.target.value)); 
     });
   }
 
   componentDidUpdate() {
-    if (this.props.townshipTownshipPermitsCreated.isLoading) {
-      } else if (!this.props.townshipTownshipPermitsCreated.isLoading) {
+    if (this.props.townshipPermitsListCreated.isLoading) {
+      } else if (!this.props.townshipPermitsListCreated.isLoading) {
         this.handleSuccess();
       }
 
-    if (this.props.townshipTownshipPermitsEdited.isLoading) {
-      } else if (!this.props.townshipTownshipPermitsEdited.isLoading) {
+    if (this.props.townshipPermitsListEdited.isLoading) {
+      } else if (!this.props.townshipPermitsListEdited.isLoading) {
         this.handleSuccess();
       }
 
-    if (this.props.townshipTownshipPermitsCreated.isLoading) {
-      } else if (!this.props.townshipTownshipPermitsEdited.isLoading) {
+    if (this.props.townshipPermitsListCreated.isLoading) {
+      } else if (!this.props.townshipPermitsListEdited.isLoading) {
         this.handleSuccess();
       }
   };
@@ -146,41 +129,22 @@ export default class TownshipPermitsForm extends React.Component {
   tempInputsEdit(initialValues) {
      const {
       fields: {  
-        id,  
-        date_time, 
-        township_code, 
-        dd,  
-        location_name, 
-        location_type, 
-        full_address,  
-        intersect_road1, 
-        intersect_road2, 
-        rows,  
-        lots_per_rows, 
-        total_lots,  
-        parking_rate,  
-        show_location, 
-        country, 
-        ff,  
-        location_code, 
-        state,
+        id,
+        date_time,
+        user_id,
+        township_code,
+        permit_name,
+        name,
+        user_name,
       },
       resetForm,
       submitting,
       dispatch
     } = this.props;
 
-    const fields = [     
-      'dd',   
-      'location_type', 
-      'full_address',  
-      'intersect_road1', 
-      'intersect_road2', 
-      'rows',  
-      'lots_per_rows', 
-      'total_lots',   
-      'show_location', 
-      'ff',  
+    const fields = [
+    'township_code',
+    'permit_name',
     ]
 
     return fields.map((data) => {
@@ -203,12 +167,7 @@ export default class TownshipPermitsForm extends React.Component {
       dispatch
     } = this.props
 
-    const countriesList = countries.map((data) => {
-      return {label: data, value: data}
-    })
-    const statesList = states.map((data) => {
-      return {label: data, value: data}
-    })
+
 
     return (
       <div>
@@ -224,62 +183,25 @@ export default class TownshipPermitsForm extends React.Component {
               </div>
 
               <div className="row"> 
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label>Country</label>
-                    <div clasName="input-field col s12">
-                      <SimpleSelect 
-                        options = {countriesList} 
-                        placeholder = "Country"
-                        theme = "material"
-                        style={{marginTop: 5}}
-                        transitionEnter = {true} 
-                        onValueChange = {(value) => {
-                          dispatch(change('facilities-form', 'country', value.value)); 
-                        }}/>
-                    </div>
-                  </div>
-                </div>
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label>State</label>
-                    <div clasName="input-field col s12">
-                      <SimpleSelect 
-                        options = {statesList} 
-                        placeholder = "State"
-                        theme = "material"
-                        style={{marginTop: 5}}
-                        transitionEnter = {true} 
-                        onValueChange = {(value) => {
-                          dispatch(change('facilities-form', 'state', value.value)); 
-                        }}/>
-                    </div>
-                  </div>
-                </div>
-                
+
+                <AdminSelectize 
+                options={this.state.selectizeOptions}
+                objectKey={'user_name'} 
+                formName={'township-permits-form'} 
+                fieldName={'user_name'}
+                defaultData={this.props.rowData}
+                dispatch={dispatch} 
+                />
+                <AdminSelectize 
+                options={this.state.selectizeOptions}
+                objectKey={'user_id'} 
+                formName={'township-permits-form'} 
+                fieldName={'user_id'}
+                defaultData={this.props.rowData}
+                dispatch={dispatch} 
+                />
                 {this.tempInputsEdit(this.props.initialValues)}
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'rate'} 
-                formName={'facilities-form'} 
-                fieldName={'parking_rate'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'location_code'} 
-                formName={'parking-rules-form'} 
-                fieldName={'location_code'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label htmlFor="date_time">date_time</label>
-                    <input id="date_time" className="date_time" type="text"/>
-                  </div>
-                </div>
+                
               </div>
             </div>
 
@@ -302,23 +224,23 @@ export default class TownshipPermitsForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    townshipTownshipPermitsFetched: state.townshipTownshipPermitsFetched,
-    townshipTownshipPermitsCreated: state.townshipTownshipPermitsCreated,
-    townshipTownshipPermitsEdited: state.townshipTownshipPermitsEdited,
+    townshipPermitsListFetched: state.townshipPermitsListFetched,
+    townshipPermitsListCreated: state.townshipPermitsListCreated,
+    townshipPermitsListEdited: state.townshipPermitsListEdited,
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    fetchTownshipTownshipPermits, 
-    editTownshipTownshipPermits, 
-    createTownshipTownshipPermits, 
+    fetchTownshipPermitsList, 
+    editTownshipPermitsList, 
+    createTownshipPermitsList, 
     resetLoading
   }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-  form: 'permit-types-form',
+  form: 'township-permits-form',
   fields,
   overwriteOnInitialValuesChange : true
 })(TownshipPermitsForm));

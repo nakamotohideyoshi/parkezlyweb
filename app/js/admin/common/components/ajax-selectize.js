@@ -61,10 +61,10 @@ export const ajaxPut = function(tableName, id, data, componentFunction) {
   })
 };
 
-export const ajaxPost = function(tableName, data) {
+export const ajaxPost = function(tableName, data, componentFunction) {
   var fullUrl = tableName;
   AXIOS_INSTANCE.post(fullUrl, data).then((response) => {
-    //componentFunction(tableName);
+    componentFunction(tableName);
   })
 };
 

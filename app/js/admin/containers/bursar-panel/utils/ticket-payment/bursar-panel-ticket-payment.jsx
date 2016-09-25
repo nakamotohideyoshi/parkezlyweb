@@ -419,6 +419,14 @@ class BursarPanelTicketPayment extends React.Component {
     );
   }
 
+  renderButtonClicked() {
+    return(
+      <div>
+        
+      </div>
+    )
+  }
+
   render() {
     return(
       <div>

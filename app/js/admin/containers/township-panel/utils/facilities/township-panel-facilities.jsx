@@ -102,6 +102,7 @@ class TownshipPanelFacilities extends React.Component {
   };
 
   handleSuccess(){
+    console.log("Test12345");
     this.props.resetLoading();
     $('#modal-facilities-create').closeModal();
     $('#modal-success').openModal();
@@ -287,7 +288,7 @@ class TownshipPanelFacilities extends React.Component {
         />
 
         <div className="divider"/> 
-
+        
         <div className="center-align">
 
           <a

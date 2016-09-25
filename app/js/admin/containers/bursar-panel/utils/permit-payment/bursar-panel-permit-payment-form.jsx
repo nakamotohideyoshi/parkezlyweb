@@ -109,9 +109,9 @@ class BursarPanelPermitPaymentForm extends React.Component {
   }
 
   componentWillMount() {
-    ajaxSelectizeGet('permit_type', 'permit_type', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('user_profile', 'user_id', this.selectizeOptionsUpdate);
-    ajaxSelectizeFilteredGet('parking_permits', 'permit_name', this.props.townshipCode, this.selectizeOptionsUpdate);
+    //ajaxSelectizeGet('permit_type', 'permit_type', this.selectizeOptionsUpdate);
+    //ajaxSelectizeGet('user_profile', 'user_id', this.selectizeOptionsUpdate);
+    //ajaxSelectizeFilteredGet('parking_permits', 'permit_name', this.props.townshipCode, this.selectizeOptionsUpdate);
 
     ajaxGet('parking_permits', (table) => {
       this.setState({permitData: table.data.resource});

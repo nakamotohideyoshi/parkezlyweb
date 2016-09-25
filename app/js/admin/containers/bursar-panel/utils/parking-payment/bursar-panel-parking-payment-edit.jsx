@@ -228,7 +228,7 @@ class BursarPanelParkingPaymentEdit extends React.Component {
                   <button fetchTownshipFacilitie
                   type="submit" 
                   disabled={submitting} 
-                  className="waves-effect waves-light btn">Edit Ticket</button>
+                  className="waves-effect waves-light btn">Edit Payment</button>
                 </div>
               </div>
             </div>
@@ -241,8 +241,8 @@ class BursarPanelParkingPaymentEdit extends React.Component {
 
               <div className="row">
                 <div className="center-align">
-                  <h4>Duplicate a Ticket</h4>
-                  <p className="center-align">Duplicate a Ticket by filling out the fields.</p>
+                  <h4>Duplicate a Payment</h4>
+                  <p className="center-align">Duplicate a Payment by filling out the fields.</p>
                 </div>
               </div>
 
@@ -313,7 +313,7 @@ class BursarPanelParkingPaymentEdit extends React.Component {
                   <button 
                   type="submit" 
                   disabled={submitting} 
-                  className="waves-effect waves-light btn">Duplicate Ticket</button>
+                  className="waves-effect waves-light btn">Duplicate Payment</button>
                 </div>
               </div>
             </div>

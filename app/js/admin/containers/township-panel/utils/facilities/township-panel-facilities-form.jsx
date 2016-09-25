@@ -23,7 +23,7 @@ import Griddle from 'griddle-react'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 
 import { ajaxSelectizeGet, ajaxDelete } from '../../../../common/components/ajax-selectize.js'
-import AdminSelectize from '../../../../common/components/admin-selectize.jsx'
+import AdminSelectize from '../../../../common/components/admin-selectize.jsx';
 import {countries, states} from '../../../../constants/countries.js'
 
 export const fields = [ 
