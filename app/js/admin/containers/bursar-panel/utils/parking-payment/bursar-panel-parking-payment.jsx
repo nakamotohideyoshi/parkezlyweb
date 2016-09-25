@@ -76,7 +76,6 @@ class BursarPanelParkingPayment extends React.Component {
   selectizeOptionsUpdate(test, keyName) {
     var optionsDataObject = {[keyName]: test};
     Object.assign(this.state.selectizeOptions, optionsDataObject);
-    //console.log(this.state.selectizeOptions)
     this.forceUpdate();
   }
 
@@ -93,6 +92,7 @@ class BursarPanelParkingPayment extends React.Component {
     ajaxSelectizeGet('township_users', 'user_name', this.selectizeOptionsUpdate);
     ajaxSelectizeGet('user_vehicles', 'plate_no', this.selectizeOptionsUpdate);
     ajaxSelectizeGet('locations_rate', 'rate', this.selectizeOptionsUpdate);
+
     this.props.dispatch(change('parking-payment', 'date', moment().format('YYYY-MM-DD HH:mm:ss')));
   }
 

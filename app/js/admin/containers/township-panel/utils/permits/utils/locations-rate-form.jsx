@@ -41,7 +41,7 @@ const fields = [
   'permit_type',
 ]
 
-export default class LocationsRateForm extends React.Component {
+class LocationsRateForm extends React.Component {
 
   constructor(props) {
     super(props);

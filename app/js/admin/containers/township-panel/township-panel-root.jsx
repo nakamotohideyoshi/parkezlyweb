@@ -1,7 +1,9 @@
 import React from 'react';
 import Body from "../../../common/components/body/body.jsx";
+import Spinner from '../../common/components/spinner.jsx';
 import TownshipDetails from './utils/township-panel-details.jsx';
 import TownshipPanelTiles from './utils/township-panel-tiles.jsx';
+
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -41,17 +43,7 @@ class TownshipPanelRoot extends React.Component {
       return (
         <div className="center-align" style={{marginTop: 40}}>
           <div className="card">
-            <div className="preloader-wrapper big active">
-              <div className="spinner-layer spinner-green-only">
-                <div className="circle-clipper left">
-                  <div className="circle"></div>
-                </div><div className="gap-patch">
-                  <div className="circle"></div>
-                </div><div className="circle-clipper right">
-                  <div className="circle"></div>
-                </div>
-              </div>
-            </div>
+            <div className="center-align"> <Spinner /> </div> 
           </div>
         </div>
       );

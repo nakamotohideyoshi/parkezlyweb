@@ -17,6 +17,7 @@ import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import {customFilterComponent, customFilterFunction} from '../../../../../common/components/griddle-custom-filter.jsx'
 
 import {ajaxSelectizeGet, ajaxSelectizeFilteredGet, ajaxDelete, ajaxGet, ajaxPost} from '../../../../../common/components/ajax-selectize.js'
+import SubscriptionsForm from './subscriptions-form'
 
 
 export const fields = [ 
@@ -89,7 +90,7 @@ class Subscriptions extends React.Component {
     this.props.dispatch(change('subscriptions', 'date_time', formattedDate));
   }
 
-   renderEditModal(rowData) {
+  renderEditModal(rowData) {
     window.scrollTo(0, document.body.scrollHeight);
     this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true})
   }
@@ -156,7 +157,7 @@ class Subscriptions extends React.Component {
         <a
         onClick={() => {
           this.setState({showEditModal: true})
-          $('#modal-township-facilities-edit').openModal(); 
+          $('#modal-subscriptions-edit').openModal(); 
         }}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">edit</i>
@@ -165,7 +166,7 @@ class Subscriptions extends React.Component {
         <a
         onClick={() => {
           this.setState({showEditModal: true})
-          $('#modal-township-facilities-duplicate').openModal(); 
+          $('#modal-subscriptions-duplicate').openModal(); 
         }}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">content_copy</i>
@@ -200,7 +201,7 @@ class Subscriptions extends React.Component {
                 <a className="waves-effect waves-light btn btn-green" 
                 onClick={() => {
                   $('#modal-delete').closeModal()
-                  ajaxDelete('manage_locations', this.state.rowData.id, this.handleSuccess);
+                  ajaxDelete('subscriptions', this.state.rowData.id, this.handleSuccess);
                   this.setState({showEditDuplicateButtons: false});
                   window.scrollTo(0, 0);
                 }}>Yes</a>
@@ -208,7 +209,32 @@ class Subscriptions extends React.Component {
             </div>
           </div>
         </div>
-
+        { 
+          !this.state.showEditModal ?
+          <div></div> : 
+          <div>
+            <SubscriptionsForm
+              initialValues={this.state.rowData} 
+              handleSuccess={this.handleSuccess}
+              modalName="modal-subscriptions-edit" 
+              modalText="Edit a Subscription" 
+              submitType="EDIT"
+              initialValues={this.state.rowData} 
+              rowData={this.state.rowData}
+              handleSuccess={this.handleSuccess}
+            />
+            <SubscriptionsForm
+              initialValues={this.state.rowData} 
+              handleSuccess={this.handleSuccess}
+              modalName="modal-subscriptions-duplicate" 
+              modalText="Duplicate a Subscription" 
+              submitType="DUPLICATE"
+              initialValues={this.state.rowData} 
+              rowData={this.state.rowData}
+              handleSuccess={this.handleSuccess}
+            />
+          </div>
+        }
       </div>
     );
   }
@@ -239,6 +265,18 @@ class Subscriptions extends React.Component {
               style={{margin: 10}}>Add New Subscriptions</a>
           </div>
 
+        </div>
+
+        <div id="modal-success" className="modal">
+          <div className="modal-content">
+            <h4>Success!</h4>
+            <p>You've successfully sent the request!</p>
+          </div>
+          <div className="modal-footer">
+            <button 
+            href="#" 
+            className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
+          </div>
         </div>
 
         {this.state.showEditDuplicateButtons ? 
