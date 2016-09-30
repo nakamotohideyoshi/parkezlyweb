@@ -109,7 +109,7 @@ class Nearby extends Component {
 
   renderMyLocationIcon() {
     return (
-      <div className="my-location-marker" onClick={this.goToInitialLocation}>
+      <div className="my-location-marker-nearby" onClick={this.goToInitialLocation}>
       </div>
     );
   }
@@ -164,11 +164,13 @@ class Nearby extends Component {
     const { locationsList } = this.props.LocationsList.Locations;
     const locations = locationsList.map(this.renderLocation);
     return (
+      <div className="locations-select-list">
         <SimpleSelect
           onValueChange={e => this.selectLocation(e)}
           placeholder="Select Location">
           {locations}
         </SimpleSelect>
+      </div>
     );
   }
 
