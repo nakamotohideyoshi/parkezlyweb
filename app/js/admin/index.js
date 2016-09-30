@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from "react-dom";
 import { Router, Route, Link, hashHistory, browserHistory } from "react-router";
 
-import AdminLogin from "./components/login/login-root.jsx";
 import TownshipListController from './containers/township-list/township-list-controller.jsx';
 
 import {

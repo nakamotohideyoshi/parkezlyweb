@@ -50,6 +50,7 @@ class PermitTypes extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
     this.renderEditModal = this.renderEditModal.bind(this);
+    this.renderCreateModal = this.renderCreateModal.bind(this);
 
     this.state = {
       showEditDuplicateButtons: false,
@@ -82,7 +83,6 @@ class PermitTypes extends React.Component {
 
   handleSuccess(){
     this.props.resetLoading();
-    $('#modal-permit-type-create').closeModal();
     this.props.fetchTownshipPermitTypes();
     $('#modal-success').openModal();
   }
@@ -103,39 +103,16 @@ class PermitTypes extends React.Component {
     } = this.props
 
     return(
-      <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
-        <div id="modal-permit-type-create" className="modal modal-fixed-footer">
-          <div className="modal-content">
-
-            <div className="row">
-              <div className="center-align">
-                <h4>Create a Permit Type</h4>
-                <p className="center-align">Create a permit type by filling out the fields.</p>
-              </div>
-            </div>
-
-            <div className="row">
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Permit Type</label>
-                  <input type="text" placeholder="Permit Type" {...permit_type}/>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="modal-footer">
-            <div className="row marginless-row">
-              <div className="col s12 center-align">
-                <button 
-                type="submit" 
-                disabled={submitting} 
-                className="waves-effect waves-light btn">Create Permit Type</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
+      <PermitTypesForm
+        initialValues={this.state.rowData} 
+        handleSuccess={this.handleSuccess}
+        modalName="modal-permit-types-create" 
+        modalText="Create a Permit Type" 
+        submitType="CREATE"
+        initialValues={this.state.rowData} 
+        rowData={this.state.rowData}
+        handleSuccess={this.handleSuccess}
+      />
     );
 
   }
@@ -280,7 +257,7 @@ class PermitTypes extends React.Component {
             <a className="brand-logo center">Permit Types</a>
           </div>
         </nav>
-        <div className="card">
+        <div className="card" style={{marginBottom: 40}}>
 
           <div className="township-list-container center-align">
             <ul className="collection z-depth-2">
@@ -294,14 +271,18 @@ class PermitTypes extends React.Component {
           <div className="center-align">
             <a
               className="modal-trigger waves-effect waves-light btn valign" 
-              onClick={() => $('#modal-permit-type-create').openModal()}
+              onClick={() => $('#modal-permit-types-create').openModal()}
               style={{margin: 10}}>Add New Permit Type</a>
           </div>
-            {this.renderCreateModal()}
+            {
+              this.props.townshipPermitTypesFetched.isLoading ?
+              <div> </div> : this.renderCreateModal()
+            }
         </div>
         {this.state.showEditDuplicateButtons ? 
                 this.renderEditDuplicateButtons(this.state.rowData.id) : <div> </div>}
-         <div id="modal-success" className="modal">
+                
+        <div id="modal-success" className="modal">
           <div className="modal-content">
             <h4>Success!</h4>
             <p>You've successfully sent the request!</p>
@@ -312,6 +293,7 @@ class PermitTypes extends React.Component {
             className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
           </div>
         </div>
+
       </div>
     );
   }

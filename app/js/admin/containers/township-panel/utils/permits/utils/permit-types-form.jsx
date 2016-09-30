@@ -47,6 +47,7 @@ class PermitTypesForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
     this.selectizeOptionsUpdate = this.selectizeOptionsUpdate.bind(this);
+    this.props.dispatch(change('permit-types-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
   }
 
   handleSubmit(data) {
@@ -94,7 +95,6 @@ class PermitTypesForm extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log(this.props.townshipPermitTypesEdited)
     if (this.props.townshipPermitTypesCreated.isLoading) {
       } else if (!this.props.townshipPermitTypesCreated.isLoading) {
         this.handleSuccess();
@@ -112,8 +112,8 @@ class PermitTypesForm extends React.Component {
   };
 
   handleSuccess(){
-    this.props.handleSuccess();
     this.props.resetLoading();
+    this.props.handleSuccess();
   }
 
   tempInputsEdit(initialValues) {
@@ -195,6 +195,7 @@ class PermitTypesForm extends React.Component {
                 </div>
               </div>
             </div>
+            
           </div>
         </form>
       </div>

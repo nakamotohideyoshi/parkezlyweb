@@ -9,6 +9,7 @@ import _ from 'lodash';
 import { Link } from 'react-router'
 
 import TownshipImageUpload from '../../township-list/utils/township-image-upload.jsx';
+import Spinner from '../../../common/components/spinner.jsx';
 
 import {
   editTownship, 
@@ -351,7 +352,7 @@ class TownshipDetails extends React.Component {
     } else {
       return (
         <div className="card-content center-align">
-          <p>Select a Township</p>
+          <div className="center-align"> <Spinner /> </div> 
         </div>
       );
     }

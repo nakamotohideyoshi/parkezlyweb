@@ -177,6 +177,21 @@ export function townshipPermitTypesFetched(state = initialState, action) {
   }
 };
 
+export function townshipPermitTypesEdited(state = initialState, action) {
+  switch(action.type) {
+    case types.TOWNSHIP_PERMIT_TYPES_PUT_ERROR:
+      return Object.assign({}, state, {isLoading: false, data: action.data, error: true});
+    case types.TOWNSHIP_PERMIT_TYPES_PUT_SUCCESS:
+      return Object.assign({}, state, {isLoading: false, data: action.data, error: false });
+    case types.TOWNSHIP_PERMIT_TYPES_PUT_REQ:
+      return Object.assign({}, state, {isLoading: true, error: false });
+    case types.RESET_LOADING:
+      return Object.assign({}, state, initialState);
+    default:
+      return state;
+  }
+};
+
 export function townshipPermitTypesCreated(state = initialState, action) {
   switch(action.type) {
     case types.TOWNSHIP_PERMIT_TYPES_POST_ERROR:
@@ -228,6 +243,22 @@ export function townshipPermitsListFetched(state = initialState, action) {
       return Object.assign({}, state, {isLoading: false, data: action.data, error: false });
     case types.TOWNSHIP_PERMITS_LIST_GET_REQ:
       return Object.assign({}, state, {isLoading: true, error: false });
+    default:
+      return state;
+  }
+};
+
+
+export function townshipPermitsListEdited(state = initialState, action) {
+  switch(action.type) {
+    case types.TOWNSHIP_PERMITS_LIST_PUT_ERROR:
+      return Object.assign({}, state, {isLoading: false, data: action.data, error: true});
+    case types.TOWNSHIP_PERMITS_LIST_PUT_SUCCESS:
+      return Object.assign({}, state, {isLoading: false, data: action.data, error: false });
+    case types.TOWNSHIP_PERMITS_LIST_PUT_REQ:
+      return Object.assign({}, state, {isLoading: true, error: false });
+    case types.RESET_LOADING:
+      return Object.assign({}, state, initialState);
     default:
       return state;
   }
@@ -427,6 +458,3 @@ export function townshipHearingPlaceEdited(state = initialState, action) {
       return state;
   }
 };
-
-
-

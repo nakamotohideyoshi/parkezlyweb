@@ -40,7 +40,9 @@
     "materialize-css": "^0.97.6",
     "moment": "^2.13.0",
     "node-datetime": "^1.0.0",
+    "node-schedule": "^1.1.1",
     "node-uuid": "^1.4.7",
+    "nodemailer": "^2.6.0",
     "object-squish": "^1.1.0",
     "paypal-rest-sdk": "^1.6.8",
     "react": "^0.14.0",
@@ -66,7 +68,9 @@
     "redux-promise": "^0.5.3",
     "redux-thunk": "^2.0.1",
     "script-loader": "^0.7.0",
-    "underscore": "^1.8.3"
+    "twilio": "^2.9.3",
+    "underscore": "^1.8.3",
+    "xoauth2": "^1.2.0"
   },
   "devDependencies": {
     "babel-cli": "^6.6.4",

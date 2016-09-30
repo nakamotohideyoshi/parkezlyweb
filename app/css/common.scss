@@ -97,6 +97,7 @@ a {
 
 /* Buttons */
 .btn{
+  /* Currently messing with buttons globally. Might want to think about splitting files with webpack.
   font-size: 18px;
   font-weight: 300;
   padding: 7px;
@@ -104,6 +105,7 @@ a {
   border-radius: 5px;
   text-align: center;
   height: auto;
+  */
 
   &.gray-btn {
     background: #6D6E6E !important;
