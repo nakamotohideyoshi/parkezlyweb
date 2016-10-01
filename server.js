@@ -19,9 +19,11 @@ s3Config(app);
 /* Notifications (Every 60 seconds) */
 twilioMain();
 emailMain();
+/*
 setInterval(() => {
     
 }, 60*1000);
+*/
 
 
 

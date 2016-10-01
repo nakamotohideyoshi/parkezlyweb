@@ -26,6 +26,7 @@ import {
   townshipPermitRequestsEdited,
 
   townshipParkingPermitsFetched,
+  townshipParkingPermitsEdited,
   townshipParkingPermitsCreated,
 
   townshipPermitsListFetched,
@@ -125,6 +126,7 @@ var townshipPanelReducers = {
   townshipPermitTypesEdited: townshipPermitTypesEdited,
 
   townshipParkingPermitsFetched: townshipParkingPermitsFetched,
+  townshipParkingPermitsEdited: townshipParkingPermitsEdited,
   townshipParkingPermitsCreated: townshipParkingPermitsCreated,
 
   townshipPermitsListFetched: townshipPermitsListFetched,

@@ -249,7 +249,7 @@ class BursarPanelTicketRates extends React.Component {
                 </div>
               </nav>
                <div className="card">
-                  <div >
+                  <div>
                     { 
                       this.props.bursarTicketRatesFetched.isLoading ||
                       this.props.townshipLocationsFetched.isLoading ? 

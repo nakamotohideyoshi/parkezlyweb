@@ -33,25 +33,25 @@ export default class TownshipPanelPermits extends React.Component {
           <div style={{marginTop: 40}}>
             <div className="row marginless-row">
               <Tabbordion className="traditional-tab col s12 z-depth-2" classNames={classNames} initialIndex={0} name="tabs">
-                <Panel title={<span>Permit Types</span>}>
-                  <div className="row marginless-row" style={{marginTop: 40}}>
-                    <PermitTypes className="col s12" townshipCode={this.props.townshipCode} />
-                  </div>  
-                </Panel>
                 <Panel title={<span>Township Permits</span>}>
                     <div className="row marginless-row" style={{marginTop: 40}}>
                       <TownshipPermits className="col s12" townshipCode={this.props.townshipCode} />
                     </div>
                 </Panel>
-                <Panel title={<span>Locations Rate</span>}>
+                <Panel title={<span>Parking Permits</span>}>
+                    <div className="row marginless-row" style={{marginTop: 40}}>
+                      <ParkingPermits className="col s12" townshipCode={this.props.townshipCode} />
+                    </div>
+                </Panel>
+                <Panel title={<span>Locations Permit Rate</span>}>
                     <div className="row marginless-row" style={{marginTop: 40}}>
                       <LocationsRate className="col s12" townshipCode={this.props.townshipCode} />
                     </div>
                 </Panel>
-                <Panel title={<span>Subscriptions</span>}>
-                    <div className="row marginless-row" style={{marginTop: 40}}>
-                      <Subscriptions className="col s12" townshipCode={this.props.townshipCode} />
-                    </div>
+                <Panel title={<span>Permit Types</span>}>
+                  <div className="row marginless-row" style={{marginTop: 40}}>
+                    <PermitTypes className="col s12" townshipCode={this.props.townshipCode} />
+                  </div>  
                 </Panel>
               </Tabbordion>
             </div>
@@ -63,9 +63,9 @@ export default class TownshipPanelPermits extends React.Component {
 }
 
 /*
-<Panel title={<span>Location Rate</span>}>
-  <div className="row marginless-row">
-    <LocationsRate townshipCode={this.props.townshipCode} />
-  </div>
+<Panel title={<span>Subscriptions</span>}>
+    <div className="row marginless-row" style={{marginTop: 40}}>
+      <Subscriptions className="col s12" townshipCode={this.props.townshipCode} />
+    </div>
 </Panel>
 */

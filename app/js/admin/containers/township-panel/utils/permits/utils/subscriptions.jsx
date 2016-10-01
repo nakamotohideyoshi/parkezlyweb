@@ -90,6 +90,21 @@ class Subscriptions extends React.Component {
     this.props.dispatch(change('subscriptions', 'date_time', formattedDate));
   }
 
+  renderCreateModal() {
+    return(
+      <SubscriptionsForm
+        initialValues={this.state.rowData} 
+        handleSuccess={this.handleSuccess}
+        modalName="modal-subscriptions-create" 
+        modalText="Create a Subscription" 
+        submitType="CREATE"
+        initialValues={this.state.rowData} 
+        rowData={this.state.rowData}
+        handleSuccess={this.handleSuccess}
+      />
+    )
+  }
+
   renderEditModal(rowData) {
     window.scrollTo(0, document.body.scrollHeight);
     this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true})
@@ -261,7 +276,7 @@ class Subscriptions extends React.Component {
           <div className="center-align">
             <a
               className="modal-trigger waves-effect waves-light btn valign" 
-              onClick={() => $('#modal-permit-type-create').openModal()}
+              onClick={() => $('#modal-subscriptions-create').openModal()}
               style={{margin: 10}}>Add New Subscriptions</a>
           </div>
 

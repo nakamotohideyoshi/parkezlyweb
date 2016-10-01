@@ -164,7 +164,6 @@ class LocationsRateForm extends React.Component {
     } = this.props;
 
   const fields = [ 
-    'date_time',
     'exact_address',
     'township_id',
     'township_code',
@@ -214,13 +213,15 @@ class LocationsRateForm extends React.Component {
               </div>
 
               <div className="row"> 
-                {this.tempInputsEdit(this.props.initialValues)}
+                
                 <div className="col s6 admin-form-input">
                   <div className="form-group">
                     <label htmlFor="date_time">date_time</label>
                     <input id="date_time" className="date_time" type="text"/>
                   </div>
                 </div>
+                {this.tempInputsEdit(this.props.initialValues)}
+                
               </div>
             </div>
 
