@@ -1,15 +1,15 @@
 import React from 'react';
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import { reduxForm, change } from 'redux-form'
+import { reduxForm, change, reset, Field} from 'redux-form'
 import moment from 'moment'
 
 import {SimpleSelect} from 'react-selectize'
 
 import {
-        fetchTownshipPermitsList, 
-        editTownshipPermitsList,
-        createTownshipPermitsList,
+        fetchTownshipParkingPermits, 
+        editTownshipParkingPermits,
+        createTownshipParkingPermits,
         resetLoading
       } from '../../../../../actions/actions-township-panel.jsx'
 import {fetchTownshipSchemeTypes} from '../../../../../actions/actions-township-common.jsx'
@@ -25,16 +25,21 @@ import {ajaxSelectizeGet, ajaxSelectizeFilteredGet, ajaxDelete, ajaxGet, ajaxPos
 import AdminSelectize from '../../../../../common/components/admin-selectize.jsx'
 
 const fields = [
-'id',
-'date_time',
-'user_id',
-'township_code',
-'permit_name',
-'name',
-'user_name',
+    'id',
+    'date_time',
+    'township_code',
+    'township_name',
+    'permit_type',
+    'permit_name',
+    'covered_locations',
+    'cost',
+    'year',
+    'location_address',
+    'active',
+    'scheme_type',
 ]
 
-class TownshipPermitsForm extends React.Component {
+class ParkingPermitsForm extends React.Component {
 
   constructor(props) {
     super(props);
@@ -57,17 +62,17 @@ class TownshipPermitsForm extends React.Component {
   handleSubmit(data) {
     
     $('#' + this.props.modalName).closeModal();
-    this.props.dispatch(change('township-permits-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
+    this.props.dispatch(change('parking-permits-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
 
     switch(this.props.submitType) {
       case "CREATE":
-        this.props.createTownshipPermitsList(data);
+        this.props.createTownshipParkingPermits(data);
         break;
       case "EDIT":
-        this.props.editTownshipPermitsList(data, data.id);
+        this.props.editTownshipParkingPermits(data, data.id);
         break;
       case "DUPLICATE":
-        this.props.createTownshipPermitsList(data);
+        this.props.createTownshipParkingPermits(data);
         break;
       default:
         console.log("No valid submit type was provided.");
@@ -83,11 +88,12 @@ class TownshipPermitsForm extends React.Component {
   }
 
   componentWillMount() {
-    ajaxSelectizeGet('township_users', 'user_id', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('township_users', 'user_name', this.selectizeOptionsUpdate);
-
-    this.props.dispatch(change('township-permits-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
-    //ajaxSelectizeGet('townships_manager', 'manager_id', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('permit_type', 'permit_type', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('scheme_type', 'scheme_type', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('township_permits', 'permit_name', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('manage_locations', 'location_name', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('manage_locations', 'full_address', this.selectizeOptionsUpdate);
+    this.props.dispatch(change('parking-permits-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
   }
 
   componentDidMount() {
@@ -100,23 +106,23 @@ class TownshipPermitsForm extends React.Component {
     $('.date_time')
     .bootstrapMaterialDatePicker({ time: true, format : 'YYYY-MM-DD HH:mm:ss' })
     .on('change', function(event) {
-      dispatch(change('township-permits-form', 'date_time', event.target.value)); 
+      dispatch(change('parking-permits-form', 'date_time', event.target.value)); 
     });
   }
 
   componentDidUpdate() {
-    if (this.props.townshipPermitsListCreated.isLoading) {
-      } else if (!this.props.townshipPermitsListCreated.isLoading) {
+    if (this.props.townshipParkingPermitsCreated.isLoading) {
+      } else if (!this.props.townshipParkingPermitsCreated.isLoading) {
         this.handleSuccess();
       }
 
-    if (this.props.townshipPermitsListEdited.isLoading) {
-      } else if (!this.props.townshipPermitsListEdited.isLoading) {
+    if (this.props.townshipParkingPermitsEdited.isLoading) {
+      } else if (!this.props.townshipParkingPermitsEdited.isLoading) {
         this.handleSuccess();
       }
 
-    if (this.props.townshipPermitsListCreated.isLoading) {
-      } else if (!this.props.townshipPermitsListEdited.isLoading) {
+    if (this.props.townshipParkingPermitsCreated.isLoading) {
+      } else if (!this.props.townshipParkingPermitsEdited.isLoading) {
         this.handleSuccess();
       }
   };
@@ -131,11 +137,16 @@ class TownshipPermitsForm extends React.Component {
       fields: {  
         id,
         date_time,
-        user_id,
         township_code,
+        township_name,
+        permit_type,
         permit_name,
-        name,
-        user_name,
+        covered_locations,
+        cost,
+        year,
+        location_address,
+        active,
+        scheme_type,
       },
       resetForm,
       submitting,
@@ -143,16 +154,21 @@ class TownshipPermitsForm extends React.Component {
     } = this.props;
 
     const fields = [
-    'township_code',
-    'permit_name',
+      'date_time',
+      'township_code',
+      'township_name',
+      'covered_locations',
+      'cost',
+      'year',
+      'active',
     ]
-
+    
     return fields.map((data) => {
       return( 
         <div key={data.id} className="col s6 admin-form-input">
           <div className="form-group">
             <label>{data}</label>
-            <input type="text" placeholder={data} {...this.props.fields[data]}/>
+            <input type="text" {...this.props.fields[data]}/>
           </div>
         </div>
       );
@@ -182,19 +198,43 @@ class TownshipPermitsForm extends React.Component {
 
               <div className="row"> 
 
-                <AdminSelectize 
+                 <AdminSelectize 
                   options={this.state.selectizeOptions}
-                  objectKey={'user_name'} 
-                  formName={'township-permits-form'} 
-                  fieldName={'user_name'}
+                  objectKey={'permit_type'} 
+                  formName={'parking-permits-form'} 
+                  fieldName={'permit_type'}
                   defaultData={this.props.rowData}
                   dispatch={dispatch} 
                 />
                 <AdminSelectize 
                   options={this.state.selectizeOptions}
-                  objectKey={'user_id'} 
-                  formName={'township-permits-form'} 
-                  fieldName={'user_id'}
+                  objectKey={'scheme_type'} 
+                  formName={'parking-permits-form'} 
+                  fieldName={'scheme_type'}
+                  defaultData={this.props.rowData}
+                  dispatch={dispatch} 
+                />
+                <AdminSelectize 
+                  options={this.state.selectizeOptions}
+                  objectKey={'permit_name'} 
+                  formName={'parking-permits-form'} 
+                  fieldName={'permit_name'}
+                  defaultData={this.props.rowData}
+                  dispatch={dispatch} 
+                />
+                <AdminSelectize 
+                  options={this.state.selectizeOptions}
+                  objectKey={'full_address'} 
+                  formName={'parking-permits-form'} 
+                  fieldName={'location_address'}
+                  defaultData={this.props.rowData}
+                  dispatch={dispatch} 
+                />
+                <AdminSelectize 
+                  options={this.state.selectizeOptions}
+                  objectKey={'location_name'} 
+                  formName={'parking-permits-form'} 
+                  fieldName={'covered_locations'}
                   defaultData={this.props.rowData}
                   dispatch={dispatch} 
                 />
@@ -222,23 +262,24 @@ class TownshipPermitsForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    townshipPermitsListFetched: state.townshipPermitsListFetched,
-    townshipPermitsListCreated: state.townshipPermitsListCreated,
-    townshipPermitsListEdited: state.townshipPermitsListEdited,
+    townshipParkingPermitsFetched: state.townshipParkingPermitsFetched,
+    townshipParkingPermitsEdited: state.townshipParkingPermitsEdited,
+    townshipParkingPermitsCreated: state.townshipParkingPermitsCreated,
+
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    fetchTownshipPermitsList, 
-    editTownshipPermitsList, 
-    createTownshipPermitsList, 
+    fetchTownshipParkingPermits, 
+    editTownshipParkingPermits, 
+    createTownshipParkingPermits, 
     resetLoading
   }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-  form: 'township-permits-form',
+  form: 'parking-permits-form',
   fields,
-  overwriteOnInitialValuesChange : true
-})(TownshipPermitsForm));
+})(ParkingPermitsForm));
+//    TownshipParkingPermitsEdited: state.TownshipParkingPermitsEdited,
