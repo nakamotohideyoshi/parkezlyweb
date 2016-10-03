@@ -17,7 +17,7 @@ import {optionsSelectize} from '../../../../../common/components/options-selecti
 import Griddle from 'griddle-react'
 import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import {customFilterComponent, customFilterFunction} from '../../../../../common/components/griddle-custom-filter.jsx'
-import ParkingPermitsForm from './parking-permits-form'
+import ParkingPermitsForm from './parking-permits-form.jsx'
 import {ajaxSelectizeGet, ajaxSelectizeFilteredGet, ajaxDelete, ajaxGet, ajaxPost} from '../../../../../common/components/ajax-selectize.js'
 
 
