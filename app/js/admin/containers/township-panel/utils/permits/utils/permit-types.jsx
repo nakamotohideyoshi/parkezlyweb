@@ -15,7 +15,7 @@ import Griddle from 'griddle-react'
 import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import {customFilterComponent, customFilterFunction} from '../../../../../common/components/griddle-custom-filter.jsx'
 import {ajaxSelectizeGet, ajaxSelectizeFilteredGet, ajaxDelete, ajaxGet, ajaxPost} from '../../../../../common/components/ajax-selectize.js'
-import PermitTypesForm from './permit-types-form'
+import PermitTypesForm from './permit-types-form.jsx'
 
 export const fields = [ 
   'id',

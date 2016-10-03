@@ -33,6 +33,9 @@ module.exports = {
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
     })
   ],
+  resolve: {
+    extensions: ['', '.js', '.jsx']
+  },
   module: {
     noParse: [/aws-sdk.js/],
     loaders: [

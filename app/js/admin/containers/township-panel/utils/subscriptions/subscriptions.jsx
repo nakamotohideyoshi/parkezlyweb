@@ -18,7 +18,7 @@ import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 
 import {ajaxSelectizeGet, ajaxSelectizeFilteredGet, ajaxDelete, ajaxGet, ajaxPost} from '../../../../common/components/ajax-selectize.js'
-import SubscriptionsForm from './subscriptions-form'
+import SubscriptionsForm from './subscriptions-form.jsx'
 
 export const fields = [ 
   'id',
@@ -286,7 +286,7 @@ class Subscriptions extends React.Component {
                   <a
                     className="modal-trigger waves-effect waves-light btn valign" 
                     onClick={() => $('#modal-subscriptions-create').openModal()}
-                    style={{margin: 10}}>Add New Subscriptions</a>
+                    style={{margin: 10}}>Add New Subscription</a>
                 </div>
 
               </div>

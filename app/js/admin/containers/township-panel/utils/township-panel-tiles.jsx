@@ -8,7 +8,7 @@ export default class TownshipPanelTiles extends React.Component {
 
   render() {
     return (
-      <div className="animated fadeInUp">
+      <div className="animated fadeIn">
         <div className="row center-align marginless-row" style={{marginTop: 30}}>
             <div className="col s12 m12 l6">
               <Link 

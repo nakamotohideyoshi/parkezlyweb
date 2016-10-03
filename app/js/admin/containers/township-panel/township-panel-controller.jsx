@@ -8,7 +8,7 @@ import TownshipPanelPermitRequests from './utils/permit-requests/township-panel-
 import TownshipPanelViolationCode from './utils/violation-code/township-panel-violation-code.jsx'
 import TownshipPanelHearingPlace from './utils/hearing-place/township-panel-hearing-place.jsx'
 import TownshipPanelParkingRules from './utils/parking-rules/township-panel-parking-rules.jsx'
-import Subscriptions from './utils/subscriptions/subscriptions'
+import Subscriptions from './utils/subscriptions/subscriptions.jsx'
 import store from '../../store/store.js'
 
 export class TownshipPanelController extends React.Component {

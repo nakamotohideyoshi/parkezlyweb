@@ -23,14 +23,14 @@ export class InspectorPanelTiles extends Component {
           </div>
         </div>
         <div className="row marginless-row">
-          <div className="col s12 m12 l6 animated fadeInUp">
+          <div className="col s12 m12 l6 animated fadeInLeft">
             <Link to={{pathname: `/admin/inspector/create-ticket/${this.props.townshipCode}`}} 
             className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12">
               <i className="material-icons valign">receipt</i>
               <h4> Ticket List </h4>
             </Link>
           </div>
-          <div className="col s12 m12 l6 animated fadeInUp">
+          <div className="col s12 m12 l6 animated fadeInRight">
             <Link to={{pathname: `/admin/inspector/map-view/${this.props.townshipCode}`}} 
             className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12">
               <i className="material-icons valign">map</i>
