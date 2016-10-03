@@ -5,11 +5,11 @@ import cookie from "react-cookie";
 import Body from "../../../common/components/body/body.jsx";
 import { SimpleSelect } from "react-selectize";
 import { GoogleMapLoader, GoogleMap, Marker } from "react-google-maps";
-import { getPlaces, getLocationDetails } from "../../actions/nearby.js";
+import { getPlaces, getLocationDetails } from "../../actions/traffic.js";
 import { setPosition, setInitialPosition } from "../../actions/location.js";
 import { getLocations } from "../../actions/locations.js";
 import { throttle } from "lodash";
-import "./styles/nearby.scss";
+import "./styles/traffic.scss";
 
 const canUseDOM = !!(
   typeof window !== 'undefined' &&
@@ -17,7 +17,7 @@ const canUseDOM = !!(
   window.document.createElement
 );
 
-class Nearby extends Component {
+class Traffic extends Component {
   constructor(props) {
     super(props);
     this.handleCenterChanged = throttle(this.handleCenterChanged.bind(this), 100);
@@ -109,7 +109,7 @@ class Nearby extends Component {
 
   renderMyLocationIcon() {
     return (
-      <div className="my-location-marker-nearby" onClick={this.goToInitialLocation}>
+      <div className="my-location-marker" onClick={this.goToInitialLocation}>
       </div>
     );
   }
@@ -164,13 +164,11 @@ class Nearby extends Component {
     const { locationsList } = this.props.LocationsList.Locations;
     const locations = locationsList.map(this.renderLocation);
     return (
-      <div className="locations-select-list">
         <SimpleSelect
           onValueChange={e => this.selectLocation(e)}
           placeholder="Select Location">
           {locations}
         </SimpleSelect>
-      </div>
     );
   }
 
@@ -225,4 +223,4 @@ const MapStateToProps = (state) => {
   };
 };
 
-export default connect(MapStateToProps)(Nearby);
+export default connect(MapStateToProps)(Traffic);

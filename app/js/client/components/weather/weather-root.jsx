@@ -20,7 +20,7 @@ class Weather extends Component {
   componentWillMount() {
     const { dispatch } = this.props;
     const userId = cookie.load('userId');
-    dispatch(getLocations(userId));    
+    dispatch(getLocations(userId));
     navigator.geolocation.getCurrentPosition( function(postion){
       dispatch(getWeather(postion.coords.latitude, postion.coords.longitude));
     });
@@ -52,7 +52,7 @@ class Weather extends Component {
   renderLocation(locationData, index) {
     const { location_name, lat,lng } = locationData;
     return (
-      <option value={index}>{location_name}</option>
+      <option value={index} key={index}>{location_name}</option>
     );
   }
 
