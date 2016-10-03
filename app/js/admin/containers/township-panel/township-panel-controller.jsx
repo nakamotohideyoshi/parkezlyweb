@@ -1,14 +1,15 @@
-import React from 'react';
-import { Provider } from 'react-redux';
-import TownshipPanelRoot from './township-panel-root.jsx';
+import React from 'react'
+import { Provider } from 'react-redux'
+import TownshipPanelRoot from './township-panel-root.jsx'
 import TownshipPanelUsers from './utils/users/township-panel-users.jsx'
 import TownshipPanelFacilities from './utils/facilities/township-panel-facilities.jsx'
 import TownshipPanelPermits from './utils/permits/township-panel-permits.jsx'
 import TownshipPanelPermitRequests from './utils/permit-requests/township-panel-permit-requests.jsx'
-import TownshipPanelViolationCode from './utils/violation-code/township-panel-violation-code.jsx';
+import TownshipPanelViolationCode from './utils/violation-code/township-panel-violation-code.jsx'
 import TownshipPanelHearingPlace from './utils/hearing-place/township-panel-hearing-place.jsx'
 import TownshipPanelParkingRules from './utils/parking-rules/township-panel-parking-rules.jsx'
-import store from '../../store/store.js';
+import Subscriptions from './utils/subscriptions/subscriptions'
+import store from '../../store/store.js'
 
 export class TownshipPanelController extends React.Component {
   constructor(props) {
@@ -75,6 +76,20 @@ export class TownshipPermitRequestsController extends React.Component {
     return (
       <Provider store={store}>
         <TownshipPanelPermitRequests townshipCode={this.props.params.townshipCode} />
+      </Provider>
+    );
+  }
+}
+
+export class TownshipSubscriptionsController extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <Provider store={store}>
+        <Subscriptions townshipCode={this.props.params.townshipCode} />
       </Provider>
     );
   }
