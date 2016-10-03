@@ -1,25 +1,24 @@
-/*
 import React from 'react';
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import { reduxForm, change } from 'redux-form'
+import Body from "../../../../../common/components/body/body.jsx";
 import datetime from 'node-datetime';
 
 import {
   fetchTownshipPermitTypes, 
   createTownshipPermitTypes,
   resetLoading
-} from '../../../../../actions/actions-township-panel.jsx'
+} from '../../../../actions/actions-township-panel.jsx'
 
-import Spinner from '../../../../../common/components/spinner.jsx';
+import Spinner from '../../../../common/components/spinner.jsx';
 
 import Griddle from 'griddle-react'
 import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
-import {customFilterComponent, customFilterFunction} from '../../../../../common/components/griddle-custom-filter.jsx'
+import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 
-import {ajaxSelectizeGet, ajaxSelectizeFilteredGet, ajaxDelete, ajaxGet, ajaxPost} from '../../../../../common/components/ajax-selectize.js'
+import {ajaxSelectizeGet, ajaxSelectizeFilteredGet, ajaxDelete, ajaxGet, ajaxPost} from '../../../../common/components/ajax-selectize.js'
 import SubscriptionsForm from './subscriptions-form'
-
 
 export const fields = [ 
   'id',
@@ -76,6 +75,7 @@ class Subscriptions extends React.Component {
 
     this.renderPermitList = this.renderPermitList.bind(this);
     this.renderEditModal = this.renderEditModal.bind(this);
+    this.handleSuccess = this.handleSuccess.bind(this);
 
     this.state = {
       showEditDuplicateButtons: false,
@@ -91,11 +91,24 @@ class Subscriptions extends React.Component {
     this.props.dispatch(change('subscriptions', 'date_time', formattedDate));
   }
 
+  componentWillMount() {
+    ajaxGet('subscriptions', (table) => {
+      this.setState({subscriptionData: table.data.resource});
+    });
+  }
+  
+  handleSuccess(){
+    ajaxGet('subscriptions', (table) => {
+      this.setState({subscriptionData: table.data.resource});
+    });
+    this.props.resetLoading();
+    this.props.fetchTownshipPermitTypes();
+    $('#modal-success').openModal();
+  }
+
   renderCreateModal() {
     return(
       <SubscriptionsForm
-        initialValues={this.state.rowData} 
-        handleSuccess={this.handleSuccess}
         modalName="modal-subscriptions-create" 
         modalText="Create a Subscription" 
         submitType="CREATE"
@@ -109,12 +122,6 @@ class Subscriptions extends React.Component {
   renderEditModal(rowData) {
     window.scrollTo(0, document.body.scrollHeight);
     this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true})
-  }
-
-  componentWillMount() {
-    ajaxGet('subscriptions', (table) => {
-      this.setState({subscriptionData: table.data.resource});
-    });
   }
 
   renderPermitList() {
@@ -218,6 +225,7 @@ class Subscriptions extends React.Component {
                 onClick={() => {
                   $('#modal-delete').closeModal()
                   ajaxDelete('subscriptions', this.state.rowData.id, this.handleSuccess);
+                  ajaxGet('subscriptions', this.handleSuccess())
                   this.setState({showEditDuplicateButtons: false});
                   window.scrollTo(0, 0);
                 }}>Yes</a>
@@ -230,8 +238,6 @@ class Subscriptions extends React.Component {
           <div></div> : 
           <div>
             <SubscriptionsForm
-              initialValues={this.state.rowData} 
-              handleSuccess={this.handleSuccess}
               modalName="modal-subscriptions-edit" 
               modalText="Edit a Subscription" 
               submitType="EDIT"
@@ -240,8 +246,6 @@ class Subscriptions extends React.Component {
               handleSuccess={this.handleSuccess}
             />
             <SubscriptionsForm
-              initialValues={this.state.rowData} 
-              handleSuccess={this.handleSuccess}
               modalName="modal-subscriptions-duplicate" 
               modalText="Duplicate a Subscription" 
               submitType="DUPLICATE"
@@ -257,46 +261,54 @@ class Subscriptions extends React.Component {
 
   render() {
     return (
-      <div className="col s12" style={{marginBottom: 40}}>
-        <nav>
-          <div className="nav-wrapper nav-admin z-depth-2">
-            <a className="brand-logo center">Subscriptions</a>
-          </div>
-        </nav>
-        <div className="card">
+      <div className="blue-body marginless-row">
+        <Body showHeader={true}>
+          <div className="row marginless-row" style={{marginTop: 40}}>
+            <div className="col s12">
 
-          <div className="township-list-container">
-            <ul className="collection z-depth-2">
-              {this.state.subscriptionData === null ? 
-                <div className="center-align"> <Spinner /> </div> : this.renderPermitList()}
-            </ul>
-          </div>
+              <nav>
+                <div className="nav-wrapper nav-admin z-depth-2">
+                  <a className="brand-logo center">Subscriptions</a>
+                </div>
+              </nav>
+              <div className="card">
 
-          <div className="divider"/>
+                <div className="township-list-container">
+                  <ul className="collection z-depth-2">
+                    {this.state.subscriptionData === null ? 
+                      <div className="center-align"> <Spinner /> </div> : this.renderPermitList()}
+                  </ul>
+                </div>
 
-          <div className="center-align">
-            <a
-              className="modal-trigger waves-effect waves-light btn valign" 
-              onClick={() => $('#modal-subscriptions-create').openModal()}
-              style={{margin: 10}}>Add New Subscriptions</a>
-          </div>
+                <div className="divider"/>
 
-        </div>
+                <div className="center-align">
+                  <a
+                    className="modal-trigger waves-effect waves-light btn valign" 
+                    onClick={() => $('#modal-subscriptions-create').openModal()}
+                    style={{margin: 10}}>Add New Subscriptions</a>
+                </div>
 
-        <div id="modal-success" className="modal">
-          <div className="modal-content">
-            <h4>Success!</h4>
-            <p>You've successfully sent the request!</p>
-          </div>
-          <div className="modal-footer">
-            <button 
-            href="#" 
-            className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
-          </div>
-        </div>
+              </div>
 
-        {this.state.showEditDuplicateButtons ? 
+              <div id="modal-success" className="modal">
+                <div className="modal-content">
+                  <h4>Success!</h4>
+                  <p>You've successfully sent the request!</p>
+                </div>
+                <div className="modal-footer">
+                  <button 
+                  href="#" 
+                  className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
+                </div>
+              </div>
+                {this.state.subscriptionData === null ?
+                  <div> </div> : this.renderCreateModal()}
+                {this.state.showEditDuplicateButtons ? 
                 this.renderEditDuplicateButtons(this.state.rowData.id) : <div> </div>}
+            </div>
+          </div>
+        </Body>
       </div>
     );
   }
@@ -304,8 +316,7 @@ class Subscriptions extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    townshipPermitTypesFetched: state.townshipPermitTypesFetched,
-    townshipPermitTypesCreated: state.townshipPermitTypesCreated
+
   }   
 }
 
@@ -321,4 +332,4 @@ export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   form: 'subscriptions',
   fields
 })(Subscriptions));
-*/
+

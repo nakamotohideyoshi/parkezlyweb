@@ -1,4 +1,3 @@
-/*
 import React from 'react';
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
@@ -6,17 +5,17 @@ import { reduxForm, change } from 'redux-form'
 
 import {SimpleSelect} from 'react-selectize'
 
-import {fetchTownshipSchemeTypes} from '../../../../../actions/actions-township-common.jsx'
-import {fetchTownshipList} from '../../../../../actions/actions-township.js';
+import {fetchTownshipSchemeTypes} from '../../../../actions/actions-township-common.jsx'
+import {fetchTownshipList} from '../../../../actions/actions-township.js';
 
-import Spinner from '../../../../../common/components/spinner.jsx';
-import {optionsSelectize} from '../../../../../common/components/options-selectize.js';
+import Spinner from '../../../../common/components/spinner.jsx';
+import {optionsSelectize} from '../../../../common/components/options-selectize.js';
 
 import Griddle from 'griddle-react'
 import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
-import {customFilterComponent, customFilterFunction} from '../../../../../common/components/griddle-custom-filter.jsx'
-import {ajaxSelectizeGet, ajaxSelectizeFilteredGet, ajaxDelete, ajaxGet, ajaxPost} from '../../../../../common/components/ajax-selectize.js'
-import AdminSelectize from '../../../../../common/components/admin-selectize.jsx'
+import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
+import {ajaxSelectizeGet, ajaxSelectizeFilteredGet, ajaxDelete, ajaxGet, ajaxPost} from '../../../../common/components/ajax-selectize.js'
+import AdminSelectize from '../../../../common/components/admin-selectize.jsx'
 
 const fields = [ 
   'id',
@@ -151,6 +150,35 @@ class SubscriptionsForm extends React.Component {
       dispatch
     } = this.props;
 
+    const fields = [ 
+      'date_time',
+      'user_name',
+      'township_name',
+      'location_code',
+      'location_name',
+      'bill_date',
+      'expiry_date',
+      'permit_name',
+      'rate',
+      'ipn_custom_element',
+      'ipn_custom_value',
+      'ipn_txn_id',
+      'ipn_payment',
+      'ipn_status',
+      'ipn_address',
+      'user_id',
+      'ip',
+      'paypal_logo',
+      'logo_paypal',
+      'township_code',
+      'scheme_type',
+      'permit_type',
+      'duration',
+      'duration_period',
+      'permit_status',
+      'expired',
+    ]
+
     return fields.map((data) => {
       return( 
         <div className="col s6 admin-form-input">
@@ -195,7 +223,7 @@ class SubscriptionsForm extends React.Component {
                   <button 
                   type="submit" 
                   disabled={submitting} 
-                  className="waves-effect waves-light btn">{this.props.modalText}</button>
+                  className="waves-effect waves-light btn valign">{this.props.modalText}</button>
                 </div>
               </div>
             </div>
@@ -211,4 +239,3 @@ export default connect()(reduxForm({
   fields,
   overwriteOnInitialValuesChange : true
 })(SubscriptionsForm));
-*/
