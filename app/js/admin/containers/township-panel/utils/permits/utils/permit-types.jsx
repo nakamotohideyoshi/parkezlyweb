@@ -70,7 +70,7 @@ class PermitTypes extends React.Component {
     this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true})
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.fetchTownshipPermitTypes();
   }
 

@@ -77,6 +77,7 @@ class LocationsRate extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
     this.renderEditModal = this.renderEditModal.bind(this);
+    this.renderCreateModal = this.renderCreateModal.bind(this);
   }
 
   componentWillMount() {
@@ -94,12 +95,27 @@ class LocationsRate extends React.Component {
 
   handleSuccess(){
     this.props.resetLoading();
-    $('#modal-locations-rate-create').closeModal();
+    $('#modal-success3').openModal();
     this.props.fetchLocationsRate();
   }
 
   handleSubmit(data) {
     this.props.createTownshipLocationsRate(data);
+  }
+
+  renderCreateModal() {
+    return(
+      <LocationsRateForm
+        initialValues={this.state.rowData} 
+        handleSuccess={this.handleSuccess}
+        modalName="modal-locations-rate-create" 
+        modalText="Create a Location Rate" 
+        submitType="CREATE"
+        initialValues={this.state.rowData} 
+        rowData={this.state.rowData}
+        handleSuccess={this.handleSuccess}
+      />
+    );
   }
 
   renderEditModal(rowData) {
@@ -241,6 +257,10 @@ class LocationsRate extends React.Component {
         </div>
         {this.state.showEditDuplicateButtons ? 
                 this.renderEditDuplicateButtons(this.state.rowData.id) : <div> </div>}
+        {
+          this.props.townshipLocationsRateFetched.isLoading ?
+          <div> </div> : this.renderCreateModal()
+        }
         { 
           !this.state.showEditModal ?
           <div></div> : 
@@ -268,7 +288,7 @@ class LocationsRate extends React.Component {
           </div>
         }
 
-        <div id="modal-success" className="modal">
+        <div id="modal-success3" className="modal">
           <div className="modal-content">
             <h4>Success!</h4>
             <p>You've successfully sent the request!</p>

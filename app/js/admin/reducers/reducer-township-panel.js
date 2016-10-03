@@ -220,6 +220,21 @@ export function townshipParkingPermitsFetched(state = initialState, action) {
   }
 };
 
+export function townshipParkingPermitsEdited(state = initialState, action) {
+  switch(action.type) {
+    case types.TOWNSHIP_PARKING_PERMITS_PUT_ERROR:
+      return Object.assign({}, state, {isLoading: false, data: action.data, error: true});
+    case types.TOWNSHIP_PARKING_PERMITS_PUT_SUCCESS:
+      return Object.assign({}, state, {isLoading: false, data: action.data, error: false });
+    case types.TOWNSHIP_PARKING_PERMITS_PUT_REQ:
+      return Object.assign({}, state, {isLoading: true, error: false });
+    case types.RESET_LOADING:
+      return Object.assign({}, state, initialState);
+    default:
+      return state;
+  }
+};
+
 export function townshipParkingPermitsCreated(state = initialState, action) {
   switch(action.type) {
     case types.TOWNSHIP_PARKING_PERMITS_POST_ERROR:
@@ -315,6 +330,8 @@ export function townshipLocationsRateEdited(state = initialState, action) {
       return Object.assign({}, state, {isLoading: false, data: action.data, error: false });
     case types.TOWNSHIP_LOCATIONS_RATE_PUT_REQ:
       return Object.assign({}, state, {isLoading: true, error: false });
+    case types.RESET_LOADING:
+      return Object.assign({}, state, initialState);
     default:
       return state;
   }

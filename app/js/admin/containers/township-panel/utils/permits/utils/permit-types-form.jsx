@@ -73,7 +73,6 @@ class PermitTypesForm extends React.Component {
   selectizeOptionsUpdate(test, keyName) {
     var optionsDataObject = {[keyName]: test};
     Object.assign(this.state.selectizeOptions, optionsDataObject);
-    this.forceUpdate();
   }
 
   componentWillMount() {
@@ -149,7 +148,7 @@ class PermitTypesForm extends React.Component {
 
     return fields.map((data) => {
       return( 
-        <div className="col s6 admin-form-input">
+        <div key={data.id} className="col s6 admin-form-input">
           <div className="form-group">
             <label>{data}</label>
             <input type="text" placeholder={data} {...this.props.fields[data]}/>

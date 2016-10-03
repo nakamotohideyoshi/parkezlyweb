@@ -5,43 +5,49 @@ import { reduxForm, change } from 'redux-form'
 
 import {SimpleSelect} from 'react-selectize'
 
-import {
-        fetchLocationsRate,
-        createLocationsRate,
-        editLocationsRate,
-        resetLoading
-      } from '../../../../../actions/actions-township-panel.jsx'
-import {fetchTownshipSchemeTypes} from '../../../../../actions/actions-township-common.jsx'
-import {fetchTownshipList} from '../../../../../actions/actions-township.js';
+import {fetchTownshipSchemeTypes} from '../../../../actions/actions-township-common.jsx'
+import {fetchTownshipList} from '../../../../actions/actions-township.js';
 
-import Spinner from '../../../../../common/components/spinner.jsx';
-import {optionsSelectize} from '../../../../../common/components/options-selectize.js';
+import Spinner from '../../../../common/components/spinner.jsx';
+import {optionsSelectize} from '../../../../common/components/options-selectize.js';
 
 import Griddle from 'griddle-react'
 import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
-import {customFilterComponent, customFilterFunction} from '../../../../../common/components/griddle-custom-filter.jsx'
-import {ajaxSelectizeGet, ajaxSelectizeFilteredGet, ajaxDelete, ajaxGet, ajaxPost} from '../../../../../common/components/ajax-selectize.js'
-import AdminSelectize from '../../../../../common/components/admin-selectize.jsx'
+import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
+import {ajaxSelectizeGet, ajaxSelectizeFilteredGet, ajaxDelete, ajaxGet, ajaxPost} from '../../../../common/components/ajax-selectize.js'
+import AdminSelectize from '../../../../common/components/admin-selectize.jsx'
 
 const fields = [ 
   'id',
   'date_time',
-  'exact_address',
-  'township_id',
-  'township_code',
-  'location_id',
-  'location_code',
-  'scheme',
-  'rate',
-  'location_name',
-  'location_map',
-  'max_period',
+  'user_name',
   'township_name',
+  'location_code',
+  'location_name',
+  'bill_date',
+  'expiry_date',
+  'permit_name',
+  'rate',
+  'ipn_custom_element',
+  'ipn_custom_value',
+  'ipn_txn_id',
+  'ipn_payment',
+  'ipn_status',
+  'ipn_address',
+  'user_id',
+  'ip',
+  'paypal_logo',
+  'logo_paypal',
+  'township_code',
   'scheme_type',
   'permit_type',
+  'duration',
+  'duration_period',
+  'permit_status',
+  'expired',
 ]
 
-class LocationsRateForm extends React.Component {
+class SubscriptionsForm extends React.Component {
 
   constructor(props) {
     super(props);
@@ -51,32 +57,29 @@ class LocationsRateForm extends React.Component {
       parkingLocationCode: null,
       showEditModal: false,
       rowData: null,
-      selectizeOptions: {}
+      subscriptionData: null,
+      subEdited: false,
+      subDuplicated: true
     }
 
     this.tempInputsEdit = this.tempInputsEdit.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
     this.selectizeOptionsUpdate = this.selectizeOptionsUpdate.bind(this);
-
   }
 
   handleSubmit(data) {
-    
     $('#' + this.props.modalName).closeModal();
-    $('#modal-success').openModal();
-    this.props.dispatch(change('locations-rate-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
-
     switch(this.props.submitType) {
       case "CREATE":
-        this.props.createLocationsRate(data);
+        ajaxPost('subscriptions', data, this.handleSuccess)
         break;
       case "EDIT":
-      console.log(data);
-        this.props.editLocationsRate(data, data.id);
+        console.log(data)
+        ajaxPut('subscriptions', data.id, data, this.handleSuccess)
         break;
       case "DUPLICATE":
-        this.props.createLocationsRate(data);
+        ajaxPost('subscriptions', data, this.handleSuccess)
         break;
       default:
         console.log("No valid submit type was provided.");
@@ -92,12 +95,10 @@ class LocationsRateForm extends React.Component {
   }
 
   componentWillMount() {
-    ajaxSelectizeGet('townships_manager', 'manager_id', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('locations_rate', 'rate', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('location_lot', 'location_code', this.selectizeOptionsUpdate);
-
-    this.props.dispatch(change('locations-rate-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
-    this.props.dispatch(change('locations-rate-form', 'township_code', this.props.townshipCode));
+    this.props.dispatch(change('subscriptions-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
+    ajaxGet('subscriptions', (table) => {
+      this.setState({subscriptionData: table.data.resource});
+    });
   }
 
   componentDidMount() {
@@ -110,29 +111,15 @@ class LocationsRateForm extends React.Component {
     $('.date_time')
     .bootstrapMaterialDatePicker({ time: true, format : 'YYYY-MM-DD HH:mm:ss' })
     .on('change', function(event) {
-      dispatch(change('locations-rate-form', 'date_time', event.target.value)); 
+      dispatch(change('facilities-form', 'date_time', event.target.value)); 
     });
   }
 
   componentDidUpdate() {
-    if (this.props.townshipLocationsRateCreated.isLoading) {
-      } else if (!this.props.townshipLocationsRateCreated.isLoading) {
-        this.handleSuccess();
-      }
 
-    if (this.props.townshipLocationsRateEdited.isLoading) {
-      } else if (!this.props.townshipLocationsRateEdited.isLoading) {
-        this.handleSuccess();
-      }
-
-    if (this.props.townshipLocationsRateCreated.isLoading) {
-      } else if (!this.props.townshipLocationsRateEdited.isLoading) {
-        this.handleSuccess();
-      }
   };
 
   handleSuccess(){
-    this.props.resetLoading();
     this.props.handleSuccess();
   }
 
@@ -163,20 +150,33 @@ class LocationsRateForm extends React.Component {
       dispatch
     } = this.props;
 
-  const fields = [ 
-    'exact_address',
-    'township_id',
-    'township_code',
-    'location_id',
-    'location_code',
-    'scheme',
-    'rate',
-    'location_name',
-    'location_map',
-    'max_period',
-    'township_name',
-    'scheme_type',
-    'permit_type',
+    const fields = [ 
+      'date_time',
+      'user_name',
+      'township_name',
+      'location_code',
+      'location_name',
+      'bill_date',
+      'expiry_date',
+      'permit_name',
+      'rate',
+      'ipn_custom_element',
+      'ipn_custom_value',
+      'ipn_txn_id',
+      'ipn_payment',
+      'ipn_status',
+      'ipn_address',
+      'user_id',
+      'ip',
+      'paypal_logo',
+      'logo_paypal',
+      'township_code',
+      'scheme_type',
+      'permit_type',
+      'duration',
+      'duration_period',
+      'permit_status',
+      'expired',
     ]
 
     return fields.map((data) => {
@@ -213,15 +213,7 @@ class LocationsRateForm extends React.Component {
               </div>
 
               <div className="row"> 
-                
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label htmlFor="date_time">date_time</label>
-                    <input id="date_time" className="date_time" type="text"/>
-                  </div>
-                </div>
                 {this.tempInputsEdit(this.props.initialValues)}
-                
               </div>
             </div>
 
@@ -231,7 +223,7 @@ class LocationsRateForm extends React.Component {
                   <button 
                   type="submit" 
                   disabled={submitting} 
-                  className="waves-effect waves-light btn">{this.props.modalText}</button>
+                  className="waves-effect waves-light btn valign">{this.props.modalText}</button>
                 </div>
               </div>
             </div>
@@ -242,25 +234,8 @@ class LocationsRateForm extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    townshipLocationsRateFetched: state.townshipLocationsRateFetched,
-    townshipLocationsRateCreated: state.townshipLocationsRateCreated,
-    townshipLocationsRateEdited: state.townshipLocationsRateEdited,
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    fetchLocationsRate, 
-    editLocationsRate, 
-    createLocationsRate, 
-    resetLoading
-  }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-  form: 'locations-rate-form',
+export default connect()(reduxForm({
+  form: 'subscriptions-form',
   fields,
   overwriteOnInitialValuesChange : true
-})(LocationsRateForm));
+})(SubscriptionsForm));

@@ -187,7 +187,7 @@ export function editTownshipPermitRequests(data, id) {
   }
 }
 
-export function fetchTownshipPermitTypes(data) {
+export function fetchTownshipPermitTypes(townshipCode) {
   const URL = 'permit_type';
 
   return function(dispatch) {
@@ -195,7 +195,6 @@ export function fetchTownshipPermitTypes(data) {
     return AXIOS_INSTANCE.get(URL)
     .then(function(response) {
       dispatch(apiTownship.receiveData(response.data, types.TOWNSHIP_PERMIT_TYPES_GET_SUCCESS));
-      dispatch(reset('permit-types'));
     })
     .catch(function(response){
       dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_PERMIT_TYPES_GET_ERROR));
@@ -246,6 +245,21 @@ export function fetchTownshipParkingPermits(townshipCode) {
     })
     .catch(function(response){
       dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_PARKING_PERMITS_GET_ERROR));
+    })
+  }
+}
+
+export function editTownshipParkingPermits(data, id) {
+  const URL = 'parking_permits?ids=' + id;
+
+  return function(dispatch) {
+    dispatch(apiTownship.requestData(types.TOWNSHIP_PARKING_PERMITS_PUT_REQ));
+    return AXIOS_INSTANCE.put(URL, data)
+    .then(function(response) {
+      dispatch(apiTownship.receiveData(response.data, types.TOWNSHIP_PARKING_PERMITS_PUT_SUCCESS));
+    })
+    .catch(function(response){
+      dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_PARKING_PERMITS_PUT_ERROR));
     })
   }
 }

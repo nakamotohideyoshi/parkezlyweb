@@ -16,9 +16,9 @@ export const ajaxSelectizeGet = function(tableName, dataField, componentFunction
       if (data[dataField] === null || data[dataField] === undefined) {
         optionsArray.push({id: data.id, label: 'n/a - submitted blank', value: 'n/a - submitted blank'});
       } else if (typeof data[dataField] !== 'string') {
-        optionsArray.push({id: data.id, label: data[dataField].toString(), value: data[dataField].toString()});
+        optionsArray.push({id: data.id, label: _.truncate(data[dataField].toString(), {'length': 40}), value: data[dataField].toString()});
       } else {
-        optionsArray.push({id: data.id, label: data[dataField], value: data[dataField]});
+        optionsArray.push({id: data.id, label: _.truncate(data[dataField], {'length': 40}), value: data[dataField]});
       }
     });
 
@@ -30,15 +30,15 @@ export const ajaxSelectizeFilteredGet = function(tableName, dataField, filter, c
   AXIOS_INSTANCE.get(tableName).then((response) => {
 
     let optionsArray = [];
-    let tableData = _.filter(response.data.resource, {'township_code': filter});
+    let tableData = _.filter(response.data.resource, filter);
 
     tableData.map(function(data){
       if (data[dataField] === null || data[dataField] === undefined) {
         optionsArray.push({id: data.id, label: 'n/a - submitted blank', value: 'n/a - submitted blank'});
       } else if (typeof data[dataField] !== 'string') {
-        optionsArray.push({id: data.id, label: data[dataField].toString(), value: data[dataField].toString()});
+        optionsArray.push({id: data.id, label: _.truncate(data[dataField].toString(), {'length': 40}), value: data[dataField].toString()});
       } else {
-        optionsArray.push({id: data.id, label: data[dataField], value: data[dataField]});
+        optionsArray.push({id: data.id, label: _.truncate(data[dataField], {'length': 40}), value: data[dataField]});
       }
     });
 

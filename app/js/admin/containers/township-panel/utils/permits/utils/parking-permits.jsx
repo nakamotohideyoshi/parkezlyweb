@@ -1,38 +1,59 @@
 import React from 'react';
-import { reduxForm, change } from 'redux-form'
+import { reduxForm, change, reset } from 'redux-form'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-
-import datetime from 'node-datetime'
-import {SimpleSelect} from 'react-selectize'
+import datetime from 'node-datetime';
+import {SimpleSelect} from "react-selectize"
 
 import {
   fetchTownshipParkingPermits,
-  fetchTownshipUsers,
-  fetchTownshipPermitTypes,
   createTownshipParkingPermits,
-  fetchTownshipFacilities,
-  fetchTownshipPermitsList,
+  fetchTownshipUsers,
   resetLoading} from '../../../../../actions/actions-township-panel.jsx'
 
-import {fetchTownshipSchemeTypes} from '../../../../../actions/actions-township-common.jsx'
-import {fetchTownshipList} from '../../../../../actions/actions-township.js';
-
-import Spinner from '../../../../../common/components/spinner.jsx'
+import Spinner from '../../../../../common/components/spinner.jsx';
 import {optionsSelectize} from '../../../../../common/components/options-selectize.js';
 
+import Griddle from 'griddle-react'
+import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
+import {customFilterComponent, customFilterFunction} from '../../../../../common/components/griddle-custom-filter.jsx'
+import ParkingPermitsForm from './parking-permits-form'
+import {ajaxSelectizeGet, ajaxSelectizeFilteredGet, ajaxDelete, ajaxGet, ajaxPost} from '../../../../../common/components/ajax-selectize.js'
 
-export const fields = [ 
-'township_code',
-'township_name',
-'permit_type',
-'permit_name',
-'covered_locations',
-'cost',
-'year',
-'location_address',
-'active',
-'scheme_type']
+
+const fields = [
+  'id',
+  'date_time',
+  'township_code',
+  'township_name',
+  'permit_type',
+  'permit_name',
+  'covered_locations',
+  'cost',
+  'year',
+  'location_address',
+  'active',
+  'scheme_type',
+]
+
+class customColumnComponent extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div onClick={() => this.props.metadata.customComponentMetadata.renderEditModal(
+        this.props.rowData) }>
+        {this.props.data}
+      </div>
+    );
+  }
+}
+
+customColumnComponent.defaultProps = { "data": {}, "renderEditModal": null };
+
 
 class ParkingPermits extends React.Component {
 
@@ -42,14 +63,22 @@ class ParkingPermits extends React.Component {
     this.renderCreateModal = this.renderCreateModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
+    this.renderEditModal = this.renderEditModal.bind(this);
+
+    this.state = {
+      showEditDuplicateButtons: false,
+      parkingLocationCode: null,
+      showEditModal: false,
+      rowData: null,
+      selectizeOptions: {}
+    }
+
+   
   }
 
   componentWillMount() {
     this.props.fetchTownshipParkingPermits();
-
-    var dt = datetime.create();
-    var formattedDate = dt.format('m-d-Y H:M:S');
-    this.props.dispatch(change('parking-permits', 'year', formattedDate));
+    this.props.dispatch(change('parking-permits-form', 'township_code', this.props.townshipCode));
   }
 
   componentDidUpdate() {
@@ -59,89 +88,209 @@ class ParkingPermits extends React.Component {
     }
   };
 
-  handleSuccess(){
+  handleSuccess() {
     this.props.resetLoading();
-    $('#modal-parking-permit-create').closeModal();
     this.props.fetchTownshipParkingPermits();
+    $('#modal-success3').openModal();
   }
 
   handleSubmit(data) {
     this.props.createTownshipParkingPermits(data);
   }
 
-  renderPermitsData() {
-    let filteredPermits = this.props.townshipParkingPermitsFetched.data.resource;
-    return filteredPermits.map((permit) => {
-      return( 
-        <tr key={permit.id}>
-          <td>{permit.township_code}</td>
-          <td>{permit.township_name}</td>
-          <td>{permit.permit_type}</td>
-          <td>{permit.permit_name}</td>
-          <td>{permit.covered_locations}</td>
-          <td>{permit.cost}</td>
-          <td>{permit.year}</td>
-          <td>{permit.location_address}</td>
-          <td>{permit.active}</td>
-          <td>{permit.scheme_type}</td>
-        </tr>
-      );
-    });
+  renderEditModal(rowData) {
+    window.scrollTo(0, document.body.scrollHeight);
+    this.setState({ showEditDuplicateButtons: true, rowData: rowData, showEditModal: true })
+  }
+
+  renderCreateModal() {
+    return (
+      <ParkingPermitsForm
+        initialValues={this.state.rowData}
+        handleSuccess={this.handleSuccess}
+        modalName="modal-parking-permits-create"
+        modalText="Create a Parking Permit"
+        submitType="CREATE"
+        rowData={this.state.rowData}
+        handleSuccess={this.handleSuccess}
+      />
+    );
   }
 
   renderPermitsTable() {
+    let filteredPermits = this.props.townshipParkingPermitsFetched.data.resource;
+
+    var renderEditModal = this.renderEditModal;
+    var metaDataFunction = () => {
+      return fields.map((data) => {
+        return (
+          {
+            "columnName": data,
+            "customComponent": customColumnComponent,
+            'customComponentMetadata': {
+              'renderEditModal': renderEditModal
+            }
+          }
+        );
+      });
+    }
+    var columnMeta = metaDataFunction()
+
     return (
-      <div className="township-userlist-container">
-        <table className="highlight">
-          <thead>
-            <tr>
-              <th data-field="id">Township Code</th>
-              <th data-field="name">Township Name</th>
-              <th data-field="price">Permit Type</th>
-              <th data-field="price">Permit Name</th>
-              <th data-field="price">Covered Locations</th>
-              <th data-field="price">Cost</th>
-              <th data-field="price">Year</th>
-              <th data-field="price">Location Address</th>
-              <th data-field="price">Active</th>
-              <th data-field="price">Scheme Type</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.renderPermitsData()}
-          </tbody>
-        </table>
+      <Griddle
+        tableClassName={'table table-bordered table-striped table-hover'}
+          filterClassName={''}
+          useGriddleStyles={false}
+          results={filteredPermits}
+          showFilter={true}
+          showSettings={true}
+          settingsToggleClassName='btn btn-default'
+          useCustomPagerComponent={true}
+          customPagerComponent={ BootstrapPager }
+          useCustomFilterComponent={true} customFilterComponent={customFilterComponent}
+          useCustomFilterer={true} customFilterer={customFilterFunction}
+          columnMetadata={columnMeta}
+          columns={[
+            'id',
+            'date_time',
+            'township_code',
+            'township_name',
+            'permit_type',
+            'permit_name'
+          ]}
+        />
+    );
+  }
+
+  renderEditDuplicateButtons(locationCode) {
+    return (
+      <div className="container" style={{ marginTop: 40 }}>
+        <a
+          onClick={() => {
+            this.setState({ showEditModal: true })
+            $('#modal-parking-permits-edit').openModal();
+          } }
+          className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">edit</i>
+          <h4> Edit Parking Permit: {locationCode} </h4>
+        </a>
+        <a
+          onClick={() => {
+            this.setState({ showEditModal: true })
+            $('#modal-parking-permits-duplicate').openModal();
+          } }
+          className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">content_copy</i>
+          <h4> Duplicate Parking Permit: {locationCode} </h4>
+        </a>
+
+        <a
+          onClick={() => $('#modal-delete3').openModal() }
+          className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+          <i className="material-icons valign">delete </i>
+          <h4> Delete Parking Permit: {locationCode} </h4>
+        </a>
+        <div id="modal-delete3" className="modal" style={{ overflowX: "hidden" }}>
+          <div className="modal-content">
+            <h4>Delete</h4>
+            <p>Are you sure you want to delete this record?</p>
+          </div>
+          <div className="modal-footer">
+            <div className="row marginless-row">
+              <div className="col s6 left">
+                <button
+                  href="#"
+                  className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
+              </div>
+              <div className="col s3">
+                <a className="waves-effect waves-light btn btn-red"
+                  onClick={() => {
+                    $('#modal-delete3').closeModal()
+                  } }>No</a>
+              </div>
+              <div className="col s3">
+                <a className="waves-effect waves-light btn btn-green"
+                  onClick={() => {
+                    $('#modal-delete3').closeModal()
+                    ajaxDelete('parking_permits', this.state.rowData.id, this.handleSuccess);
+                    this.setState({ showEditDuplicateButtons: false });
+                    window.scrollTo(0, 0);
+                  } }>Yes</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {
+          !this.state.showEditModal ?
+            <div></div> :
+            <div>
+              <ParkingPermitsForm
+                initialValues={this.state.rowData}
+                handleSuccess={this.handleSuccess}
+                modalName="modal-parking-permits-edit"
+                modalText="Edit a Parking Permit"
+                submitType="EDIT"
+                rowData={this.state.rowData}
+                handleSuccess={this.handleSuccess}
+                />
+              <ParkingPermitsForm
+                initialValues={this.state.rowData}
+                handleSuccess={this.handleSuccess}
+                modalName="modal-parking-permits-duplicate"
+                modalText="Duplicate a Parking Permit"
+                submitType="DUPLICATE"
+                rowData={this.state.rowData}
+                handleSuccess={this.handleSuccess}
+                />
+            </div>
+        }
       </div>
-    ); 
+    );
   }
 
   render() {
+    var isFetched = this.props.townshipParkingPermitsFetched.isLoading;
     return (
-      <div className="col s12" style={{marginTop: 40, marginBottom: 40}}>
+      <div>
         <nav>
           <div className="nav-wrapper nav-admin z-depth-2">
             <a className="brand-logo center">Parking Permits</a>
           </div>
         </nav>
-        <div className="card">
-          {this.props.townshipParkingPermitsFetched.isLoading ? 
-              <div className="center-align"> <Spinner /> </div> : this.renderPermitsTable()}   
+        <div className="card" style={{marginBottom: 40}}>
+          {isFetched ?
+            <div className="center-align"> <Spinner /> </div> : this.renderPermitsTable() }
 
-          <div className="divider"/> 
+          <div className="divider"/>
 
           <div className="center-align">
             <a
-              className="modal-trigger waves-effect waves-light btn valign" 
-              onClick={() => $('#modal-parking-permit-create').openModal()}
-              style={{margin: 10}}>Add New Parking Permit</a>
+              className="modal-trigger waves-effect waves-light btn valign"
+              onClick={() => {
+                  this.setState({showEditDuplicateButtons: false, rowData: null})
+                  $('#modal-parking-permits-create').openModal();
+                }
+              }
+              style={{ margin: 10 }}>Add New Parking Permit</a>
           </div>
-           {this.props.townshipPermitTypesFetched.isLoading ||
-            this.props.townshipSchemeTypesFetched.isLoading || 
-            this.props.townshipFacilitiesFetched.isLoading ||
-            this.props.townshipPermitsListFetched.isLoading ||
-            this.props.townshipListFetched.isLoading ? 
-            <div> </div> : this.renderCreateModal()}
         </div>
+        {this.props.townshipParkingPermitsFetched.isLoading ?
+          <div> </div> : this.renderCreateModal()}
+        {this.state.showEditDuplicateButtons ?
+          this.renderEditDuplicateButtons(this.state.rowData.id) : <div> </div>}
+
+        <div id="modal-success3" className="modal">
+          <div className="modal-content">
+            <h4>Success!</h4>
+            <p>You've successfully sent the request!</p>
+          </div>
+          <div className="modal-footer">
+            <button 
+            href="#" 
+            className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
+          </div>
+        </div>
+
       </div>
     );
   }
@@ -150,27 +299,15 @@ class ParkingPermits extends React.Component {
 function mapStateToProps(state) {
   return {
     townshipParkingPermitsFetched: state.townshipParkingPermitsFetched,
-    townshipParkingPermitsCreated: state.townshipParkingPermitsCreated,
-    townshipUsersFetched: state.townshipUsersFetched,
-    townshipPermitTypesFetched: state.townshipPermitTypesFetched,
-    townshipSchemeTypesFetched: state.townshipSchemeTypesFetched,
-    townshipFacilitiesFetched: state.townshipFacilitiesFetched,
-    townshipPermitsListFetched: state.townshipPermitsListFetched,
-    townshipListFetched: state.townshipListFetched
+    townshipParkingPermitsCreated: state.townshipParkingPermitsCreated
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     fetchTownshipParkingPermits,
-    fetchTownshipUsers,
-    fetchTownshipPermitTypes,
     createTownshipParkingPermits,
-    fetchTownshipSchemeTypes,
-    fetchTownshipFacilities,
-    fetchTownshipPermitsList,
-    fetchTownshipList,
-    resetLoading
+    resetLoading,
   }, dispatch);
 }
 
@@ -204,7 +341,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
 
     var optionsSchemeTypes = optionsSelectize(this.props.townshipSchemeTypesFetched.data.resource, 'scheme_type');
 
-    var optionsPermitsList = optionsSelectize(this.props.townshipPermitsListFetched.data.resource, 'permit_name');
+    var optionsPermitsList = optionsSelectize(this.props.townshipParkingPermitsFetched.data.resource, 'permit_name');
 
     var optionsLocationName = optionsSelectize(this.props.townshipFacilitiesFetched.data.resource, 'location_name');
 
@@ -219,7 +356,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
 
             <div className="row">
               <div className="center-align">
-                <h4>Create a Township Permit</h4>
+                <h4>Create a Parking Permit</h4>
                 <p className="center-align">Create a parking permit by filling out the fields.</p>
               </div>
             </div>
