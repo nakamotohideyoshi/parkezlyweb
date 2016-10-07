@@ -14,7 +14,7 @@ import {optionsSelectize} from '../../../../common/components/options-selectize.
 import Griddle from 'griddle-react'
 import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
-import {ajaxSelectizeGet, ajaxSelectizeFilteredGet, ajaxDelete, ajaxGet, ajaxPost} from '../../../../common/components/ajax-selectize.js'
+import {ajaxSelectizeGet, ajaxSelectizeFilteredGet, ajaxDelete, ajaxGet, ajaxPost, ajaxPut} from '../../../../common/components/ajax-selectize.js'
 import AdminSelectize from '../../../../common/components/admin-selectize.jsx'
 
 const fields = [ 
@@ -59,7 +59,8 @@ class SubscriptionsForm extends React.Component {
       rowData: null,
       subscriptionData: null,
       subEdited: false,
-      subDuplicated: true
+      subDuplicated: true,
+      selectizeOptions: {}
     }
 
     this.tempInputsEdit = this.tempInputsEdit.bind(this);
@@ -88,13 +89,16 @@ class SubscriptionsForm extends React.Component {
   }
 
 
-  selectizeOptionsUpdate(test, keyName) {
-    var optionsDataObject = {[keyName]: test};
+  selectizeOptionsUpdate(valueName, keyName) {
+    var optionsDataObject = {[keyName]: valueName};
     Object.assign(this.state.selectizeOptions, optionsDataObject);
     this.forceUpdate();
   }
 
   componentWillMount() {
+    ajaxSelectizeGet('manage_locations', 'location_code', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('manage_locations', 'location_name', this.selectizeOptionsUpdate);
+    
     this.props.dispatch(change('subscriptions-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
     ajaxGet('subscriptions', (table) => {
       this.setState({subscriptionData: table.data.resource});
@@ -115,9 +119,6 @@ class SubscriptionsForm extends React.Component {
     });
   }
 
-  componentDidUpdate() {
-
-  };
 
   handleSuccess(){
     this.props.handleSuccess();
@@ -154,8 +155,6 @@ class SubscriptionsForm extends React.Component {
       'date_time',
       'user_name',
       'township_name',
-      'location_code',
-      'location_name',
       'bill_date',
       'expiry_date',
       'permit_name',
@@ -213,6 +212,23 @@ class SubscriptionsForm extends React.Component {
               </div>
 
               <div className="row"> 
+                <AdminSelectize 
+                  options={this.state.selectizeOptions}
+                  objectKey={'location_code'} 
+                  formName={'subscriptions-form'} 
+                  fieldName={'location_code'}
+                  defaultData={this.props.rowData}
+                  dispatch={dispatch} 
+                />
+
+                <AdminSelectize 
+                  options={this.state.selectizeOptions}
+                  objectKey={'location_name'} 
+                  formName={'subscriptions-form'} 
+                  fieldName={'location_name'}
+                  defaultData={this.props.rowData}
+                  dispatch={dispatch} 
+                />
                 {this.tempInputsEdit(this.props.initialValues)}
               </div>
             </div>

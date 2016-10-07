@@ -314,7 +314,10 @@ class TownshipPanelUsers extends React.Component {
               <div className="card">
                 <div className="township-userlist-container">
                   {this.props.townshipUsersFetched.isLoading ? 
-                    <div> </div> : this.renderUserTable()}
+                    <div className="card-content center-align">
+                      <div className="center-align"> <Spinner /> </div> 
+                    </div>
+                    : this.renderUserTable()}
                 </div>
               </div>
               {this.state.showEditDuplicateButtons ? 

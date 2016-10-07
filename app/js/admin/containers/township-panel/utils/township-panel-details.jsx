@@ -351,8 +351,8 @@ class TownshipDetails extends React.Component {
       }
     } else {
       return (
-        <div className="card-content center-align">
-          <div className="center-align"> <Spinner /> </div> 
+        <div className="card-content center-align animated fadeIn">
+          <div className="center-align animated fadeIn"> <Spinner /> </div> 
         </div>
       );
     }

@@ -2,6 +2,7 @@ node_modules/
 dist/
 *.d.ts
 .vscode/
+typings/
 typings.json
 jsconfig.json
 test/
