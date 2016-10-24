@@ -1,4 +1,10 @@
 - Dreamfactory -
-username: millennialapps@gmail.com
-password: millennialdev
+username: bgolson@gmail.com 
+password: dream2212
 
+http://54.83.189.72/dreamfactory/dist/index.html#/login
+
+- Dreamfactory Scripts - 
+if (event.request.payload) { 
+    event.request.payload = {"resource": [event.request.payload]};
+}

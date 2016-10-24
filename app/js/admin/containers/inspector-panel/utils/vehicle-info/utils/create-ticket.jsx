@@ -23,6 +23,7 @@ import {fetchInspectorTicket, createInspectorTicket} from '../../../../../action
 import { ajaxGet, ajaxDelete } from '../../../../../common/components/ajax-selectize.js';
 
 import { Link } from 'react-router';
+import axios from 'axios';
 
 export const fields = [ 
   'id',
@@ -69,11 +70,12 @@ class CreateTicket extends React.Component {
 
     this.state = {
       hearingMenu: false,
-      violationMenu: false,
       hearingSelected: false,
+      violationMenu: false,
       violationSelected: false,
       tableMenu: false,
       parkedCarData: null,
+      ticketData: null,
     }
 
     this.handleHearingData = this.handleHearingData.bind(this)
@@ -110,10 +112,19 @@ class CreateTicket extends React.Component {
 
   handleSuccess(){
     $('#modal-success').openModal();
+    this.props.resetLoading();
   }
 
   handleSubmit(data) {
     this.props.createInspectorTicket(data);
+
+    axios.post('/api/notify-parking-ticket', data)
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((response) => {
+      console.log(response.data);
+    })
   }
 
   renderHearingLocation() {
@@ -167,11 +178,7 @@ class CreateTicket extends React.Component {
   }
 
   handleHearingData(data) {
-    console.log(data);
-    console.log(this.props.fields)
-
     for (var key in data) {
-      console.log(data[key]);
       this.props.dispatch(change('map-create-ticket-form', key, data[key]));
     }
     this.handleParkingData(this.state.parkedCarData);
@@ -194,11 +201,7 @@ class CreateTicket extends React.Component {
   }
 
   handleViolationData(data) {
-    console.log(data);
-    console.log(this.props.fields)
-
     for (var key in data) {
-      console.log(data[key]);
       this.props.dispatch(change('map-create-ticket-form', key, data[key]));
     }
     this.handleParkingData(this.state.parkedCarData);
@@ -207,11 +210,7 @@ class CreateTicket extends React.Component {
   }
 
   handleParkingData(data) {
-    console.log(data);
-    console.log(this.props.fields)
-
     for (var key in data) {
-      console.log(data[key]);
       this.props.dispatch(change('map-create-ticket-form', key, data[key]));
     }
   }
@@ -276,8 +275,19 @@ class CreateTicket extends React.Component {
               {
                 this.state.parkedCarData == null ? <div> Loading... </div> : 
                 <div>
-                  <div style={{marginTop: 20, fontSize: 50}}> Vehicle Info. </div>
-                  <img src={require('../../../../../../../images/car_red@3x.png')} className="responsive-img"/>
+                  <div style={{marginTop: 20, fontSifze: 50}}> Vehicle Info. </div>
+                  {(() => {
+                    let currentTime = moment().diff(moment(this.state.parkedCarData.expiry_time), 'hours');
+                    if(currentTime > 0 && this.state.greenOff == false) {
+                      return <img src={require('../../../../../../../images/car_red@3x.png')} />
+                    } else if (currentTime < 0 && this.state.redOff == false) {
+                      return <img src={require('../../../../../../../images/car_green@3x.png')} />
+                    } else if (currentTime == 0 && this.state.yellowOff == false) {
+                      return <img src={require('../../../../../../../images/car_yellow@3x.png')} />
+                    } else {
+                      return <img src={require('../../../../../../../images/car_green@3x.png')} />
+                    }
+                  })()}
 
                   <div className="row" style={{marginTop: 30}}>
                     <h5 className="col s12">Plate Number - {this.state.parkedCarData.plate_no}</h5>
@@ -299,7 +309,7 @@ class CreateTicket extends React.Component {
             {
                 this.state.parkedCarData == null ? <div> Loading... </div> : 
                 <div className="card waves-effect waves-light" 
-                  onClick={this.props.handleSubmit(this.handleSubmit)} 
+                  onClick={() => this.handleSubmit()} 
                   style={{
                   backgroundColor: "#CC0000", 
                   border: "2px solid black", 
@@ -394,8 +404,5 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-  form: 'map-create-ticket-form',
-  fields
-})(CreateTicket));
+export default connect(mapStateToProps, mapDispatchToProps)(CreateTicket);
 

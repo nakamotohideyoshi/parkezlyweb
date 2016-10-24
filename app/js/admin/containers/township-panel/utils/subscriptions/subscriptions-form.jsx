@@ -18,7 +18,6 @@ import {ajaxSelectizeGet, ajaxSelectizeFilteredGet, ajaxDelete, ajaxGet, ajaxPos
 import AdminSelectize from '../../../../common/components/admin-selectize.jsx'
 
 const fields = [ 
-  'id',
   'date_time',
   'user_name',
   'township_name',
@@ -126,8 +125,7 @@ class SubscriptionsForm extends React.Component {
 
   tempInputsEdit(initialValues) {
      const {
-      fields: {  
-        id,  
+      fields: {   
         date_time, 
         township_code, 
         dd,  

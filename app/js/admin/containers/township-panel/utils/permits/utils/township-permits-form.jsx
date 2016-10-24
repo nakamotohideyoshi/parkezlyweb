@@ -83,8 +83,9 @@ class TownshipPermitsForm extends React.Component {
   }
 
   componentWillMount() {
-    ajaxSelectizeGet('township_users', 'user_id', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('township_users', 'user_name', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('user_profile', 'user_id', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('user_profile', 'user_name', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('parking_permits', 'permit_name', this.selectizeOptionsUpdate);
 
     this.props.dispatch(change('township-permits-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
     //ajaxSelectizeGet('townships_manager', 'manager_id', this.selectizeOptionsUpdate);
@@ -144,7 +145,6 @@ class TownshipPermitsForm extends React.Component {
 
     const fields = [
     'township_code',
-    'permit_name',
     ]
 
     return fields.map((data) => {
@@ -195,6 +195,14 @@ class TownshipPermitsForm extends React.Component {
                   objectKey={'user_id'} 
                   formName={'township-permits-form'} 
                   fieldName={'user_id'}
+                  defaultData={this.props.rowData}
+                  dispatch={dispatch} 
+                />
+                <AdminSelectize 
+                  options={this.state.selectizeOptions}
+                  objectKey={'permit_name'} 
+                  formName={'township-permits-form'} 
+                  fieldName={'permit_name'}
                   defaultData={this.props.rowData}
                   dispatch={dispatch} 
                 />

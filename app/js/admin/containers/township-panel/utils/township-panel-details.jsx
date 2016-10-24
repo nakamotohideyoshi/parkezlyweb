@@ -388,7 +388,7 @@ class TownshipDetails extends React.Component {
           }
 
           {this.props.townshipListFetched.isLoading ?  
-            console.log('Township Panel Is Loading')
+            <div> Loading... </div>
           : this.renderDetails(dataValid, townshipData)}
         </div>
 

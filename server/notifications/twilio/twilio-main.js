@@ -15,7 +15,7 @@ var client = require('twilio')('ACa6bbd1a6fadaa82cb2ae65175dc7f052', '843aad89d3
 var toNum = [];
 const fromNum = '';
 
-export default function twilioMain() {
+export default function twilioMain(app) {
     /*
     client.calls.get(function(err, response) {
         response.calls.forEach(function(call) {

@@ -17,8 +17,8 @@ apiConfig(app);
 apiRoutes(app);
 s3Config(app);
 /* Notifications (Every 60 seconds) */
-twilioMain();
-emailMain();
+//twilioMain(app);
+emailMain(app);
 /*
 setInterval(() => {
     

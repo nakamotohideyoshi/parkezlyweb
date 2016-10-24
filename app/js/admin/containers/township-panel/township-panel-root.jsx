@@ -64,7 +64,6 @@ class TownshipPanelRoot extends React.Component {
   }
 
   render() {
-    console.log("Testing 123");
     if(!this.props.townshipListFetched.isLoading) {
       townshipObjects = this.props.townshipListFetched.data.resource;
       filteredTownship = _.filter(townshipObjects, { 'id':  parseInt(this.props.townshipId)})

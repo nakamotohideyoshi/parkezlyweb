@@ -235,7 +235,7 @@ export function createTownshipPermitTypes(data) {
 }
 
 export function fetchTownshipParkingPermits(townshipCode) {
-  const URL = 'parking_permits';
+  const URL = `parking_permits?filter=(township_code=${townshipCode})`;
 
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.TOWNSHIP_PARKING_PERMITS_GET_REQ));
@@ -283,7 +283,7 @@ export function createTownshipParkingPermits(data) {
 
 
 export function fetchTownshipPermitsList(townshipCode) {
-  const URL = 'township_permits';
+  const URL = `township_permits?filter=(township_code=${townshipCode})`;
 
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.TOWNSHIP_PERMITS_LIST_GET_REQ));
@@ -321,7 +321,7 @@ export function createTownshipPermitsList(data) {
     return AXIOS_INSTANCE.post(URL, data)
     .then(function(response) {
       dispatch(apiTownship.receiveData(response.data, types.TOWNSHIP_PERMITS_LIST_POST_SUCCESS));
-      dispatch(reset('township-permits'));
+      //dispatch(reset('township-permits'));
     })
     .catch(function(response){
       dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_PERMITS_LIST_POST_ERROR));
@@ -330,7 +330,7 @@ export function createTownshipPermitsList(data) {
 }
 
 export function fetchLocationsRate(townshipCode) {
-  const URL = 'locations_rate';
+  const URL = `locations_rate?filter=(township_code=${townshipCode})`;
 
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.TOWNSHIP_LOCATIONS_RATE_GET_REQ));

@@ -77,7 +77,7 @@ class ParkingPermits extends React.Component {
   }
 
   componentWillMount() {
-    this.props.fetchTownshipParkingPermits();
+    this.props.fetchTownshipParkingPermits(this.props.townshipCode);
     this.props.dispatch(change('parking-permits-form', 'township_code', this.props.townshipCode));
   }
 
@@ -90,7 +90,7 @@ class ParkingPermits extends React.Component {
 
   handleSuccess() {
     this.props.resetLoading();
-    this.props.fetchTownshipParkingPermits();
+    this.props.fetchTownshipParkingPermits(this.props.townshipCode);
     $('#modal-success3').openModal();
   }
 
@@ -315,174 +315,3 @@ export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   form: 'parking-permits',
   fields
 })(ParkingPermits));
-
-/*
-
-  renderCreateModal() {
-    const {
-      fields: {
-        township_code,
-        township_name,
-        permit_type,
-        permit_name,
-        covered_locations,
-        cost,
-        year,
-        location_address,
-        active,
-        scheme_type
-      },
-      resetForm,
-      submitting,
-      dispatch
-    } = this.props
-
-    var optionsPermitTypes = optionsSelectize(this.props.townshipPermitTypesFetched.data.resource, 'permit_type');
-
-    var optionsSchemeTypes = optionsSelectize(this.props.townshipSchemeTypesFetched.data.resource, 'scheme_type');
-
-    var optionsPermitsList = optionsSelectize(this.props.townshipParkingPermitsFetched.data.resource, 'permit_name');
-
-    var optionsLocationName = optionsSelectize(this.props.townshipFacilitiesFetched.data.resource, 'location_name');
-
-    var optionsLocationAddress = optionsSelectize(this.props.townshipListFetched.data.resource, 'address');
-
-    var optionsActive = [{label: 'YES', value: 'YES'}, {label: 'NO', value: 'NO'}];
-
-    return(
-      <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
-        <div id="modal-parking-permit-create" className="modal modal-fixed-footer">
-          <div className="modal-content">
-
-            <div className="row">
-              <div className="center-align">
-                <h4>Create a Parking Permit</h4>
-                <p className="center-align">Create a parking permit by filling out the fields.</p>
-              </div>
-            </div>
-
-            <div className="row">
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Permit Type</label>
-                  <div clasName="input-field col s12">
-                    <SimpleSelect 
-                    options = {optionsPermitTypes} 
-                    placeholder = "Select Permit Type" 
-                    theme = "material" 
-                    style={{marginTop: 5}}
-                    onValueChange = {(value) => {
-                      dispatch(change('parking-permits', 'permit_type', value.value)); 
-                    }}></SimpleSelect>
-                  </div>
-                </div>
-              </div>
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Permit Name</label>
-                  <div clasName="input-field col s12">
-                    <SimpleSelect 
-                    options = {optionsPermitsList} 
-                    placeholder = "Permit Name" 
-                    theme = "material" 
-                    style={{marginTop: 5}}
-                    onValueChange = {(value) => {
-                      dispatch(change('parking-permits', 'permit_name', value.value)); 
-                    }}></SimpleSelect>
-                  </div>
-                </div>
-              </div>
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Scheme Type</label>
-                  <div clasName="input-field col s12">
-                    <SimpleSelect 
-                    options = {optionsSchemeTypes} 
-                    placeholder = "Select Scheme Type" 
-                    theme = "material" 
-                    style={{marginTop: 5}}
-                    onValueChange = {(value) => {
-                      dispatch(change('parking-permits', 'scheme_type', value.value)); 
-                    }}></SimpleSelect>
-                  </div>
-                </div>
-              </div>
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Covered Locations</label>
-                  <div clasName="input-field col s12">
-                    <SimpleSelect 
-                    options = {optionsLocationName} 
-                    placeholder = "Select Covered Locations" 
-                    theme = "material" 
-                    style={{marginTop: 5}}
-                    onValueChange = {(value) => {
-                      dispatch(change('parking-permits', 'covered_locations', value.value)); 
-                    }}></SimpleSelect>
-                  </div>
-                </div>
-              </div>
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Location Address</label>
-                  <div clasName="input-field col s12">
-                    <SimpleSelect 
-                    options = {optionsLocationAddress} 
-                    placeholder = "LocationAddress" 
-                    theme = "material" 
-                    style={{marginTop: 5}}
-                    onValueChange = {(value) => {
-                      dispatch(change('parking-permits', 'location_address', value.value)); 
-                    }}></SimpleSelect>
-                  </div>
-                </div>
-              </div>
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Active</label>
-                  <div clasName="input-field col s12">
-                    <SimpleSelect 
-                    options = {optionsActive} 
-                    placeholder = "Active" 
-                    theme = "material" 
-                    style={{marginTop: 5}}
-                    onValueChange = {(value) => {
-                      dispatch(change('parking-permits', 'active', value.value)); 
-                    }}></SimpleSelect>
-                  </div>
-                </div>
-              </div>
-              <div className="col s6 admin-form-input">
-                <div className="form-group">
-                  <label>Cost</label>
-                  <div className="row marginless-row">
-                    <div className="col s1 left-align">
-                      <p>$</p>
-                    </div>
-                    <div className="col s11">
-                      <input style={{maxWidth: 250, minWidth: 250}} 
-                      id="icon_telephone" type="number" step="any" placeholder="Cost" onChange={(value) => {
-                        dispatch(change('parking-permits', 'cost', '$' + value.target.value.toString())); }}/>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="modal-footer">
-            <div className="row marginless-row">
-              <div className="col s8">
-                <button 
-                type="submit" 
-                disabled={submitting} 
-                className="waves-effect waves-light btn">Create Permit Type</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
-    );
-  }
-*/
-
