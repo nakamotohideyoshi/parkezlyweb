@@ -27,7 +27,6 @@ import AdminSelectize from '../../../../common/components/admin-selectize.jsx';
 import {countries, states} from '../../../../constants/countries.js'
 
 export const fields = [ 
-  'id',  
   'date_time', 
   'township_code', 
   'dd',  
@@ -65,6 +64,7 @@ class TownshipPanelFacilitiesForm extends React.Component {
     this.handleSuccess = this.handleSuccess.bind(this);
     this.selectizeOptionsUpdate = this.selectizeOptionsUpdate.bind(this);
 
+    this.props.dispatch(change('violation-code-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
   }
 
   handleSubmit(data) {
@@ -72,7 +72,7 @@ class TownshipPanelFacilitiesForm extends React.Component {
     $('#' + this.props.modalName).closeModal();
     $('#modal-success').openModal();
     this.props.dispatch(change('facilities-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
-
+    console.log(data)
     switch(this.props.submitType) {
       case "CREATE":
         this.props.createTownshipLocations(data);
@@ -143,8 +143,7 @@ class TownshipPanelFacilitiesForm extends React.Component {
 
   tempInputsEdit(initialValues) {
      const {
-      fields: {  
-        id,  
+      fields: {   
         date_time, 
         township_code, 
         dd,  
@@ -254,8 +253,7 @@ class TownshipPanelFacilitiesForm extends React.Component {
                     </div>
                   </div>
                 </div>
-                
-                {this.tempInputsEdit(this.props.initialValues)}
+
                 <AdminSelectize 
                 options={this.state.selectizeOptions}
                 objectKey={'rate'} 
@@ -272,12 +270,9 @@ class TownshipPanelFacilitiesForm extends React.Component {
                 defaultData={this.props.rowData}
                 dispatch={dispatch} 
                 />
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label htmlFor="date_time">date_time</label>
-                    <input id="date_time" className="date_time" type="text"/>
-                  </div>
-                </div>
+                
+                {this.tempInputsEdit(this.props.initialValues)}
+                
               </div>
             </div>
 

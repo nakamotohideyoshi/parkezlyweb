@@ -18,6 +18,8 @@ import Griddle from 'griddle-react'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 import InspectorPanelCreateTicketForm from './inspector-panel-create-ticket-form.jsx'
 
+import axios from 'axios'
+
 export const fields = [ 
   'id',
   'town_logo', 
@@ -94,6 +96,7 @@ class InspectorCreateTicket extends React.Component {
     this.handleSuccess = this.handleSuccess.bind(this);
     this.renderTable = this.renderTable.bind(this);
     this.renderEditModal = this.renderEditModal.bind(this);
+
   }
 
   componentWillMount() {
@@ -213,8 +216,6 @@ class InspectorCreateTicket extends React.Component {
   }
 
   renderEditModal(recordId, rowData) {
-    console.log(rowData);
-    console.log(recordId);
     window.scrollTo(0, document.body.scrollHeight);
     this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true, parkingLocationCode: recordId})
   }

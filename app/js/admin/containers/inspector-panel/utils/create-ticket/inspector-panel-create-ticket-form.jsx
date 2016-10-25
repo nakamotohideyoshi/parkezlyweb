@@ -24,6 +24,7 @@ import {customFilterComponent, customFilterFunction} from '../../../../common/co
 
 import { ajaxSelectizeGet, ajaxDelete } from '../../../../common/components/ajax-selectize.js'
 import AdminSelectize from '../../../../common/components/admin-selectize.jsx'
+import axios from 'axios'
 
 export const fields = [ 
   'id',
@@ -83,19 +84,34 @@ class InspectorSearchTicketForm extends React.Component {
   }
 
   handleSubmit(data) {
-    
     $('#' + this.props.modalName).closeModal();
     $('#modal-success').openModal();
 
     switch(this.props.submitType) {
       case "CREATE":
+        data = _.omit(data, 'id');
         this.props.createInspectorTicket(data);
+        axios.post('/api/notify-parking-ticket', data)
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((response) => {
+          console.log(response.data);
+        })
         break;
       case "EDIT":
         this.props.editInspectorTicket(data, data.id);
         break;
       case "DUPLICATE":
+        data = _.omit(data, 'id');
         this.props.createInspectorTicket(data);
+        axios.post('/api/notify-parking-ticket', data)
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((response) => {
+          console.log(response.data);
+        })
         break;
       default:
         console.log("No valid submit type was provided.");
@@ -111,7 +127,7 @@ class InspectorSearchTicketForm extends React.Component {
   }
 
   componentWillMount() {
-    ajaxSelectizeGet('township_users', 'user_id', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('user_profile', 'user_id', this.selectizeOptionsUpdate);
   }
 
   componentDidUpdate() {

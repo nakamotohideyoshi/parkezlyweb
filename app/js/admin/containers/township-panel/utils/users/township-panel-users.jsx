@@ -80,7 +80,6 @@ class TownshipPanelUsers extends React.Component {
     }
 
     this.renderUserTable = this.renderUserTable.bind(this);
-    this.renderUserTableData = this.renderUserTableData.bind(this);
     this.renderUserList = this.renderUserList.bind(this);
 
     this.renderEditModal = this.renderEditModal.bind(this);
@@ -89,7 +88,7 @@ class TownshipPanelUsers extends React.Component {
 
   componentWillMount() {
     this.props.fetchTownshipUsers(this.props.townshipCode);
-  };
+  }
 
   handleSuccess(){
     this.props.resetLoading();
@@ -110,38 +109,6 @@ class TownshipPanelUsers extends React.Component {
         townshipCode={this.props.townshipCode}
       />
     );
-  }
-
-  renderUserTableData(filteredUsersData) {
-    const filteredUsers = filteredUsersData.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS))
-    console.log(filteredUsers)
-    if(filteredUsers.length > 0){   
-      return filteredUsers.map((user) => {
-        return( 
-          <tr className="clickable" key={user.id} onClick={
-            () => this.setState({
-              editMode: true,
-              createMode: false, 
-              fieldData: user, 
-              userId: user.id
-            })
-          }>
-            <td>{user.user_id}</td>
-            <td>{user.user_name}</td>
-            <td>{user.township_code}</td>
-            <td>{user.township_name}</td>
-            <td>{user.profile_name}</td>
-            <td>{user.status}</td>
-          </tr>  
-        );
-      });
-    } else {
-      return( 
-        <tr>
-          <td>There are currently no users in this township or ones that match your search. Please create one.</td> 
-        </tr>
-      );
-    }
   }
 
   renderEditModal(recordId, rowData) {
@@ -314,7 +281,10 @@ class TownshipPanelUsers extends React.Component {
               <div className="card">
                 <div className="township-userlist-container">
                   {this.props.townshipUsersFetched.isLoading ? 
-                    <div> </div> : this.renderUserTable()}
+                    <div className="card-content center-align">
+                      <div className="center-align"> <Spinner /> </div> 
+                    </div>
+                    : this.renderUserTable()}
                 </div>
               </div>
               {this.state.showEditDuplicateButtons ? 

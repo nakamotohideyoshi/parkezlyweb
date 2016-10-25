@@ -72,7 +72,7 @@ class TownshipPermits extends React.Component {
   }
 
   componentWillMount() {
-    this.props.fetchTownshipPermitsList();
+    this.props.fetchTownshipPermitsList(this.props.townshipCode);
     this.props.fetchTownshipUsers(this.props.townshipCode);
     this.props.dispatch(change('township-permits-form', 'township_code', this.props.townshipCode));
   }
@@ -86,7 +86,7 @@ class TownshipPermits extends React.Component {
 
   handleSuccess() {
     this.props.resetLoading();
-    this.props.fetchTownshipPermitsList();
+    this.props.fetchTownshipPermitsList(this.props.townshipCode);
     $('#modal-success2').openModal();
   }
 

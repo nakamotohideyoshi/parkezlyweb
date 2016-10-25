@@ -6,6 +6,8 @@ import Body from "../../../../../common/components/body/body.jsx";
 import {
   fetchTownshipPermitRequests, 
   editTownshipPermitRequests, 
+  fetchTownshipPermitsList,
+  createTownshipPermitsList,
   fetchTownshipParkingPermits, 
   createTownshipParkingPermits, 
   resetLoading
@@ -19,6 +21,7 @@ import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 
 import _ from "lodash";
+import axios from "axios";
 
 var classNames = {
   content: 'traditional-tabs-content',
@@ -120,8 +123,12 @@ class TownshipPanelPermitRequests extends React.Component {
   }
 
   componentDidUpdate() {
-    if (this.props.townshipParkingPermitsCreated.isLoading) {
-    } else if (!this.props.townshipParkingPermitsCreated.isLoading) {
+    /*
+    if (!this.props.townshipParkingPermitsCreated.isLoading) {
+      this.handleSuccess();
+    }
+    */
+    if (!this.props.townshipPermitRequestsEdited.isLoading && !this.props.townshipPermitsListCreated.isLoading) {
       this.handleSuccess();
     }
   };
@@ -133,37 +140,21 @@ class TownshipPanelPermitRequests extends React.Component {
   }
 
   handleAccept() {
-
-    const filteredPermits = _.filter(
-      this.props.townshipParkingPermitsFetched.data.resource, 
-      {'permit_name': this.state.rowData.permit_name, 'township_code': this.props.townshipCode}
-    );
-    var currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
-
-    const permitData = filteredPermits[0];
-    var permitMoment = moment(permitData.year);
-    var currentMoment = moment(currentTime);
-
-    console.log(currentMoment.diff(permitMoment, "years"));
-
-    if (filteredPermits[0] === null && filteredPermits[0] === undefined) {
-      this.props.createTownshipParkingPermits({
-        "township_code": this.props.townshipCode,
-        "date_time": currentTime,
-        "township_name": this.props.townshipCode,
-        "permit_type": this.state.rowData.permit_type,
-        "permit_name": this.state.rowData.permit_name,
-        "covered_locations": null,
-        "cost": this.state.rowData.rate,
-        "year": currentTime,
-        "location_address": null,
-        "active": "NO",
-        "scheme_type": this.state.rowData.scheme_type
-      });
-    } else {
-      alert("Error: A permit with that permit name already exists.")
+    let townshipPermit = {
+      "date_time": moment().format('YYYY-MM-DD HH:mm:ss'),
+      "user_id": this.state.rowData.user_id,
+      "township_code": this.props.townshipCode,
+      "permit_name": this.state.rowData.permit_name,
+      "name": this.state.rowData.user_id,
+      "user_name": this.state.rowData.user_id,
     }
-    this.props.fetchTownshipParkingPermits();
+
+    //this.props.createTownshipPermitsList(townshipPermit)
+
+    axios.post('/api/notify-parking-permit', townshipPermit)
+    .then((response) => {
+      console.log(response.data);
+    })
   }
 
   renderApproveModal() {
@@ -185,7 +176,10 @@ class TownshipPanelPermitRequests extends React.Component {
           </div>
           <div className="col s3">
             <a className="waves-effect waves-light btn btn-green" onClick={
-              () => this.handleAccept()
+              () => {
+                this.props.editTownshipPermitRequests({"approved": "YES", "status": "ACTIVE"}, this.state.requestId)
+                this.handleAccept()
+              }
             }>Approve</a>
           </div>
         </div>
@@ -195,7 +189,6 @@ class TownshipPanelPermitRequests extends React.Component {
   }
 
   renderEditModal(requestId, rowData) {
-    console.log(rowData)
     this.setState({requestId: requestId, rowData: rowData});
     $('#permit-requests-modal').openModal();
   }
@@ -414,7 +407,6 @@ class TownshipPanelPermitRequests extends React.Component {
   }
 
   render() {
-    console.log(this.props.townshipParkingPermitsFetched)
     return (
       <div className="blue-body marginless-row">
         <Body showHeader={true}>
@@ -474,8 +466,13 @@ function mapStateToProps(state) {
   return {
     townshipPermitRequestsFetched: state.townshipPermitRequestsFetched,
     townshipPermitRequestsEdited: state.townshipPermitRequestsEdited,
+
+    townshipPermitsListFetched: state.townshipPermitsListFetched,
+    townshipPermitsListCreated: state.townshipPermitsListCreated,
+
     townshipParkingPermitsFetched: state.townshipParkingPermitsFetched,
     townshipParkingPermitsCreated: state.townshipParkingPermitsCreated,
+    townshipParkingPermitsEdited: state.townshipParkingPermitsEdited
   }
 }
 
@@ -483,6 +480,8 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     fetchTownshipPermitRequests,
     editTownshipPermitRequests,
+    fetchTownshipPermitsList,
+    createTownshipPermitsList,
     fetchTownshipParkingPermits, 
     createTownshipParkingPermits, 
     resetLoading
@@ -494,17 +493,49 @@ export default connect(mapStateToProps, mapDispatchToProps)(TownshipPanelPermitR
 
 /*
 
-if(permitData.scheme_type == "SUBSCRIPTION") {
-  if (permitData.active == "YES") {
+  if(permitData.scheme_type == "SUBSCRIPTION") {
+    if (permitData.active == "YES") {
 
+    }
   }
-}
 
-this.props.editTownshipPermitRequests(
-{
-  "approved": "YES", 
-  "status": "ACTIVE", 
-  "date_action": currentTime 
-}, this.state.requestId);
+  this.props.editTownshipPermitRequests(
+  {
+    "approved": "YES", 
+    "status": "ACTIVE", 
+    "date_action": currentTime 
+  }, this.state.requestId);
 
 */
+
+    /*
+    const filteredPermits = _.filter(
+      this.props.townshipParkingPermitsFetched.data.resource, 
+      {'permit_name': this.state.rowData.permit_name, 'township_code': this.props.townshipCode}
+    );
+    const permitData = filteredPermits[0];
+    let currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
+    console.log(currentMoment.diff(permitMoment, "years"));
+
+    if (filteredPermits[0] === null || filteredPermits[0] === undefined) {
+      let permitMoment = moment(permitData.year);
+      let currentMoment = moment(currentTime);
+
+      this.props.createTownshipParkingPermits({
+        "township_code": this.props.townshipCode,
+        "date_time": currentTime,
+        "township_name": this.props.townshipCode,
+        "permit_type": this.state.rowData.permit_type,
+        "permit_name": this.state.rowData.permit_name,
+        "covered_locations": null,
+        "cost": this.state.rowData.rate,
+        "year": currentTime,
+        "location_address": null,
+        "active": "NO",
+        "scheme_type": this.state.rowData.scheme_type
+      });
+    } else {
+      alert("Error: A permit with that permit name already exists.")
+    }
+    this.props.fetchTownshipParkingPermits();
+    */

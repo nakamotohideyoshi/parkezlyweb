@@ -187,7 +187,7 @@ export default class InspectorVehicleInfo extends React.Component {
           }
 
           <div 
-            onClick={() => this.context.router.goBack()}
+            onClick={browserHistory.goBack}
             className="card waves-effect waves-light center-align" 
             style={{
             backgroundColor: "#FCFF00", 
@@ -205,8 +205,4 @@ export default class InspectorVehicleInfo extends React.Component {
       </div>
     );
   }
-}
-
-InspectorVehicleInfo.contextTypes = {
-    router: React.PropTypes.func.isRequired
 }

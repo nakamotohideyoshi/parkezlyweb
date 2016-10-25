@@ -1,6 +1,6 @@
 import moment from 'moment'
 import {API_CONFIG} from '../../config/axios/axios-config';
-var client = require('twilio')('ACa6bbd1a6fadaa82cb2ae65175dc7f052', '843aad89d381d13b021bea30d785a1b6');
+var client = require('twilio')('ACf7f226de232f0af117b36cec35d15c73', 'b0f74f30a6c9519f4a2c47065fb3fcce');
     // Troy Live
 // ACa6bbd1a6fadaa82cb2ae65175dc7f052
 // 843aad89d381d13b021bea30d785a1b6
@@ -15,7 +15,7 @@ var client = require('twilio')('ACa6bbd1a6fadaa82cb2ae65175dc7f052', '843aad89d3
 var toNum = [];
 const fromNum = '';
 
-export default function twilioMain() {
+export default function twilioMain(app) {
     /*
     client.calls.get(function(err, response) {
         response.calls.forEach(function(call) {

@@ -81,7 +81,7 @@ class LocationsRate extends React.Component {
   }
 
   componentWillMount() {
-    this.props.fetchLocationsRate();
+    this.props.fetchLocationsRate(this.props.townshipCode);
     this.props.dispatch(change('locations-rate', 'township_code', this.props.townshipCode));
   }
 
@@ -96,7 +96,7 @@ class LocationsRate extends React.Component {
   handleSuccess(){
     this.props.resetLoading();
     $('#modal-success3').openModal();
-    this.props.fetchLocationsRate();
+    this.props.fetchLocationsRate(this.props.townshipCode);
   }
 
   handleSubmit(data) {

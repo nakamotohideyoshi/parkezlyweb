@@ -23,6 +23,7 @@ import {fetchInspectorTicket, createInspectorTicket} from '../../../../../action
 import { ajaxGet, ajaxDelete } from '../../../../../common/components/ajax-selectize.js';
 
 import { Link } from 'react-router';
+import axios from 'axios';
 
 export const fields = [ 
   'id',
@@ -69,22 +70,23 @@ class CreateTicket extends React.Component {
 
     this.state = {
       hearingMenu: false,
-      violationMenu: false,
       hearingSelected: false,
+      violationMenu: false,
       violationSelected: false,
       tableMenu: false,
       parkedCarData: null,
+      ticketData: {},
     }
 
     this.handleHearingData = this.handleHearingData.bind(this)
     this.handleViolationData = this.handleViolationData.bind(this)
-    this.handleParkingData = this.handleParkingData.bind(this)
     this.renderHearingLocation = this.renderHearingLocation.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this);
     this.ajaxGet = this.ajaxGet.bind(this);
   }
 
   componentWillMount() {
+    console.log(this.props.townshipHearingPlaceFetched)
     this.props.fetchHearingPlace();
     this.props.fetchViolationCode();
     ajaxGet('parked_cars', this.ajaxGet);
@@ -102,18 +104,31 @@ class CreateTicket extends React.Component {
 
   componentDidUpdate() {
     window.scrollTo(0, 0);
-    if (this.props.inspectorTicketCreated.isLoading) {
-    } else if (!this.props.inspectorTicketCreated.isLoading) {
+    if (!this.props.inspectorTicketCreated.isLoading) {
       this.handleSuccess();
     }
   };
 
   handleSuccess(){
+    this.props.resetLoading();
+    this.props.fetchHearingPlace();
+    this.props.fetchViolationCode();
     $('#modal-success').openModal();
+    //this.setState({hearingSelected: false, violationSelected: false})
   }
 
   handleSubmit(data) {
-    this.props.createInspectorTicket(data);
+    let ticketData = _.merge(this.state.parkedCarData, data)
+    this.props.createInspectorTicket(_.omit(ticketData, 'id'));
+
+    axios.post('/api/notify-parking-ticket', ticketData)
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((response) => {
+      console.log(response.data);
+    })
+    
   }
 
   renderHearingLocation() {
@@ -126,7 +141,7 @@ class CreateTicket extends React.Component {
           <div style={{marginTop: 20, fontSize: 50}}> Hearing Location </div>
           {this.state.hearingSelected ?  
           <div className="row">
-            <h5>Location: {this.props.fields.hearing_location.value}</h5>
+            <h5>Location: {this.state.ticketData.hearing_location}</h5>
           </div> : 
           <div className="row">
             <h5> Select a Location </h5>
@@ -149,11 +164,11 @@ class CreateTicket extends React.Component {
             <div>
               <div className="row">
                 <h5 className="col s6">Violation Code:</h5> 
-                <h5 className="col s6">{this.props.fields.violation_code.value}</h5>
+                <h5 className="col s6">{this.state.ticketData.violation_code}</h5>
                 <h5 className="col s6">Violation Fee:</h5> 
-                <h5 className="col s6">{this.props.fields.violation_fee.value}</h5>
+                <h5 className="col s6">{this.state.ticketData.violation_fee}</h5>
                 <h5 className="col s6">Description:</h5>  
-                <h5 className="col s6">{this.props.fields.violation_description.value}</h5>
+                <h5 className="col s6">{this.state.ticketData.violation_description}</h5>
               </div>
             </div> 
             : 
@@ -167,15 +182,7 @@ class CreateTicket extends React.Component {
   }
 
   handleHearingData(data) {
-    console.log(data);
-    console.log(this.props.fields)
-
-    for (var key in data) {
-      console.log(data[key]);
-      this.props.dispatch(change('map-create-ticket-form', key, data[key]));
-    }
-    this.handleParkingData(this.state.parkedCarData);
-    this.setState({tableMenu: false, hearingSelected: true})
+    this.setState({tableMenu: false, hearingSelected: true, ticketData: _.extend(this.state.ticketData, data)})
   }
 
   renderHearingMenu() {
@@ -194,26 +201,7 @@ class CreateTicket extends React.Component {
   }
 
   handleViolationData(data) {
-    console.log(data);
-    console.log(this.props.fields)
-
-    for (var key in data) {
-      console.log(data[key]);
-      this.props.dispatch(change('map-create-ticket-form', key, data[key]));
-    }
-    this.handleParkingData(this.state.parkedCarData);
-    this.setState({tableMenu: false, violationSelected: true})
-    
-  }
-
-  handleParkingData(data) {
-    console.log(data);
-    console.log(this.props.fields)
-
-    for (var key in data) {
-      console.log(data[key]);
-      this.props.dispatch(change('map-create-ticket-form', key, data[key]));
-    }
+    this.setState({tableMenu: false, violationSelected: true, ticketData: _.extend(this.state.ticketData, data)})
   }
 
   renderViolationMenu() {
@@ -276,8 +264,19 @@ class CreateTicket extends React.Component {
               {
                 this.state.parkedCarData == null ? <div> Loading... </div> : 
                 <div>
-                  <div style={{marginTop: 20, fontSize: 50}}> Vehicle Info. </div>
-                  <img src={require('../../../../../../../images/car_red@3x.png')} className="responsive-img"/>
+                  <div style={{marginTop: 20, fontSifze: 50}}> Vehicle Info. </div>
+                  {(() => {
+                    let currentTime = moment().diff(moment(this.state.parkedCarData.expiry_time), 'hours');
+                    if(currentTime > 0 && this.state.greenOff == false) {
+                      return <img src={require('../../../../../../../images/car_red@3x.png')} />
+                    } else if (currentTime < 0 && this.state.redOff == false) {
+                      return <img src={require('../../../../../../../images/car_green@3x.png')} />
+                    } else if (currentTime == 0 && this.state.yellowOff == false) {
+                      return <img src={require('../../../../../../../images/car_yellow@3x.png')} />
+                    } else {
+                      return <img src={require('../../../../../../../images/car_green@3x.png')} />
+                    }
+                  })()}
 
                   <div className="row" style={{marginTop: 30}}>
                     <h5 className="col s12">Plate Number - {this.state.parkedCarData.plate_no}</h5>
@@ -299,7 +298,7 @@ class CreateTicket extends React.Component {
             {
                 this.state.parkedCarData == null ? <div> Loading... </div> : 
                 <div className="card waves-effect waves-light" 
-                  onClick={this.props.handleSubmit(this.handleSubmit)} 
+                  onClick={() => this.handleSubmit(this.state.ticketData)} 
                   style={{
                   backgroundColor: "#CC0000", 
                   border: "2px solid black", 
@@ -394,8 +393,5 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-  form: 'map-create-ticket-form',
-  fields
-})(CreateTicket));
+export default connect(mapStateToProps, mapDispatchToProps)(CreateTicket);
 

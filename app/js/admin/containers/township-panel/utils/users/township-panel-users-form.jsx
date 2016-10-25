@@ -52,13 +52,24 @@ class TownshipPanelUsersForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
     this.selectizeOptionsUpdate = this.selectizeOptionsUpdate.bind(this);
-    this.props.dispatch(change('township-users-form', 'township_code', this.props.townshipCode));
-    this.props.dispatch(change('township-users-form', 'township_name', this.props.townshipCode))
-  }
 
-  componentWillMount() {
     this.props.dispatch(change('township-users-form', 'township_code', this.props.townshipCode))
     this.props.dispatch(change('township-users-form', 'township_name', this.props.townshipCode))
+    
+  }
+
+  componentDidMount() {
+    const {
+      resetForm,
+      submitting,
+      dispatch
+    } = this.props
+
+    $('.date_time')
+    .bootstrapMaterialDatePicker({ time: true, format : 'YYYY-MM-DD HH:mm:ss' })
+    .on('change', function(event) {
+      dispatch(change('township-users-form', 'date_time', event.target.value)); 
+    });
   }
 
   handleSubmit(data) {
@@ -68,12 +79,14 @@ class TownshipPanelUsersForm extends React.Component {
 
     switch(this.props.submitType) {
       case "CREATE":
+        data = _.omit(data, 'id');
         this.props.createTownshipUsers(data);
         break;
       case "EDIT":
         this.props.editTownshipUsers(data, data.id);
         break;
       case "DUPLICATE":
+        data = _.omit(data, 'id');
         this.props.createTownshipUsers(data);
         break;
       default:
@@ -90,13 +103,16 @@ class TownshipPanelUsersForm extends React.Component {
   }
 
   componentWillMount() {
+    /*
     ajaxSelectizeGet('manage_locations', 'location_code', this.selectizeOptionsUpdate);
     ajaxSelectizeGet('scheme_type', 'scheme_type', this.selectizeOptionsUpdate);
     ajaxSelectizeGet('payment_type', 'pay_method', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('township_users', 'user_id', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('township_users', 'user_name', this.selectizeOptionsUpdate);
     ajaxSelectizeGet('user_vehicles', 'plate_no', this.selectizeOptionsUpdate);
     ajaxSelectizeGet('locations_rate', 'rate', this.selectizeOptionsUpdate);
+    */
+    ajaxSelectizeGet('user_profile', 'user_id', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('user_profile', 'user_name', this.selectizeOptionsUpdate);
+
   }
 
   componentDidUpdate() {
@@ -125,7 +141,10 @@ class TownshipPanelUsersForm extends React.Component {
 
   tempInputsEdit(initialValues) {
      const {
-      fields: {  
+      fields: { 
+        id,
+        township_name,
+        township_code, 
         user_id,
         user_name,
         profile_name,
@@ -136,10 +155,8 @@ class TownshipPanelUsersForm extends React.Component {
       dispatch
     } = this.props;
 
-    const fields = [ 
-      'id',
-      'user_id',
-      'profile_name',
+    const fields = [
+      'township_code'
     ]
 
     return fields.map((data) => {
@@ -178,6 +195,7 @@ class TownshipPanelUsersForm extends React.Component {
               </div>
 
               <div className="row">
+
                 <div className="col s6 admin-form-input">
                   <div className="form-group">
                     <label>status</label>
@@ -191,20 +209,59 @@ class TownshipPanelUsersForm extends React.Component {
                         onValueChange = {(value) => {
                           dispatch(change('township-users-form', 'status', value.value)); 
                         }}/>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'user_name'} 
-                formName={'township-users-form'} 
-                fieldName={'user_name'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
+                  <div className="col s6 admin-form-input">
+                    <div className="form-group">
+                      <label>profile_name</label>
+                      <div clasName="input-field col s12">
+                        <SimpleSelect 
+                          options = {[
+                            {label: "TwpBursar", value: "TwpBursar"}, 
+                            {label: "TwpInspector", value: "TwpInspector"},
+                            {label: "TwpAdmin", value: "TwpAdmin"},
+                            {label: "VehicleUser", value: "VehicleUser"},
+                          ]} 
+                          placeholder = "profile_name"
+                          theme = "material"
+                          style={{marginTop: 5}}
+                          transitionEnter = {true} 
+                          onValueChange = {(value) => {
+                            dispatch(change('township-users-form', 'profile_name', value.value)); 
+                          }}/>
+                      </div>
+                    </div>
+                  </div>
+                  
 
-                {this.tempInputsEdit(this.props.initialValues)}
+                  <AdminSelectize 
+                    options={this.state.selectizeOptions}
+                    objectKey={'user_name'} 
+                    formName={'township-users-form'} 
+                    fieldName={'user_name'}
+                    defaultData={this.props.rowData}
+                    dispatch={dispatch} 
+                  />
+
+                  <AdminSelectize 
+                    options={this.state.selectizeOptions}
+                    objectKey={'user_id'} 
+                    formName={'township-users-form'} 
+                    fieldName={'user_id'}
+                    defaultData={this.props.rowData}
+                    dispatch={dispatch} 
+                  />
+
+                  {this.tempInputsEdit(this.props.initialValues)}
+
+                  <div className="col s6 admin-form-input">
+                    <div className="form-group">
+                      <label htmlFor="date_time">date_time</label>
+                      <input id="date_time" className="date_time" type="text"/>
+                    </div>
+                  </div>
 
               </div>
             </div>
@@ -220,6 +277,7 @@ class TownshipPanelUsersForm extends React.Component {
                 </div>
               </div>
             </div>
+            
           </div>
         </form>
       </div>
@@ -247,5 +305,5 @@ function mapDispatchToProps(dispatch) {
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   form: 'township-users-form',
   fields,
-  overwriteOnInitialValuesChange : true
+  overwriteOnInitialValuesChange : false
 })(TownshipPanelUsersForm));

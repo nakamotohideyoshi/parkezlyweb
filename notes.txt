@@ -1,25 +1,10 @@
 - Dreamfactory -
-username: millennialapps@gmail.com
-password: millennialdev
+username: bgolson@gmail.com 
+password: dream2212
 
+http://54.83.189.72/dreamfactory/dist/index.html#/login
 
-- On Permits -
-
-The general flow is, a user requests a permit, the permit gets approved, 
-the user pays for the permit, after 1 year, the user has to pay again to renew the permit.
-
-- Approve permit in permit_subscriptions 
-- Find permit in parking_permits table
-- Check if type "subscription"
-- Check year field
-- Every time you open the permits page check if any of the permits need to be renewed?
-- If yes and unpaid make inactive
-- On permit payment page (pay_for_permit), add a year for every subscription renewal paid.
-
-
-New - 
-
-- Approve permit in permit_subscriptions 
-parked_cars
-scheme_location
-subscriptions
+- Dreamfactory Scripts - 
+if (event.request.payload) { 
+    event.request.payload = {"resource": [event.request.payload]};
+}

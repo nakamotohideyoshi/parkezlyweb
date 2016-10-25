@@ -351,8 +351,8 @@ class TownshipDetails extends React.Component {
       }
     } else {
       return (
-        <div className="card-content center-align">
-          <div className="center-align"> <Spinner /> </div> 
+        <div className="card-content center-align animated fadeIn">
+          <div className="center-align animated fadeIn"> <Spinner /> </div> 
         </div>
       );
     }
@@ -388,7 +388,7 @@ class TownshipDetails extends React.Component {
           }
 
           {this.props.townshipListFetched.isLoading ?  
-            console.log('Township Panel Is Loading')
+            <div> Loading... </div>
           : this.renderDetails(dataValid, townshipData)}
         </div>
 

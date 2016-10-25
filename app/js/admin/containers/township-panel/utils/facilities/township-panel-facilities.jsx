@@ -28,7 +28,6 @@ import TownshipPanelFacilitiesForm from './township-panel-facilities-form.jsx';
 import {ajaxSelectizeGet, ajaxDelete} from '../../../../common/components/ajax-selectize.js'
 
 export const fields = [ 
-  'id',  
   'date_time', 
   'township_code', 
   'dd',  
@@ -160,6 +159,7 @@ class TownshipPanelFacilities extends React.Component {
         initialValues={this.state.rowData} 
         rowData={this.state.rowData}
         handleSuccess={this.handleSuccess}
+        townshipCode={this.props.townshipCode}
       />
     );
   }
@@ -346,6 +346,7 @@ class TownshipPanelFacilities extends React.Component {
               initialValues={this.state.rowData} 
               rowData={this.state.rowData}
               handleSuccess={this.handleSuccess}
+              townshipCode={this.props.townshipCode}
             />
             <TownshipPanelFacilitiesForm
               initialValues={this.state.rowData} 
@@ -356,6 +357,7 @@ class TownshipPanelFacilities extends React.Component {
               initialValues={this.state.rowData} 
               rowData={this.state.rowData}
               handleSuccess={this.handleSuccess}
+              townshipCode={this.props.townshipCode}
             />
           </div>
         }

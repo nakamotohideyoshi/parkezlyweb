@@ -106,8 +106,8 @@ class TownshipPanelParkingRulesForm extends React.Component {
   componentWillMount() {
     ajaxSelectizeGet('townships_manager', 'manager_id', this.selectizeOptionsUpdate);
     ajaxSelectizeGet('locations_rate', 'rate', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('location_lot', 'location_code', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('location_lot', 'location_name', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('manage_locations', 'location_code', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('manage_locations', 'location_name', this.selectizeOptionsUpdate);
   }
 
   componentDidMount() {
