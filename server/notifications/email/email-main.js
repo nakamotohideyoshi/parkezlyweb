@@ -97,7 +97,7 @@ function newTicketNotify(app) {
             .catch(function(response){
                 console.log(response);
             });
-        }, 20); // 1 hour 3600000
+        }, 3600000); // 1 hour = 3600000 ms
     });
 }
 
