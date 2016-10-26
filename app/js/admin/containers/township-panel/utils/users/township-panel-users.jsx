@@ -92,9 +92,10 @@ class TownshipPanelUsers extends React.Component {
 
   handleSuccess(){
     this.props.resetLoading();
+    this.props.fetchTownshipUsers(this.props.townshipCode);
+    this.setState({rowData: {}, showEditDuplicateButtons: false});
     $('#modal-hearing-place-create').closeModal();
     $('#modal-success').openModal();
-    this.props.fetchTownshipUsers(this.props.townshipCode);
   }
 
   renderCreateModal() {

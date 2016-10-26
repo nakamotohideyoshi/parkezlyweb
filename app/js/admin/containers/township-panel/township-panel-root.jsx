@@ -34,7 +34,7 @@ class TownshipPanelRoot extends React.Component {
     this.renderDetailsFlag = this.renderDetailsFlag.bind(this);
   }
   componentWillMount() {
-    //this.props.fetchTownshipDetails(this.props.townshipId);
+    //this.props.fetchTownshipDetails(this.props.townshipCode);
     this.props.fetchTownshipList();
   }
 
@@ -52,10 +52,10 @@ class TownshipPanelRoot extends React.Component {
       return (
           <div>
             <TownshipDetails 
-            townshipId={this.props.townshipId} 
+            townshipId={this.props.townshipCode} 
             townshipData={filteredTownship[0]}
             initialValues={filteredTownship[0]} />
-            <TownshipPanelTiles townshipId={this.props.townshipId} townshipCode={filteredTownship[0].manager_id}/>
+            <TownshipPanelTiles townshipId={this.props.townshipCode} townshipCode={filteredTownship[0].manager_id}/>
           </div>
         );
     }
@@ -66,7 +66,7 @@ class TownshipPanelRoot extends React.Component {
   render() {
     if(!this.props.townshipListFetched.isLoading) {
       townshipObjects = this.props.townshipListFetched.data.resource;
-      filteredTownship = _.filter(townshipObjects, { 'id':  parseInt(this.props.townshipId)})
+      filteredTownship = _.filter(townshipObjects, { 'id':  parseInt(this.props.townshipCode)})
     }
 
     return (
@@ -122,7 +122,7 @@ class TownshipPanelRoot extends React.Component {
         </nav>
         <Body showHeader={true}>
           <div className="container">
-            ID: {this.props.townshipId}
+            ID: {this.props.townshipCode}
             {this.renderDetailsFlag()}
           </div>
 

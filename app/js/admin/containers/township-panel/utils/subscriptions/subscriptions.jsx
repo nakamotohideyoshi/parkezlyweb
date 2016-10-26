@@ -76,6 +76,7 @@ class Subscriptions extends React.Component {
     this.renderPermitList = this.renderPermitList.bind(this);
     this.renderEditModal = this.renderEditModal.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
+    this.renderCreateModal = this.renderCreateModal.bind(this);
 
     this.state = {
       showEditDuplicateButtons: false,
@@ -98,15 +99,21 @@ class Subscriptions extends React.Component {
   }
   
   handleSuccess(){
+    this.props.resetLoading();
+    this.setState({showEditDuplicateButtons: false, rowData: {}, showEditModal: false, subscriptionData: null});
     ajaxGet('subscriptions', (table) => {
       this.setState({subscriptionData: table.data.resource});
     });
-    this.props.resetLoading();
-    this.props.fetchTownshipPermitTypes();
+    //this.props.fetchTownshipPermitTypes();
     $('#modal-success').openModal();
   }
 
   renderCreateModal() {
+    const {
+      resetForm,
+      submitting,
+      dispatch
+    } = this.props
     return(
       <SubscriptionsForm
         modalName="modal-subscriptions-create" 
@@ -241,7 +248,6 @@ class Subscriptions extends React.Component {
               modalName="modal-subscriptions-edit" 
               modalText="Edit a Subscription" 
               submitType="EDIT"
-              initialValues={this.state.rowData} 
               rowData={this.state.rowData}
               handleSuccess={this.handleSuccess}
             />

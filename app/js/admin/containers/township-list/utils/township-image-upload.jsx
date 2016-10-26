@@ -28,7 +28,7 @@ class TownshipImageUpload extends React.Component {
 
     } else {
       let townshipLogo = this.props.uploadedImage.data.data.message;
-      this.props.editTownshipImage({"township_logo": townshipLogo}, this.props.townshipId);
+      this.props.editTownshipImage({"township_logo": townshipLogo}, this.props.townshipCode);
       this.setState({showerSpinner: false})
       this.props.resetLoading();
     }

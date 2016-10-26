@@ -104,6 +104,8 @@ class BursarPanelTicketPayment extends React.Component {
     this.props.resetLoading();
     $('#modal-bursar-payment-create').closeModal();
     this.props.fetchBursarTicketPayment();
+    this.setState({rowData: {}, showEditDuplicateButtons: false});
+    $('#modal-success').openModal();
   }
 
   handleSubmit(data) {

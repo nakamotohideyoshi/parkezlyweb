@@ -70,9 +70,10 @@ class TownshipPanelHearingPlace extends React.Component {
 
   handleSuccess(){
     this.props.resetLoading();
+    this.props.fetchHearingPlace();
+    this.setState({rowData: {}, showEditDuplicateButtons: false});
     $('#modal-hearing-place-create').closeModal();
     $('#modal-success').openModal();
-    this.props.fetchHearingPlace();
   }
 
   handleSubmit(data) {

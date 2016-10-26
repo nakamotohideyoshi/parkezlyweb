@@ -101,7 +101,6 @@ class TownshipPanelParkingRules extends React.Component {
   }
 
   componentWillMount() {
-    console.log(this.props.locationCode)
     this.props.fetchParkingRules(this.props.locationCode);
     this.props.fetchTownshipSchemeTypes();
     //this.props.fetchTownshipLocations(this.props.townshipCode);
@@ -116,9 +115,10 @@ class TownshipPanelParkingRules extends React.Component {
 
   handleSuccess(){
     this.props.resetLoading();
+    this.props.fetchParkingRules(this.props.locationCode);
+    this.setState({rowData: {}, showEditDuplicateButtons: false});
     $('#modal-township-parking-rules').closeModal();
     $('#modal-success').openModal();
-    this.props.fetchParkingRules(this.props.locationCode);
     window.scrollTo(0, 0);
   }
 
@@ -316,7 +316,7 @@ class TownshipPanelParkingRules extends React.Component {
                 <a className="waves-effect waves-light btn btn-green" 
                 onClick={() => {
                   $('#modal-delete').closeModal()
-                  ajaxDelete('parking_rules', locationId, this.handleSuccess);
+                  ajaxDelete('parking_rules', this.state.rowData.id, this.handleSuccess);
                   this.setState({showEditDuplicateButtons: false});
                   window.scrollTo(0, 0);
                 }}>Yes</a>

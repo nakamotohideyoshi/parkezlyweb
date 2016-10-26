@@ -91,6 +91,7 @@ class ParkingPermits extends React.Component {
   handleSuccess() {
     this.props.resetLoading();
     this.props.fetchTownshipParkingPermits(this.props.townshipCode);
+    this.setState({rowData: {}, showEditDuplicateButtons: false});
     $('#modal-success3').openModal();
   }
 

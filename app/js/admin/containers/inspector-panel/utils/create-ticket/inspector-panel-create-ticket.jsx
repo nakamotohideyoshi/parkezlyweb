@@ -112,11 +112,12 @@ class InspectorCreateTicket extends React.Component {
     }
   };
 
-  handleSuccess(){
+  handleSuccess() {
     this.props.resetLoading();
     $('#modal-inspector-ticket-create').closeModal();
-    $('#modal-success').openModal();
     this.props.fetchInspectorTicket();
+    this.setState({rowData: {}, showEditDuplicateButtons: false});
+    $('#modal-success').openModal();
   }
 
   handleSubmit(data) {

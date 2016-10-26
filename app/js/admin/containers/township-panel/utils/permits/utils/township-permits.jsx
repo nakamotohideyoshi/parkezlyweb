@@ -87,6 +87,7 @@ class TownshipPermits extends React.Component {
   handleSuccess() {
     this.props.resetLoading();
     this.props.fetchTownshipPermitsList(this.props.townshipCode);
+    this.setState({rowData: {}, showEditDuplicateButtons: false});
     $('#modal-success2').openModal();
   }
 

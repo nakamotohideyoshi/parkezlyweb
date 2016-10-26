@@ -95,8 +95,6 @@ class InspectorPanelParkingFieldEdit extends React.Component {
 
     $('#' + this.props.modalName).closeModal();
     $('#modal-success').openModal();
-    console.log(this.props.submitType);
-    console.log(data);
     switch(this.props.submitType) {
       case "CREATE":
         this.props.createInspectorParkingField(data);
@@ -124,7 +122,7 @@ class InspectorPanelParkingFieldEdit extends React.Component {
   }
 
   componentWillMount() {
-    
+    this.props.dispatch(change('parking-field-form', 'township_code', this.props.townshipCode));
   }
 
   componentDidUpdate() {
@@ -195,7 +193,6 @@ class InspectorPanelParkingFieldEdit extends React.Component {
 
     const fields = [   
       'parking_type',
-      'township_code',
       'location_code',
       'entry_date_time',
       'exit_date_time',
@@ -211,9 +208,7 @@ class InspectorPanelParkingFieldEdit extends React.Component {
       'address1',
       'address2',
       'city',
-      'state',
       'zip',
-      'country',
       'lot_row',
       'lot_number',
       'ip',
@@ -288,7 +283,7 @@ class InspectorPanelParkingFieldEdit extends React.Component {
                         style={{marginTop: 5}}
                         transitionEnter = {true} 
                         onValueChange = {(value) => {
-                          dispatch(change('facilities-form', 'country', value.value)); 
+                          dispatch(change('parking-field-form', 'country', value.value)); 
                         }}/>
                     </div>
                   </div>
@@ -304,7 +299,7 @@ class InspectorPanelParkingFieldEdit extends React.Component {
                         style={{marginTop: 5}}
                         transitionEnter = {true} 
                         onValueChange = {(value) => {
-                          dispatch(change('facilities-form', 'state', value.value)); 
+                          dispatch(change('parking-field-form', 'state', value.value)); 
                         }}/>
                     </div>
                   </div>
