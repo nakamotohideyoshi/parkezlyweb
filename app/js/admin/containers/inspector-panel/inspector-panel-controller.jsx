@@ -17,7 +17,7 @@ export class InspectorPanelController extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        <InspectorPanelRoot townshipId={this.props.params.townshipId} />
+        <InspectorPanelRoot townshipCode={this.props.params.townshipCode} />
       </Provider>
     );
   }
@@ -31,7 +31,7 @@ export class InspectorCreateTicketController extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        <InspectorCreateTicket townshipId={this.props.params.townshipId} />
+        <InspectorCreateTicket townshipCode={this.props.params.townshipCode} />
       </Provider>
     );
   }
@@ -45,7 +45,7 @@ export class InspectorParkingFieldController extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        <InspectorParkingField townshipId={this.props.params.townshipId} />
+        <InspectorParkingField townshipCode={this.props.params.townshipCode} />
       </Provider>
     );
   }
@@ -59,7 +59,7 @@ export class InspectorSearchPlateController extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        <InspectorSearchPlate townshipId={this.props.params.townshipId} />
+        <InspectorSearchPlate townshipCode={this.props.params.townshipCode} />
       </Provider>
     );
   }
@@ -73,7 +73,7 @@ export class InspectorMapViewController extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        <InspectorMapView townshipId={this.props.params.townshipId} />
+        <InspectorMapView townshipCode={this.props.params.townshipCode} />
       </Provider>
     );
   }

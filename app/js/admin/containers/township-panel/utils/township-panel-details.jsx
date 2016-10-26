@@ -83,7 +83,7 @@ class TownshipDetails extends React.Component {
 
   handleSubmit(data) {
     console.log(this.props.townshipData);
-    this.props.editTownship(data, this.props.townshipId);
+    this.props.editTownship(data, this.props.townshipCode);
   }
 
   handleSuccess(){
@@ -361,7 +361,7 @@ class TownshipDetails extends React.Component {
   render() {
     let dataValid;
     let townshipData = this.props.townshipData;
-    let townshipId = this.props.townshipId;
+    let townshipId = this.props.townshipCode;
 
     if (townshipData !== null && townshipData !== undefined) {
       dataValid = true;
@@ -382,7 +382,7 @@ class TownshipDetails extends React.Component {
           this.state.isShowingModal &&
           <ModalContainer onClose={this.handleClose}>
             <ModalDialog onClose={this.handleClose} style={{top: 120}}>
-              <TownshipImageUpload townshipId={this.props.townshipId} />
+              <TownshipImageUpload townshipId={this.props.townshipCode} />
             </ModalDialog>
           </ModalContainer>
           }

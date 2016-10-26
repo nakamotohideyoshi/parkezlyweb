@@ -19,7 +19,7 @@ export class TownshipPanelController extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        <TownshipPanelRoot townshipId={this.props.params.townshipId} />
+        <TownshipPanelRoot townshipCode={this.props.params.townshipCode} />
       </Provider>
     );
   }

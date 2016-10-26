@@ -15,7 +15,7 @@ class BursarPanelRoot extends React.Component {
   }
 
   componentWillMount() {
-    this.props.fetchTownshipDetails(this.props.townshipId);
+    this.props.fetchTownshipDetails(this.props.townshipCode);
   }
 
   render() {

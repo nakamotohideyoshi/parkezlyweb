@@ -81,6 +81,8 @@ class BursarPanelPermitPayment extends React.Component {
     this.props.resetLoading();
     $('#modal-bursar-permit-create').closeModal();
     this.props.fetchBursarPermitPayment();
+    this.setState({rowData: {}, showEditDuplicateButtons: false});
+    $('#modal-success').openModal();
   }
 
   handleSubmit(data) {

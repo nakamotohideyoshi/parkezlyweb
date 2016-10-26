@@ -73,9 +73,10 @@ class TownshipPanelViolationCode extends React.Component {
 
   handleSuccess(){
     this.props.resetLoading();
+    this.props.fetchViolationCode();
+    this.setState({rowData: {}, showEditDuplicateButtons: false});
     $('#modal-violation-code-create').closeModal();
     $('#modal-success').openModal();
-    this.props.fetchViolationCode();
   }
 
   handleSubmit(data) {

@@ -87,7 +87,6 @@ class BursarPanelTicketPaymentForm extends React.Component {
   handleSubmit(data) {
     
     $('#' + this.props.modalName).closeModal();
-    $('#modal-success').openModal();
 
     switch(this.props.submitType) {
       case "CREATE":
@@ -113,7 +112,7 @@ class BursarPanelTicketPaymentForm extends React.Component {
   }
 
   componentWillMount() {
-    ajaxSelectizeGet('township_users', 'user_id', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('user_profile', 'user_id', this.selectizeOptionsUpdate);
   }
 
   componentDidUpdate() {
@@ -167,7 +166,6 @@ class BursarPanelTicketPaymentForm extends React.Component {
       'ip',
       'ticket_no',
       'plate_num',
-      'user_id',
       'address',
       'email',
       'paypal_total',

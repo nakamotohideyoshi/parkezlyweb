@@ -111,7 +111,7 @@ class InspectorParkingField extends React.Component {
   componentWillMount() {
     this.props.fetchInspectorParkingField();
     this.props.fetchTownshipSchemeTypes();
-    this.props.fetchTownshipLocations(this.props.townshipId);
+    this.props.fetchTownshipLocations(this.props.townshipCode);
     ajaxSelectizeGet('payment_type', 'pay_method', this.selectizeOptionsUpdate);
   }
 
@@ -124,8 +124,9 @@ class InspectorParkingField extends React.Component {
 
   handleSuccess(){
     this.props.resetLoading();
-    $('#modal-Inspector-payment-create').closeModal();
     this.props.fetchInspectorParkingField();
+    this.setState({rowData: {}, showEditDuplicateButtons: false});
+    $('#modal-Inspector-payment-create').closeModal();
   }
 
   handleSubmit(data) {
@@ -141,13 +142,14 @@ class InspectorParkingField extends React.Component {
       initialValues={null}
       editMode={false}
       handleSuccess={this.handleSuccess}
+      townshipCode={this.props.townshipCode}
       />
     );
 
   }
 
   renderTable() {
-    //"township_code": this.props.townshipId,
+    //"township_code": this.props.townshipCode,
     let parkingData = this.props.inspectorParkingFieldFetched.data.resource;
     let filteredData = _.filter(parkingData, {"parking_status": "ENTRY", "ticket_status": "TICKETED"});
     console.log(filteredData);
@@ -302,6 +304,7 @@ class InspectorParkingField extends React.Component {
                 initialValues={this.state.rowData} 
                 rowData={this.state.rowData}
                 handleSuccess={this.handleSuccess}
+                townshipCode={this.props.townshipCode}
                 />
               <InspectorPanelParkingFieldForm 
                 initialValues={this.state.rowData} 
@@ -312,6 +315,7 @@ class InspectorParkingField extends React.Component {
                 initialValues={this.state.rowData} 
                 rowData={this.state.rowData}
                 handleSuccess={this.handleSuccess}
+                townshipCode={this.props.townshipCode}
                 />
             </div>
           }

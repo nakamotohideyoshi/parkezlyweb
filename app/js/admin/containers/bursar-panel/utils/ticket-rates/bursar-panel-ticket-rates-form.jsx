@@ -85,7 +85,6 @@ class BursarPanelTicketRatesForm extends React.Component {
   handleSubmit(data) {
     console.log(data);
     $('#' + this.props.modalName).closeModal();
-    $('#modal-success').openModal();
 
     switch(this.props.submitType) {
       case "CREATE":
@@ -115,8 +114,8 @@ class BursarPanelTicketRatesForm extends React.Component {
     ajaxSelectizeGet('manage_locations', 'location_code', this.selectizeOptionsUpdate);
     ajaxSelectizeGet('scheme_type', 'scheme_type', this.selectizeOptionsUpdate);
     ajaxSelectizeGet('payment_type', 'pay_method', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('township_users', 'user_id', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('township_users', 'user_name', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('user_profile', 'user_id', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('user_profile', 'user_name', this.selectizeOptionsUpdate);
     ajaxSelectizeGet('user_vehicles', 'plate_no', this.selectizeOptionsUpdate);
     ajaxSelectizeGet('locations_rate', 'rate', this.selectizeOptionsUpdate);
 

@@ -95,8 +95,9 @@ class LocationsRate extends React.Component {
 
   handleSuccess(){
     this.props.resetLoading();
-    $('#modal-success3').openModal();
+    this.setState({rowData: {}, showEditDuplicateButtons: false});
     this.props.fetchLocationsRate(this.props.townshipCode);
+    $('#modal-success3').openModal();
   }
 
   handleSubmit(data) {

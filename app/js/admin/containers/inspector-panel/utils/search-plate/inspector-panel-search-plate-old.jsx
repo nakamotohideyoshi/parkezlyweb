@@ -164,7 +164,7 @@ class InspectorSearchPlate extends React.Component {
   renderTable() {
     console.log(this.props.inspectorPlateFetched)
     let parkingData = this.props.inspectorPlateFetched.data.resource;
-    let filteredData = _.filter(parkingData, {"township_code": this.props.townshipId});
+    let filteredData = _.filter(parkingData, {"township_code": this.props.townshipCode});
 
     var renderEditModal = this.renderEditModal;
     var metaDataFunction = () =>  {

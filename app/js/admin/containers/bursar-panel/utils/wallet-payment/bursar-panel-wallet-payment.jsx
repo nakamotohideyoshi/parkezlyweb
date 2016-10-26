@@ -75,6 +75,8 @@ class BursarPanelWalletPayment extends React.Component {
     this.props.resetLoading();
     $('#modal-bursar-payment-create').closeModal();
     this.props.fetchBursarWalletPayment();
+    this.setState({rowData: {}, showEditDuplicateButtons: false});
+    $('#modal-success').openModal();
   }
 
   handleSubmit(data) {

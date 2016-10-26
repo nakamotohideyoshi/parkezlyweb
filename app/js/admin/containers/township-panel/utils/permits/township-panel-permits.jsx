@@ -9,7 +9,6 @@ import PermitTypes from './utils/permit-types.jsx'
 import ParkingPermits from './utils/parking-permits.jsx'
 import TownshipPermits from './utils/township-permits.jsx'
 import LocationsRate from './utils/locations-rate.jsx'
-import Subscriptions from './utils/subscriptions.jsx'
 
 import {Tabbordion, Panel} from 'react-tabbordion'
 
@@ -61,11 +60,3 @@ export default class TownshipPanelPermits extends React.Component {
     );
   }
 }
-
-/*
-<Panel title={<span>Subscriptions</span>}>
-    <div className="row marginless-row" style={{marginTop: 40}}>
-      <Subscriptions className="col s12" townshipCode={this.props.townshipCode} />
-    </div>
-</Panel>
-*/

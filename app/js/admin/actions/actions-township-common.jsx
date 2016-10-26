@@ -24,6 +24,7 @@ export function fetchTownshipSchemeTypes(townshipCode) {
 }
 
 
+/*
 export function fetchTownshipSchemeTypes(townshipCode) {
 
   const getLocationLot = () => {AXIOS_INSTANCE.get('location_lot')};
@@ -40,3 +41,4 @@ export function fetchTownshipSchemeTypes(townshipCode) {
     })
   }
 }
+*/

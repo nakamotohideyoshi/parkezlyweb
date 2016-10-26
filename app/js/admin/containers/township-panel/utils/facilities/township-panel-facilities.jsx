@@ -101,11 +101,11 @@ class TownshipPanelFacilities extends React.Component {
   };
 
   handleSuccess(){
-    console.log("Test12345");
     this.props.resetLoading();
+    this.props.fetchTownshipLocations(this.props.townshipCode);
+    this.setState({rowData: {}, showEditDuplicateButtons: false});
     $('#modal-facilities-create').closeModal();
     $('#modal-success').openModal();
-    this.props.fetchTownshipLocations(this.props.townshipCode);
   }
 
   handleSubmit(data) {
@@ -165,8 +165,6 @@ class TownshipPanelFacilities extends React.Component {
   }
 
   renderEditModal(locationCode, rowData) {
-    console.log(rowData);
-    console.log(locationCode);
     window.scrollTo(0, document.body.scrollHeight);
     this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true, parkingLocationCode: locationCode})
   }

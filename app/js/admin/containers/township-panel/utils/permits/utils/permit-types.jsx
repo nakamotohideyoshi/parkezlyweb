@@ -84,6 +84,7 @@ class PermitTypes extends React.Component {
   handleSuccess(){
     this.props.resetLoading();
     this.props.fetchTownshipPermitTypes();
+    this.setState({rowData: {}, showEditDuplicateButtons: false});
     $('#modal-success').openModal();
   }
 

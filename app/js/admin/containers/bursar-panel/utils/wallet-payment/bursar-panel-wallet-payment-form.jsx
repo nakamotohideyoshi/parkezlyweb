@@ -60,7 +60,6 @@ class BursarPanelWalletPaymentForm extends React.Component {
   handleSubmit(data) {
     
     $('#' + this.props.modalName).closeModal();
-    $('#modal-success').openModal();
 
     switch(this.props.submitType) {
       case "CREATE":
@@ -126,7 +125,6 @@ class BursarPanelWalletPaymentForm extends React.Component {
     } = this.props;
 
     const fields = [ 
-      'id',
       'date_time',
       'user_id',
       'wallet_id',
