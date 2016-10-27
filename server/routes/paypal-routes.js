@@ -187,20 +187,36 @@ exports.confirmParking = function(req, res) {
   }
 };
 
-
+/*
 exports.acceptBursarPayment = function(req, res) {
   var paypalPayment = {
       "intent": "sale",
       "payer": {
-          "payment_method": "paypal"
-      },
-      "redirect_urls": {},
-      "transactions": [{
-        "amount": {
-          "currency": "USD"
+      "payment_method": "credit_card",
+      "funding_instruments": [
+      {
+        "credit_card":
+        {
+          "number": "4012888888881881",
+          "type": "mastercard",
+          "expire_month": 12,
+          "expire_year": 2018,
+          "cvv2": 111,
+          "first_name": "Betsy",
+          "last_name": "Buyer"
         }
       }]
-    };
+    },
+    "transactions": [
+    {
+      "amount":
+      {
+        "total": "7.47",
+        "currency": "USD"
+      },
+      "description": "This is the payment transaction description."
+    }]
+  }
 
     paypalPayment.transactions[0].amount.total = req.body.amount;
     paypalPayment.transactions[0].description = "Pay for Parking";
@@ -229,7 +245,7 @@ exports.acceptBursarPayment = function(req, res) {
       }
     });
 };
-
+*/
 exports.init = function (c) {
   config = c;
   paypal.configure(c.api);
