@@ -39,9 +39,10 @@ export default function connect(app) {
     });
   } else {
     // Production server
-    app.use(express.static(publicPath));
 
     const publicPath = path.resolve('./dist/');
+    app.use(express.static(publicPath));
+
     const server = http.createServer(app);
     server.listen(port, function (err, result) {
       if (err) {
