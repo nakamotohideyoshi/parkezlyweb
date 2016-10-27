@@ -187,7 +187,7 @@ exports.confirmParking = function(req, res) {
   }
 };
 
-/*
+
 exports.acceptBursarPayment = function(req, res) {
   var paypalPayment = {
       "intent": "sale",
@@ -245,7 +245,7 @@ exports.acceptBursarPayment = function(req, res) {
       }
     });
 };
-*/
+
 exports.init = function (c) {
   config = c;
   paypal.configure(c.api);

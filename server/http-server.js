@@ -8,9 +8,9 @@ import path from 'path';
 import http from 'http';
 
 // Production bool
-const port = isProduction ? (process.env.PORT || 80) : 3000;
 const isProduction = process.env.NODE_ENV === 'production';
 const isDeveloping = !isProduction;
+const port = isProduction ? (process.env.PORT || 80) : 3000;
 
 export default function connect(app) {
   // Webpack dev server
