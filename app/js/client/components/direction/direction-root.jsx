@@ -152,7 +152,6 @@ class Direction extends Component {
         </div>
       );
     }
-    
   }
 
   selectMode(mode){

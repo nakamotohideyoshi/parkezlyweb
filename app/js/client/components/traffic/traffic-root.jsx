@@ -4,10 +4,11 @@ import classNames from "classnames";
 import cookie from "react-cookie";
 import Body from "../../../common/components/body/body.jsx";
 import { SimpleSelect } from "react-selectize";
-import { GoogleMapLoader, GoogleMap, Marker } from "react-google-maps";
-import { getPlaces, getLocationDetails } from "../../actions/traffic.js";
+import { DirectionsRenderer, GoogleMapLoader, GoogleMap, Marker, OverlayView} from "react-google-maps";
+import { getPlaces, getLocationDetails,setTrafficResult, setTrafficDestination, setTrafficOrigin } from "../../actions/traffic.js";
 import { setPosition, setInitialPosition } from "../../actions/location.js";
 import { getLocations } from "../../actions/locations.js";
+import GrayButton from "../../../common/components/button/gray-button.jsx";
 import { throttle } from "lodash";
 import "./styles/traffic.scss";
 
@@ -25,7 +26,6 @@ class Traffic extends Component {
   }
 
   componentWillMount() {
-
     const { dispatch } = this.props;
     const userId = cookie.load('userId');
     dispatch(getLocations(userId));
@@ -36,6 +36,31 @@ class Traffic extends Component {
     } else {
       this.getLocationDetails();
     }
+  }
+
+  componentDidUpdate() {
+     let traffic = this.props.traffic.traffic;
+     if (traffic !='')
+     {
+        var origin = this.props.traffic.origin;
+        var dest = this.props.traffic.destination;
+        var origins = origin.split(",");
+        var dests = dest.split(",");
+        var lat = (parseFloat(origins[0]) + parseFloat(dests[0])) / 2;
+        var lng = (parseFloat(origins[1]) + parseFloat(dests[1])) / 2;
+        //var directionsDisplay = new google.maps.DirectionsRenderer();
+        console.log(lat);
+        console.log(lng);
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 16,
+          center: {lat: lat, lng: lng}
+        });
+        var trafficLayer = new google.maps.TrafficLayer();
+        trafficLayer.setMap(map);
+        //directionsDisplay.setMap(map);
+        //directionsDisplay.setDirections(traffic);
+        
+     }
   }
 
   getGeolocation() {
@@ -96,10 +121,10 @@ class Traffic extends Component {
   }
 
   renderContent() {
-    const { location } = this.props.nearby;
+    const { location } = this.props.traffic;
     return (
       <div className="nearby-content">
-        <h4>Get Nearby</h4>
+        <h4>Get Traffic</h4>
         <div>
           {location}
         </div>
@@ -115,34 +140,52 @@ class Traffic extends Component {
   }
 
   renderGMap() {
+
+    let traffic = this.props.traffic.traffic;
     let lat = this.props.location.lat || 40.7128;
     let lon = this.props.location.lon || -73.935242;
-    const position = new google.maps.LatLng({
-      lat: parseFloat(lat),
-      lng: parseFloat(lon)
-    });
-    return (
-      <section style={{height: "100%"}}>
-        <GoogleMapLoader
-          containerElement={
-            <div
-              style={{
-                height: "100%",
-              }}/>
-          }
-          googleMapElement={
-            <GoogleMap
-              ref="gMap"
-              defaultZoom={15}
-              defaultCenter={{ lat: lat, lng: lon }}
-              onClick={null}
-              onCenterChanged={this.handleCenterChanged}
-              center={{ lat: lat, lng: lon }}>
-                <Marker position={position}/>
-            </GoogleMap>
-          }/>
-      </section>
-    );
+
+    if (traffic != '') {
+      return (
+        <section className="direction-map">
+          <div id="map"
+            style={{
+              height: "100%",
+            }}/>
+        </section>
+      );
+      
+    } else {
+      let lat = this.props.location.lat || 40.7128;
+      let lon = this.props.location.lon || -73.935242;
+      const position = new google.maps.LatLng({
+        lat: parseFloat(lat),
+        lng: parseFloat(lon)
+      });
+      return (
+        <section className="direction-map">
+          <GoogleMapLoader
+            containerElement={
+              <div id="map"
+                style={{
+                  height: "100%",
+                }}/>
+            }
+            googleMapElement={
+              <GoogleMap
+                ref="gMap"
+                defaultZoom={15}
+                defaultCenter={{ lat: lat, lng: lon }}
+                onClick={null}
+                onCenterChanged={this.handleCenterChanged}
+                center={{ lat: lat, lng: lon }}>
+                  <Marker position={position}/>
+              </GoogleMap>
+            }/>
+        </section>
+      );
+    }
+    
   }
 
   selectLocation(event) {   
@@ -160,36 +203,75 @@ class Traffic extends Component {
     );
   }
 
-  renderLocations() {
+  selectOrigin(event) {
+    const { dispatch } = this.props;
+    const { locationsList } = this.props.LocationsList.Locations;
+    const location = locationsList[event.value];
+    dispatch(setTrafficOrigin(location.lat+","+location.lng));
+  }
+
+  selectDestination(event) {
+    const { dispatch } = this.props;
+    const { locationsList } = this.props.LocationsList.Locations;
+    const location = locationsList[event.value];
+    dispatch(setTrafficDestination(location.lat+","+location.lng));
+  }
+
+  renderLocations(type) {
     const { locationsList } = this.props.LocationsList.Locations;
     const locations = locationsList.map(this.renderLocation);
-    return (
-        <SimpleSelect
-          onValueChange={e => this.selectLocation(e)}
-          placeholder="Select Location">
-          {locations}
-        </SimpleSelect>
-    );
+    if( type=='destination') {
+      return (
+        <div className="margin-bottom-10">
+          <SimpleSelect
+            onValueChange={e => this.selectDestination(e)}
+            placeholder="Select Destination">
+            {locations}
+          </SimpleSelect>
+        </div>
+      );
+    } else if(type=='origin'){
+       return (
+         <div className="margin-bottom-10">
+          <SimpleSelect
+            onValueChange={e => this.selectOrigin(e) }
+            placeholder="Select Origin">
+            {locations}
+          </SimpleSelect>
+        </div>
+      );
+    }
   }
 
-  selectCategory(event){
-    console.log(event);
+
+  getTrafficData(event) {
+    const { dispatch } = this.props;
+    const { origin, destination } = this.props.traffic;
+
+    const DirectionsService = new google.maps.DirectionsService();
+    const TrafficLayer = new google.maps.TrafficLayer();
+    console.log(TrafficLayer);
+
+    const tmode = "DRIVING";
+
+    DirectionsService.route({
+      origin: origin,
+      destination: destination,
+      travelMode: tmode
+    }, (result, status) => {
+      if (status === google.maps.DirectionsStatus.OK) {
+        dispatch(setTrafficResult(result));
+      } else {
+        console.log(result);
+      }
+    });
   }
 
-  renderCategories() {
+  renderGetTraffic() {
     return (
-        <SimpleSelect
-          onValueChange={e => this.selectCategory(e)}
-          placeholder="Select Category">
-          <option value="Restaurant">Restaurant</option>
-          <option value="Airport">Airport</option>
-          <option value="Atm">Atm</option>
-          <option value="Bank">Bank</option>
-          <option value="Church">Church</option>
-          <option value="Hospital">Hospital</option>
-          <option value="Mosque">Mosque</option>
-          <option value="Cinema">Movie_theater</option>
-        </SimpleSelect>
+      <GrayButton className="green-btn margin-bottom-10" onClick={ e => this.getTrafficData(e)}>
+        Get Traffic Data
+      </GrayButton>
     );
   }
 
@@ -197,9 +279,13 @@ class Traffic extends Component {
     const gMap = this.renderGMap();
     const content = this.renderContent();
     const myLocationIcon = this.renderMyLocationIcon();
+    
+    const origin = this.renderLocations('origin');
+    const destination = this.renderLocations('destination');
+    const gettrafficdata = this.renderGetTraffic();
+
     const location = this.renderLocations();
-    const category = this.renderCategories();
-    const { loading } = this.props.nearby;
+    const { loading } = this.props.traffic;
 
     return (
       <Body
@@ -207,7 +293,9 @@ class Traffic extends Component {
         showHeader={true}
         loading={false}>
           {content}
-          {location}
+          {origin}
+          {destination}
+          {gettrafficdata}
           {gMap}
           {myLocationIcon}
       </Body>
@@ -217,7 +305,7 @@ class Traffic extends Component {
 
 const MapStateToProps = (state) => {
   return {
-    nearby: state.nearbyPlaces,
+    traffic: state.traffic,
     location: state.location,
     LocationsList: state.LocationsList
   };
