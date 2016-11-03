@@ -1,10 +1,13 @@
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 import classNames from "classnames";
+import cookie from "react-cookie";
 import Body from "../../../common/components/body/body.jsx";
+import { SimpleSelect } from "react-selectize";
 import { GoogleMapLoader, GoogleMap, Marker } from "react-google-maps";
 import { getPlaces, getLocationDetails } from "../../actions/nearby.js";
 import { setPosition, setInitialPosition } from "../../actions/location.js";
+import { getLocations } from "../../actions/locations.js";
 import { throttle } from "lodash";
 import "./styles/nearby.scss";
 
@@ -22,6 +25,11 @@ class Nearby extends Component {
   }
 
   componentWillMount() {
+
+    const { dispatch } = this.props;
+    const userId = cookie.load('userId');
+    dispatch(getLocations(userId));
+
     const { lat, lon } = this.props.location;
     if(!lat) {
       this.getGeolocation();
@@ -101,7 +109,7 @@ class Nearby extends Component {
 
   renderMyLocationIcon() {
     return (
-      <div className="my-location-marker" onClick={this.goToInitialLocation}>
+      <div className="my-location-marker-nearby" onClick={this.goToInitialLocation}>
       </div>
     );
   }
@@ -137,10 +145,62 @@ class Nearby extends Component {
     );
   }
 
+  selectLocation(event) {   
+    const { dispatch } = this.props;
+    const { locationsList } = this.props.LocationsList.Locations;
+    const location = locationsList[event.value];
+    dispatch(setInitialPosition(parseFloat(location.lat), parseFloat(location.lng)));
+    dispatch(getLocationDetails(parseFloat(location.lat), parseFloat(location.lng)));
+  }
+
+  renderLocation(locationData, index) {
+    const { location_name, lat,lng } = locationData;
+    return (
+      <option value={index}>{location_name}</option>
+    );
+  }
+
+  renderLocations() {
+    const { locationsList } = this.props.LocationsList.Locations;
+    const locations = locationsList.map(this.renderLocation);
+    return (
+      <div className="locations-select-list">
+        <SimpleSelect
+          onValueChange={e => this.selectLocation(e)}
+          placeholder="Select Location">
+          {locations}
+        </SimpleSelect>
+      </div>
+    );
+  }
+
+  selectCategory(event){
+    console.log(event);
+  }
+
+  renderCategories() {
+    return (
+        <SimpleSelect
+          onValueChange={e => this.selectCategory(e)}
+          placeholder="Select Category">
+          <option value="Restaurant">Restaurant</option>
+          <option value="Airport">Airport</option>
+          <option value="Atm">Atm</option>
+          <option value="Bank">Bank</option>
+          <option value="Church">Church</option>
+          <option value="Hospital">Hospital</option>
+          <option value="Mosque">Mosque</option>
+          <option value="Cinema">Movie_theater</option>
+        </SimpleSelect>
+    );
+  }
+
   render() {
     const gMap = this.renderGMap();
     const content = this.renderContent();
     const myLocationIcon = this.renderMyLocationIcon();
+    const location = this.renderLocations();
+    const category = this.renderCategories();
     const { loading } = this.props.nearby;
 
     return (
@@ -149,6 +209,7 @@ class Nearby extends Component {
         showHeader={true}
         loading={false}>
           {content}
+          {location}
           {gMap}
           {myLocationIcon}
       </Body>
@@ -159,7 +220,8 @@ class Nearby extends Component {
 const MapStateToProps = (state) => {
   return {
     nearby: state.nearbyPlaces,
-    location: state.location
+    location: state.location,
+    LocationsList: state.LocationsList
   };
 };
 

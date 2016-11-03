@@ -1,9 +1,10 @@
 import * as WeatherAPI from "../api/weather.js";
+import * as LocationAPI from "../api/locations.js"
+
 import {
   FETCH_WEATHER_INITIATE,
   FETCH_WEATHER_SUCCESS,
-  FETCH_WEATHER_FAIL,
-  LOCATION_NOT_FOUND
+  FETCH_WEATHER_FAIL
 } from "../constants/actions.js";
 
 const initiateWeatherFetch = () => {
