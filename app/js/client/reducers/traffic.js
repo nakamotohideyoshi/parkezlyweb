@@ -6,7 +6,10 @@ import { NearByPlacesError, GenericError } from "../constants/texts.js";
 const initialState = {
   loading: false,
   location: "",
-  errorMessage: ""
+  errorMessage: "",
+  origin: "",
+  destination: "",
+  traffic: "",
 };
 
 const Traffics = (state = initialState, action) => {
@@ -28,13 +31,31 @@ const Traffics = (state = initialState, action) => {
         loading : false,
         errorMessage: GenericError
       }
+    case "SET_TRAFFIC_ORIGIN":
+      return {
+        ...state,
+        loading : false,
+        origin: action.data
+      };
+    case "SET_TRAFFIC_DESTINATION":
+      return {
+        ...state,
+        loading : false,
+        destination: action.data
+      };
+    case "SET_TRAFFIC_RESULT":
+      return {
+        ...state,
+        loading : false,
+        traffic: action.data
+      };
     default:
       return state;
   }
 };
 
 const TrafficReducers = combineReducers({
-  nearbyPlaces : Traffics,
+  traffic : Traffics,
   location: Location,
   LocationsList : LocationsList
 });

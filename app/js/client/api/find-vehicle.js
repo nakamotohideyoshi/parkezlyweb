@@ -6,7 +6,7 @@ export const getParkedVehicles = (userId) => {
     Object.assign(
       {
         method: "get",
-        url: "pzly01live7/_table/parked_cars?filter=(user_id="+userId+")%20AND%20parking_status='ENTRY'",
+        url: "new_pzly02live7/_table/parked_cars?filter=(user_id="+userId+")%20AND%20parking_status='ENTRY'",
       }, APIConfig
     )
   );
@@ -17,7 +17,7 @@ export const getParkedVehicle = (recordId) => {
     Object.assign(
       {
         method: "get",
-        url: "pzly01live7/_table/parked_cars?filter=(id="+recordId+")",
+        url: "new_pzly02live7/_table/parked_cars?filter=(id="+recordId+")",
       }, APIConfig
     )
   );

@@ -5,7 +5,10 @@ import {
   FETCH_PLACES_FAIL,
   FETCH_LOCATION_DETAILS_INITIATE,
   FETCH_LOCATION_DETAILS_SUCCESS,
-  FETCH_LOCATION_DETAILS_FAIL
+  FETCH_LOCATION_DETAILS_FAIL,
+  SET_TRAFFIC_ORIGIN,
+  SET_TRAFFIC_DESTINATION,
+  SET_TRAFFIC_RESULT
 } from "../constants/actions.js";
 
 const initiatePlacesFetch = () => {
@@ -78,3 +81,24 @@ export const getLocationDetails = (lat, lon) => {
       });
   };
 };
+
+export const setTrafficOrigin = (data) => {
+  return {
+    type: SET_TRAFFIC_ORIGIN,
+    data
+  }
+}
+
+export const setTrafficDestination = (data) => {
+  return {
+    type: SET_TRAFFIC_DESTINATION,
+    data
+  }
+}
+
+export const setTrafficResult = (data) => {
+  return {
+    type: SET_TRAFFIC_RESULT,
+    data
+  }
+}

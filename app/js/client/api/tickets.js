@@ -6,7 +6,7 @@ export const getTickets = (user_id) => {
     Object.assign(
       {
         method: "get",
-        url: "/pzly01live7/_table/parking_violations?filter=user_id="+user_id
+        url: "/new_pzly02live7/_table/parking_violations?filter=user_id="+user_id
       }, Config.APIConfig
     )
   );
