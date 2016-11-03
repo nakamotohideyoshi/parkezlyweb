@@ -429,12 +429,11 @@ class TownshipPanelPermitRequests extends React.Component {
 
     return(
       <TownshipPanelPermitRequestsForm
-        initialValues={this.state.rowData} 
         handleSuccess={this.handleSuccess}
         modalName="modal-township-permit-requests-create" 
         modalText="Create a Permit Request" 
         submitType="CREATE"
-        initialValues={this.state.rowData} 
+        initialValues={{ "approved": "NO", "status": "INACTIVE" }} 
         rowData={this.state.rowData}
         handleSuccess={this.handleSuccess}
         townshipCode={this.props.townshipCode}
