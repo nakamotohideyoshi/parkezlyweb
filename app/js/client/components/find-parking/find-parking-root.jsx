@@ -1035,13 +1035,13 @@ class FindParking extends Component {
           className="license-no"
           defaultValue={plate_no}
           onBlur={this.changePlateNo}/>
-		<Chooser 
-		  options={states}
-		  ref="select-state"
-		  selectionEntity="a State"
-		  placeholder="Select State" 
-		  defaultValue={selectedState}
-		  onValueChange={this.changeState}/>
+        <Chooser 
+          options={states}
+          ref="select-state"
+          selectionEntity="a State"
+          placeholder="Select State" 
+          defaultValue={selectedState}
+          onValueChange={this.changeState}/>
         {numHours}
       </form>
     );

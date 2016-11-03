@@ -8,12 +8,11 @@ import Body from "../../../common/components/body/body.jsx";
 import { getParkedVehicle, exitVehicle } from "../../actions/find-vehicle.js";
 import ConfirmationScreen from "./ConfirmationScreen.jsx";
 
+
 class FindVehicleDetail extends Component {
   constructor(props) {
     super(props);
     this.onExit = this.onExit.bind(this);
-    this.onPrint = this.onPrint.bind(this);
-    this.onRenew = this.onRenew.bind(this);
   }
 
   componentWillMount() {
@@ -37,43 +36,6 @@ class FindVehicleDetail extends Component {
     const { dispatch, parkingId } = this.props;
     const dateTimeNow = moment.utc().format("YYYY-MM-DD HH:mm");
     dispatch(exitVehicle(parkingId, dateTimeNow));
-  }
-
-  onPrint() {
-    const { vehicleData } = this.props.parkedVehicle;
-    const { 
-      plate_no,
-      max_time,
-      entry_date_time,
-      exit_date_time,
-      expiry_time,
-      address1,
-      address2,
-      city,
-      state,
-      zip,
-      country,
-      parking_status
-    } = vehicleData;
-
-    var pdfConverter = require('jspdf');
-    //var converter = new pdfConverter();
-    //var doc = converter.jsPDF('p', 'pt');
-
-    var doc = new pdfConverter('p','pt','c6');
-
-    doc.setFontSize(22);
-    doc.text(20, 50, 'Park Entry Ticket');
-    doc.setFontSize(16);
-    doc.text(20, 80, 'Address1: ' + address1);
-    doc.text(20, 100, 'Address2: ' + address2);
-    doc.text(20, 120, 'Entry Date & time: ' + entry_date_time);
-    doc.text(20, 140, 'Expiry date & time: ' + exit_date_time);
-    doc.save("test.pdf");
-  }
-
-  onRenew(){
-    console.log("renew");
   }
 
   renderNotice() {
@@ -124,11 +86,7 @@ class FindVehicleDetail extends Component {
         country={country}
         parkedTime={parkedTime}
         expiresAt={expiresAt}
-        onExit={this.onExit}
-	onPrint={this.onPrint}
-	onRenew={this.onRenew}
-	/>
-
+        onExit={this.onExit} />
     );
   }
 

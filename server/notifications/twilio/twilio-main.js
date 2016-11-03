@@ -15,16 +15,21 @@ var client = require('twilio')('ACf7f226de232f0af117b36cec35d15c73', 'b0f74f30a6
 var toNum = [];
 const fromNum = '';
 
+/*
 export default function twilioMain(app) {
     newPermitNotify(app);
-    meterExpiredNotify(app);
     newTicketNotify(app)
+
+    setInterval(() => {
+        meterExpiredNotify(app);
+    }, 60*1000);
 }
-
-
+*/
+/*
 function newTicketNotify(app) {
 
     app.post('/api/notify-parking-ticket', function (req, res) {
+        // Do in 1 hour.
         setTimeout(() => {
             let newTicket = req.body;
 
@@ -224,10 +229,11 @@ function meterExpiredNotify() {
 
 
 }
-
+*/
 
 
 /*
+
     client.calls.get(function(err, response) {
         response.calls.forEach(function(call) {
             console.log('Received call from: ' + call.from);
@@ -243,8 +249,7 @@ function meterExpiredNotify() {
             console.log('This call\'s unique ID is: ' + call.sid);
         });
     });
-    */
-    /*
+
     AXIOS_INSTANCE.get('parked_cars')
     .then(function(response) {
         response.data.resource.map((data) => {
@@ -289,10 +294,9 @@ function meterExpiredNotify() {
     .catch(function(response){
         console.log(response);
     })
-    */
-    /*
+
     client.sms.messages.post({
-        to:'+14012191065',
+        to:'+16513334455',
         from:'+14012694541',
         body:'Testing SMS'
     }, function(err, text) {
@@ -304,4 +308,4 @@ function meterExpiredNotify() {
             console.log('Current status of this text message is: '+ text.status);
         }
     });
-    */
+*/

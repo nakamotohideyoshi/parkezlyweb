@@ -150,6 +150,7 @@ class InspectorCreateTicket extends React.Component {
         initialValues={null}
         editMode={false}
         handleSuccess={this.handleSuccess}
+        townshipCode={this.props.townshipCode}
       />
     );
   }
@@ -328,6 +329,7 @@ class InspectorCreateTicket extends React.Component {
               initialValues={this.state.rowData} 
               rowData={this.state.rowData}
               handleSuccess={this.handleSuccess}
+              townshipCode={this.props.townshipCode}
               />
             <InspectorPanelCreateTicketForm 
               initialValues={this.state.rowData} 
@@ -338,6 +340,7 @@ class InspectorCreateTicket extends React.Component {
               initialValues={this.state.rowData} 
               rowData={this.state.rowData}
               handleSuccess={this.handleSuccess}
+              townshipCode={this.props.townshipCode}
               />
           </div>
         }

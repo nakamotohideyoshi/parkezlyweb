@@ -31,8 +31,8 @@ export default function apiRoutes(app) {
   app.post('/api/pay-for-parking', paypalRoutes.payForParking);
   app.post('/api/confirm-parking', paypalRoutes.confirmParking);
 
-  //app.post('/api/admin/paypal/accept-payment', paypalRoutes.confirmParking);
-  //app.post('/api/admin/paypal/payment-transfer', paypalRoutes.confirmParking);
+  app.post('/api/admin/paypal/create-bursar-payment', paypalRoutes.createBursarPayment);
+  app.get('/api/admin/paypal/get-bursar-payment', paypalRoutes.getBursarPayment);
 
   /*Google Places API*/
   app.post('/api/nearby', mapRoutes.getNearbyPlaces);

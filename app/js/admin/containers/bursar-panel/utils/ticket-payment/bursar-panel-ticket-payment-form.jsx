@@ -24,6 +24,7 @@ import {customFilterComponent, customFilterFunction} from '../../../../common/co
 
 import {ajaxSelectizeGet, ajaxDelete} from '../../../../common/components/ajax-selectize.js'
 import AdminSelectize from '../../../../common/components/admin-selectize.jsx'
+import axios from 'axios'
 
 export const fields = [ 
   'id',
@@ -113,6 +114,7 @@ class BursarPanelTicketPaymentForm extends React.Component {
 
   componentWillMount() {
     ajaxSelectizeGet('user_profile', 'user_id', this.selectizeOptionsUpdate);
+    this.props.dispatch(change('facilities-form', 'township_code', this.props.townshipCode));
   }
 
   componentDidUpdate() {
@@ -161,8 +163,7 @@ class BursarPanelTicketPaymentForm extends React.Component {
       dispatch
     } = this.props;
 
-    const fields = [ 
-      'id',
+    let fields = [ 
       'ip',
       'ticket_no',
       'plate_num',
@@ -199,6 +200,10 @@ class BursarPanelTicketPaymentForm extends React.Component {
       'violation_date',
       'cheque_no',
     ]
+
+    if (this.props.fieldTemplate !== null && this.props.fieldTemplate !== undefined) {
+      fields = this.props.fieldTemplate;
+    }
 
     return fields.map((data) => {
       return( 

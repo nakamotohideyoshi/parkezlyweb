@@ -5,34 +5,28 @@ import cookie from "react-cookie";
 import moment from "moment";
 
 import Body from "../../../common/components/body/body.jsx";
-import { SimpleSelect } from "react-selectize";
 import { getWeather } from "../../actions/weather.js";
-import { getLocations } from "../../actions/locations.js";
 
 import "./styles/weather.scss";
 
 class Weather extends Component {
   constructor(props) {
     super(props);
-//    this.refreshData = this.refreshData.bind(this);
+    this.refreshData = this.refreshData.bind(this);
   }
 
   componentWillMount() {
-    const { dispatch } = this.props;
-    const userId = cookie.load('userId');
-    dispatch(getLocations(userId));
-    navigator.geolocation.getCurrentPosition( function(postion){
-      dispatch(getWeather(postion.coords.latitude, postion.coords.longitude));
-    });
+    const { dispatch, position } = this.props;
+    //const { lat, lon } = position;
+    //dispatch(getTimeZone(40.7146, -74.0071));
+    dispatch(getWeather(40.7146, -74.0071));
   }
-/*
+
   refreshData() {
     const { dispatch, position } = this.props;
-    navigator.geolocation.getCurrentPosition( function(postion){
-      dispatch(getWeather(postion.coords.latitude, postion.coords.longitude));
-    });
+    dispatch(getWeather(40.7146, -74.0071));
   }
-*/
+
   renderNotice() {
     const { errorMessage } = this.props.Weather;
     return errorMessage ? (
@@ -42,34 +36,6 @@ class Weather extends Component {
     ) : null;
   }
 
-  selectLocation(event) {   
-    const { dispatch } = this.props;
-    const { locationsList } = this.props.LocationsList.Locations;
-    const location = locationsList[event.value];
-    dispatch(getWeather(location.lat, location.lng));
-  }
-
-  renderLocation(locationData, index) {
-    const { location_name, lat,lng } = locationData;
-    return (
-      <option value={index} key={index}>{location_name}</option>
-    );
-  }
-
-  renderLocations() {
-    const { locationsList } = this.props.LocationsList.Locations;
-    const locations = locationsList.map(this.renderLocation);
-    return (
-      <div className="locations-select-list">
-        <SimpleSelect
-          onValueChange={e => this.selectLocation(e)}
-          placeholder="Select Location">
-          {locations}
-        </SimpleSelect>
-      </div>
-    );
-  }
-/*
   renderRefreshButton() {
     return (
       <div className="refresh-weather">
@@ -77,7 +43,7 @@ class Weather extends Component {
       </div>
     );
   }
-*/
+
   renderContent() {
     const userTimeZone = - (new Date().getTimezoneOffset());
     const { weatherData } = this.props.Weather;
@@ -113,7 +79,6 @@ class Weather extends Component {
       icon = weather[0].icon;
       iconUrl = "http://openweathermap.org/img/w/" + icon + ".png";
     }
-
     return (
       <div className="weather-container">
         <h4>Weather Info</h4>
@@ -136,18 +101,19 @@ class Weather extends Component {
   }
 
   render() {
+    console.log(this.props);
+
     const { loading } = this.props.Weather;
     const notice = this.renderNotice();
-    const location = this.renderLocations();
-    /*const refreshBtn = this.renderRefreshButton();*/
+    const refreshBtn = this.renderRefreshButton();
     const content = !loading ? this.renderContent() : null;
 
     return (
       <Body showHeader={true} loading={loading}>
         <div className="weather-root">
           {notice}
-	        {location}
           {content}
+          {refreshBtn}
         </div>
       </Body>
     );

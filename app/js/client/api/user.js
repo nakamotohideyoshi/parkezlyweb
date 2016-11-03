@@ -46,7 +46,7 @@ export const registerUser = (userInfo) => {
     Object.assign(
       {
         method: "post",
-        url: "/new_pzly02live7/_table/user_profile",
+        url: "/pzly01live7/_table/user_profile",
         data : {
           email: email,
           password: password,

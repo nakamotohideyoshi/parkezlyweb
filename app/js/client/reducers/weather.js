@@ -1,5 +1,4 @@
 import { combineReducers } from "redux";
-import LocationsList from "./locations.js";
 import { WeatherLocationError, GenericError } from "../constants/texts.js";
 
 const initialState = {
@@ -9,6 +8,7 @@ const initialState = {
 };
 
 const Weather = (state = initialState, action) => {
+  console.log(action);
   switch(action.type) {
     case "FETCH_WEATHER_INITIATE":
       return {
@@ -39,8 +39,7 @@ const Weather = (state = initialState, action) => {
 };
 
 const WeatherReducers = combineReducers({
-  Weather : Weather,
-  LocationsList : LocationsList
+  Weather
 });
 
 export default WeatherReducers;

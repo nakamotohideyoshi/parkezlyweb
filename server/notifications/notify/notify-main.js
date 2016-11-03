@@ -15,21 +15,34 @@ const API_USER_ID="2f787a5b8ac9e7ec6aa26f4d0f61e319"
 const API_SECRET="d92cb4c2e5469b6ee54e3f3097170f2a"
 const TOKEN_STORAGE="/tmp/"
 
+/* Twilio SMS config */
+const fromNum = '';
+let toNum = [];
+let twilio = require('twilio')('AC87f456f011b5f96309449c6a976c28a6', 'f84dd735d915ff1de90bbeed3ac7432e');
+
 /**
  * Function to log response data from email API.
  *
  * @param data
  */
+
 let emailLogger = function emailLogger(data){
     console.log(data);
 }
 
-export default function emailMain(app) {
-    sendpulse.init(API_USER_ID, API_SECRET, TOKEN_STORAGE);
+export default function notifyMain(app) {
 
+    sendpulse.init(API_USER_ID, API_SECRET, TOKEN_STORAGE);
+    
+    /* Notifications on ajax request*/
     newPermitNotify(app);
-    meterExpiredNotify(app);
     newTicketNotify(app)
+
+    /* Notifications (Every 60 seconds) */
+    setInterval(() => {
+        meterExpiredNotify(app);
+    }, 60*1000);
+
     /*
     let cronj = schedule.scheduleJob('0 * * * *', function(){
         console.log('Execute cron job every hour!');
@@ -38,8 +51,9 @@ export default function emailMain(app) {
 }
 
 function newTicketNotify(app) {
-
+    
     app.post('/api/notify-parking-ticket', function (req, res) {
+        // Do in 1 hour.
         setTimeout(() => {
             let newTicket = req.body;
 
@@ -83,7 +97,8 @@ function newTicketNotify(app) {
 
                     if (userProfile !== null & userProfile !== undefined) {
                         return {"name": "ParkEZly Admin", "email": userProfile.email}
-                    }  
+                    } 
+
                 });
 
                 emailTemplate.to = filteredEmails;
@@ -226,7 +241,7 @@ function meterExpiredNotify() {
                     <hr>`;
                     emailTemplate.html = emailHtml;
 
-                    //AXIOS_INSTANCE.put("parked_cars?ids=" + expiredUser.id, {"notified": "YES"})
+                    AXIOS_INSTANCE.put("parked_cars?ids=" + parkedCar.id, {"notified": "YES"})
                     return {"name": "ParkEZly Admin", "email": userProfile.email}
                 }
             })   

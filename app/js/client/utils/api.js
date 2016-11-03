@@ -2,7 +2,7 @@ export const APIConfig = {
   baseURL: "http://54.83.189.72/api/v2/",
   headers : {
     "X-DreamFactory-Application-Name": "parkezly",
-    "X-DreamFactory-Api-Key": "bd4290ad583ae46c39ab478e34d6b4be8e996b215417b657859c54eb7311bc41"
+    "X-DreamFactory-Api-Key": "dbed451c5e4e1518d301c118ffe078ca16a2c287d5efff98515b938538abb5b5"
   }
 };
 

@@ -15,11 +15,6 @@ export const mainGuestLinks = [
     icon: "drive-ezly-icon"
   },
   {
-    text: "Admin",
-    link: "/admin",
-    icon: "my-account-icon",
-  },
-  {
     text: "Other Parking Options",
     link: "",
     icon: "other-parking-icon"

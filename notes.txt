@@ -8,3 +8,12 @@ http://54.83.189.72/dreamfactory/dist/index.html#/login
 if (event.request.payload) { 
     event.request.payload = {"resource": [event.request.payload]};
 }
+
+Create credit card
+Save credit card
+Pay with saved credit card
+
+twpinspector@parkezly.com    secret
+twpbursar@parkezly.com   secret
+twpadmin@parkezly.com   secret
+jdoe@example.com   secret

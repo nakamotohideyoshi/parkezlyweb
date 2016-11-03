@@ -4,11 +4,10 @@ import Spinner from '../../common/components/spinner.jsx';
 import TownshipDetails from './utils/township-panel-details.jsx';
 import TownshipPanelTiles from './utils/township-panel-tiles.jsx';
 
-
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-
 import { Link } from 'react-router';
+import cookie from "react-cookie";
 
 import {
   editTownship, 
@@ -19,22 +18,22 @@ import {
   fetchTownshipDetails
 } from '../../actions/actions-township.js';
 
+
 let townshipObjects;
 let filteredTownship;
 
 class TownshipPanelRoot extends React.Component {
   constructor(props) {
     super(props);
-    
-    // Scroll to the top of the page on construct.
     window.scrollTo(0, 0);
     this.state = {
       townshipCode: null
     }
     this.renderDetailsFlag = this.renderDetailsFlag.bind(this);
   }
+  
   componentWillMount() {
-    //this.props.fetchTownshipDetails(this.props.townshipCode);
+    console.log(cookie.load('userId'))
     this.props.fetchTownshipList();
   }
 

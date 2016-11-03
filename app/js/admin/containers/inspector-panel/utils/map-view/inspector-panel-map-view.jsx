@@ -30,7 +30,7 @@ export default class InspectorMapView extends React.Component {
   }
 
   ajaxGet(markerData) {
-    console.log(markerData.data.resource)
+    //console.log(markerData.data.resource)
     this.setState({markerData: markerData, showMarkers: true})
   }
 
@@ -65,6 +65,7 @@ export default class InspectorMapView extends React.Component {
   }
 
   handleMarkerClick(marker) {
+    console.log(marker)
     marker.showInfo = true;
     this.setState(this.state);
   }
@@ -99,7 +100,7 @@ export default class InspectorMapView extends React.Component {
           <Marker 
             key={index}
             ref={ref}
-            position={{lat: parseInt(data.lat), lng: parseInt(data.lng)}} 
+            position={{lat: parseFloat(data.lat), lng: parseFloat(data.lng)}} 
             icon={{url: iconUrl, scaledSize: new google.maps.Size(75,50)}} 
             onClick={this.handleMarkerClick.bind(this, data)}
             >

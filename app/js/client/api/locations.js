@@ -6,7 +6,7 @@ export const getLocations = (user_id) => {
     Object.assign(
       {
         method: "get",
-        url: "/new_pzly02live7/_table/user_locations?filter=user_id="+user_id
+        url: "/pzly01live7/_table/user_locations?filter=user_id="+user_id
       }, Config.APIConfig
     )
   );
