@@ -31,13 +31,11 @@ class Traffic extends Component {
     dispatch(getLocations(userId));
 
     const { lat, lon } = this.props.location;
-    this.getGeolocation();
-    /*
     if(!lat) {
-      
+      this.getGeolocation();
     } else {
       this.getLocationDetails();
-    }*/
+    }
   }
 
   componentDidUpdate() {

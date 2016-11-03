@@ -1,5 +1,6 @@
 import { combineReducers } from "redux";
 import Location from "./location.js";
+import LocationsList from "./locations.js";
 import { NearByPlacesError, GenericError } from "../constants/texts.js";
 
 const initialState = {
@@ -34,7 +35,8 @@ const NearbyPlaces = (state = initialState, action) => {
 
 const NearbyPlacesReducers = combineReducers({
   nearbyPlaces : NearbyPlaces,
-  location: Location
+  location: Location,
+  LocationsList : LocationsList
 });
 
 export default NearbyPlacesReducers;

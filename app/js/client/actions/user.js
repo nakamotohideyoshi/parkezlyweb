@@ -42,7 +42,7 @@ export const getUser = (userInfo) => {
         if (response && response.data) {
           const { error } = response.data;
           if (error) {
-            const { error } = response.data;
+            const { error } = data;
             errorCode = error.code;
             errorMessage = error.message;
           }
