@@ -178,7 +178,6 @@ export function editTownshipPermitRequests(data, id) {
     return AXIOS_INSTANCE.put(URL, data)
     .then(function(response) {
       dispatch(apiTownship.receiveData(response.data, types.TOWNSHIP_PERMIT_REQUESTS_PUT_SUCCESS));
-      dispatch(reset('permit-requests'));
     })
     .catch(function(response){
       dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_PERMIT_REQUESTS_PUT_ERROR));

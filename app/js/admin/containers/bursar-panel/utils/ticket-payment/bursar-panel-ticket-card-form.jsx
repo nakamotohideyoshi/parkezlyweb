@@ -63,20 +63,19 @@ class BursarPanelTicketCardForm extends React.Component {
   }
 
   handleSubmit(data) {
-    console.log(data);
     this.setState({ajaxLoading: true})
+    
     axios.post('/api/admin/paypal/create-bursar-payment', data)
     .then((res) => {
-      console.log(res.data);
       this.setState({ajaxLoading: false})
       if(res.data.httpStatusCode === 200) {
         this.props.handleSuccess(res.data);
       } else {
         this.props.handleError(res);
       }
-      
     })
     .catch((res)=>{
+      this.setState({ajaxLoading: false})
       this.props.handleError(res);
     })
   }
