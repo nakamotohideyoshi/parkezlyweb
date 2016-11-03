@@ -6,7 +6,7 @@ export const getPermits = (user_id) => {
     Object.assign(
       {
         method: "get",
-        url: "/pzly01live7/_table/subscriptions?filter=user_id="+user_id
+        url: "/new_pzly02live7/_table/subscriptions?filter=user_id="+user_id
       }, Config.APIConfig
     )
   );
@@ -17,7 +17,7 @@ export const getLocations = () => {
     Object.assign(
       {
         method: "get",
-        url: "/pzly01live7/_table/manage_locations"
+        url: "/new_pzly02live7/_table/manage_locations"
       }, Config.APIConfig
     )
   );
