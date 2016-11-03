@@ -12,6 +12,7 @@ import {
   createTownshipParkingPermits, 
   resetLoading
 } from '../../../../actions/actions-township-panel.jsx';
+import TownshipPanelPermitRequestsForm from './township-panel-permit-requests-form'
 
 import {Tabbordion, Panel} from 'react-tabbordion'
 
@@ -112,6 +113,7 @@ class TownshipPanelPermitRequests extends React.Component {
     }
 
     this.renderApproveModal = this.renderApproveModal.bind(this);
+    this.renderCreateModal = this.renderCreateModal.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
     this.renderEditModal = this.renderEditModal.bind(this);
     this.handleAccept = this.handleAccept.bind(this);
@@ -135,7 +137,11 @@ class TownshipPanelPermitRequests extends React.Component {
 
   handleSuccess() {
     this.props.resetLoading();
+
     $('#permit-requests-modal').closeModal();
+    $('#modal-township-permit-requests-create').closeModal()
+    $('#modal-success').openModal()
+
     this.props.fetchTownshipPermitRequests(this.props.townshipCode);
   }
 
@@ -240,31 +246,43 @@ class TownshipPanelPermitRequests extends React.Component {
     const filteredRequests = _.filter(filteredSubscriptions.resource, {'approved': 'NO', status: 'INACTIVE'});
 
     return(
-      <Griddle
-        tableClassName={'table table-bordered table-striped table-hover'}
-        filterClassName={''}
-        useGriddleStyles={false}
-        results={filteredRequests}
-        showFilter={true}
-        showSettings={true}
-        settingsToggleClassName='btn btn-default'
-        useCustomPagerComponent={true}
-        customPagerComponent={ BootstrapPager }
-        useCustomFilterComponent={true} 
-        customFilterComponent={customFilterComponent}
-        useCustomFilterer={true} 
-        customFilterer={customFilterFunction}
-        columnMetadata={metaDataFunction()}
-        columns={['id',  
-                  'date_time', 
-                  'user_id', 
-                  'township_code', 
-                  'township_name', 
-                  'permit_type', 
-                  'permit_name', 
-                  'residency_proof', 
-                  'approved',  ]}
-      />
+      <div>
+        <Griddle
+          tableClassName={'table table-bordered table-striped table-hover'}
+          filterClassName={''}
+          useGriddleStyles={false}
+          results={filteredRequests}
+          showFilter={true}
+          showSettings={true}
+          settingsToggleClassName='btn btn-default'
+          useCustomPagerComponent={true}
+          customPagerComponent={ BootstrapPager }
+          useCustomFilterComponent={true} 
+          customFilterComponent={customFilterComponent}
+          useCustomFilterer={true} 
+          customFilterer={customFilterFunction}
+          columnMetadata={metaDataFunction()}
+          columns={['id',  
+                    'date_time', 
+                    'user_id', 
+                    'township_code', 
+                    'township_name', 
+                    'permit_type', 
+                    'permit_name', 
+                    'residency_proof', 
+                    'approved',  ]}
+        />
+        <div className="divider"/> 
+        
+        <div className="center-align">
+
+          <a
+            className="modal-trigger waves-effect waves-light btn valign" 
+            onClick={() => $('#modal-township-permit-requests-create').openModal()}
+            style={{margin: 10}}>Add New Permit Request</a>
+
+        </div>
+      </div>
     );
   }
   renderApprovedTable() {
@@ -406,12 +424,53 @@ class TownshipPanelPermitRequests extends React.Component {
     );
   }
 
+  renderCreateModal() {
+    
+    const {
+      resetForm,
+      submitting,
+      dispatch
+    } = this.props
+
+    return(
+      <TownshipPanelPermitRequestsForm
+        initialValues={this.state.rowData} 
+        handleSuccess={this.handleSuccess}
+        modalName="modal-township-permit-requests-create" 
+        modalText="Create a Permit Request" 
+        submitType="CREATE"
+        initialValues={this.state.rowData} 
+        rowData={this.state.rowData}
+        handleSuccess={this.handleSuccess}
+        townshipCode={this.props.townshipCode}
+      />
+    );
+  }
+
+  renderSuccessModal() {
+    return (
+      <div id="modal-success" className="modal">
+        <div className="modal-content">
+          <h4>Success!</h4>
+          <p>You've successfully sent the request!</p>
+        </div>
+        <div className="modal-footer">
+          <button 
+          href="#" 
+          className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
+        </div>
+      </div>
+    );
+  }
+
   render() {
     return (
       <div className="blue-body marginless-row">
         <Body showHeader={true}>
           <div style={{marginTop: 40}}>
           {this.renderApproveModal()}
+          {this.renderCreateModal()}
+          {this.renderSuccessModal()}
             <div className="row marginless-row">
               <Tabbordion className="traditional-tab col s12 z-depth-2" classNames={classNames} initialIndex={0} name="tabs">
                 <Panel title={<span>Pending Permit Requests</span>}>
@@ -480,6 +539,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     fetchTownshipPermitRequests,
     editTownshipPermitRequests,
+
     fetchTownshipPermitsList,
     createTownshipPermitsList,
     fetchTownshipParkingPermits, 
