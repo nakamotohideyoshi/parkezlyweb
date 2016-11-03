@@ -187,67 +187,172 @@ exports.confirmParking = function(req, res) {
   }
 };
 
+/* Bursar Panel Routes */
 
-exports.acceptBursarPayment = function(req, res) {
-  var paypalPayment = {
+exports.createBursarSavedCardPayment = function(req, res) {
+    var create_payment_json = {
       "intent": "sale",
       "payer": {
-      "payment_method": "credit_card",
-      "funding_instruments": [
-      {
-        "credit_card":
-        {
-          "number": "4012888888881881",
-          "type": "mastercard",
-          "expire_month": 12,
-          "expire_year": 2018,
-          "cvv2": 111,
-          "first_name": "Betsy",
-          "last_name": "Buyer"
-        }
-      }]
-    },
-    "transactions": [
-    {
-      "amount":
-      {
-        "total": "7.47",
-        "currency": "USD"
+          "payment_method": "credit_card",
+          "funding_instruments": [{
+              "credit_card": {
+                  "type": "visa",
+                  "number": "4417119669820331",
+                  "expire_month": "11",
+                  "expire_year": "2018",
+                  "cvv2": "874",
+                  "first_name": "Joe",
+                  "last_name": "Shopper",
+                  "billing_address": {
+                      "line1": "52 N Main ST",
+                      "city": "Johnstown",
+                      "state": "OH",
+                      "postal_code": "43210",
+                      "country_code": "US"
+                  }
+              }
+          }]
       },
-      "description": "This is the payment transaction description."
-    }]
-  }
+      "transactions": [{
+          "amount": {
+              "total": "7",
+              "currency": "USD",
+              "details": {
+                  "subtotal": "5",
+                  "tax": "1",
+                  "shipping": "1"
+              }
+          },
+          "description": "This is the payment transaction description."
+      }]
+  };
 
-    paypalPayment.transactions[0].amount.total = req.body.amount;
-    paypalPayment.transactions[0].description = "Pay for Parking";
-    paypalPayment.redirect_urls.return_url = routes.parkingPaymentSuccess;
-    paypalPayment.redirect_urls.cancel_url = routes.parkingPaymentFail;
-
-    paypal.payment.create(paypalPayment, {}, function (err, resp) {
-      if (err) {
-        res.redirect('/payment-failure?errorcode=1010');
+  paypal.payment.create(create_payment_json, function (error, payment) {
+      if (error) {
+          throw error;
       } else {
-        if(resp.payer.payment_method === 'paypal') {
-          req.session[resp.id] = {
-            amount: req.body.amount,
-            paymentData: req.body.parkingData
-          };
-          console.log(req.session[resp.id]);
-          var redirectUrl;
-          for(var i=0; i < resp.links.length; i++) {
-            var link = resp.links[i];
-            if (link.method === 'REDIRECT') {
-              redirectUrl = link.href;
-            }
-          }
-          res.redirect(redirectUrl);
-        }
+          console.log("Create Payment Response");
+          console.log(payment);
       }
-    });
+  });
+}
+
+exports.createBursarPayment = function(req, res) {
+  const paymentData = req.body;
+  
+  let paypalPayment = {
+      "intent": "sale",
+      "payer": {
+          "payment_method": "credit_card",
+          "funding_instruments": [{
+              "credit_card": {}
+          }]
+      },
+      "transactions": [{
+          "amount": {
+              "currency": "USD",
+          },
+          "description": "This is the payment transaction description."
+      }]
+  };
+
+  
+  paypalPayment.payer.funding_instruments[0].credit_card.type = paymentData.type;
+  paypalPayment.payer.funding_instruments[0].credit_card.number = paymentData.number;
+  paypalPayment.payer.funding_instruments[0].credit_card.expire_month = paymentData.expire_month;
+  paypalPayment.payer.funding_instruments[0].credit_card.expire_year = paymentData.expire_year;
+  paypalPayment.payer.funding_instruments[0].credit_card.cvv2 = paymentData.cvv2;
+  paypalPayment.payer.funding_instruments[0].credit_card.first_name = paymentData.first_name;
+  paypalPayment.payer.funding_instruments[0].credit_card.last_name = paymentData.last_name;
+  paypalPayment.transactions[0].amount.total =  paymentData.total;
+
+  paypal.payment.create(paypalPayment, function (error, payment) {
+      if (error) {
+        console.log(JSON.stringify(error, null, 2));
+        res.send(error);
+      } else {
+          console.log("Create Payment Response");
+          console.log(JSON.stringify(payment, null, 2));
+          res.json(payment)
+      }
+  });
+  
 };
+
+exports.getBursarPayment = function(req, res) {
+  var paymentId = "PAY-0XL713371A312273YKE2GCNI";
+
+  paypal.payment.get(paymentId, function (error, payment) {
+      if (error) {
+          console.log(error);
+          throw error;
+      } else {
+          console.log("Get Payment Response");
+          console.log(JSON.stringify(payment));
+      }
+  }); 
+}
+
+exports.getBursarPaymentList = function(req, res) {
+  var listPayment = {
+    'count': '1',
+    'start_index': '1'
+  };
+
+  paypal.payment.list(listPayment, function (error, payment) {
+      if (error) {
+          throw error;
+      } else {
+          console.log("List Payments Response");
+          console.log(JSON.stringify(payment));
+      }
+  });
+}
 
 exports.init = function (c) {
   config = c;
   paypal.configure(c.api);
 };
+
+/*
+
+  let payPalPayment = {
+      "intent": "sale",
+      "payer": {
+          "payment_method": "credit_card",
+          "funding_instruments": [{
+              "credit_card": {
+                  "type": "visa",
+                  "number": "4417119669820331",
+                  "expire_month": "11",
+                  "expire_year": "2018",
+                  "cvv2": "874",
+                  "first_name": "Joe",
+                  "last_name": "Shopper",
+                  "billing_address": {
+                      "line1": "52 N Main ST",
+                      "city": "Johnstown",
+                      "state": "OH",
+                      "postal_code": "43210",
+                      "country_code": "US"
+                  }
+              }
+          }]
+      },
+      "transactions": [{
+          "amount": {
+              "total": "7",
+              "currency": "USD",
+              "details": {
+                  "subtotal": "5",
+                  "tax": "1",
+                  "shipping": "1"
+              }
+          },
+          "description": "This is the payment transaction description."
+      }]
+  };
+*/
+
+
 
