@@ -105,6 +105,8 @@ class TownshipPanelPermitRequestsForm extends React.Component {
     ajaxSelectizeGet('user_profile', 'user_id', this.selectizeOptionsUpdate);
     //ajaxSelectizeGet('user_profile', 'user_name', this.selectizeOptionsUpdate);
     ajaxSelectizeGet('scheme_type', 'scheme_type', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('permit_type', 'permit_type', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet('parking_permits', 'permit_name', this.selectizeOptionsUpdate);
 
     this.props.dispatch(change('permit-requests-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
     this.props.dispatch(change('permit-requests-form', 'date_action', moment().format('YYYY-MM-DD HH:mm:ss')));
@@ -177,12 +179,9 @@ class TownshipPanelPermitRequestsForm extends React.Component {
 
     const fields = [     
       'date_time',
-      'township_code',
-      'township_name',
-      'permit_type',
-      'permit_name',
-      'approved',
       'date_action',
+      'township_code',
+      'approved',
       'status',
       'paid',
       'user_comments',
@@ -245,6 +244,20 @@ class TownshipPanelPermitRequestsForm extends React.Component {
                 objectKey={'scheme_type'} 
                 formName={'permit-requests-form'} 
                 fieldName={'scheme_type'}
+                dispatch={dispatch} />
+
+                <AdminSelectize 
+                options={this.state.selectizeOptions}
+                objectKey={'permit_type'} 
+                formName={'permit-requests-form'} 
+                fieldName={'permit_type'}
+                dispatch={dispatch} />
+
+                <AdminSelectize 
+                options={this.state.selectizeOptions}
+                objectKey={'permit_name'} 
+                formName={'permit-requests-form'} 
+                fieldName={'permit_name'}
                 dispatch={dispatch} />
 
                 {this.tempInputsEdit(this.props.initialValues)}
