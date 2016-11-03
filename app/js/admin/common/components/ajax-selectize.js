@@ -49,27 +49,44 @@ export const ajaxSelectizeFilteredGet = function(tableName, dataField, filter, c
 
 export const ajaxDelete = function(tableName, id, componentFunction) {
   var fullUrl = tableName + '?ids=' + id;
-  AXIOS_INSTANCE.delete(fullUrl).then((response) => {
+  AXIOS_INSTANCE.delete(fullUrl)
+  .then((response) => {
     componentFunction(id, tableName);
+  })
+  .catch((response) => {
+    console.log(response)
   })
 };
 
 export const ajaxPut = function(tableName, id, data, componentFunction) {
   var fullUrl = tableName + '?ids=' + id;
-  AXIOS_INSTANCE.put(fullUrl, data).then((response) => {
+  AXIOS_INSTANCE.put(fullUrl, data)
+  .then((response) => {
     componentFunction(id, tableName);
+  })
+  .catch((response) => {
+    console.log(response)
   })
 };
 
 export const ajaxPost = function(tableName, data, componentFunction) {
   var fullUrl = tableName;
-  AXIOS_INSTANCE.post(fullUrl, data).then((response) => {
+  AXIOS_INSTANCE.post(fullUrl, data)
+  .then((response) => {
     componentFunction(tableName);
   })
+  .catch((response) => {
+    console.log(response)
+  })
+
 };
 
 export const ajaxGet = function(tableName, componentFunction) {
-  AXIOS_INSTANCE.get(tableName).then((response) => {
+  AXIOS_INSTANCE.get(tableName)
+  .then((response) => {
     componentFunction(response, tableName);
+  })
+  .catch((response) => {
+    console.log(response)
   })
 };
