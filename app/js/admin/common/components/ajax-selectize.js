@@ -77,7 +77,7 @@ export const ajaxPost = function(tableName, data, componentFunction) {
   })
   .catch((response) => {
     alert("Error: " + JSON.stringify(response.data.error.message))
-    console.log(JSON.stringify(response))
+    console.log(response)
   })
 
 };
