@@ -121,16 +121,11 @@ class TownshipPanelPermitRequests extends React.Component {
 
   componentWillMount() {
     this.props.fetchTownshipPermitRequests(this.props.townshipCode);
-    this.props.fetchTownshipParkingPermits();
   }
 
   componentDidUpdate() {
-    /*
-    if (!this.props.townshipParkingPermitsCreated.isLoading) {
-      this.handleSuccess();
-    }
-    */
-    if (!this.props.townshipPermitRequestsEdited.isLoading && !this.props.townshipPermitsListCreated.isLoading) {
+    console.log(!this.props.townshipPermitRequestsEdited.isLoading)
+    if (!this.props.townshipPermitRequestsEdited.isLoading) {
       this.handleSuccess();
     }
   };
@@ -525,13 +520,6 @@ function mapStateToProps(state) {
   return {
     townshipPermitRequestsFetched: state.townshipPermitRequestsFetched,
     townshipPermitRequestsEdited: state.townshipPermitRequestsEdited,
-
-    townshipPermitsListFetched: state.townshipPermitsListFetched,
-    townshipPermitsListCreated: state.townshipPermitsListCreated,
-
-    townshipParkingPermitsFetched: state.townshipParkingPermitsFetched,
-    townshipParkingPermitsCreated: state.townshipParkingPermitsCreated,
-    townshipParkingPermitsEdited: state.townshipParkingPermitsEdited
   }
 }
 
@@ -539,11 +527,6 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     fetchTownshipPermitRequests,
     editTownshipPermitRequests,
-
-    fetchTownshipPermitsList,
-    createTownshipPermitsList,
-    fetchTownshipParkingPermits, 
-    createTownshipParkingPermits, 
     resetLoading
   }, dispatch);
 }
