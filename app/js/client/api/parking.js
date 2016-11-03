@@ -95,7 +95,7 @@ export const confirmBooking = (parking_data) => {
       {
         method: "post",
         url: "pzly01live7/_table/parked_cars",
-        data : [parking_data]
+        data : parking_data
       }, APIConfig
     )
   );
