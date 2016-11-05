@@ -66,7 +66,7 @@ class TownshipPanelFacilitiesEdit extends React.Component {
   }
 
   componentWillMount() {
-    ajaxSelectizeGet('townships_manager', 'manager_id', this.selectizeOptionsUpdate);
+    
   }
 
   componentDidUpdate() {

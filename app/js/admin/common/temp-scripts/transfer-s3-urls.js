@@ -1,3 +1,4 @@
+/*
 import React from 'react';
 import axios from 'axios';
 import {API_CONFIG} from '../../config/api.js';
@@ -49,3 +50,4 @@ export const transferImages = () => {
   replicateTable();
 };
 
+*/

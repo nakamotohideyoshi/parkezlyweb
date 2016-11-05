@@ -66,8 +66,8 @@ class BursarPanelParkingPaymentEdit extends React.Component {
     this.props.dispatch(change('parking-payment', 'date', moment().format('YYYY-MM-DD HH:mm:ss')));
   }
 
-  selectizeOptionsUpdate(test, keyName) {
-    var optionsDataObject = {[keyName]: test};
+  selectizeOptionsUpdate(valueName, keyName) {
+    var optionsDataObject = {[keyName]: valueName};
     Object.assign(this.state.selectizeOptions, optionsDataObject);
     this.forceUpdate();
   }

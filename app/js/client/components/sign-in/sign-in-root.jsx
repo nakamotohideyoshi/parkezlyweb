@@ -30,12 +30,15 @@ class SignIn extends Component {
 
   componentWillReceiveProps(nextProps) {
 
-    const { userId, sessionId, sessionToken } = nextProps.user;
-
+    const { userId, role, roleId, sessionId, sessionToken, townshipCode} = nextProps.user;
+    
     if(userId) {
       cookie.save('userId', userId, { path: '/' });
+      cookie.save('role', role, { path: '/' });
+      cookie.save('roleId', roleId, { path: '/' });
       cookie.save('sessionId', sessionId, { path: '/' });
       cookie.save('sessionToken', sessionToken, { path: '/' });
+      cookie.save('townshipCode', townshipCode, { path: '/' });
 
       window.location = "/new-vehicle";
     }

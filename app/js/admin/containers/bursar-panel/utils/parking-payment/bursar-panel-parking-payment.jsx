@@ -73,8 +73,8 @@ class BursarPanelParkingPayment extends React.Component {
     this.selectizeOptionsUpdate = this.selectizeOptionsUpdate.bind(this);
   }
 
-  selectizeOptionsUpdate(test, keyName) {
-    var optionsDataObject = {[keyName]: test};
+  selectizeOptionsUpdate(valueName, keyName) {
+    var optionsDataObject = {[keyName]: valueName};
     Object.assign(this.state.selectizeOptions, optionsDataObject);
     this.forceUpdate();
   }

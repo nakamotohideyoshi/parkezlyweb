@@ -12,9 +12,16 @@ import {
   driveEzlyMenuLinks
 } from "./utils/menu-data.js";
 
+import axios from 'axios'
+
 class Header extends Component {
   constructor(props){
     super(props);
+
+    this.state = {
+      menuType: null
+    }
+
     this.toggleMenuStatus = this.toggleMenuStatus.bind(this);
     this.setMenu = this.setMenu.bind(this);
   }
@@ -22,7 +29,11 @@ class Header extends Component {
   getMenu() {
     const { selectedMenu } = this.props.header;
     const userId = cookie.load('userId');
+    const role = cookie.load('role');
+    const townshipCode = cookie.load('townshipCode');
+
     let currentMenu = null;
+
     switch (selectedMenu) {
       case "mainGuestLinks":
         currentMenu = mainGuestLinks;
@@ -37,8 +48,28 @@ class Header extends Component {
         currentMenu = driveEzlyMenuLinks;
         break;
     }
+
+    if (currentMenu) {
+      return currentMenu
+    } else {
+      switch(role) {
+        case "ApiAdmin":
+          return mainUserLinks("")
+        case "TwpAdmin":
+          return mainUserLinks("/township/" + townshipCode)
+        case "TwpBursar":
+          return mainUserLinks("/bursar/" + townshipCode)
+        case "TwpInspector":
+          return mainUserLinks("/inspector/" + townshipCode)
+        default:
+          return mainGuestLinks
+      }
+    }
+
+    /*
     return currentMenu ? currentMenu
       : (userId ? mainUserLinks : mainGuestLinks );
+    */
   }
 
   setMenu(menu) {
@@ -53,6 +84,7 @@ class Header extends Component {
   }
 
   renderNav() {
+    //const menuData = this.getMenu();
     const menuData = this.getMenu();
     const { menuStatus, selectedMenu } = this.props.header;
     return (

@@ -78,14 +78,14 @@ class TownshipPanelHearingPlaceForm extends React.Component {
   }
 
 
-  selectizeOptionsUpdate(test, keyName) {
-    var optionsDataObject = {[keyName]: test};
+  selectizeOptionsUpdate(valueName, keyName) {
+    var optionsDataObject = {[keyName]: valueName};
     Object.assign(this.state.selectizeOptions, optionsDataObject);
     this.forceUpdate();
   }
 
   componentWillMount() {
-    ajaxSelectizeGet('townships_manager', 'manager_id', this.selectizeOptionsUpdate);
+    this.props.dispatch(change('hearing-place-form', 'township_code', this.props.townshipCode));
   }
 
   componentDidMount() {
@@ -98,7 +98,7 @@ class TownshipPanelHearingPlaceForm extends React.Component {
     $('.date_time')
     .bootstrapMaterialDatePicker({ time: true, format : 'YYYY-MM-DD HH:mm:ss' })
     .on('change', function(event) {
-      dispatch(change('facilities-form', 'date_time', event.target.value)); 
+      dispatch(change('hearing-place-form', 'date_time', event.target.value)); 
     });
   }
 
@@ -195,15 +195,6 @@ class TownshipPanelHearingPlaceForm extends React.Component {
                 </div>
 
                 {this.tempInputsEdit(this.props.initialValues)}
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'manager_id'} 
-                formName={'hearing-place-form'} 
-                fieldName={'township_code'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
 
               </div>
             </div>

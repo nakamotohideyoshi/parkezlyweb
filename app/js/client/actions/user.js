@@ -28,12 +28,40 @@ export const getUser = (userInfo) => {
     dispatch(initiateSignIn());
     return AuthAPI.authenticateUser(userInfo)
       .then((response) => {
-        const data = response.data;
-        dispatch(userAuthenticated({
-          userId: data.id,
-          sessionId: data.session_id,
-          sessionToken: data.session_token
-        }));
+        const sessionData = response.data;
+
+        AuthAPI.getUserPrivledge(sessionData.id)
+        .then((response) => {
+          const userData = response.data.resource[0];
+
+          dispatch(userAuthenticated({
+            userId: sessionData.id,
+            role: sessionData.role,
+            roleId: sessionData.role_id,
+            sessionId: sessionData.session_id,
+            sessionToken: sessionData.session_token,
+            townshipCode: userData.township_code
+          }));
+
+        })
+        .catch((response) => {
+          let errorCode = "503";
+          let errorMessage = GenericError;
+          let subErrorMessage = "";
+          if (response && response.data) {
+            const { error } = response.data;
+            if (error) {
+              const { error } = data;
+              errorCode = error.code;
+              errorMessage = error.message;
+            }
+          }
+          dispatch(authenticationFailed({
+            errorCode: errorCode,
+            errorMessage: errorMessage
+          }));
+        });
+
       })
       .catch((response) => {
         let errorCode = "503";
