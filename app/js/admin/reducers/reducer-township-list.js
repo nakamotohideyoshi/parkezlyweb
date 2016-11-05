@@ -55,10 +55,8 @@ export function townshipDetailsFetched(state = initialState, action) {
     case types.DETAILS_FETCH_GET_ERROR:
       return Object.assign({}, state, {isLoading: false, data: action.data, error: true});
     case types.DETAILS_FETCH_GET_SUCCESS:
-      console.log("TEST");
       return Object.assign({}, state, {isLoading: false, data: action.data, error: false });
     case types.DETAILS_FETCH_GET_REQ:
-      console.log("TEST");
       return Object.assign({}, state, {isLoading: true, error: false });
     case types.RESET_LOADING:
       return Object.assign({}, state, initialState);

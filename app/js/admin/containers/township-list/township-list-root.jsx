@@ -6,21 +6,22 @@ import SearchInput, {createFilter} from 'react-search-input';
 import TownshipCreate from './utils/township-create.jsx';
 import Spinner from '../../common/components/spinner.jsx';
 
-// Redux
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {fetchTownshipList, updateTownshipDetails} from '../../actions/actions-township';
+import {SchemaFilterTest} from '../../common/components/schema-filter-test.jsx'
+
+
 
 const KEYS_TO_FILTERS = ['city']
 
-import {SchemaFilterTest} from '../../common/components/schema-filter-test.jsx'
-import {transferImages} from '../../common/temp-scripts/transfer-s3-urls.js'
+
 
 class TownshipListRoot extends React.Component {
   constructor(props) {
     super(props);
     
-    SchemaFilterTest();
+    //SchemaFilterTest();
 
     this.state = {
       searchTerm: ''
@@ -31,7 +32,7 @@ class TownshipListRoot extends React.Component {
 
     this.handleFetch = this.handleFetch.bind(this);
     this.renderTownshipList = this.renderTownshipList.bind(this);
-    console.log("Testing new build")
+  
   }
 
   componentWillMount() {
@@ -66,10 +67,7 @@ class TownshipListRoot extends React.Component {
   }
 
   render() {
-
     let townshipDetails = this.props.townshipDetails;
-    // let isLoading = true;
-
     return (
       <div className="blue-body">
         <Body showHeader={true}>
@@ -135,12 +133,3 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TownshipListRoot);
-
-
-/* 
-console.log({ 
-      typeof: typeof townshipObjects, 
-      isArray: Array.isArray(townshipObjects), 
-      isPromise: townshipObjects && typeof townshipObjects.then === 'function'});
-
-*/

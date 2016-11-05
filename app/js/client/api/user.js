@@ -18,6 +18,17 @@ export const authenticateUser = (userInfo) => {
   );
 };
 
+export const getUserPrivledge = (userId) => {
+  return axios(
+    Object.assign(
+      {
+        method: "get",
+        url: `/new_pzly02live7/_table/township_users?filter=(user_id=${userId})`,
+      }, Config.APIConfig
+    )
+  );
+};
+
 export const checkUser = (userInfo) => {
   const { email, password } = userInfo;
   return axios(

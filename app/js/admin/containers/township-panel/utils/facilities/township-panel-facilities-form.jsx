@@ -90,14 +90,13 @@ class TownshipPanelFacilitiesForm extends React.Component {
   }
 
 
-  selectizeOptionsUpdate(test, keyName) {
-    var optionsDataObject = {[keyName]: test};
+  selectizeOptionsUpdate(valueName, keyName) {
+    var optionsDataObject = {[keyName]: valueName};
     Object.assign(this.state.selectizeOptions, optionsDataObject);
     this.forceUpdate();
   }
 
   componentWillMount() {
-    ajaxSelectizeGet('townships_manager', 'manager_id', this.selectizeOptionsUpdate);
     ajaxSelectizeGet('locations_rate', 'rate', this.selectizeOptionsUpdate);
     ajaxSelectizeGet('location_lot', 'location_code', this.selectizeOptionsUpdate);
 

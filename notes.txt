@@ -17,3 +17,23 @@ twpinspector@parkezly.com    secret
 twpbursar@parkezly.com   secret
 twpadmin@parkezly.com   secret
 jdoe@example.com   secret
+
+Session return data:
+
+{
+    email: "Twpinspector@parkezly.com",
+    first_name: "Twpinspector",
+    host: "ip-172-31-3-129",
+    id: 5,
+    is_sys_admin: false,
+    last_login_date: "2016-11-04 14:43:38",
+    last_name: "Twpinspector",
+    name: "Twpinspector Twpinspector",
+    role: "ApiAdmin",
+    role_id: 1,
+    session_id: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjUsInVzZXJfaWQiOjUsImVtYWlsIjoiVHdwaW5zcGVjdG9yQHBhcmtlemx5LmNvbSIsImZvcmV2ZXIiOmZhbHNlLCJpc3MiOiJodHRwOlwvXC81NC44My4xODkuNzJcL2FwaVwvdjJcL3VzZXJcL3Nlc3Npb24iLCJpYXQiOjE0NzgyNzA2MTgsImV4cCI6MTQ3ODI3NDIxOCwibmJmIjoxNDc4MjcwNjE4LCJqdGkiOiIyNzYzZTYzMzMxYmY1MWE2YTI1ZjY4MDAzZDM1OTg5MCJ9.FmUjw6eeKzhj9WRHrD_v3XOUFxMZZFWc08LdsmGQKHY"
+    session_token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjUsInVzZXJfaWQiOjUsImVtYWlsIjoiVHdwaW5zcGVjdG9yQHBhcmtlemx5LmNvbSIsImZvcmV2ZXIiOmZhbHNlLCJpc3MiOiJodHRwOlwvXC81NC44My4xODkuNzJcL2FwaVwvdjJcL3VzZXJcL3Nlc3Npb24iLCJpYXQiOjE0NzgyNzA2MTgsImV4cCI6MTQ3ODI3NDIxOCwibmJmIjoxNDc4MjcwNjE4LCJqdGkiOiIyNzYzZTYzMzMxYmY1MWE2YTI1ZjY4MDAzZDM1OTg5MCJ9.FmUjw6eeKzhj9WRHrD_v3XOUFxMZZFWc08LdsmGQKHY"
+}
+
+getUserPrivledge needs sessionToken that doesn't exist yet.
+/user/session should not be returning user_id in user_profile by id from user_profile instead.

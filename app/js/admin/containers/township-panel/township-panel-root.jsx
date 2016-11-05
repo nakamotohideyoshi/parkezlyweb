@@ -7,7 +7,6 @@ import TownshipPanelTiles from './utils/township-panel-tiles.jsx';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { Link } from 'react-router';
-import cookie from "react-cookie";
 
 import {
   editTownship, 
@@ -33,7 +32,6 @@ class TownshipPanelRoot extends React.Component {
   }
   
   componentWillMount() {
-    console.log(cookie.load('userId'))
     this.props.fetchTownshipList();
   }
 

@@ -21,7 +21,9 @@ export const mainGuestLinks = [
   }
 ];
 
-export const mainUserLinks = [
+export const mainUserLinks = (townshipCode) => {
+
+let links = [
   {
     text: "Find Parking",
     link: "/find-parking",
@@ -40,7 +42,7 @@ export const mainUserLinks = [
   },
   {
     text: "Admin",
-    link: "/admin",
+    link: "/admin" + townshipCode,
     icon: "my-account-icon",
   },
   {
@@ -75,6 +77,10 @@ export const mainUserLinks = [
     icon: "managed-lot-icon"
   }
 ];
+
+return links;
+
+} 
 
 export const myAccountMenuLinks = [
   {
