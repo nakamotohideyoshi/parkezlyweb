@@ -109,7 +109,7 @@ class InspectorParkingField extends React.Component {
   }
 
   componentWillMount() {
-    this.props.fetchInspectorParkingField();
+    this.props.fetchInspectorParkingField(this.props.townshipCode);
     this.props.fetchTownshipSchemeTypes();
     this.props.fetchTownshipLocations(this.props.townshipCode);
     ajaxSelectizeGet('payment_type', 'pay_method', this.selectizeOptionsUpdate);
@@ -152,7 +152,6 @@ class InspectorParkingField extends React.Component {
     //"township_code": this.props.townshipCode,
     let parkingData = this.props.inspectorParkingFieldFetched.data.resource;
     let filteredData = _.filter(parkingData, {"parking_status": "ENTRY", "ticket_status": "TICKETED"});
-    console.log(filteredData);
     var renderEditModal = this.renderEditModal;
     var metaDataFunction = () =>  {
       return fields.map((data) => {

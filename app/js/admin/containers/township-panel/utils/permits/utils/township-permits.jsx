@@ -74,7 +74,6 @@ class TownshipPermits extends React.Component {
   componentWillMount() {
     this.props.fetchTownshipPermitsList(this.props.townshipCode);
     this.props.fetchTownshipUsers(this.props.townshipCode);
-    this.props.dispatch(change('township-permits-form', 'township_code', this.props.townshipCode));
   }
 
   componentDidUpdate() {
@@ -124,6 +123,7 @@ class TownshipPermits extends React.Component {
         initialValues={this.state.rowData}
         rowData={this.state.rowData}
         handleSuccess={this.handleSuccess}
+        townshipCode={this.props.townshipCode}
       />
     );
 
@@ -237,6 +237,7 @@ class TownshipPermits extends React.Component {
                 initialValues={this.state.rowData}
                 rowData={this.state.rowData}
                 handleSuccess={this.handleSuccess}
+                townshipCode={this.props.townshipCode}
                 />
               <TownshipPermitsForm
                 initialValues={this.state.rowData}
@@ -247,6 +248,7 @@ class TownshipPermits extends React.Component {
                 initialValues={this.state.rowData}
                 rowData={this.state.rowData}
                 handleSuccess={this.handleSuccess}
+                townshipCode={this.props.townshipCode}
                 />
             </div>
         }

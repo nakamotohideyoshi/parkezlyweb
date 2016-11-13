@@ -222,7 +222,6 @@ class InspectorSearchTicketForm extends React.Component {
     } = this.props;
 
     const fields = [ 
-      'town_logo', 
       'plate_no',
       'violation_fee', 
       'violation_detail',  

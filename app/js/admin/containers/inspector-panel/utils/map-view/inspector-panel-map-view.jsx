@@ -1,13 +1,17 @@
-import React from 'react';
+import React, {PropTypes, Component}  from 'react';
 import Body from "../../../../../common/components/body/body.jsx"
 import Spinner from '../../../../common/components/spinner.jsx'
 import { browserHistory } from 'react-router'
 import moment from 'moment'
-import { GoogleMapLoader, GoogleMap, Marker, InfoWindow } from "react-google-maps";
+
 import { ajaxGet, ajaxDelete } from '../../../../common/components/ajax-selectize.js';
 import ImageCheckbox from '../../../../../common/components/footer/utils/image-checkbox.jsx';
 
-export default class InspectorMapView extends React.Component {
+import GoogleMap from 'google-map-react';
+import { fitBounds } from 'google-map-react/utils';
+import MapMarker from './utils/marker'
+
+class InspectorMapView extends React.Component {
 
   constructor(props) {
     super(props);
@@ -19,6 +23,7 @@ export default class InspectorMapView extends React.Component {
       yellowOff: false,
       redOff: false,
       greenOff: false,
+      zoom: 10
     }
 
     this.ajaxGet = this.ajaxGet.bind(this);
@@ -26,11 +31,10 @@ export default class InspectorMapView extends React.Component {
   }
 
   componentWillMount() {
-    ajaxGet('parked_cars', this.ajaxGet);
+    ajaxGet(`parked_cars?filter=(township_code=${this.props.townshipCode})`, this.ajaxGet);
   }
 
   ajaxGet(markerData) {
-    //console.log(markerData.data.resource)
     this.setState({markerData: markerData, showMarkers: true})
   }
 
@@ -65,7 +69,6 @@ export default class InspectorMapView extends React.Component {
   }
 
   handleMarkerClick(marker) {
-    console.log(marker)
     marker.showInfo = true;
     this.setState(this.state);
   }
@@ -76,7 +79,6 @@ export default class InspectorMapView extends React.Component {
   }
   
   renderMarkers() {
-
     let markerData = this.state.markerData.data.resource;
     
     return markerData.map((data, index) => {
@@ -94,19 +96,42 @@ export default class InspectorMapView extends React.Component {
       } else {
         renderMarker = false;
       }
-
+      
       if (renderMarker) {
-        return (
-          <Marker 
-            key={index}
-            ref={ref}
-            position={{lat: parseFloat(data.lat), lng: parseFloat(data.lng)}} 
-            icon={{url: iconUrl, scaledSize: new google.maps.Size(75,50)}} 
-            onClick={this.handleMarkerClick.bind(this, data)}
-            >
-            {data.showInfo ? this.renderInfoWindow(ref, data, data.plate_no, data.id) : null}
-          </Marker>
-        );
+        let lat = parseFloat(data.lat);
+        let lng = parseFloat(data.lng);
+
+        let width = Math.round(63*Math.pow(2, this.state.zoom)) / 20000;
+        let height =  Math.round(50*Math.pow(2, this.state.zoom)) / 20000;
+
+        //restrict the maximum size of the icon
+        if(width > 126)  {
+          width = 126;
+        }
+        if(height > 93)  {
+          height = 93;
+        }
+        if(width < 32)  {
+          width = 32;
+        }
+        if(height < 25)  {
+          height = 25;
+        }
+        
+        if (lat && lng) {
+          return (
+            <MapMarker 
+            handleCarClick={() => browserHistory.push(`admin/inspector/vehicle-info/${data.id}`)}
+            iconUrl={iconUrl}
+            lat={lat} 
+            lng={lng}
+            height={height}
+            width={width}
+            plateNo={data.plate_no}
+            carId={data.id}
+            />
+          );
+        }
       }
     });
 
@@ -177,23 +202,21 @@ export default class InspectorMapView extends React.Component {
         <Body showHeader={true}>
             <div>
               <section style={{height: "calc(100% - 165px)"}}>
-                <GoogleMapLoader
-                  containerElement={
-                    <div
-                      style={{
-                        height: "100%",
-                      }}/>
-                  } 
-                  googleMapElement={
-                  <GoogleMap
-                    ref={null}
-                    defaultZoom={10}
-                    defaultCenter={{ lat: 40.7128, lng: -73.935242 }}
-                    onClick={null}
-                    center={{ lat: 40.7128, lng: -73.935242 }}>
-                    {this.state.showMarkers ?  this.renderMarkers() : <div/>}
-                  </GoogleMap>
-                }/>
+                <GoogleMap
+                  onClick={null}
+                  zoom={10}
+                  center={{ lat: 40.7128, lng: -73.935242 }}
+                  bootstrapURLKeys={{
+                    key: "AIzaSyDysQZjtU9j2dMZ5D2drY40hH-KKRR-x3k",
+                    language: 'en',
+                  }}
+                  onBoundsChange={(center, zoom, bounds, marginBounds) => { 
+                    this.setState({zoom: zoom});
+                  }}
+                  >
+                  {this.state.showMarkers ?  this.renderMarkers() : <div/>}
+                  <MapMarker lat={59.955413} lng={30.337844}/>
+                </GoogleMap>
               </section>
               {this.renderFooterIcons()}
             </div>
@@ -202,3 +225,6 @@ export default class InspectorMapView extends React.Component {
     );
   }   
 }
+
+export default InspectorMapView;
+//  onZoomAnimationStart={(test) => (alert(test))}

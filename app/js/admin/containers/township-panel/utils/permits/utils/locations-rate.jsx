@@ -82,7 +82,6 @@ class LocationsRate extends React.Component {
 
   componentWillMount() {
     this.props.fetchLocationsRate(this.props.townshipCode);
-    this.props.dispatch(change('locations-rate', 'township_code', this.props.townshipCode));
   }
 
 
@@ -115,6 +114,7 @@ class LocationsRate extends React.Component {
         initialValues={this.state.rowData} 
         rowData={this.state.rowData}
         handleSuccess={this.handleSuccess}
+        townshipCode={this.props.townshipCode}
       />
     );
   }
@@ -275,6 +275,7 @@ class LocationsRate extends React.Component {
               initialValues={this.state.rowData} 
               rowData={this.state.rowData}
               handleSuccess={this.handleSuccess}
+              townshipCode={this.props.townshipCode}
             />
             <LocationsRateForm
               initialValues={this.state.rowData} 
@@ -285,6 +286,7 @@ class LocationsRate extends React.Component {
               initialValues={this.state.rowData} 
               rowData={this.state.rowData}
               handleSuccess={this.handleSuccess}
+              townshipCode={this.props.townshipCode}
             />
           </div>
         }

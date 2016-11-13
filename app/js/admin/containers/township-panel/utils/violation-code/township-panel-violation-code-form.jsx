@@ -92,7 +92,7 @@ class InspectorSearchTicketForm extends React.Component {
   }
 
   componentWillMount() {
-    ajaxSelectizeGet('townships_manager', 'manager_id', this.selectizeOptionsUpdate);
+    this.props.dispatch(change('violation-code-form', 'township_code', this.props.townshipCode));
   }
 
   componentDidMount() {
@@ -198,16 +198,6 @@ class InspectorSearchTicketForm extends React.Component {
               </div>
 
               <div className="row">
-
-
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'manager_id'} 
-                formName={'violation-code-form'} 
-                fieldName={'township_code'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
 
                 <div className="col s6 admin-form-input">
                   <div className="form-group">

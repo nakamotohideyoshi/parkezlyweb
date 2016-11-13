@@ -37,3 +37,28 @@ Session return data:
 
 getUserPrivledge needs sessionToken that doesn't exist yet.
 /user/session should not be returning user_id in user_profile by id from user_profile instead.
+
+authUser should be happening on register as well
+
+
+1. Right now, for Insert/Editing/or Viewing it pulls all fields from the table.  Needs logic applied based on what we are doing there. 
+For example, when adding money to the wallet, search by plate # or phone# and pull that person's wallet and add. 
+
+2. Many fields on each form need to be hidden.; Some fields must be drop down/cascading
+
+3. For Inspector Panel >  Two Tiles first: 
+i) Lot/Map View ; 
+ii) List View 
+ii) Search Plate#
+ i) Three Views ( Lot View, Map View of a a location,  Map view of the township>  and 
+ ii)Five Lists >  Expired Cars, Expiring Cars, Green Cars, Blue Cars, Ticketed Cars 
+
+4. For Bursar Panel 
+Three Tiles: 
+i ) Recieve Payments,  
+ii) Payments Received at Bursar Desk,
+iii ) Payments from web/app
+ 
+ ii) & iii) are reports, which can be pulled as  daily, weekly, monthly etc.  
+ 
+6. Ui forms for Google Place Partners and Local Partners to enter their data.

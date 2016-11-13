@@ -178,9 +178,6 @@ class TownshipPanelPermitRequestsForm extends React.Component {
     } = this.props;
 
     const fields = [     
-      'date_time',
-      'date_action',
-      'township_code',
       'approved',
       'status',
       'paid',

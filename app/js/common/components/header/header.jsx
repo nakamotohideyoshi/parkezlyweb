@@ -8,6 +8,7 @@ import { setCurrentMenu, toggleMenu  } from "./header.js";
 import {
   mainGuestLinks,
   mainUserLinks,
+  mainAdminLinks,
   myAccountMenuLinks,
   driveEzlyMenuLinks
 } from "./utils/menu-data.js";
@@ -54,13 +55,15 @@ class Header extends Component {
     } else {
       switch(role) {
         case "ApiAdmin":
-          return mainUserLinks("")
+          return mainAdminLinks("")
         case "TwpAdmin":
-          return mainUserLinks("/township/" + townshipCode)
+          return mainAdminLinks("/township/" + townshipCode)
         case "TwpBursar":
-          return mainUserLinks("/bursar/" + townshipCode)
+          return mainAdminLinks("/bursar/" + townshipCode)
         case "TwpInspector":
-          return mainUserLinks("/inspector/" + townshipCode)
+          return mainAdminLinks("/inspector/" + townshipCode)
+        case "Registered":
+          return mainUserLinks
         default:
           return mainGuestLinks
       }
