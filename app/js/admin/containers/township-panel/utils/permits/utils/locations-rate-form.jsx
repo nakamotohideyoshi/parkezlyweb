@@ -72,7 +72,6 @@ class LocationsRateForm extends React.Component {
         this.props.createLocationsRate(data);
         break;
       case "EDIT":
-      console.log(data);
         this.props.editLocationsRate(data, data.id);
         break;
       case "DUPLICATE":
@@ -98,6 +97,7 @@ class LocationsRateForm extends React.Component {
 
     this.props.dispatch(change('locations-rate-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
     this.props.dispatch(change('locations-rate-form', 'township_code', this.props.townshipCode));
+    this.props.dispatch(change('locations-rate-form', 'township_id', this.props.townshipCode));
   }
 
   componentDidMount() {
@@ -164,20 +164,18 @@ class LocationsRateForm extends React.Component {
     } = this.props;
 
   const fields = [ 
-    'exact_address',
-    'township_id',
-    'township_code',
-    'location_id',
-    'location_code',
-    'scheme',
-    'rate',
-    'location_name',
-    'location_map',
-    'max_period',
-    'township_name',
-    'scheme_type',
-    'permit_type',
-    ]
+      'exact_address',
+      'location_id',
+      'location_code',
+      'scheme',
+      'rate',
+      'location_name',
+      'location_map',
+      'max_period',
+      'township_name',
+      'scheme_type',
+      'permit_type',
+  ]
 
     return fields.map((data) => {
       return( 

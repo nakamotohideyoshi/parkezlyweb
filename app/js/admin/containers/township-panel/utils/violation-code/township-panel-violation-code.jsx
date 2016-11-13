@@ -110,6 +110,7 @@ class TownshipPanelViolationCode extends React.Component {
         initialValues={null}
         editMode={false}
         handleSuccess={this.handleSuccess}
+        townshipCode={this.props.townshipCode}
       />
     );
 
@@ -166,8 +167,6 @@ class TownshipPanelViolationCode extends React.Component {
   }
 
   renderEditModal(recordId, rowData) {
-    console.log(rowData);
-    console.log(recordId);
     window.scrollTo(0, document.body.scrollHeight);
     this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true, parkingLocationCode: recordId})
   }
@@ -238,7 +237,6 @@ class TownshipPanelViolationCode extends React.Component {
   }
 
   render() {
-    console.log(this.props.townshipLocationsFetched)
     return (
       <div className="blue-body marginless-row">
         <Body showHeader={true}>
@@ -270,24 +268,22 @@ class TownshipPanelViolationCode extends React.Component {
           <div></div> : 
           <div>
             <TownshipPanelViolationCodeForm
-              initialValues={this.state.rowData} 
-              handleSuccess={this.handleSuccess}
               modalName="modal-violation-code-edit" 
               modalText="Edit a Violation Type" 
               submitType="EDIT"
               initialValues={this.state.rowData} 
               rowData={this.state.rowData}
               handleSuccess={this.handleSuccess}
+              townshipCode={this.props.townshipCode}
               />
             <TownshipPanelViolationCodeForm 
-              initialValues={this.state.rowData} 
-              handleSuccess={this.handleSuccess}
               modalName="modal-violation-code-duplicate" 
               modalText="Duplicate a Violation Type" 
               submitType="DUPLICATE"
               initialValues={this.state.rowData} 
               rowData={this.state.rowData}
               handleSuccess={this.handleSuccess}
+              townshipCode={this.props.townshipCode}
               />
           </div>
         }

@@ -7,8 +7,8 @@ import {API_CONFIG} from '../config/api.js';
 
 const AXIOS_INSTANCE = axios.create(API_CONFIG);
 
-export function fetchInspectorParkingField(locationCode) {
-  const URL = 'parked_cars';
+export function fetchInspectorParkingField(townshipCode) {
+  const URL = `parked_cars?filter=(township_code=${townshipCode})`;
 
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.INSPECTOR_PARKING_FIELD_GET_REQ));
@@ -23,14 +23,14 @@ export function fetchInspectorParkingField(locationCode) {
 }
 
 export function editInspectorParkingField(data, id) {
-  const URL = 'parked_cars?ids=' + id;
+  const URL = `parked_cars?ids=` + id;
 
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.INSPECTOR_PARKING_FIELD_PUT_REQ));
     return AXIOS_INSTANCE.put(URL, data)
     .then(function(response) {
       dispatch(apiTownship.receiveData(response.data, types.INSPECTOR_PARKING_FIELD_PUT_SUCCESS));
-      dispatch(reset('parking-field-edit'));
+      dispatch(reset(`parking-field-edit`));
     })
     .catch(function(response) {
       dispatch(apiTownship.receiveError(response.data, types.INSPECTOR_PARKING_FIELD_PUT_ERROR));
@@ -41,14 +41,14 @@ export function editInspectorParkingField(data, id) {
 
 export function createInspectorParkingField(data) {
   
-  const URL = 'parked_cars';
+  const URL = `parked_cars`;
   
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.INSPECTOR_PARKING_FIELD_POST_REQ));
     return AXIOS_INSTANCE.post(URL, data)
     .then(function(response) {
       dispatch(apiTownship.receiveData(response.data, types.INSPECTOR_PARKING_FIELD_POST_SUCCESS));
-      dispatch(reset('parking-payment'));
+      dispatch(reset(`parking-payment`));
     })
     .catch(function(response){
       dispatch(apiTownship.receiveError(response.data, types.INSPECTOR_PARKING_FIELD_POST_ERROR));
@@ -56,8 +56,8 @@ export function createInspectorParkingField(data) {
   }
 }
 
-export function fetchInspectorPlate(locationCode) {
-  const URL = 'parked_cars';
+export function fetchInspectorPlate(townshipCode) {
+  const URL = `parked_cars`;
 
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.INSPECTOR_PLATE_GET_REQ));
@@ -72,14 +72,14 @@ export function fetchInspectorPlate(locationCode) {
 }
 
 export function editInspectorPlate(data, id) {
-  const URL = 'parked_cars?ids=' + id;
+  const URL = `parked_cars?ids=` + id;
 
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.INSPECTOR_PLATE_PUT_REQ));
     return AXIOS_INSTANCE.put(URL, data)
     .then(function(response) {
       dispatch(apiTownship.receiveData(response.data, types.INSPECTOR_PLATE_PUT_SUCCESS));
-      dispatch(reset('parking-payment'));
+      dispatch(reset(`parking-payment`));
     })
     .catch(function(response){
       dispatch(apiTownship.receiveError(response.data, types.INSPECTOR_PLATE_PUT_ERROR));
@@ -90,14 +90,14 @@ export function editInspectorPlate(data, id) {
 
 export function createInspectorPlate(data) {
   
-  const URL = 'parked_cars';
+  const URL = `parked_cars`;
   
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.INSPECTOR_PLATE_POST_REQ));
     return AXIOS_INSTANCE.post(URL, data)
     .then(function(response) {
       dispatch(apiTownship.receiveData(response.data, types.INSPECTOR_PLATE_POST_SUCCESS));
-      dispatch(reset('parking-payment'));
+      dispatch(reset(`parking-payment`));
     })
     .catch(function(response){
       dispatch(apiTownship.receiveError(response.data, types.INSPECTOR_PLATE_POST_ERROR));
@@ -105,8 +105,8 @@ export function createInspectorPlate(data) {
   }
 }
 
-export function fetchInspectorTicket(locationCode) {
-  const URL = 'parking_violations';
+export function fetchInspectorTicket(townshipCode) {
+  const URL = `parking_violations?filter=(township_code=${townshipCode})`;
 
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.INSPECTOR_PARKING_FIELD_GET_REQ));
@@ -121,14 +121,14 @@ export function fetchInspectorTicket(locationCode) {
 }
 
 export function editInspectorTicket(data, id) {
-  const URL = 'parking_violations?ids=' + id;
+  const URL = `parking_violations?ids=` + id;
 
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.INSPECTOR_TICKET_PUT_REQ));
     return AXIOS_INSTANCE.put(URL, data)
     .then(function(response) {
       dispatch(apiTownship.receiveData(response.data, types.INSPECTOR_TICKET_PUT_SUCCESS));
-      dispatch(reset('parking-payment'));
+      dispatch(reset(`parking-payment`));
     })
     .catch(function(response){
       dispatch(apiTownship.receiveError(response.data, types.INSPECTOR_TICKET_PUT_ERROR));
@@ -139,14 +139,14 @@ export function editInspectorTicket(data, id) {
 
 export function createInspectorTicket(data) {
   
-  const URL = 'parking_violations';
+  const URL = `parking_violations`;
   
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.INSPECTOR_TICKET_POST_REQ));
     return AXIOS_INSTANCE.post(URL, data)
     .then(function(response) {
       dispatch(apiTownship.receiveData(response.data, types.INSPECTOR_TICKET_POST_SUCCESS));
-      dispatch(reset('parking-payment'));
+      dispatch(reset(`parking-payment`));
     })
     .catch(function(response){
       dispatch(apiTownship.receiveError(response.data, types.INSPECTOR_TICKET_POST_ERROR));

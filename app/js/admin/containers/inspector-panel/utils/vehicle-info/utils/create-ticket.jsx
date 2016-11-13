@@ -86,20 +86,13 @@ class CreateTicket extends React.Component {
   }
 
   componentWillMount() {
-    console.log(this.props.townshipHearingPlaceFetched)
     this.props.fetchHearingPlace();
     this.props.fetchViolationCode();
-    ajaxGet('parked_cars', this.ajaxGet);
+    ajaxGet(`parked_cars/${this.props.vehicleCode}`, this.ajaxGet);
   }
 
   ajaxGet(parkedCarData) {
-    let markerArray = parkedCarData.data.resource;
-    let filteredData = markerArray.find((element, index) => {
-      if (element.id == this.props.vehicleCode) {
-        return (element);
-      }
-    });
-    this.setState({parkedCarData: filteredData});
+    this.setState({parkedCarData: parkedCarData.data});
   }
 
   componentDidUpdate() {
@@ -262,19 +255,19 @@ class CreateTicket extends React.Component {
               borderBottom: "0px"}}>
               <div style={{backgroundColor: "#F6EADF"}} className="township-userlist-container center-align">
               {
-                this.state.parkedCarData == null ? <div> Loading... </div> : 
+                this.state.parkedCarData == null ? <div className="center-align"> <Spinner /> </div> : 
                 <div>
                   <div style={{marginTop: 20, fontSifze: 50}}> Vehicle Info. </div>
                   {(() => {
                     let currentTime = moment().diff(moment(this.state.parkedCarData.expiry_time), 'hours');
                     if(currentTime > 0 && this.state.greenOff == false) {
-                      return <img src={require('../../../../../../../images/car_red@3x.png')} />
+                      return <img src={require('../../../../../../../images/car_red@3x.png')} className="animated bounceIn"/>
                     } else if (currentTime < 0 && this.state.redOff == false) {
-                      return <img src={require('../../../../../../../images/car_green@3x.png')} />
+                      return <img src={require('../../../../../../../images/car_green@3x.png')} className="animated bounceIn"/>
                     } else if (currentTime == 0 && this.state.yellowOff == false) {
-                      return <img src={require('../../../../../../../images/car_yellow@3x.png')} />
+                      return <img src={require('../../../../../../../images/car_yellow@3x.png')} className="animated bounceIn"/>
                     } else {
-                      return <img src={require('../../../../../../../images/car_green@3x.png')} />
+                      return <img src={require('../../../../../../../images/car_green@3x.png')} className="animated bounceIn"/>
                     }
                   })()}
 

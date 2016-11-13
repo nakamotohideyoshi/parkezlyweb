@@ -21,7 +21,57 @@ export const mainGuestLinks = [
   }
 ];
 
-export const mainUserLinks = (townshipCode) => {
+export const mainUserLinks = [
+  {
+    text: "Find Parking",
+    link: "/find-parking",
+    icon: "find-parking-icon"
+  },
+  {
+    text: "Find My Vehicle",
+    link: "/find-vehicle",
+    icon: "find-vehicle-icon"
+  },
+  {
+    text: "My Account",
+    link: "",
+    icon: "my-account-icon",
+    subMenu: "myAccountMenuLinks"
+  },
+  {
+    text: "Drive EZly",
+    link: "",
+    icon: "drive-ezly-icon",
+    subMenu: "driveEzlyMenuLinks"
+  },
+  {
+    text: "Other Parking Options",
+    link: "",
+    icon: "other-parking-icon"
+  },
+  {
+    text: "Logout",
+    link: "/logout",
+    icon: "logout-icon"
+  },
+  {
+    text: "Driver View",
+    link: "",
+    icon: "driver-view-icon"
+  },
+  {
+    text: "Street Parking View",
+    link: "",
+    icon: "street-parking-icon"
+  },
+  {
+    text: "Managed Lot View",
+    link: "",
+    icon: "managed-lot-icon"
+  }
+];
+
+export const mainAdminLinks = (townshipCode) => {
 
 let links = [
   {

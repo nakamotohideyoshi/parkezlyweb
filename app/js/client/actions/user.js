@@ -29,39 +29,46 @@ export const getUser = (userInfo) => {
     return AuthAPI.authenticateUser(userInfo)
       .then((response) => {
         const sessionData = response.data;
-
-        AuthAPI.getUserPrivledge(sessionData.id)
-        .then((response) => {
-          const userData = response.data.resource[0];
-
+        if(sessionData.role_id !== 5 && sessionData.role_id !== 6) {
+          AuthAPI.getUserPrivledge(sessionData.id)
+          .then((response) => {
+            const townshipCode = response.data.resource[0].township_code;
+            dispatch(userAuthenticated({
+              userId: sessionData.id,
+              role: sessionData.role,
+              roleId: sessionData.role_id,
+              sessionId: sessionData.session_id,
+              sessionToken: sessionData.session_token,
+              townshipCode: townshipCode
+            }));
+          })
+          .catch((response) => {
+            let errorCode = "503";
+            let errorMessage = GenericError;
+            let subErrorMessage = "";
+            if (response && response.data) {
+              const { error } = response.data;
+              if (error) {
+                const { error } = data;
+                errorCode = error.code;
+                errorMessage = error.message;
+              }
+            }
+            dispatch(authenticationFailed({
+              errorCode: errorCode,
+              errorMessage: errorMessage
+            }));
+          });
+        } else {
           dispatch(userAuthenticated({
             userId: sessionData.id,
             role: sessionData.role,
             roleId: sessionData.role_id,
             sessionId: sessionData.session_id,
             sessionToken: sessionData.session_token,
-            townshipCode: userData.township_code
+            townshipCode: null
           }));
-
-        })
-        .catch((response) => {
-          let errorCode = "503";
-          let errorMessage = GenericError;
-          let subErrorMessage = "";
-          if (response && response.data) {
-            const { error } = response.data;
-            if (error) {
-              const { error } = data;
-              errorCode = error.code;
-              errorMessage = error.message;
-            }
-          }
-          dispatch(authenticationFailed({
-            errorCode: errorCode,
-            errorMessage: errorMessage
-          }));
-        });
-
+        }
       })
       .catch((response) => {
         let errorCode = "503";

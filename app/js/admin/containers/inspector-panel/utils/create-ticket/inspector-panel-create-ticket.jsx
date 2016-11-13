@@ -100,7 +100,7 @@ class InspectorCreateTicket extends React.Component {
   }
 
   componentWillMount() {
-    this.props.fetchInspectorTicket();
+    this.props.fetchInspectorTicket(this.props.townshipCode);
     this.props.fetchTownshipSchemeTypes();
     this.props.fetchTownshipLocations(this.props.townshipCode);
   }
@@ -192,7 +192,7 @@ class InspectorCreateTicket extends React.Component {
           columnMetadata={columnMeta}
           columns={[
             'id',
-            'town_logo', 
+            'township_code', 
             'plate_no',
             'violation_fee', 
             'violation_detail',  

@@ -156,7 +156,6 @@ class TownshipPanelUsersForm extends React.Component {
     } = this.props;
 
     const fields = [
-      'township_code'
     ]
 
     return fields.map((data) => {

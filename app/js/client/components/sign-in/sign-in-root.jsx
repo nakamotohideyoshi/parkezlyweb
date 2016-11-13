@@ -23,8 +23,19 @@ class SignIn extends Component {
   }
 
   componentWillMount() {
-    if(this.checkAuthStatus()) {
-      window.location = "/new-vehicle";
+    const checkAuthStatus = this.checkAuthStatus();
+    if(checkAuthStatus) {
+      if(checkAuthStatus.role === "ApiAdmin") {
+        window.location = "/admin";
+      } else if (checkAuthStatus.role === "TwpAdmin") {
+        window.location = "/admin/township/" + checkAuthStatus.townshipCode;
+      } else if (checkAuthStatus.role === "TwpBursar") {
+        window.location = "/admin/bursar/" + checkAuthStatus.townshipCode;
+      } else if (checkAuthStatus.role === "TwpInspector") {
+        window.location = "/admin/inspector/" + checkAuthStatus.townshipCode;
+      } else if (checkAuthStatus.role === "Registered") {
+        window.location = "/new-vehicle"
+      } 
     }
   }
 
@@ -40,14 +51,44 @@ class SignIn extends Component {
       cookie.save('sessionToken', sessionToken, { path: '/' });
       cookie.save('townshipCode', townshipCode, { path: '/' });
 
-      window.location = "/new-vehicle";
+      if(role === "ApiAdmin") {
+        window.location = "/admin";
+      } else if (role === "TwpAdmin") {
+        window.location = "/admin/township/" + townshipCode;
+      } else if (role === "TwpBursar") {
+        window.location = "/admin/bursar/" + townshipCode;
+      } else if (role === "TwpInspector") {
+        window.location = "/admin/inspector/" + townshipCode;
+      } else if (role === "Registered") {
+        window.location = "/new-vehicle"
+      } 
+
+      /*
+      switch(role) {
+        case "ApiAdmin":
+          window.location = "/admin";
+        case "TwpAdmin":
+          window.location = "/admin/township/" + townshipCode;
+        case "TwpBursar":
+          window.location = "/admin/bursar/" + townshipCode;
+        case "TwpInspector":
+          window.location = "/admin/inspector/" + townshipCode;
+        case "Registered":
+          window.location = "/new-vehicle"
+      }
+      */
+
     }
   }
 
   checkAuthStatus() {
     const userId = cookie.load('userId');
-    if(userId) {
-      return true;
+    const role = cookie.load('role');
+    const townshipCode = cookie.load('townshipCode')
+    if(userId && role && townshipCode) {
+      return {userId: userId, role: role, townshipCode: townshipCode};
+    } else {
+      return false
     }
   }
 

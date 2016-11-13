@@ -94,6 +94,49 @@ const fieldsCard = [
   'violation_date',
 ]
 
+export const fieldsCash = [ 
+  'ticket_no',
+  'plate_num',
+
+  'user_id',
+  'address',
+  'email',
+  'paypal_total',
+
+  'violation_charge',
+  'violation_details',
+  'violation_location',
+  'pld_guilty',
+
+  'penalty_adjustment',
+  'adjust_rfchange',
+  'new_amt_due',
+  'pmt_status',
+  'ticket_status',
+  'pmt_options',
+  
+  'ipn_txn_id',
+  'ipn_payment',
+  'tr_percentage',
+  'ipn_address',
+  'wallet_balance',
+
+  'twp_payment',
+  'ipn_status',
+  'adjust_ref',
+  'phone',
+  'paid_date',
+  'ipn_custom',
+  'penalty_change',
+  'date_payment',
+  'tr_fee',
+  'cheque_details',
+  'cheque_date',
+  'violation_date',
+  'cheque_no',
+]
+
+
 
 class BursarPanelTicketPayment extends React.Component {
 

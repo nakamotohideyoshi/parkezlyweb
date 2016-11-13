@@ -88,6 +88,7 @@ class TownshipPermitsForm extends React.Component {
     ajaxSelectizeGet('parking_permits', 'permit_name', this.selectizeOptionsUpdate);
 
     this.props.dispatch(change('township-permits-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
+    this.props.dispatch(change('township-permits-form', 'township_code', this.props.townshipCode));
     //ajaxSelectizeGet('townships_manager', 'manager_id', this.selectizeOptionsUpdate);
   }
 
@@ -144,7 +145,6 @@ class TownshipPermitsForm extends React.Component {
     } = this.props;
 
     const fields = [
-    'township_code',
     ]
 
     return fields.map((data) => {

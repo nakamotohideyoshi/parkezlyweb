@@ -155,8 +155,6 @@ class ParkingPermitsForm extends React.Component {
 
     const fields = [
       'date_time',
-      'township_code',
-      'township_name',
       'covered_locations',
       'cost',
       'year',
