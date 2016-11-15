@@ -19,14 +19,14 @@ export class InspectorPanelTiles extends Component {
           <div></div>
           :
           <div>
-            <div className="col s12 m12 l12 animated fadeInRight">
+            <div className="col s12 m12 l12 animated fadeInDown">
               <Link to={{pathname: `/admin/inspector/map-view/${this.props.townshipCode}`}} 
               className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12">
                 <i className="material-icons valign">map</i>
                 <h4> Map View </h4>
               </Link>
             </div>
-            <div className="col s12 m12 l12 animated fadeInLeft">
+            <div className="col s12 m12 l12 animated fadeInUp">
               <button onClick={() => {this.setState({showListView: true})}}
               className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12">
                 <i className="material-icons valign">list</i>

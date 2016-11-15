@@ -5,7 +5,7 @@ import webpackConfig from '../webpack.config';
 
 import express from 'express';
 import path from 'path';
-import https from 'https';
+import http from 'http';
 
 // Production bool
 const isProduction = process.env.NODE_ENV === 'production';
@@ -43,7 +43,7 @@ export default function connect(app) {
     const publicPath = path.resolve('./dist/');
     app.use(express.static(publicPath));
 
-    const server = https.createServer(app);
+    const server = http.createServer(app);
     server.listen(port, function (err, result) {
       if (err) {
         console.log(err);

@@ -47,6 +47,7 @@
     "react-addons-css-transition-group": "^15.1.0",
     "react-addons-shallow-compare": "^15.1.0",
     "react-bootstrap": "^0.29.4",
+    "react-bootstrap-daterangepicker": "^3.2.2",
     "react-cookie": "^0.4.5",
     "react-cropper": "^0.8.0",
     "react-dom": "^0.14.8",
