@@ -5,6 +5,7 @@ import Body from "../../../common/components/body/body.jsx";
 
 import {fetchTownshipList, fetchTownshipDetails} from '../../actions/actions-township.js';
 import {InspectorPanelTiles} from './utils/inspector-panel-tiles.jsx'
+import Spinner from "../../../admin/common/components/spinner"
 
 class InspectorPanelRoot extends React.Component {
 
@@ -23,7 +24,11 @@ class InspectorPanelRoot extends React.Component {
         <Body showHeader={true}>
           <div className="content-container">
             <div className="container">
-              {this.props.townshipDetailsFetched.isLoading ? <div> Loading...</div> : 
+              {this.props.townshipDetailsFetched.isLoading ? 
+                <div className="center-align"> 
+                  <Spinner /> <div style={{color: "#FFF"}}> Loading... </div> 
+                </div>  
+                : 
                 <InspectorPanelTiles townshipCode={this.props.townshipDetailsFetched.data.resource[0].manager_id}/>}
             </div>
           </div>
