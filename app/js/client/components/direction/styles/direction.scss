@@ -12,7 +12,7 @@
 .direction-panel {
   width: 50%;
   height: 350px;
-  overflow-x: scroll;
+  overflow-y: scroll;
   z-index: 2;
   text-align: center;
   background: $white;
@@ -23,10 +23,26 @@
 .direction-map {
   width: 100%;
   top: 350px;
-  height: 500px;
+  height: 700px;
   position: absolute;
 }
 .direction-confirmation {
 	width: 400px;
 	margin: 20px auto;
+}
+
+@media (max-width: 800px) {
+  .direction-content {
+    width: 100%;
+    height: 250px;
+  }
+  .direction-panel {
+    width: 100%;
+    height: 350px;
+    overflow-x:hidden;
+  }
+  .direction-map {
+    width: 100%;
+    top: 600px;
+  }
 }
