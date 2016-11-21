@@ -12,6 +12,7 @@ import FindVehicleDetailController from "./components/find-vehicle/find-vehicle-
 import MyPermitsController from "./components/my-permits/my-permits-controller.jsx";
 import MyTicketsController from "./components/my-tickets/my-tickets-controller.jsx";
 import MyLocationsController from "./components/my-locations/my-locations-controller.jsx";
+import NewLocationController from "./components/my-locations/new-location-controller.jsx";
 import MyWalletController from "./components/my-wallet/my-wallet-controller.jsx";
 import PaymentSuccessful from "./components/payment/payment-successful.jsx";
 //import ParkingPaymentSuccessful from "./components/payment/parking-payment-successful.jsx";
@@ -39,6 +40,7 @@ export default function ClientIndex() {
       <Route path="my-permits" component={MyPermitsController}/>
       <Route path="my-tickets" component={MyTicketsController}/>
       <Route path="my-locations" component={MyLocationsController}/>
+      <Route path="new-location" component={NewLocationController}/>
       <Route path="my-wallet" component={MyWalletController}/>
       <Route path="finalize-payment" component={PaymentSuccessful}/>
       <Route path="finalize-parking" component={ParkingPaymentSuccessful}/>

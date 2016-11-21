@@ -255,26 +255,24 @@ class Traffic extends Component {
   getTrafficData(event) {
     const { dispatch } = this.props;
     const { origin, destination } = this.props.traffic;
+
     const DirectionsService = new google.maps.DirectionsService();
     const TrafficLayer = new google.maps.TrafficLayer();
+    console.log(TrafficLayer);
 
     const tmode = "DRIVING";
 
-    if(origin == '' || destination == ''){
-      dispatch(setTrafficResult("CURRENT"));
-    } else {
-      DirectionsService.route({
-        origin: origin,
-        destination: destination,
-        travelMode: tmode
-      }, (result, status) => {
-        if (status === google.maps.DirectionsStatus.OK) {
-          dispatch(setTrafficResult(result));
-        } else {
-          console.log(result);
-        }
-      });
-    }
+    DirectionsService.route({
+      origin: origin,
+      destination: destination,
+      travelMode: tmode
+    }, (result, status) => {
+      if (status === google.maps.DirectionsStatus.OK) {
+        dispatch(setTrafficResult(result));
+      } else {
+        console.log(result);
+      }
+    });
   }
 
   renderGetTraffic() {

@@ -11,10 +11,6 @@ class Logout extends Component {
     cookie.remove('userId', { path: '/' });
     cookie.remove('sessionId', { path: '/' });
     cookie.remove('sessionToken', { path: '/' });
-    cookie.remove('role', { path: '/' });
-    cookie.remove('roleId', { path: '/' });
-    cookie.remove('townshipCode', { path: '/' });
-
     window.location = "/";
   }
 

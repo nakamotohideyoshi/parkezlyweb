@@ -85,7 +85,7 @@ class Direction extends Component {
     const DirectionsService = new google.maps.DirectionsService();
 
     const tmode = mode || "DRIVING";
-    
+
     DirectionsService.route({
       origin: origin,
       destination: destination,

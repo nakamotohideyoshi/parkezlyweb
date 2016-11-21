@@ -23,62 +23,28 @@ class SignIn extends Component {
   }
 
   componentWillMount() {
-    const checkAuthStatus = this.checkAuthStatus();
-    if(checkAuthStatus) {
-      if(checkAuthStatus.role === "ApiAdmin") {
-        window.location = "/admin";
-      } else if (checkAuthStatus.role === "TwpAdmin") {
-        window.location = "/admin/township/" + checkAuthStatus.townshipCode;
-      } else if (checkAuthStatus.role === "TwpBursar") {
-        window.location = "/admin/bursar/" + checkAuthStatus.townshipCode;
-      } else if (checkAuthStatus.role === "TwpInspector") {
-        window.location = "/admin/inspector/" + checkAuthStatus.townshipCode;
-      } else if (checkAuthStatus.role === "Registered") {
-        window.location = "/new-vehicle"
-      } 
+    if(this.checkAuthStatus()) {
+      window.location = "/new-vehicle";
     }
   }
 
   componentWillReceiveProps(nextProps) {
 
-    const { userId, role, roleId, sessionId, sessionToken, townshipCode} = nextProps.user;
-    
+    const { userId, sessionId, sessionToken } = nextProps.user;
+
     if(userId) {
       cookie.save('userId', userId, { path: '/' });
-      cookie.save('role', role, { path: '/' });
-      cookie.save('roleId', roleId, { path: '/' });
       cookie.save('sessionId', sessionId, { path: '/' });
       cookie.save('sessionToken', sessionToken, { path: '/' });
-      cookie.save('townshipCode', townshipCode, { path: '/' });
 
-      switch(role) {
-        case "ApiAdmin":
-          window.location = "/admin";
-          break;
-        case "TwpAdmin":
-          window.location = "/admin/township/" + townshipCode;
-          break;
-        case "TwpBursar":
-          window.location = "/admin/bursar/" + townshipCode;
-          break;
-        case "TwpInspector":
-          window.location = "/admin/inspector/" + townshipCode;
-          break;
-        case "Registered":
-          window.location = "/new-vehicle"
-          break;
-      }
+      window.location = "/new-vehicle";
     }
   }
 
   checkAuthStatus() {
     const userId = cookie.load('userId');
-    const role = cookie.load('role');
-    const townshipCode = cookie.load('townshipCode')
-    if(userId && role && townshipCode) {
-      return {userId: userId, role: role, townshipCode: townshipCode};
-    } else {
-      return false
+    if(userId) {
+      return true;
     }
   }
 
