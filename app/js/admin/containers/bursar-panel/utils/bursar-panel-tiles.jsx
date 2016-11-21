@@ -23,14 +23,14 @@ export class BursarPanelTiles extends Component {
               </button>
           </div>
           <div className="col s12 m12 l6 animated fadeInLeft">
-              <Link to={{pathname: `/admin/bursar/parking/${this.props.townshipCode}`}} 
+              <Link to={{pathname: `/admin/bursar/bursar-reports/${this.props.townshipCode}`}} 
               className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12">
                   <i className="material-icons valign">account_balance</i>
                   <h4> Bursar Desk Reports </h4>
               </Link>
           </div>
           <div className="col s12 m12 l6 animated fadeInRight">
-            <Link to={{pathname: `/admin/bursar/parking/${this.props.townshipCode}`}} 
+            <Link to={{pathname: `/admin/bursar/web-reports/${this.props.townshipCode}`}} 
             className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12">
                 <i className="material-icons valign">web</i>
                 <h4> Web Payment Reports </h4>

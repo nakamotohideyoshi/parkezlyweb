@@ -1,7 +1,7 @@
 import React from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {reduxForm} from 'redux-form'
+import {reduxForm, change} from 'redux-form'
 import {createFilter} from 'react-search-input';
 import {ModalContainer, ModalDialog} from 'react-modal-dialog';
 import _ from 'lodash';
@@ -10,7 +10,7 @@ import { Link } from 'react-router'
 
 import TownshipImageUpload from '../../township-list/utils/township-image-upload.jsx';
 import Spinner from '../../../common/components/spinner.jsx';
-
+import {SimpleSelect} from 'react-selectize'
 import {
   editTownship, 
   fetchTownshipList, 
@@ -65,31 +65,18 @@ class TownshipDetails extends React.Component {
     this.props.fetchTownshipList();
   }
 
-   componentDidUpdate() {
-    if (this.props.townshipData === null && this.props.townshipData === undefined) {
-      this.props.fetchTownshipDetails(this.props.townshipData.id);
-    }
-  };
-
-  componentWillUpdate() {
+  componentDidUpdate() {
     if (!this.props.townshipListEdited.isLoading || !this.props.uploadedImage.isLoading) {
       this.handleClose();
       this.handleSuccess();
     } 
   };
 
-  componentDidUpdate () {
-  }
-
   handleSubmit(data) {
-    console.log(this.props.townshipData);
-    this.props.editTownship(data, this.props.townshipCode);
+    this.props.editTownship(data, this.props.townshipId);
   }
 
   handleSuccess(){
-    // Reset loading status so it doesn't infinitely handleSuccess. 
-    // Reload township list to represent new changes.
-    // Go back to view mode.
     this.props.fetchTownshipList();
     this.setState({editMode: false});
     $('#modal-success').openModal();
@@ -119,7 +106,8 @@ class TownshipDetails extends React.Component {
         contact_number,
         contact_email },
       resetForm,
-      submitting
+      submitting,
+      dispatch
     } = this.props
     let editMode = this.state.editMode;
 
@@ -150,32 +138,8 @@ class TownshipDetails extends React.Component {
               <div className="row">
                 <div className="col s6 admin-form-input">
                   <div className="form-group">
-                    <label>Manager ID</label>
-                    <input value={townshipData.manager_id} onChange={() => this.setState({townshipData: townshipData})}/>
-                  </div>
-                </div>
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label>Manager Type</label>
-                    <input value={townshipData.manager_type} onChange={() => this.setState({townshipData: townshipData})}/>
-                  </div>
-                </div>
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label>Lot Manager</label>
-                    <input value={townshipData.lot_manager} onChange={() => this.setState({townshipData: townshipData})}/>
-                  </div>
-                </div>
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label>Address</label>
-                    <input value={townshipData.address} onChange={() => this.setState({townshipData: townshipData})}/>
-                  </div>
-                </div>
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label>City</label>
-                    <input value={townshipData.city} onChange={() => this.setState({townshipData: townshipData})}/>
+                    <label>Country</label>
+                    <input value={townshipData.country} onChange={() => this.setState({townshipData: townshipData})}/>
                   </div>
                 </div>
                 <div className="col s6 admin-form-input">
@@ -186,8 +150,8 @@ class TownshipDetails extends React.Component {
                 </div>
                 <div className="col s6 admin-form-input">
                   <div className="form-group">
-                    <label>Country</label>
-                    <input value={townshipData.country} onChange={() => this.setState({townshipData: townshipData})}/>
+                    <label>City</label>
+                    <input value={townshipData.city} onChange={() => this.setState({townshipData: townshipData})}/>
                   </div>
                 </div>
                 <div className="col s6 admin-form-input">
@@ -196,28 +160,54 @@ class TownshipDetails extends React.Component {
                     <input value={townshipData.zip} onChange={() => this.setState({townshipData: townshipData})}/>
                   </div>
                 </div>
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label>Contact Person</label>
-                    <input value={townshipData.contact_person} onChange={() => this.setState({townshipData: townshipData})}/>
+                <div className="row">
+                  <div className="col s6 admin-form-input">
+                    <div className="form-group">
+                      <label>Address</label>
+                      <input value={townshipData.address} onChange={() => this.setState({townshipData: townshipData})}/>
+                    </div>
                   </div>
-                </div>
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label>Contact Title</label>
-                    <input value={townshipData.contact_title} onChange={() => this.setState({townshipData: townshipData})}/>
+                  <div className="col s6 admin-form-input">
+                    <div className="form-group">
+                      <label>Phone</label>
+                      <input value={townshipData.contact_number} onChange={() => this.setState({townshipData: townshipData})}/>
+                    </div>
                   </div>
-                </div>
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label>Contact Number</label>
-                    <input value={townshipData.contact_number} onChange={() => this.setState({townshipData: townshipData})}/>
+                  <div className="col s6 admin-form-input">
+                    <div className="form-group">
+                      <label>Email</label>
+                      <input value={townshipData.contact_email} onChange={() => this.setState({townshipData: townshipData})}/>
+                    </div>
                   </div>
-                </div>
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label>Contact Email</label>
-                    <input value={townshipData.contact_email} onChange={() => this.setState({townshipData: townshipData})}/>
+                  <div className="col s6 admin-form-input">
+                    <div className="form-group">
+                      <label>Contact Person</label>
+                      <input value={townshipData.contact_person} onChange={() => this.setState({townshipData: townshipData})}/>
+                    </div>
+                  </div>
+                  <div className="col s6 admin-form-input">
+                    <div className="form-group">
+                      <label>Contact Title</label>
+                      <input value={townshipData.contact_title} onChange={() => this.setState({townshipData: townshipData})}/>
+                    </div>
+                  </div>
+                  <div className="col s6 admin-form-input">
+                    <div className="form-group">
+                      <label>Owner Type</label>
+                      <input value={townshipData.manager_type} onChange={() => this.setState({townshipData: townshipData})}/>
+                    </div>
+                  </div>
+                  <div className="col s6 admin-form-input">
+                    <div className="form-group">
+                      <label>Owner Name</label>
+                      <input value={townshipData.lot_manager} onChange={() => this.setState({townshipData: townshipData})}/>
+                    </div>
+                  </div>
+                  <div className="col s6 admin-form-input">
+                    <div className="form-group">
+                      <label>FacilityMgr Code</label>
+                      <input value={townshipData.manager_id} onChange={() => this.setState({townshipData: townshipData})}/>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -253,94 +243,119 @@ class TownshipDetails extends React.Component {
                     <p className="center-align">Edit a township by changing the fields.</p>
                   </div>
                 </div>
-
+                
                 <div className="row">
-                  <div className="col s6 admin-form-input">
-                    <div className="form-group">
-                      <label>Manager ID</label>
-                      <input type="text" placeholder="Manager ID" {...manager_id}/>
-                    </div>
-                    {manager_id.touched && manager_id.error && <div className="form-required">{manager_id.error}</div>}
-                  </div>
-                  <div className="col s6 admin-form-input">
-                    <div className="form-group">
-                      <label>Manager Type</label>
-                      <input type="text" placeholder="Manager Type" {...manager_type}/>
-                    </div>
-                  </div>
-                  <div className="col s6 admin-form-input">
-                    <div className="form-group">
-                      <label>Lot Manager</label>
-                      <input type="text" placeholder="Lot Manager" {...lot_manager}/>
-                    </div>
-                  </div>
-                  <div className="col s6 admin-form-input">
-                    <div className="form-group">
-                      <label>Address</label>
-                      <input type="text" placeholder="Address" {...address}/>
-                    </div>
-                  </div>
-                  <div className="col s6 admin-form-input">
-                    <div className="form-group">
-                      <label>City</label>
-                      <input type="text" placeholder="City" {...city}/>
-                    </div>
-                  </div>
-                  <div className="col s6 admin-form-input">
-                    <div className="form-group">
-                      <label>State</label>
-                      <input type="text" placeholder="State" {...state}/>
-                    </div>
-                  </div>
-                  <div className="col s6 admin-form-input">
+                  <div className="col s6">
                     <div className="form-group">
                       <label>Country</label>
                       <input type="text" placeholder="Country" {...country}/>
                     </div>
                   </div>
-                  <div className="col s6 admin-form-input">
+                  <div className="col s6">
+                    <div className="form-group">
+                      <label>State</label>
+                      <input type="text" placeholder="State" {...state}/>
+                    </div>
+                  </div>
+                  <div className="col s6">
+                    <div className="form-group">
+                      <label>City</label>
+                      <input type="text" placeholder="City" {...city}/>
+                    </div>
+                  </div>
+                  <div className="col s6">
                     <div className="form-group">
                       <label>Zip</label>
                       <input type="number" placeholder="Zip" {...zip}/>
                     </div>
                   </div>
-                  <div className="col s6 admin-form-input">
+                  <div className="col s6">
+                    <div className="form-group">
+                      <label>Address</label>
+                      <input type="text" placeholder="Address" {...address}/>
+                    </div>
+                  </div>
+                  <div className="col s6">
+                    <div className="form-group">
+                      <label>Phone</label>
+                      <input type="text" placeholder="Contact Number" {...contact_number}/>
+                    </div>
+                  </div>
+                  <div className="col s6">
+                    <div className="form-group">
+                      <label>Email</label>
+                      <input type="email" placeholder="Contact Email" {...contact_email}/>
+                    </div>
+                  </div>
+                  <div className="col s6">
                     <div className="form-group">
                       <label>Contact Person</label>
                       <input type="text" placeholder="Contact Person" {...contact_person}/>
                     </div>
                   </div>
-                  <div className="col s6 admin-form-input">
+                  <div className="col s6">
                     <div className="form-group">
                       <label>Contact Title</label>
                       <input type="text" placeholder="Contact Title" {...contact_title}/>
                     </div>
                   </div>
-                  <div className="col s6 admin-form-input">
+                  <div className="col s6" style={{paddingBottom: 15}}>
                     <div className="form-group">
-                      <label>Contact Number</label>
-                      <input type="text" placeholder="Contact Number" {...contact_number}/>
+                      <label>Owner Type</label>
+                      <div clasName="input-field col s12">
+                        <SimpleSelect 
+                        style={{marginTop: 5}}
+                        options = {[
+                          {label: "Township", value: "TOWNSHIP"},
+                          {label: "City", value: "CITY"},
+                          {label: "Village", value: "VILLAGE"},
+                          {label: "State", value: "STATE"},
+                          {label: "Federal", value: "FEDERAL"},
+                          {label: "Private", value: "PRIVATE"},
+                          {label: "Commercial", value: "COMMERCIAL"},
+                        ]} 
+                        placeholder = "Owner Type"
+                        theme = "material" 
+                        defaultValue = {{label: townshipData.manager_type, value: townshipData.manager_type}}
+                        onValueChange = {(value) => {
+                          dispatch(change("township-panel-details", "manager_type", value.value)); 
+                        }}></SimpleSelect>
+                      </div>
                     </div>
                   </div>
-                  <div className="col s6 admin-form-input">
+                  <div className="col s6">
                     <div className="form-group">
-                      <label>Contact Email</label>
-                      <input type="email" placeholder="Contact Email" {...contact_email}/>
+                      <label>Owner Name</label>
+                      <input type="text" placeholder="Lot Manager" {...lot_manager}/>
                     </div>
-                  </div>
+                  </div>  
+                  <div className="col s6">
+                    <div className="form-group">
+                      <label>FacilityMgr Code</label>
+                      <input type="text" placeholder="Manager ID" {...manager_id}/>
+                    </div>
+                    {manager_id.touched && manager_id.error && <div className="form-required">{manager_id.error}</div>}
+                  </div>          
                 </div>
               </div>
-
+              
               <div className="card-action">
-                <div className="row marginless-row" style={{minWidth: 500}}>
-                  <div className="col s12 m12 l3 offset-l5">
-                    <a className="waves-effect waves-light btn btn-yellow" onClick={() => {this.setState({editMode: false}); resetForm()}}>Cancel</a>
+                <div className="row marginless-row">
+                  <div className="col s12 m12 l5 center-align">
+                    <Link to={{pathname: `/admin/township/${townshipData.id}`}} className="waves-effect waves-light btn">Go To Township</Link>
                   </div>
-                  <div className="col s12 m12 l3">
-                    <button 
-                    type="submit" 
-                    disabled={submitting} 
-                    className="waves-effect waves-light btn btn-green">Save Township</button>
+                  <div className="col s12 m12 l7 right">
+                    <div className="row marginless-row">
+                      <div className="col s12 m12 l6 right center-align">
+                        <button 
+                        type="submit" 
+                        disabled={submitting} 
+                        className="waves-effect waves-light btn btn-green">Save Township</button>
+                      </div>
+                      <div className="col s12 m12 l6 right right-align">
+                        <a className="waves-effect waves-light btn btn-yellow" onClick={() => {this.setState({editMode: false}); resetForm();}}>Cancel</a>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -362,7 +377,6 @@ class TownshipDetails extends React.Component {
     let dataValid;
     let townshipData = this.props.townshipData;
     let townshipId = this.props.townshipCode;
-
     if (townshipData !== null && townshipData !== undefined) {
       dataValid = true;
     } else {
@@ -388,7 +402,10 @@ class TownshipDetails extends React.Component {
           }
 
           {this.props.townshipListFetched.isLoading ?  
-            <div> Loading... </div>
+            <div className="center-align"> 
+              <Spinner /> 
+              <div> Loading... </div> 
+            </div>
           : this.renderDetails(dataValid, townshipData)}
         </div>
 
@@ -404,7 +421,6 @@ class TownshipDetails extends React.Component {
             onClick={() => this.forceUpdate()}>Close</button>
           </div>
         </div>
-
       </div>
     );
   }
