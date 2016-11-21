@@ -51,33 +51,23 @@ class SignIn extends Component {
       cookie.save('sessionToken', sessionToken, { path: '/' });
       cookie.save('townshipCode', townshipCode, { path: '/' });
 
-      if(role === "ApiAdmin") {
-        window.location = "/admin";
-      } else if (role === "TwpAdmin") {
-        window.location = "/admin/township/" + townshipCode;
-      } else if (role === "TwpBursar") {
-        window.location = "/admin/bursar/" + townshipCode;
-      } else if (role === "TwpInspector") {
-        window.location = "/admin/inspector/" + townshipCode;
-      } else if (role === "Registered") {
-        window.location = "/new-vehicle"
-      } 
-
-      /*
       switch(role) {
         case "ApiAdmin":
           window.location = "/admin";
+          break;
         case "TwpAdmin":
           window.location = "/admin/township/" + townshipCode;
+          break;
         case "TwpBursar":
           window.location = "/admin/bursar/" + townshipCode;
+          break;
         case "TwpInspector":
           window.location = "/admin/inspector/" + townshipCode;
+          break;
         case "Registered":
           window.location = "/new-vehicle"
+          break;
       }
-      */
-
     }
   }
 

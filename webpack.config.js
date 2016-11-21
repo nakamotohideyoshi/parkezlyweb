@@ -43,11 +43,13 @@ module.exports = {
       {
         test: /\.json?$/,
         loader: 'json'
-      },{
-        test: /\.css$/,
-        loader: 'style!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
-        include: path.resolve(__dirname, 'app/')
-      },{
+      },
+        { test: /\.css$/,  loader: "style-loader!css-loader" },
+        { test: /\.less$/, loader: "style-loader!css-loader!less-loader" },
+        { test: /\.gif$/, loader: "url-loader?mimetype=image/png" },
+        { test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/, loader: "url-loader?mimetype=application/font-woff" },
+        { test: /\.(ttf|eot|svg)(\?v=[0-9].[0-9].[0-9])?$/, loader: "file-loader?name=[name].[ext]" },
+        {
         test: /\.scss$/,
         loaders: ['style', 'css', 'sass'],
         include: path.resolve(__dirname, 'app/')
@@ -55,13 +57,7 @@ module.exports = {
       { test: /\.(jpe?g|png|gif|svg)$/, 
         loader: 'url', 
         query: {limit: 10240} 
-      }, {
-        test: /\.woff(2)?$/,
-        loader: "url-loader?name=/fonts/['name'].[ext]&limit=10000&minetype=application/font-woff"
-      }, {
-        test: /\.(ttf|eot)$/,
-        loader: "file-loader?name=/images/[sha512:hash:base64:10].[ext]"
-      }
+      }, 
     ]
   }
 };

@@ -7,6 +7,7 @@ import TownshipPanelTiles from './utils/township-panel-tiles.jsx';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { Link } from 'react-router';
+import {SimpleSelect} from 'react-selectize';
 
 import {
   editTownship, 
@@ -49,9 +50,10 @@ class TownshipPanelRoot extends React.Component {
       return (
           <div>
             <TownshipDetails 
-            townshipId={this.props.townshipCode} 
-            townshipData={filteredTownship[0]}
-            initialValues={filteredTownship[0]} />
+              townshipId={this.props.townshipCode} 
+              townshipData={filteredTownship[0]}
+              initialValues={filteredTownship[0]} 
+            />
             <TownshipPanelTiles townshipId={this.props.townshipCode} townshipCode={filteredTownship[0].manager_id}/>
           </div>
         );

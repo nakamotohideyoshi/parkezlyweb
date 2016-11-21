@@ -62,3 +62,7 @@ iii ) Payments from web/app
  ii) & iii) are reports, which can be pulled as  daily, weekly, monthly etc.  
  
 6. Ui forms for Google Place Partners and Local Partners to enter their data.
+
+sudo git pull https://TroyEdwardsJr@bitbucket.org/parkezlyweb/parkezlyweb.git master
+
+{(() => {})()}

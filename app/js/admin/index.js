@@ -23,7 +23,9 @@ import {
   BursarPermitController,
   BursarTicketController,
   BursarWalletController,
-  BursarTicketRatesController
+  BursarTicketRatesController,
+  BursarWebReportsController,
+  BursarReportsController,
 } from './containers/bursar-panel/bursar-panel-controller.jsx'
 import {
   InspectorPanelController,
@@ -75,6 +77,8 @@ const superAdminRoutes = () => {
         <Route path="admin/bursar/ticket/:townshipCode" component={BursarTicketController} />
         <Route path="admin/bursar/wallet/:townshipCode" component={BursarWalletController} />
         <Route path="admin/bursar/ticket-rates/:townshipCode" component={BursarTicketRatesController} />
+        <Route path="admin/bursar/bursar-reports/:townshipCode" component={BursarReportsController} />
+        <Route path="admin/bursar/web-reports/:townshipCode" component={BursarWebReportsController} />
 
         <Route path="admin/inspector/:townshipCode" component={InspectorPanelController} />
         <Route path="admin/inspector/parking-field/:townshipCode" component={InspectorParkingFieldController} />
@@ -113,6 +117,8 @@ const twpBursarRoutes = () => {
         <Route path="admin/bursar/ticket/:townshipCode" component={BursarTicketController} />
         <Route path="admin/bursar/wallet/:townshipCode" component={BursarWalletController} />
         <Route path="admin/bursar/ticket-rates/:townshipCode" component={BursarTicketRatesController} />
+        <Route path="admin/bursar/bursar-reports/:townshipCode" component={BursarReportsController} />
+        <Route path="admin/bursar/web-reports/:townshipCode" component={BursarWebReportsController} />
       </div>
   );
 }
