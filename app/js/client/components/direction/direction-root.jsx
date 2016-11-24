@@ -170,6 +170,11 @@ class Direction extends Component {
             <option value="WALKING">Walking</option>
             <option value="BICYCLING">Bicycling</option>
             <option value="TRANSIT">Transit</option>
+            <option value="TRANSIT-TRAIN">Train</option>
+            <option value="TRANSIT-RAIL">Rail</option>
+            <option value="TRANSIT-SUBWAY">Subway</option>
+            <option value="TRANSIT-TRAM">Tram</option>
+            <option value="TRANSIT-BUS">Bus</option>
           </SimpleSelect>
         </div>
     );

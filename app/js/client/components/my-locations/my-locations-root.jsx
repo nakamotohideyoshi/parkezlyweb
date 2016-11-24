@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import classNames from "classnames";
 import cookie from "react-cookie";
 import moment from "moment";
+import {Link } from 'react-router';
 
 import Body from "../../../common/components/body/body.jsx";
 import { getLocations } from "../../actions/locations.js";
@@ -18,7 +19,7 @@ class MyLocations extends Component {
     }
     const userId = cookie.load('userId');
     const { dispatch } = this.props;
-    dispatch(getLocations(228));
+    dispatch(getLocations(userId));
   }
 
   checkAuthStatus() {
@@ -49,14 +50,25 @@ class MyLocations extends Component {
     )
   }
 
+  renderAddShowButtons() {
+    return (
+      <div>
+        <Link className="toolBtn" to="/new-location">Add</Link>
+        <Link className="toolBtn active" to="/my-locations">Show</Link>
+      </div>
+    );
+  }
+
   renderLocations() {
     const { locationsList } = this.props.locations;
     const notice = this.renderNotice();
     const locations = locationsList.map(this.renderLocation);
+    const addShowBtns = this.renderAddShowButtons();
     return (
       <div className="locations-list">
         {notice}
         <h4>My Locations</h4>
+        {addShowBtns}
         <div className="row">
           {locations} 
         </div>

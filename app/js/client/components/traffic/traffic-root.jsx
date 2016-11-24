@@ -42,8 +42,19 @@ class Traffic extends Component {
 
   componentDidUpdate() {
      let traffic = this.props.traffic.traffic;
-     if (traffic !='')
-     {
+     if (traffic =='CURRENT') {
+
+        var lat = this.props.location.lat;
+        var lng = this.props.location.lon;
+        //var directionsDisplay = new google.maps.DirectionsRenderer();
+        var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 16,
+        center: {lat: lat, lng: lng}
+        });
+        var trafficLayer = new google.maps.TrafficLayer();
+        trafficLayer.setMap(map);
+
+     } else if (traffic !='') {
         var origin = this.props.traffic.origin;
         var dest = this.props.traffic.destination;
         var origins = origin.split(",");
@@ -51,17 +62,12 @@ class Traffic extends Component {
         var lat = (parseFloat(origins[0]) + parseFloat(dests[0])) / 2;
         var lng = (parseFloat(origins[1]) + parseFloat(dests[1])) / 2;
         //var directionsDisplay = new google.maps.DirectionsRenderer();
-        console.log(lat);
-        console.log(lng);
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 16,
           center: {lat: lat, lng: lng}
         });
         var trafficLayer = new google.maps.TrafficLayer();
         trafficLayer.setMap(map);
-        //directionsDisplay.setMap(map);
-        //directionsDisplay.setDirections(traffic);
-        
      }
   }
 

@@ -6,8 +6,7 @@ import cookie from 'react-cookie';
 import Body from "../../../common/components/body/body.jsx";
 import Plate from "./plate.jsx";
 import { getVehicles } from "../../actions/vehicle.js";
-//alert(cookie.load('role'));
-//alert(cookie.load('townshipCode'));
+
 class VehicleList extends Component {
   constructor(props) {
     super(props);

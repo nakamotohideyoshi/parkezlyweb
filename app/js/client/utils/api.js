@@ -20,5 +20,5 @@ export const placesAPIConfig = {
 };
 
 export const locationAPIConfig = {
-	baseURL: "http://maps.googleapis.com/maps/api/geocode/json"
+	baseURL: "https://maps.googleapis.com/maps/api/geocode"
 }

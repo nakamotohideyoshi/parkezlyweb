@@ -73,7 +73,10 @@ export const deleteVehicle = (vehicleId) => {
     Object.assign(
       {
         method: "delete",
-        url: "/new_pzly02live7/_table/user_vehicles?filter=id="+vehicleId
+        url: "/new_pzly02live7/_table/user_vehicles",
+        data:{
+          id: vehicleId
+        }
       }, Config.APIConfig
     )
   );
