@@ -128,7 +128,7 @@ class TownshipDetails extends React.Component {
                 </ul>
               </div>
             </div>
-            <div className="card-content township-details-container">
+            <div className="card-content township-details-container" style={{overflowX: "hidden"}}>
               <div className="row">
                 <div className="center-align">
                   <h4 style={{marginTop: 0}}>View Township</h4>
@@ -236,7 +236,7 @@ class TownshipDetails extends React.Component {
                 </ul>
               </div>
             </div>
-              <div className="card-content township-edit-container">
+              <div className="card-content township-edit-container" style={{overflowX: "hidden"}}>
                 <div className="row">
                   <div className="center-align">
                     <h4 style={{marginTop: 0}}>Edit Township</h4>
@@ -366,7 +366,7 @@ class TownshipDetails extends React.Component {
       }
     } else {
       return (
-        <div className="card-content center-align animated fadeIn">
+        <div className="card-content center-align animated fadeIn" style={{overflowX: "hidden"}}>
           <div className="center-align animated fadeIn"> <Spinner /> </div> 
         </div>
       );

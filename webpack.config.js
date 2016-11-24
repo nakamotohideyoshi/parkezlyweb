@@ -2,6 +2,7 @@
 
 var path = require('path');
 var webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   devtool: 'eval-source-map',
@@ -21,6 +22,7 @@ module.exports = {
    
   },
   plugins: [
+    new ExtractTextPlugin('style.css', { allChunks: true }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({'process.env.NODE_ENV': JSON.stringify('development')
@@ -44,7 +46,8 @@ module.exports = {
         test: /\.json?$/,
         loader: 'json'
       },
-        { test: /\.css$/,  loader: "style-loader!css-loader" },
+        { test: /\.css$/,  loader: "style!css?modules&sourceMap&localIdentName=[local]___[hash:base64:5]!resolve-url!sass?outputStyle=expanded&sourceMap" },
+
         { test: /\.less$/, loader: "style-loader!css-loader!less-loader" },
         { test: /\.gif$/, loader: "url-loader?mimetype=image/png" },
         { test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/, loader: "url-loader?mimetype=application/font-woff" },
