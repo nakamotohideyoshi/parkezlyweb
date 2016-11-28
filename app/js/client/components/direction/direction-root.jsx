@@ -110,28 +110,40 @@ class Direction extends Component {
   selectOrigin(event) {
     const { dispatch } = this.props;
     const { locationsList } = this.props.LocationsList.Locations;
-    const location = locationsList[event.value];
-    dispatch(setDirectionOrigin(location.lat+","+location.lng));
+    if (event.value != 0) {
+      const location = locationsList[event.value-1];
+      dispatch(setDirectionOrigin(location.lat+","+location.lng));
+    }
+    else
+      dispatch(setDirectionOrigin(this.props.location.lat+","+this.props.location.lon));
   }
 
   selectDestination(event) {
     const { dispatch } = this.props;
     const { locationsList } = this.props.LocationsList.Locations;
-    const location = locationsList[event.value];
-    dispatch(setDirectionDestination(location.lat+","+location.lng));
+    if (event.value != 0) {
+      const location = locationsList[event.value-1];
+      dispatch(setDirectionDestination(location.lat+","+location.lng));
+    }
+    else
+      dispatch(setDirectionDestination(this.props.location.lat+","+this.props.location.lon));
   }
 
   renderLocation(locationData, index) {
     const { location_name, lat,lng } = locationData;
     return (
-      <option value={index} key={index}>{location_name}</option>
+      <option value={index+1} key={index+1}>{location_name}</option>
     );
   }
 
   renderLocations(type) {
     const { locationsList } = this.props.LocationsList.Locations;
-    const locations = locationsList.map(this.renderLocation);
-    if( type=='destination') {
+    let locations = locationsList.map(this.renderLocation);
+    let cur_location_name = this.props.directions.location;
+    const index = 0;
+    const cur_location = (<option value={index} key={index}>{cur_location_name}</option>);
+    locations.unshift(cur_location);
+    if( type=='destination') {      
       return (
         <div className="margin-bottom-10">
           <SimpleSelect

@@ -83,15 +83,11 @@ class NewLocationForm extends Component {
   }
 
   selectLocation(locationData) {
-    console.log(locationData);
     this.setState({
       location: locationData.formatted_address
     });
-    console.log(this.state.location);
     this.latitude = locationData.geometry.location.lat;
     this.longitude = locationData.geometry.location.lng;
-    console.log(this.latitude);
-    console.log(this.longitude);
   }
 
   renderLocations() {
@@ -101,12 +97,13 @@ class NewLocationForm extends Component {
     }
     const locations = locationsList.results.map((locationData,index)=>{
       const { address_components, formatted_address, geometry } = locationData;
-      const location_address = formatted_address.replace(address_components[0].short_name+", ", "");
+      const location_name = formatted_address.split(',', 1);
+      const location_address = formatted_address.replace(location_name+", ", "");
 
       return (
         <div className="col s12" key={index}>
           <a onClick={()=>this.selectLocation(locationData)}>
-            <h5>Location: {address_components[0].short_name}</h5>
+            <h5>Location: {location_name}</h5>
             <p>{location_address}</p>
           </a>
         </div>
