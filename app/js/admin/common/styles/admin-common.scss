@@ -231,6 +231,10 @@ textarea.materialize-textarea:focus:not([readonly]) {
   cursor: pointer;
 }
 
+.flex-important {
+  display: flex !important;
+}
+
 .admin-form-input {
   min-width: 300px !important;
   margin-bottom: 20px;
