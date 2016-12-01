@@ -18,7 +18,7 @@ export class BursarPanelController extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        <BursarPanelRoot townshipId={this.props.params.townshipId} />
+        <BursarPanelRoot townshipCode={this.props.params.townshipCode} />
       </Provider>
     );
   }

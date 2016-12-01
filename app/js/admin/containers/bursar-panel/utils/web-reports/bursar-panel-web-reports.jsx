@@ -11,32 +11,14 @@ import momentLocalizer from 'react-widgets/lib/localizers/moment'
 
 const DateTimePicker = require('react-widgets').DateTimePicker
 const currentDate = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
-const paymentOptions = [
-  {
-    label: "Ticket Payments", 
-    value: "ticket_payments?order=paid_date DESC&filter=((pmt_options=MYWALLET)OR(pmt_options=PAYPAL))AND(township_code=FDV)"
-  },
-  {
-    label: "Parking Payments", 
-    value: "pay_for_parking?order=date DESC&filter=((pay_method=MYWALLET)OR(pay_method=PAYPAL))AND(location_id CONTAINS FDV)"
-  },
-  {
-    label: "Permit Payments", 
-    value: "pay_for_permit?order=date_payment DESC&filter=((pay_method=MYWALLET)OR(pay_method=PAYPAL))AND(twnshp_code=FDV)"
-  },
-  {
-    label: "Wallet Payments", 
-    value: "pay_for_wallet?order=date_time DESC&filter=((pay_method=MYWALLET)OR(pay_method=PAYPAL))"
-  },
-]
 
 class BursarPanelWebReports extends Component {
   constructor(props) {
     super(props);
     this.state = {
       activeTableData: null,
-      paymentType: "Ticket Payments",
-      paymentOption: "ticket_payments?order=paid_date DESC&filter=((pmt_options=MYWALLET)OR(pmt_options=PAYPAL))AND(township_code=FDV)",
+      paymentType: `Ticket Payments`,
+      paymentOption: `ticket_payments?order=paid_date DESC&filter=((pmt_options=MYWALLET)OR(pmt_options=PAYPAL))AND(township_code=${this.props.townshipCode})`,
       startDate: currentDate,
       endDate: currentDate,
       tableLoading: true
@@ -49,6 +31,24 @@ class BursarPanelWebReports extends Component {
     this.renderPermitPayments = this.renderPermitPayments.bind(this);
     this.renderWalletPayments = this.renderWalletPayments.bind(this);
     momentLocalizer(moment);
+		this.paymentOptions = [
+			{
+				label: `Ticket Payments`, 
+				value: `ticket_payments?order=paid_date DESC&filter=((pmt_options=MYWALLET)OR(pmt_options=PAYPAL))AND(township_code=${this.props.townshipCode})`
+			},
+			{
+				label: `Parking Payments`, 
+				value: `pay_for_parking?order=date DESC&filter=((pay_method=MYWALLET)OR(pay_method=PAYPAL))AND(location_id CONTAINS ${this.props.townshipCode})`
+			},
+			{
+				label: `Permit Payments`, 
+				value: `pay_for_permit?order=date_payment DESC&filter=((pay_method=MYWALLET)OR(pay_method=PAYPAL))AND(twnshp_code=${this.props.townshipCode})`
+			},
+			{
+				label: `Wallet Payments`, 
+				value: `pay_for_wallet?order=date_time DESC&filter=((pay_method=MYWALLET)OR(pay_method=PAYPAL))`
+			},
+		]
   }
 
   componentWillMount() {
@@ -395,7 +395,7 @@ class BursarPanelWebReports extends Component {
               <label style={{color:"white"}}>Payment Type</label>
               <div clasName="input-field col s12">
                 <SimpleSelect 
-                  options = {paymentOptions} 
+                  options = {this.paymentOptions} 
                   placeholder = {"Payment Options"}
                   theme = "default" 
                   style={{marginTop: 5}}

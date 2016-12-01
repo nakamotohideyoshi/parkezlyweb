@@ -46,7 +46,7 @@ class AdminFormGeneric extends React.Component {
         ajaxPost(this.props.tableName, data, this.handleSuccess)
         break;
       case "EDIT":
-      console.log(data)
+      	console.log(data)
         ajaxPut(this.props.tableName, data.id, data, this.handleSuccess)
         break;
       case "DUPLICATE":
