@@ -341,10 +341,10 @@ class TownshipDetails extends React.Component {
               
               <div className="card-action">
                 <div className="row marginless-row">
-                  <div className="col s12 m12 l5 center-align">
+                  <div className="col s12 m12 l6 center-align">
                     <Link to={{pathname: `/admin/township/${townshipData.id}`}} className="waves-effect waves-light btn">Go To Township</Link>
                   </div>
-                  <div className="col s12 m12 l7 right">
+                  <div className="col s12 m12 l6 right">
                     <div className="row marginless-row">
                       <div className="col s12 m12 l6 right center-align">
                         <button 

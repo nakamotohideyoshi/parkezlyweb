@@ -14,13 +14,11 @@ import {SimpleSelect} from 'react-selectize'
 import {
   editTownship, 
   fetchTownshipList, 
-  updateTownshipDetails, 
   resetLoading,
-  resetTownshipDetails,
-  fetchTownshipDetails
 } from '../../../actions/actions-township';
 
 export const fields = [ 
+	'id',
   'manager_id', 
   'manager_type', 
   'lot_manager', 
@@ -44,8 +42,6 @@ const validate = values => {
   return errors
 }
 
-export let townshipData;
-
 export class TownshipDetails extends React.Component {
   constructor(props) {
     super(props);
@@ -60,56 +56,44 @@ export class TownshipDetails extends React.Component {
     this.handleSuccess = this.handleSuccess.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleClick = this.handleClick.bind(this);
-
+    this.handleModalSuccess = this.handleModalSuccess.bind(this);
   }
+
   componentDidUpdate() {
-    if (this.props.townshipData.data !== null && this.props.townshipData.data !== undefined) {
-      this.props.fetchTownshipDetails(this.props.townshipData.data.id);
-    }
-  };
-
-  componentWillUpdate() {
-    townshipData = this.props.townshipData;
-    if (this.props.townshipDetailsFetched.isLoading === false) {
-      let townshipObjects = this.props.townshipDetailsFetched.data.resource;
-      let filteredTownship = _.filter(townshipObjects, { 'id': townshipData.data.id})
-
-      this.props.updateTownshipDetails(filteredTownship[0]);
-      this.props.resetLoading();
-    }
-    if (this.props.townshipListEdited.isLoading) {
-
-    } else {
+    if (!this.props.townshipListEdited.isLoading) {
       this.handleSuccess();
       this.handleClose();
     }
   };
 
-  componentDidUpdate () {
-    townshipData = this.props.townshipData;
-  }
-
   handleSubmit(data) {
-    this.props.editTownship(data, this.props.townshipData.data.id);
+		this.setState({townshipData: data});
+    this.props.editTownship(data, this.props.townshipData.id);
   }
 
   handleSuccess(){
-    // Reset loading status so it doesn't infinitely handleSuccess. 
-    // Reload township list to represent new changes.
-    // Go back to view mode.
     this.props.resetLoading();
-    this.props.fetchTownshipList();
     this.setState({editMode: false});
-    this.props.fetchTownshipDetails(this.props.townshipData.data.id);
+		this.props.handleSuccess(this.state.townshipData);
     $('#modal-success').openModal();
   }
+
+	handleModalSuccess(townshipImage) {
+		const townshipData = _.assignIn({}, this.state.townshipData, {township_logo: townshipImage, official_logo: townshipImage});
+		this.props.handleSuccess(townshipData);
+    this.setState({isShowingModal: false, editMode: false})
+		$('#modal-success').openModal();
+  } 
 
   handleClick() {
     this.setState({isShowingModal: true})
   } 
+
   handleClose() {
     this.setState({isShowingModal: false})
   } 
+
+
 
   renderDetails(dataValid, townshipData) {
     const {
@@ -160,86 +144,85 @@ export class TownshipDetails extends React.Component {
               <div className="col s6">
                 <div className="form-group">
                   <label>Country</label>
-                  <input value={townshipData.country} onChange={() => this.setState({townshipData: townshipData})}/>
+                  <input value={townshipData.country} />
                 </div>
               </div>
               <div className="col s6">
                 <div className="form-group">
                   <label>State</label>
-                  <input value={townshipData.state} onChange={() => this.setState({townshipData: townshipData})}/>
+                  <input value={townshipData.state} />
                 </div>
               </div>
               <div className="col s6">
                 <div className="form-group">
                   <label>City</label>
-                  <input value={townshipData.city} onChange={() => this.setState({townshipData: townshipData})}/>
+                  <input value={townshipData.city} />
                 </div>
               </div>
               <div className="col s6">
                 <div className="form-group">
                   <label>Zip</label>
-                  <input value={townshipData.zip} onChange={() => this.setState({townshipData: townshipData})}/>
+                  <input value={townshipData.zip} />
                 </div>
               </div>
               <div className="row">
                 <div className="col s6">
                   <div className="form-group">
                     <label>Address</label>
-                    <input value={townshipData.address} onChange={() => this.setState({townshipData: townshipData})}/>
+                    <input value={townshipData.address} />
                   </div>
                 </div>
                 <div className="col s6">
                   <div className="form-group">
                     <label>Phone</label>
-                    <input value={townshipData.contact_number} onChange={() => this.setState({townshipData: townshipData})}/>
+                    <input value={townshipData.contact_number} />
                   </div>
                 </div>
                 <div className="col s6">
                   <div className="form-group">
                     <label>Email</label>
-                    <input value={townshipData.contact_email} onChange={() => this.setState({townshipData: townshipData})}/>
+                    <input value={townshipData.contact_email} />
                   </div>
                 </div>
                 <div className="col s6">
                   <div className="form-group">
                     <label>Contact Person</label>
-                    <input value={townshipData.contact_person} onChange={() => this.setState({townshipData: townshipData})}/>
+                    <input value={townshipData.contact_person} />
                   </div>
                 </div>
                 <div className="col s6">
                   <div className="form-group">
                     <label>Contact Title</label>
-                    <input value={townshipData.contact_title} onChange={() => this.setState({townshipData: townshipData})}/>
+                    <input value={townshipData.contact_title} />
                   </div>
                 </div>
                 <div className="col s6">
                   <div className="form-group">
                     <label>Owner Type</label>
-                    <input value={townshipData.manager_type} onChange={() => this.setState({townshipData: townshipData})}/>
+                    <input value={townshipData.manager_type} />
                   </div>
                 </div>
                 <div className="col s6">
                   <div className="form-group">
                     <label>Owner Name</label>
-                    <input value={townshipData.lot_manager} onChange={() => this.setState({townshipData: townshipData})}/>
+                    <input value={townshipData.lot_manager} />
                   </div>
                 </div>
                 <div className="col s6">
                   <div className="form-group">
                     <label>FacilityMgr Code</label>
-                    <input value={townshipData.manager_id} onChange={() => this.setState({townshipData: townshipData})}/>
+                    <input value={townshipData.manager_id} />
                   </div>
                 </div>
               </div>
             </div>
-
             <div className="card-action">
               <div className="row marginless-row">
-                <div className="col s12 m12 l6">
+                <div className="col s12 m12 l6 center-align">
                   <Link to={{pathname: `/admin/township/${townshipData.id}`}} className="waves-effect waves-light btn">Go To Township</Link>
                 </div>
                 <div className="col s12 m12 l6 right">
-                  <div className="right-align">
+                  <div className="center-align">
                     <a className="waves-effect waves-light btn btn-green" onClick={() => this.setState({editMode: true})}>Edit Township</a>
                   </div>
                 </div>
@@ -270,8 +253,7 @@ export class TownshipDetails extends React.Component {
                     <h4 style={{marginTop: 0}}>Edit Township</h4>
                     <p className="center-align">Edit a township by changing the fields.</p>
                   </div>
-                </div>
-                
+                </div>            
                 <div className="row">
                   <div className="col s6">
                     <div className="form-group">
@@ -366,7 +348,6 @@ export class TownshipDetails extends React.Component {
                   </div>          
                 </div>
               </div>
-              
               <div className="card-action">
                 <div className="row marginless-row" style={{minWidth: 500}}>
                   <div className="col s12 m12 l5 center-align">
@@ -387,7 +368,6 @@ export class TownshipDetails extends React.Component {
                   </div>
                 </div>
               </div>
-
             </div>
           </form>
         );
@@ -399,20 +379,17 @@ export class TownshipDetails extends React.Component {
         </div>
       );
     }
-
   }
 
   render() {
+    const townshipData = this.props.townshipData;
+		let dataValid;
 
-    let dataValid;
-    townshipData = this.props.townshipData;
-
-    if (townshipData.data !== null && townshipData.data !== undefined) {
+    if (townshipData) {
       dataValid = true;
     } else {
       dataValid = false;
     }
-
 
     return (
       <div>
@@ -423,20 +400,15 @@ export class TownshipDetails extends React.Component {
         </nav>
         <div className="card">
           { 
-
-          this.state.isShowingModal &&
-          <ModalContainer onClose={this.handleClose}>
-            <ModalDialog onClose={this.handleClose} style={{top: 90}}>
-              <TownshipImageUpload townshipId={this.props.townshipData.data.id}/>
-            </ModalDialog>
-          </ModalContainer>
+						this.state.isShowingModal &&
+						<ModalContainer onClose={this.handleClose}>
+							<ModalDialog onClose={this.handleClose} style={{top: 90}}>
+								<TownshipImageUpload townshipId={this.props.townshipData.id} handleModalSuccess={this.handleModalSuccess}/>
+							</ModalDialog>
+						</ModalContainer>
           }
-
-          {this.renderDetails(dataValid, townshipData.data)}
+          {this.renderDetails(dataValid, townshipData)}
         </div>
-
-
-
         <div id="modal-success" className="modal">
           <div className="modal-content">
             <h4>Success!</h4>
@@ -449,17 +421,9 @@ export class TownshipDetails extends React.Component {
             onClick={() => this.forceUpdate()}>Close</button>
           </div>
         </div>
-
       </div>
     );
   }
-}
-
-
-TownshipDetails.propTypes = {
-  fields: React.PropTypes.object.isRequired,
-  resetForm: React.PropTypes.func.isRequired,
-  submitting: React.PropTypes.bool.isRequired
 }
 
 function mapStateToProps(state) {
@@ -474,11 +438,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     editTownship,
-    fetchTownshipList,
-    updateTownshipDetails,
     resetLoading,
-    resetTownshipDetails,
-    fetchTownshipDetails
   }, dispatch);
 }
 
@@ -487,6 +447,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   fields,
   validate
 })(TownshipDetails))
+
 //Drop Down: Township, City,Village, State, Federal, Private, Commercial
 /*
  {this.props.townshipListEdited.isLoading ?  

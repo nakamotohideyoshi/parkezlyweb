@@ -28,20 +28,24 @@ const fields = [
   'location_code', 
 ]
 
-const list = [
-  'Test'
-];
-
-const colors = [
-  "#F44336",
-  "#3F51B5",
-  "#4CAF50",
-  "#FF9800",
-  "#2196F3",
-  "#374046",
-  "#CDDC39",
-  "#673AB7",
-]
+const colors = 
+[
+  '#f44336',
+  '#3f51b5',
+  '#4caf50',
+  '#ff9800',
+  '#2196f3',
+  '#374046',
+  '#cddc39',
+  '#2196f3',
+  '#9c27b0',
+  '#ffc107',
+  '#009688',
+  '#673ab7',
+  '#ffeb3b',
+  '#cddc39', 
+  '#795548'
+ ]
 
 export default class InspectorPanelSearchPlate extends React.Component {
   

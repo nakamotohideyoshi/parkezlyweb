@@ -4,16 +4,18 @@ const initialState = {
   error: false
 };
 
+import _ from 'lodash';
+
 function handleAction(state, action, type) {
   switch(action.type) {
     case type.error:
-      return Object.assign({}, state, {isLoading: false, data: action.data, error: true});
+      return _.assign({}, state, {isLoading: false, data: action.data, error: true});
     case type.success:
-      return Object.assign({}, state, {isLoading: false, data: action.data, error: false });
+      return _.assign({}, state, {isLoading: false, data: action.data, error: false });
     case type.start:
-      return Object.assign({}, state, {isLoading: true, error: false });
+      return _.assign({}, state, {isLoading: true, error: false });
     case types.RESET_LOADING:
-      return Object.assign({}, state, initialState);
+      return _.assign({}, state, initialState);
     default:
       return state;
   }

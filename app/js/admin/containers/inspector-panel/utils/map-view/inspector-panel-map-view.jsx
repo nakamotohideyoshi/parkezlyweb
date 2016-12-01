@@ -10,6 +10,8 @@ import ImageCheckbox from '../../../../../common/components/footer/utils/image-c
 import GoogleMap from 'google-map-react';
 import { fitBounds } from 'google-map-react/utils';
 import MapMarker from './utils/marker'
+import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
 
 class InspectorMapView extends React.Component {
 
@@ -23,7 +25,9 @@ class InspectorMapView extends React.Component {
       yellowOff: false,
       redOff: false,
       greenOff: false,
-      zoom: 10
+      zoom: 10,
+			lat: 59.955413,
+			lng: 30.337844,
     }
 
     this.ajaxGet = this.ajaxGet.bind(this);
@@ -215,7 +219,7 @@ class InspectorMapView extends React.Component {
                   }}
                   >
                   {this.state.showMarkers ?  this.renderMarkers() : <div/>}
-                  <MapMarker lat={59.955413} lng={30.337844}/>
+                  <MapMarker lat={this.state.lat} lng={this.state.lng}/>
                 </GoogleMap>
               </section>
               {this.renderFooterIcons()}
@@ -226,5 +230,16 @@ class InspectorMapView extends React.Component {
   }   
 }
 
-export default InspectorMapView;
-//  onZoomAnimationStart={(test) => (alert(test))}
+function mapStateToProps(state) {
+  return {
+    inspectorTicketFetched: state.inspectorTicketFetched,
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    fetchInspectorTicket
+  }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(InspectorMapView);

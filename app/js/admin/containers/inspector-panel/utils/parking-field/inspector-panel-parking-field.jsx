@@ -186,18 +186,18 @@ class InspectorParkingField extends React.Component {
           initialSort={'entry_date_time'}
           initialSortAscending={false}
           columns={[
-                  'id',
-                  'township_code',
-                  'parking_type',
-                  'location_code',
-                  'entry_date_time',
-                  'country',
-                  'city',
-                  'state',
-                  'user_id', 
-                  'parking_status',
-                  'ticket_status'
-                  ]}
+            'id',
+            'township_code',
+            'parking_type',
+            'location_code',
+            'entry_date_time',
+            'country',
+            'city',
+            'state',
+            'user_id', 
+            'parking_status',
+            'ticket_status'
+          ]}
         />
 
         <div className="divider"/> 

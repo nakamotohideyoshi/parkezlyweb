@@ -14,22 +14,13 @@ class InspectorPanelRoot extends React.Component {
     window.scrollTo(0, 0)
   }
 
-  componentWillMount() {
-    this.props.fetchTownshipDetails(this.props.townshipCode);
-  }
-
   render() {
     return (
       <div className="blue-body">
         <Body showHeader={true}>
           <div className="content-container">
             <div className="container">
-              {this.props.townshipDetailsFetched.isLoading ? 
-                <div className="center-align"> 
-                  <Spinner /> <div style={{color: "#FFF"}}> Loading... </div> 
-                </div>  
-                : 
-                <InspectorPanelTiles townshipCode={this.props.townshipDetailsFetched.data.resource[0].manager_id}/>}
+              <InspectorPanelTiles townshipCode={this.props.townshipCode}/>
             </div>
           </div>
         </Body>
@@ -38,18 +29,4 @@ class InspectorPanelRoot extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    townshipDetailsFetched: state.townshipDetailsFetched,
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    fetchTownshipList, 
-    fetchTownshipDetails
-  }, dispatch);
-}
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(InspectorPanelRoot);
+export default InspectorPanelRoot;

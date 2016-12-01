@@ -11,42 +11,36 @@ import {bindActionCreators} from 'redux';
 import {fetchTownshipList, updateTownshipDetails} from '../../actions/actions-township';
 import {SchemaFilterTest} from '../../common/components/schema-filter-test.jsx'
 
-
-
-const KEYS_TO_FILTERS = ['city']
-
-
+const KEYS_TO_FILTERS = ['city'];
 
 class TownshipListRoot extends React.Component {
   constructor(props) {
     super(props);
-    
     //SchemaFilterTest();
-
     this.state = {
-      searchTerm: ''
+      searchTerm: '',
+			selectedTownship: null,
     }
 
     // Scroll to the top of the page on construct.
     window.scrollTo(0, 0);
 
-    this.handleFetch = this.handleFetch.bind(this);
+    this.handleSuccess = this.handleSuccess.bind(this);
     this.renderTownshipList = this.renderTownshipList.bind(this);
-  
   }
 
   componentWillMount() {
     this.props.fetchTownshipList();
   };
 
-  handleFetch(townshipData) {
-    this.props.fetchTownshipList();
-  }
+	handleSuccess(selectedTownship) {
+		this.setState({selectedTownship: selectedTownship})
+		this.props.fetchTownshipList();
+	}
 
   renderTownshipList(townshipData) {
-
-    let townshipObjects = townshipData.resource;
-
+		
+    const townshipObjects = townshipData.resource;
     const filteredTownships = townshipObjects.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS));
 
     return filteredTownships.map((township) => {
@@ -54,10 +48,11 @@ class TownshipListRoot extends React.Component {
           <a 
           className="collection-item waves-effect waves-dark avatar" 
           key={township.id} 
-          onClick={() => this.props.updateTownshipDetails(township)}>
+          onClick={() => this.setState({selectedTownship: township})}>
               <img 
-              src={township.township_logo} 
-              alt="" className="circle"/>
+								src={township.township_logo} 
+								alt="" className="circle"
+							/>
               <span className="title">{township.city}</span>
               <p>{township.city} - {township.manager_type}</p>
           </a>
@@ -67,7 +62,6 @@ class TownshipListRoot extends React.Component {
   }
 
   render() {
-    let townshipDetails = this.props.townshipDetails;
     return (
       <div className="blue-body">
         <Body showHeader={true}>
@@ -105,10 +99,16 @@ class TownshipListRoot extends React.Component {
                 </div>
               </div>
               <div className="col s12 m12 l6 township-content-width">
-                <TownshipDetails townshipData={townshipDetails} initialValues={townshipDetails.data}/>
+              <TownshipDetails 
+								townshipData={this.state.selectedTownship} 
+								initialValues={this.state.selectedTownship}
+								handleSuccess={this.handleSuccess}
+							/>
               </div>
             </div>  
-            <TownshipTiles townshipData={townshipDetails} />
+            {this.state.selectedTownship == null ?  <div/> : 
+							<TownshipTiles townshipCode={this.state.selectedTownship.manager_id} />
+						}
           </div>
         </Body>
       </div>
@@ -116,19 +116,16 @@ class TownshipListRoot extends React.Component {
   }
 }
 
-
 function mapStateToProps(state) {
   return {
     townshipListFetched: state.townshipListFetched,
-    townshipListEdited: state.townshipListEdited,
-    townshipDetails: state.townshipDetails
+    townshipListEdited: state.townshipListEdited
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    fetchTownshipList,
-    updateTownshipDetails
+    fetchTownshipList
   }, dispatch);
 }
 

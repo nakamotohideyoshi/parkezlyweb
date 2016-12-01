@@ -21,17 +21,20 @@ class TownshipImageUpload extends React.Component {
 
     this.onDrop = this.onDrop.bind(this);
     this._cropImage = this._cropImage.bind(this);
+		this.townshipImage;
   }
 
   componentDidUpdate() {
-    if (this.props.uploadedImage.isLoading) {
-
-    } else {
-      let townshipLogo = this.props.uploadedImage.data.data.message;
-      this.props.editTownshipImage({"township_logo": townshipLogo}, this.props.townshipCode);
-      this.setState({showerSpinner: false})
+    if (!this.props.uploadedImage.isLoading) {
       this.props.resetLoading();
+			this.townshipImage = this.props.uploadedImage.data.data.message;
+			this.props.editTownshipImage({"township_logo": this.props.uploadedImage.data.data.message}, this.props.townshipId);
     }
+		if (!this.props.townshipImageEdited.isLoading) {
+			this.setState({showerSpinner: false});
+			this.props.handleModalSuccess(this.townshipImage);
+			this.props.resetLoading();
+		}
   };
 
   _cropImage() {
@@ -61,15 +64,23 @@ class TownshipImageUpload extends React.Component {
       <div>
         {this.state.files.map((file) => {filePreview = file.preview})}
         <div className="row">
-          <div className="col s12 m12 l4 offset-l1 center-align">
-            <p className="center-align">Uploader</p>
-            <Dropzone onDrop={this.onDrop}>
-              <div style={{padding: 20}}>Try dropping some files here, or click to select files to upload.</div>
-            </Dropzone>
+          <div className="col s12 m12 l5">
+						<div className="center-align">
+							<p>Uploader</p>
+						</div>
+						<div className="center-align">
+							<Dropzone onDrop={this.onDrop} className="dropzone-fix" style={{height: 300, width: 300}}>
+								<div style={{padding: 20, height: "100%"}} className="valign-wrapper">
+									<div className="valign">
+										Try dropping some files here, or click to select files to upload.
+									</div>
+								</div>
+							</Dropzone>
+						</div>
           </div>
-          <div className="col s12 m12 l7">
+          <div className="col s12 m12 l7 center-align right">
             <p className="center-align">Crop Editor</p>
-            <div className="image-upload-crop">
+            <div className="image-upload-crop" style={{height: 300, width: 450,display: "inline-block"}}>
               <Cropper
                 ref='cropper'
                 preview=".img-preview"
@@ -83,27 +94,26 @@ class TownshipImageUpload extends React.Component {
         </div>
         
         <div className="row">
-          <div className="col s12 m12 l4">
-            <p className="center-align">Uploaded File Preview</p>
+          <div className="col s12 m12 l4 center-align">
+            <p>Uploaded File Preview</p>
             <img src={filePreview} style={{height: 256, width: 256}}/>
           </div>
-          <div className="col s12 m12 l4">
-            <p className="center-align">Crop Preview</p>
-            <div className="cropper-wrap-box image-upload-crop" style={{ height: 256, width: 256, position: "relative"}}>
-              <div className="img-preview" style={{ width: '100%', float: 'left', height: 300 }} />
-            </div>
+          <div className="col s12 m12 l4 center-align">
+            <p> Crop Preview</p>
+						<div className="cropper-wrap-box image-upload-crop" style={{height: 256, width: 256, position: "relative", display: "inline-block"}}>
+            	<div className="img-preview" style={{width: '100%', height: 300, display: "inline-block"}} />
+						</div>
           </div>
-          <div className="col s12 m12 l4">
-            <p className="center-align"> Cropped Image </p>
-            <div className="cropper-wrap-box" style={{ height: 256, width: 256, position: "relative"}}>
+          <div className="col s12 m12 l4 center-align">
+            <p> Cropped Image </p>
               <img style={{ height: 256, width: 256 }} src={this.state.cropResult} />
-            </div>
           </div>
         </div>
 
-        <div className="row">
+        <div className="row" style={{marginTop: 40}}>
           <div className="col s12 m12 l12 center-align">
-          {this.state.showSpinner ?  
+          {
+						this.state.showSpinner ?  
             <div>
               <div> Uploading: Please be patient... </div>
               <div className="preloader-wrapper small active">
@@ -117,10 +127,12 @@ class TownshipImageUpload extends React.Component {
                   </div>
                 </div>
               </div>
-            </div>: 
+            </div>
+						: 
             <button 
-            className="waves-effect waves-light green btn btn-green" 
-            onClick={ this._cropImage }>Upload Cropped Image</button>}
+            className="waves-effect waves-light btn btn-green" 
+            onClick={ this._cropImage }>Upload Cropped Image</button>
+					}
             
           </div>
         </div>
@@ -146,6 +158,7 @@ class TownshipImageUpload extends React.Component {
 function mapStateToProps(state) {
   return {
     townshipListFetched: state.townshipListFetched,
+    townshipImageEdited: state.townshipImageEdited,
     uploadedImage: state.uploadedImage
   }
 }

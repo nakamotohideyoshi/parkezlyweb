@@ -13,6 +13,11 @@
   color: red;
 }
 
+.dropzone-fix {
+	display: inline-block !important;
+	border-style: dashed;
+}
+
 .township-details-image {
   height: 256 !important; 
   width: 256 !important;
