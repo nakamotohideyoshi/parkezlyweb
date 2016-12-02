@@ -230,16 +230,5 @@ class InspectorMapView extends React.Component {
   }   
 }
 
-function mapStateToProps(state) {
-  return {
-    inspectorTicketFetched: state.inspectorTicketFetched,
-  }
-}
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    fetchInspectorTicket
-  }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(InspectorMapView);
+export default InspectorMapView;

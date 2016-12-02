@@ -46,7 +46,7 @@ class BursarPanelWebReports extends Component {
 			},
 			{
 				label: `Wallet Payments`, 
-				value: `pay_for_wallet?order=date_time DESC&filter=((pay_method=MYWALLET)OR(pay_method=PAYPAL))`
+				value: `pay_for_wallet?order=date_time DESC&filter=((pay_method=MYWALLET)OR(pay_method=PAYPAL))&related=township_users_by_user_id`
 			},
 		]
   }
