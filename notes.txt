@@ -65,4 +65,10 @@ iii ) Payments from web/app
 
 sudo git pull https://TroyEdwardsJr@bitbucket.org/parkezlyweb/parkezlyweb.git master
 
+iii) List View from Category Search ( Categories: Expired, Expiring, Valid, Non_Validated) 
+iv) List View from Location Search ( An inspector can search for a location under his jurisdiction and see all parked cars. 
+The other two links for Inspector's dashboard are :
+
 {(() => {})()}
+
+Object.assign doesn't work in IE. Replace with lodash.

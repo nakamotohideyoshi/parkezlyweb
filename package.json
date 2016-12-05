@@ -39,7 +39,7 @@
     "jspdf": "git://github.com/MrRio/jsPDF/#76edb3387cda3d5292e212765134b06150030364",
     "jwt-decode": "^2.0.1",
     "lodash": "^4.11.1",
-    "materialize-css": "^0.97.6",
+    "materialize-css": "0.97.7",
     "moment": "^2.13.0",
     "node-datetime": "^1.0.0",
     "node-schedule": "^1.1.1",

@@ -109,17 +109,15 @@ export function editTownshipImage(data, id) {
   const URL = 'townships_manager?ids=' + id;
 
   return function(dispatch) {
-    dispatch(apiTownship.requestData(types.TOWNSHIP_EDIT_PUT_REQ));
+    dispatch(apiTownship.requestData(types.TOWNSHIP_IMAGE_PUT_REQ));
     return AXIOS_INSTANCE.put(URL, data)
     .then(function(response) {
-      dispatch(apiTownship.receiveData(response.data, types.TOWNSHIP_EDIT_PUT_SUCCESS));
-      dispatch(reset('township-details'));
+      dispatch(apiTownship.receiveData(response.data, types.TOWNSHIP_IMAGE_PUT_SUCCESS));
       console.log(response)
     })
     .catch(function(response){
-      dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_EDIT_PUT_ERROR));
-      dispatch(apiTownship.pushState(null,'/error'));
-      console.log(response)
+      dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_IMAGE_PUT_ERROR));
+			console.log(response)
     })
   }
 }

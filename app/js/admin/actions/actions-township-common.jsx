@@ -22,23 +22,3 @@ export function fetchTownshipSchemeTypes(townshipCode) {
     })
   }
 }
-
-
-/*
-export function fetchTownshipSchemeTypes(townshipCode) {
-
-  const getLocationLot = () => {AXIOS_INSTANCE.get('location_lot')};
-
-  return function(dispatch) {
-    dispatch(apiTownship.requestData(types.TOWNSHIP_SCHEME_TYPES_GET_REQ));
-    return axios.all([getLocationLot(), ])
-    .then(function(response) {
-      var dataArray =
-      dispatch(apiTownship.receiveData(response.data, types.TOWNSHIP_SCHEME_TYPES_GET_SUCCESS));
-    })
-    .catch(function(response){
-      dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_SCHEME_TYPES_GET_ERROR));
-    })
-  }
-}
-*/

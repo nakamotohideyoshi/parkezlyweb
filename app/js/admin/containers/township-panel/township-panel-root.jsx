@@ -8,6 +8,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { Link } from 'react-router';
 import {SimpleSelect} from 'react-selectize';
+import {ajaxGet} from '../../common/components/ajax-selectize.js'
 
 import {
   editTownship, 
@@ -18,26 +19,25 @@ import {
   fetchTownshipDetails
 } from '../../actions/actions-township.js';
 
-
-let townshipObjects;
-let filteredTownship;
-
 class TownshipPanelRoot extends React.Component {
   constructor(props) {
     super(props);
     window.scrollTo(0, 0);
     this.state = {
-      townshipCode: null
+			townshipData: null
     }
     this.renderDetailsFlag = this.renderDetailsFlag.bind(this);
   }
   
   componentWillMount() {
-    this.props.fetchTownshipList();
+		ajaxGet("townships_manager/FDV?id_field=manager_id", (response) => {
+      this.setState({townshipData: response.data});
+    });
   }
 
   renderDetailsFlag() {
-    if(filteredTownship === null || filteredTownship === undefined) {
+		const {townshipData} = this.state
+    if(townshipData === null) {
       return (
         <div className="center-align" style={{marginTop: 40}}>
           <div className="card">
@@ -51,10 +51,10 @@ class TownshipPanelRoot extends React.Component {
           <div>
             <TownshipDetails 
               townshipId={this.props.townshipCode} 
-              townshipData={filteredTownship[0]}
-              initialValues={filteredTownship[0]} 
+              townshipData={townshipData}
+              initialValues={townshipData} 
             />
-            <TownshipPanelTiles townshipId={this.props.townshipCode} townshipCode={filteredTownship[0].manager_id}/>
+            <TownshipPanelTiles townshipCode={this.props.townshipCode}/>
           </div>
         );
     }
@@ -63,15 +63,11 @@ class TownshipPanelRoot extends React.Component {
   }
 
   render() {
-    if(!this.props.townshipListFetched.isLoading) {
-      townshipObjects = this.props.townshipListFetched.data.resource;
-      filteredTownship = _.filter(townshipObjects, { 'id':  parseInt(this.props.townshipCode)})
-    }
-
+		const {townshipData} = this.state
     return (
       <div className="blue-body marginless-row">
         <nav className="tab-bar">
-          {filteredTownship !== undefined ? 
+          {this.state.townshipData !== null ? 
           <div className="nav-wrapper">
             <a href="#" data-activates="mobile-demo" className="button-collapse"><i className="material-icons">menu</i></a>
             <ul className="left hide-on-med-and-down">
@@ -80,32 +76,32 @@ class TownshipPanelRoot extends React.Component {
                 <i className="material-icons left tab-bar-icons">home</i>Township Editor</a>
               </li>
               <li>
-                <Link to={{pathname: `/admin/township/users/${filteredTownship[0].manager_id}`}} 
+                <Link to={{pathname: `/admin/township/users/${this.props.townshipCode}`}} 
                 className="waves-effect waves-light tab-bar-link">
                 <i className="material-icons left tab-bar-icons">person</i>User List</Link>
               </li>
               <li>
-                <Link to={{pathname: `/admin/township/facilities/${filteredTownship[0].manager_id}`}} 
+                <Link to={{pathname: `/admin/township/facilities/${this.props.townshipCode}`}} 
                 className="waves-effect waves-light tab-bar-link">
                 <i className="material-icons left tab-bar-icons">place</i>Facilities List</Link>
               </li>
               <li>
-                <Link to={{pathname: `/admin/township/permit/${filteredTownship[0].manager_id}`}} 
+                <Link to={{pathname: `/admin/township/permit/${this.props.townshipCode}`}} 
                 className="waves-effect waves-light tab-bar-link">
                 <i className="material-icons left tab-bar-icons">event_note</i>Permit List</Link>
               </li>
               <li>
-                <Link to={{pathname: `/admin/township/permit-requests/${filteredTownship[0].manager_id}`}} 
+                <Link to={{pathname: `/admin/township/permit-requests/${this.props.townshipCode}`}} 
                 className="waves-effect waves-light tab-bar-link">
                 <i className="material-icons left tab-bar-icons">event_available</i>Permit Request List</Link>
               </li>
               <li>
-                <Link to={{pathname: `/admin/inspector/${filteredTownship[0].id}`}} 
+                <Link to={{pathname: `/admin/inspector/${this.props.townshipCode}`}} 
                 className="waves-effect waves-light tab-bar-link">
                 <i className="material-icons left tab-bar-icons">&#xE90D;</i>Inspector Panel</Link>
               </li>
               <li>
-                <Link to={{pathname: `/admin/bursar/${filteredTownship[0].id}`}} 
+                <Link to={{pathname: `/admin/bursar/${this.props.townshipCode}`}} 
                 className="waves-effect waves-light tab-bar-link">
                 <i className="material-icons left tab-bar-icons">&#xE227;</i>Bursar Panel</Link>
               </li>

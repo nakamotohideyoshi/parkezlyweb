@@ -10,7 +10,7 @@ export const API_CONFIG = {
   timeout: 20000,
   headers: {
     'X-DreamFactory-Api-Key' : API_KEY,
-    
+    'X-DreamFactory-Application-Name': APP_NAME,
   },
 };
 //'X-DreamFactory-Session-Token': SESSION_TOKEN

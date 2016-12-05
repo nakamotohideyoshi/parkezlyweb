@@ -29,12 +29,15 @@ import {
 } from './containers/bursar-panel/bursar-panel-controller.jsx'
 import {
   InspectorPanelController,
+	InspectorMapViewController,
+  InspectorMapTicketController,
+	InspectorListViewController,
   InspectorCreateTicketController,
   InspectorSearchPlateController,
+  InspectorSearchLocationController,
+  InspectorSearchCategoryController,
   InspectorParkingFieldController,
-  InspectorMapViewController,
   InspectorVehicleInfoController,
-  InspectorMapTicketController
 } from './containers/inspector-panel/inspector-panel-controller.jsx'
 
 
@@ -81,11 +84,14 @@ const superAdminRoutes = () => {
         <Route path="admin/bursar/web-reports/:townshipCode" component={BursarWebReportsController} />
 
         <Route path="admin/inspector/:townshipCode" component={InspectorPanelController} />
+				<Route path="admin/inspector/map-view/:townshipCode" component={InspectorMapViewController} />
+        <Route path="admin/inspector/map-view/create-ticket/:vehicleCode" component={InspectorCreateTicketController} />
+				<Route path="admin/inspector/list-view/:townshipCode" component={InspectorListViewController} />
         <Route path="admin/inspector/parking-field/:townshipCode" component={InspectorParkingFieldController} />
         <Route path="admin/inspector/search-plate/:townshipCode" component={InspectorSearchPlateController} />
+        <Route path="admin/inspector/search-location/:townshipCode" component={InspectorSearchLocationController} />
+        <Route path="admin/inspector/search-category/:townshipCode" component={InspectorSearchCategoryController} />
         <Route path="admin/inspector/create-ticket/:townshipCode" component={InspectorCreateTicketController} />
-        <Route path="admin/inspector/map-view/:townshipCode" component={InspectorMapViewController} />
-        <Route path="admin/inspector/map-view/create-ticket/:vehicleCode" component={InspectorCreateTicketController} />
         <Route path="admin/inspector/vehicle-info/:vehicleCode" component={InspectorVehicleInfoController} />
         <Route path="admin/inspector/vehicle-info/create-ticket/:vehicleCode" component={InspectorMapTicketController} />
       </div>
@@ -127,11 +133,14 @@ const twpInspectorRoutes = () => {
    return (
       <div>
         <Route path="admin/inspector/:townshipCode" component={InspectorPanelController} />
+				<Route path="admin/inspector/map-view/:townshipCode" component={InspectorMapViewController} />
+        <Route path="admin/inspector/map-view/create-ticket/:vehicleCode" component={InspectorCreateTicketController} />
+				<Route path="admin/inspector/list-view/:townshipCode" component={InspectorListViewController} />
         <Route path="admin/inspector/parking-field/:townshipCode" component={InspectorParkingFieldController} />
         <Route path="admin/inspector/search-plate/:townshipCode" component={InspectorSearchPlateController} />
+        <Route path="admin/inspector/search-location/:townshipCode" component={InspectorSearchLocationController} />
+        <Route path="admin/inspector/search-category/:townshipCode" component={InspectorSearchCategoryController} />
         <Route path="admin/inspector/create-ticket/:townshipCode" component={InspectorCreateTicketController} />
-        <Route path="admin/inspector/map-view/:townshipCode" component={InspectorMapViewController} />
-        <Route path="admin/inspector/map-view/create-ticket/:vehicleCode" component={InspectorCreateTicketController} />
         <Route path="admin/inspector/vehicle-info/:vehicleCode" component={InspectorVehicleInfoController} />
         <Route path="admin/inspector/vehicle-info/create-ticket/:vehicleCode" component={InspectorMapTicketController} />
       </div>

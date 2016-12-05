@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import {reducer as formReducer} from 'redux-form';
+import _ from 'lodash';
 
 import {
   townshipListFetched, 
@@ -7,7 +8,9 @@ import {
   townshipListEdited,
   townshipDetailsFetched, 
   uploadedImage,
-  townshipDetails} from './reducer-township-list.js';
+	townshipImageEdited,
+  townshipDetails
+} from './reducer-township-list.js';
 
 import {
   townshipUsersFetched, 
@@ -101,6 +104,7 @@ var townshipReducers = {
   townshipDetails: townshipDetails,
   townshipDetailsFetched: townshipDetailsFetched,
   uploadedImage: uploadedImage,
+	townshipImageEdited: townshipImageEdited
 };
 
 // Township Panel
@@ -196,7 +200,7 @@ var reduxFormReducer = {
   form: formReducer 
 };
 
-var combinedReducerObjects = Object.assign(
+var combinedReducerObjects = _.assign(
   townshipReducers, 
   townshipPanelReducers, 
   townshipCommonReducers,

@@ -1,9 +1,7 @@
 import React from 'react';
-
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import { reduxForm } from 'redux-form'
-
 import {submitNewTownship, fetchTownshipList, resetLoading} from '../../../actions/actions-township.js';
 
 export const fields = [ 
@@ -171,17 +169,17 @@ class TownshipCreate extends React.Component {
 
               <div className="modal-footer">
                 <div className="row marginless-row">
-                  <div className="col s3">
-                    <a className="modal-action modal-close waves-effect waves-light btn btn-yellow" onClick={resetForm}>Cancel</a>
-                  </div>
-                  <div className="col s4 offset-s1">
-                    <a className="waves-effect waves-light btn btn-green" disabled={submitting} onClick={resetForm}>Clear Values</a>
-                  </div>
-                  <div className="col s4">
+								  <div className="col s4 right">
                     <button 
                     type="submit" 
                     disabled={submitting} 
                     className="waves-effect waves-light btn">Create Township</button>
+                  </div>
+                  <div className="col s3 right">
+                    <button className="modal-action modal-close waves-effect waves-light btn btn-yellow" onClick={resetForm}>Cancel</button>
+                  </div>
+                  <div className="col s4 center-align">
+                    <button className="waves-effect waves-light btn btn-green" disabled={submitting} onClick={resetForm}>Clear Values</button>
                   </div>
                 </div>
               </div>
@@ -191,13 +189,6 @@ class TownshipCreate extends React.Component {
       </div>
     );
   }
-}
-
-
-TownshipCreate.propTypes = {
-  fields: React.PropTypes.object.isRequired,
-  resetForm: React.PropTypes.func.isRequired,
-  submitting: React.PropTypes.bool.isRequired
 }
 
 function mapStateToProps(state) {
@@ -219,6 +210,3 @@ export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   fields,
   validate
 })(TownshipCreate))
-
-
-// {submitting ? <p> TEST </p> : <p> TESTING </p>} 
