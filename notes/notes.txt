@@ -72,3 +72,5 @@ The other two links for Inspector's dashboard are :
 {(() => {})()}
 
 Object.assign doesn't work in IE. Replace with lodash.
+
+blue lighten-2

@@ -21,18 +21,21 @@ import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import Griddle from 'griddle-react'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 
-import { ajaxSelectizeGet, ajaxDelete } from '../../../../common/components/ajax-selectize.js'
+import { ajaxSelectizeGet, ajaxDelete, ajaxGet} from '../../../../common/components/ajax-selectize.js'
 import AdminSelectize from '../../../../common/components/admin-selectize.jsx'
 import {SimpleSelect} from "react-selectize"
+import moment from 'moment'
 
 export const fields = [ 
   'id',
+	'date_time',
   'user_id',
   'user_name',
   'township_name',
   'township_code',
   'profile_name',
-  'status'
+  'status',
+  'email'
 ]
 
 class TownshipPanelUsersForm extends React.Component {
@@ -55,25 +58,10 @@ class TownshipPanelUsersForm extends React.Component {
 
     this.props.dispatch(change('township-users-form', 'township_code', this.props.townshipCode))
     this.props.dispatch(change('township-users-form', 'township_name', this.props.townshipCode))
-    
+		this.props.dispatch(change('township-users-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
   }
-
-  componentDidMount() {
-    const {
-      resetForm,
-      submitting,
-      dispatch
-    } = this.props
-
-    $('.date_time')
-    .bootstrapMaterialDatePicker({ time: true, format : 'YYYY-MM-DD HH:mm:ss' })
-    .on('change', function(event) {
-      dispatch(change('township-users-form', 'date_time', event.target.value)); 
-    });
-  }
-
   handleSubmit(data) {
-    
+    console.log(data)
     $('#' + this.props.modalName).closeModal();
     $('#modal-success').openModal();
 
@@ -103,16 +91,8 @@ class TownshipPanelUsersForm extends React.Component {
   }
 
   componentWillMount() {
-    /*
-    ajaxSelectizeGet('manage_locations', 'location_code', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('scheme_type', 'scheme_type', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('payment_type', 'pay_method', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('user_vehicles', 'plate_no', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('locations_rate', 'rate', this.selectizeOptionsUpdate);
-    */
-    ajaxSelectizeGet('user_profile', 'user_id', this.selectizeOptionsUpdate);
-    ajaxSelectizeGet('user_profile', 'user_name', this.selectizeOptionsUpdate);
-
+    ajaxSelectizeGet(`user_profile`, 'user_id', this.selectizeOptionsUpdate);
+    //ajaxSelectizeGet('user_profile', 'user_name', this.selectizeOptionsUpdate);
   }
 
   componentDidUpdate() {
@@ -148,7 +128,8 @@ class TownshipPanelUsersForm extends React.Component {
         user_id,
         user_name,
         profile_name,
-        status
+        status,
+        email
       },
       resetForm,
       submitting,
@@ -160,7 +141,7 @@ class TownshipPanelUsersForm extends React.Component {
 
     return fields.map((data) => {
       return( 
-        <div className="col s6 admin-form-input">
+        <div className="col s12 admin-form-input">
           <div className="form-group">
             <label>{data}</label>
             <input type="text" placeholder={data} {...this.props.fields[data]}/>
@@ -170,8 +151,6 @@ class TownshipPanelUsersForm extends React.Component {
     }); 
   }
 
-
-
   render() {
 
     const {
@@ -179,89 +158,110 @@ class TownshipPanelUsersForm extends React.Component {
       submitting,
       dispatch
     } = this.props
-
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-          <div id={this.props.modalName} className="modal modal-fixed-footer">
+          <div id={this.props.modalName} className="modal modal-fixed-footer managed-parking-modal">
+						<nav>
+							<div className="nav-wrapper nav-admin">
+								<a className="brand-logo center">{this.props.modalText}</a>
+								<i 
+								className="material-icons right right-align clickable" 
+								style={{marginRight: 15, lineHeight: "55px"}}
+								onClick={() => {
+									$('#' + this.props.modalName).closeModal();
+								}}>close</i>
+							</div>
+						</nav>
             <div className="modal-content">
-
               <div className="row">
                 <div className="center-align">
-                  <h4>{this.props.modalText}</h4>
-                  <p className="center-align">{this.props.modalText} by filling out the fields.</p>
+								  <p className="center-align">{this.props.modalText} by filling out the fields.</p>
                 </div>
               </div>
 
               <div className="row">
 
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label>status</label>
-                    <div clasName="input-field col s12">
-                      <SimpleSelect 
-                        options = {[{label: "ACTIVE", value: "ACTIVE"}, {label: "INACTIVE", value: "INACTIVE"}]} 
-                        placeholder = "status"
-                        theme = "material"
-                        style={{marginTop: 5}}
-                        transitionEnter = {true} 
-                        onValueChange = {(value) => {
-                          dispatch(change('township-users-form', 'status', value.value)); 
-                        }}/>
-                      </div>
-                    </div>
-                  </div>
+								<AdminSelectize 
+									options={this.state.selectizeOptions}
+									objectKey={'user_id'} 
+									formName={'township-users-form'} 
+									fieldName={'User ID'}
+									defaultData={this.props.rowData}
+									dispatch={dispatch} 
+                  updateRowData={this.props.updateRowData}
+									dispatchFunction={(value) => {
+										ajaxGet(`user_profile/${value.value}?id_field=user_id`, (userProfile) => {
+											dispatch(change('township-users-form', 'user_name', userProfile.data.user_name)); 
+											dispatch(change('township-users-form', 'email', userProfile.data.email)); 
+										});
+									}}
+								/>
 
-                  <div className="col s6 admin-form-input">
-                    <div className="form-group">
-                      <label>profile_name</label>
-                      <div clasName="input-field col s12">
-                        <SimpleSelect 
-                          options = {[
-                            {label: "TwpBursar", value: "TwpBursar"}, 
-                            {label: "TwpInspector", value: "TwpInspector"},
-                            {label: "TwpAdmin", value: "TwpAdmin"},
-                            {label: "VehicleUser", value: "VehicleUser"},
-                          ]} 
-                          placeholder = "profile_name"
-                          theme = "material"
-                          style={{marginTop: 5}}
-                          transitionEnter = {true} 
-                          onValueChange = {(value) => {
-                            dispatch(change('township-users-form', 'profile_name', value.value)); 
-                          }}/>
-                      </div>
-                    </div>
-                  </div>
-                  
+								<div className="col s12 admin-form-input">
+									<div className="form-group">
+										<div clasName="input-field col s12">
+											<SimpleSelect 
+												options = {[
+                          {label: "VehicleUser", value: "VehicleUser"},
+                          {label: "ApiAdmin", value: "ApiAdmin"},
+                          {label: "TwpAdmin", value: "TwpAdmin"},
+													{label: "TwpBursar", value: "TwpBursar"}, 
+													{label: "TwpInspector", value: "TwpInspector"},			
+												]} 
+												placeholder = "Profile Name"
+												theme = "default" 
+												style={{marginTop: 5}}
+												transitionEnter = {true} 
+                        value = {(() => {
+                          if (this.props.rowData !== null && this.props.rowData !== undefined) {
+                            let objectKey = "profile_name";
+                            let defaultValue = this.props.rowData[objectKey];
+                            if (defaultValue !== null && defaultValue !== "" && defaultValue !== undefined) {
+                              return {label: defaultValue, value: defaultValue}
+                            } else {
+                              return;
+                            }
+                          }
+                        })()}
+												onValueChange = {(value) => {
+                          this.props.updateRowData(value.value, "profile_name");
+													dispatch(change('township-users-form', 'profile_name', value.value)); 
+												}}/>
+										</div>
+									</div>
+								</div>
 
-                  <AdminSelectize 
-                    options={this.state.selectizeOptions}
-                    objectKey={'user_name'} 
-                    formName={'township-users-form'} 
-                    fieldName={'user_name'}
-                    defaultData={this.props.rowData}
-                    dispatch={dispatch} 
-                  />
-
-                  <AdminSelectize 
-                    options={this.state.selectizeOptions}
-                    objectKey={'user_id'} 
-                    formName={'township-users-form'} 
-                    fieldName={'user_id'}
-                    defaultData={this.props.rowData}
-                    dispatch={dispatch} 
-                  />
-
+								<div className="col s12 admin-form-input">
+									<div className="form-group">
+										<div clasName="input-field col s12">
+											<SimpleSelect 
+												options = {[{label: "ACTIVE", value: "ACTIVE"}, {label: "INACTIVE", value: "INACTIVE"}]} 
+												placeholder = "Status"
+												theme = "default" 
+												style={{marginTop: 5}}
+												transitionEnter = {true} 
+                        value = {(() => {
+                          if (this.props.rowData !== null && this.props.rowData !== undefined) {
+                            let objectKey = "status";
+                            let defaultValue = this.props.rowData[objectKey];
+                            if (defaultValue !== null && defaultValue !== "" && defaultValue !== undefined) {
+                              return {label: defaultValue, value: defaultValue}
+                            } else {
+                              return;
+                            }
+                          }
+                        })()}
+												onValueChange = {(value) => {
+                          console.log(this.props.rowData)
+                          this.props.updateRowData(value.value, "status");
+													dispatch(change('township-users-form', 'status', value.value)); 
+												}}
+                        />
+										</div>
+									</div>
+								</div>
                   {this.tempInputsEdit(this.props.initialValues)}
-
-                  <div className="col s6 admin-form-input">
-                    <div className="form-group">
-                      <label htmlFor="date_time">date_time</label>
-                      <input id="date_time" className="date_time" type="text"/>
-                    </div>
-                  </div>
-
               </div>
             </div>
             
@@ -272,7 +272,7 @@ class TownshipPanelUsersForm extends React.Component {
                   <button 
                   type="submit" 
                   disabled={submitting} 
-                  className="waves-effect waves-light btn">{this.props.modalText}</button>
+                  className="waves-effect waves-light btn blue-btn-admin">{this.props.modalText}</button>
                 </div>
               </div>
             </div>

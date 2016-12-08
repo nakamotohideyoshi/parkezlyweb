@@ -14,23 +14,30 @@ export default class AdminSelectize extends React.Component {
     let defaultValue;
 
     if (this.props.defaultData !== null && this.props.defaultData !== undefined) {
-      defaultValue = this.props.defaultData[this.props.fieldName];
+      defaultValue = this.props.defaultData[this.props.objectKey];
     }
 
     if(this.props.options[this.props.objectKey] !== undefined) {
       return (
-        <div className="col s6 admin-form-input">
+        <div className="col s12 admin-form-input">
           <div className="form-group">
-            <label>{this.props.fieldName}</label>
             <div clasName="input-field col s12">
               <SimpleSelect 
               options = {this.props.options[this.props.objectKey]} 
-              placeholder = {this.props.fieldName}
-              theme = "material" 
+              placeholder={this.props.fieldName}
+              theme = "default" 
               style={{marginTop: 5}}
-              defaultValue = {{label: defaultValue, value: defaultValue}}
+              value = {(() => {
+                if (defaultValue !== null && defaultValue !== "" && defaultValue !== undefined) {
+                  return {label: defaultValue, value: defaultValue}
+                } else {
+                  return;
+                }
+              })()}
               onValueChange = {(value) => {
-                dispatch(change(this.props.formName, this.props.fieldName, value.value)); 
+                this.props.updateRowData(value.value, this.props.objectKey);
+								this.props.dispatchFunction(value);
+                dispatch(change(this.props.formName, this.props.objectKey, value.value)); 
                 if(this.props.onChange !== null && this.props.onChange !== undefined) {
                   this.props.onChange(value.value);
                 }
@@ -41,17 +48,23 @@ export default class AdminSelectize extends React.Component {
       );
     } else {
       return (
-        <div className="col s6 admin-form-input">
+        <div className="col s12 admin-form-input">
           <div className="form-group">
-            <label>{this.props.objectKey}</label>
             <div clasName="input-field col s12">
               <SimpleSelect 
               options = {this.props.options} 
-              defaultValue = {{label: defaultValue, value: defaultValue}}
               placeholder = "Select Scheme Type" 
-              theme = "material" 
+              theme = "default" 
               style={{marginTop: 5}}
+              value = {(() => {
+                if (defaultValue !== null && defaultValue !== "" && defaultValue !== undefined) {
+                  return {label: defaultValue, value: defaultValue}
+                } else {
+                  return;
+                }
+              })()}
               onValueChange = {(value) => {
+                this.props.updateRowData(value.value, this.props.objectKey);
                 if(this.props.onChange !== null && this.props.onChange !== undefined) {
                   this.props.onChange(value.value);
                 }
@@ -64,12 +77,6 @@ export default class AdminSelectize extends React.Component {
   }
 
   render() {
-    if (this.props.options[this.props.objectKey] === undefined) {
-      //console.log(this.props.options[this.props.objectKey]);
-    } else {
-      //console.log(this.props.options[this.props.objectKey]);
-    }
-    
     return(
       <div>
         {this.renderSelectize()}

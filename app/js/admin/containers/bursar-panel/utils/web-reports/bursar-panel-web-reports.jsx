@@ -8,6 +8,7 @@ import { ajaxGet, ajaxDelete } from '../../../../common/components/ajax-selectiz
 import { Column, Table, AutoSizer } from 'react-virtualized';
 import moment from 'moment'
 import momentLocalizer from 'react-widgets/lib/localizers/moment'
+import _ from 'lodash';
 
 const DateTimePicker = require('react-widgets').DateTimePicker
 const currentDate = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
@@ -56,7 +57,13 @@ class BursarPanelWebReports extends Component {
   }
 
   ajaxGet(activeTableData) {
-    this.setState({activeTableData: activeTableData.data.resource, tableLoading: false});
+    if(this.state.paymentType === "Wallet Payments") {
+      let filteredTableData = _.filter(activeTableData.data.resource, {township_users_by_user_id: {township_code: 'FDV'}})
+      this.setState({activeTableData: filteredTableData, tableLoading: false});
+      console.log(this.state.activeTableData)
+    } else {
+      this.setState({activeTableData: activeTableData.data.resource, tableLoading: false});
+    }
   }
 
   renderTicketPayments() {
