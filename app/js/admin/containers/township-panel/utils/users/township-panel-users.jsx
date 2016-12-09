@@ -99,9 +99,9 @@ class TownshipPanelUsers extends React.Component {
   }
 
   updateRowData(newData, objectKey) {
-    console.log(_.assign(this.state.rowData, {[objectKey]: newData}))
+    //console.log(_.merge(this.state.rowData, {[objectKey]: newData}))
     this.setState({
-      rowData: _.assign(this.state.rowData, {[objectKey]: newData})
+      rowData: _.merge(this.state.rowData, {[objectKey]: newData})
     });
   }
 
@@ -113,7 +113,8 @@ class TownshipPanelUsers extends React.Component {
         submitType="CREATE"
         initialValues={null}
         editMode={false}
-        rowData={this.props.rowData}
+        initialValues={this.state.rowData} 
+        rowData={this.state.rowData}
         handleSuccess={this.handleSuccess}
         townshipCode={this.props.townshipCode}
         updateRowData={this.updateRowData}
@@ -122,6 +123,7 @@ class TownshipPanelUsers extends React.Component {
   }
 
   renderEditModal(recordId, rowData) {
+    console.log(rowData)
     window.scrollTo(0, document.body.scrollHeight);
     this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true, parkingLocationCode: recordId})
   }
@@ -170,6 +172,7 @@ class TownshipPanelUsers extends React.Component {
             onClick={() => {
               window.scrollTo(0, 0);
               $('#modal-township-users-create').openModal()
+              this.setState({rowData: {}, showEditDuplicateButtons: false})
             }}
             style={{margin: 10}}>Add New User</a>
         </div>
@@ -317,8 +320,6 @@ class TownshipPanelUsers extends React.Component {
           <div></div> : 
           <div>
             <TownshipPanelUsersForm
-              initialValues={this.state.rowData} 
-              handleSuccess={this.handleSuccess}
               modalName="modal-township-users-edit" 
               modalText="Edit a User" 
               submitType="EDIT"

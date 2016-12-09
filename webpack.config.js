@@ -8,7 +8,8 @@ module.exports = {
   devtool: 'eval-source-map',
   devServer: {
     hot: true,
-    inline: true
+    inline: true,
+    outputPath: path.join(__dirname, 'dist'),
   },
   entry: [
     'babel-polyfill',
@@ -72,7 +73,7 @@ module.exports = {
       { test: /\.(jpe?g|png|gif|svg)$/, 
         loader: 'url', 
         query: {limit: 10240} 
-      }, 
+      }
     ]
   }
 };

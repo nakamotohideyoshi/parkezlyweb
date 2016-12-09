@@ -9,11 +9,13 @@ if (event.request.payload) {
 }
 
 // Reponse for parked cars.
-function filterParkedCars(object) {
-  return object.profile_name === "TwpInspector";
-}
 
-if(event.response.content.resource) {
+// Fixed
+
+if(event.response.content.resource[0].township_users_by_township_code !== undefined) {
+    var filterParkedCars = function(object) {
+        return object.profile_name === "TwpInspector";
+    }
     event.response.content.resource.forEach(function(obj) {
         obj.township_users_by_township_code = obj.township_users_by_township_code.filter(filterParkedCars);
     });

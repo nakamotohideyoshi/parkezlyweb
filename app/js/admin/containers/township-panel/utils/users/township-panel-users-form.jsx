@@ -60,22 +60,24 @@ class TownshipPanelUsersForm extends React.Component {
     this.props.dispatch(change('township-users-form', 'township_name', this.props.townshipCode))
 		this.props.dispatch(change('township-users-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
   }
+
   handleSubmit(data) {
-    console.log(data)
+    let newData = _.merge(this.props.rowData, data);
+    console.log(newData);
     $('#' + this.props.modalName).closeModal();
     $('#modal-success').openModal();
 
     switch(this.props.submitType) {
       case "CREATE":
-        data = _.omit(data, 'id');
-        this.props.createTownshipUsers(data);
+        newData = _.omit(newData, 'id');
+        this.props.createTownshipUsers(newData);
         break;
       case "EDIT":
-        this.props.editTownshipUsers(data, data.id);
+        this.props.editTownshipUsers(newData, newData.id);
         break;
       case "DUPLICATE":
-        data = _.omit(data, 'id');
-        this.props.createTownshipUsers(data);
+        newData = _.omit(newData, 'id');
+        this.props.createTownshipUsers(newData);
         break;
       default:
         console.log("No valid submit type was provided.");
@@ -114,10 +116,8 @@ class TownshipPanelUsersForm extends React.Component {
 
   handleSuccess(){
     this.props.resetLoading();
-    this.props.handleSuccess();
+    this.props.handleSuccess();    
   }
-
-
 
   tempInputsEdit(initialValues) {
      const {
@@ -242,6 +242,7 @@ class TownshipPanelUsersForm extends React.Component {
 												style={{marginTop: 5}}
 												transitionEnter = {true} 
                         value = {(() => {
+                          //console.log(this.props.rowData)
                           if (this.props.rowData !== null && this.props.rowData !== undefined) {
                             let objectKey = "status";
                             let defaultValue = this.props.rowData[objectKey];
@@ -253,7 +254,7 @@ class TownshipPanelUsersForm extends React.Component {
                           }
                         })()}
 												onValueChange = {(value) => {
-                          console.log(this.props.rowData)
+                          //console.log(this.props.rowData)
                           this.props.updateRowData(value.value, "status");
 													dispatch(change('township-users-form', 'status', value.value)); 
 												}}
