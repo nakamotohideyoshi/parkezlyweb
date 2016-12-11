@@ -39,8 +39,6 @@ const fields = [
   'id',
   'user_id',
   'user_name',
-  'township_code',
-  'township_name',
   'profile_name',
   'status'
 ]

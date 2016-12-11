@@ -86,13 +86,11 @@ class TownshipPanelUsersForm extends React.Component {
   componentWillMount() {
     this.props.dispatch(change('township-users-form', 'township_code', this.props.townshipCode));
     this.props.dispatch(change('township-users-form', 'township_name', this.props.townshipCode));
-		this.props.dispatch(change('township-users-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
+    this.props.dispatch(change('township-users-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
     ajaxSelectizeGet(`user_profile`, 'user_id', this.selectizeOptionsUpdate);
   }
 
   componentDidUpdate() {
-    console.log(this.props.fields.township_code.value)
-    console.log(this.props.fields.date_time.value)
     if (this.props.townshipUsersCreated.isLoading) {
       } else if (!this.props.townshipUsersCreated.isLoading) {
         this.handleSuccess();
