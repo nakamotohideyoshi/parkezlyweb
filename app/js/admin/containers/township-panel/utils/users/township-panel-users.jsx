@@ -10,7 +10,8 @@ import {
   fetchTownshipUsers, 
   editTownshipUsers, 
   createTownshipUsers,  
-  resetLoading
+  resetLoading,
+  resetReduxForm
 } from '../../../../actions/actions-township-panel.jsx'
 
 import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
@@ -79,7 +80,6 @@ class TownshipPanelUsers extends React.Component {
     }
 
     this.renderUserTable = this.renderUserTable.bind(this);
-    this.renderUserList = this.renderUserList.bind(this);
     this.updateRowData = this.updateRowData.bind(this);
 
     this.renderEditModal = this.renderEditModal.bind(this);
@@ -165,46 +165,11 @@ class TownshipPanelUsers extends React.Component {
             className="modal-trigger waves-effect waves-light btn valign blue-btn-admin"
             onClick={() => {
               window.scrollTo(0, 0);
-              $('#modal-township-users-create').openModal()
+              this.props.resetReduxForm(fields);
               this.setState({showEditDuplicateButtons: false})
+              $('#modal-township-users-create').openModal()
             }}
             style={{margin: 10}}>Add New User</a>
-        </div>
-      </div>
-    );
-  }
-
-  renderUserList() {
-    return(
-      <div>
-        {this.state.editMode ? 
-        <nav>
-          <div className="nav-wrapper nav-admin z-depth-2">
-            <a className="brand-logo center">Township Users Editor</a>
-          </div>
-        </nav>
-        :
-        <nav>
-          <div className="nav-wrapper nav-admin z-depth-2">
-            <a className="brand-logo center">Township Users List</a>
-          </div>
-        </nav>
-        }
-
-        <div className="card">
-          <div className="divider" />
-					{this.props.townshipUsersFetched.isLoading ? <div className="center-align"> <Spinner /> </div> : this.renderUserTable()}
-          {this.state.editMode ? 
-          null
-          :
-          <div className="center-align">
-            <a
-            className="modal-trigger waves-effect waves-light btn valign" 
-            onClick={() => this.setState({createMode: true})}
-            style={{margin: 10}}>Add New User</a>
-          </div>
-          }
-                     
         </div>
       </div>
     );
@@ -354,7 +319,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     fetchTownshipUsers,
-    resetLoading
+    resetLoading,
+    resetReduxForm
   }, dispatch);
 }
 
