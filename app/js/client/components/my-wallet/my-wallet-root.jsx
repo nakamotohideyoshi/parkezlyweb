@@ -112,9 +112,13 @@ class MyWallet extends Component {
   renderTransaction(transactionData, index) {
     const { date_time, last_paid_amt, paid_date, add_amt } = transactionData;
     const paymentDate = paid_date ? paid_date : date_time;
-    const paidDate = moment(paymentDate).format("MM-DD-YYYY");
+    const paidDate = moment(paymentDate).format("M-DD-YYYY");
     const amt = last_paid_amt || add_amt;
+    const amt_tmp = parseFloat(amt).toFixed(2);
+    // const amt_tmp = parseFloat(amt).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
     const purpose = last_paid_amt ? "Parking Payment" : "Added Funds";
+    const sign = last_paid_amt ? "-": "+";
+    const zero = amt ? amt_tmp: "0.00";
     return (
       <div className="row" key={index}>
         <div className="col s4">
@@ -124,7 +128,7 @@ class MyWallet extends Component {
           {purpose}
         </div>
         <div className="col s3">
-          &#36; {amt}
+         {sign} &#36; {zero}
         </div>
       </div>
     );

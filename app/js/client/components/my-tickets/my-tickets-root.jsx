@@ -19,7 +19,7 @@ class MyTickets extends Component {
     }
     const userId = cookie.load('userId');
     const { dispatch } = this.props;
-    dispatch(getTickets(226));
+    dispatch(getTickets(userId));
   }
 
   checkAuthStatus() {
