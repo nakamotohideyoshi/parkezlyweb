@@ -47,37 +47,28 @@ class TownshipPanelUsersForm extends React.Component {
       showEditDuplicateButtons: false,
       parkingLocationCode: null,
       showEditModal: false,
-      rowData: null,
       selectizeOptions: {}
     }
 
-    this.tempInputsEdit = this.tempInputsEdit.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
     this.selectizeOptionsUpdate = this.selectizeOptionsUpdate.bind(this);
-
-    this.props.dispatch(change('township-users-form', 'township_code', this.props.townshipCode))
-    this.props.dispatch(change('township-users-form', 'township_name', this.props.townshipCode))
-		this.props.dispatch(change('township-users-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
   }
 
   handleSubmit(data) {
-    let newData = _.merge(this.props.rowData, data);
-    console.log(newData);
+    console.log(data);
     $('#' + this.props.modalName).closeModal();
-    $('#modal-success').openModal();
-
     switch(this.props.submitType) {
       case "CREATE":
-        newData = _.omit(newData, 'id');
-        this.props.createTownshipUsers(newData);
+        data = _.omit(data, 'id');
+        this.props.createTownshipUsers(data);
         break;
       case "EDIT":
-        this.props.editTownshipUsers(newData, newData.id);
+        this.props.editTownshipUsers(data, data.id);
         break;
       case "DUPLICATE":
-        newData = _.omit(newData, 'id');
-        this.props.createTownshipUsers(newData);
+        data = _.omit(data, 'id');
+        this.props.createTownshipUsers(data);
         break;
       default:
         console.log("No valid submit type was provided.");
@@ -93,11 +84,15 @@ class TownshipPanelUsersForm extends React.Component {
   }
 
   componentWillMount() {
+    this.props.dispatch(change('township-users-form', 'township_code', this.props.townshipCode));
+    this.props.dispatch(change('township-users-form', 'township_name', this.props.townshipCode));
+		this.props.dispatch(change('township-users-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
     ajaxSelectizeGet(`user_profile`, 'user_id', this.selectizeOptionsUpdate);
-    //ajaxSelectizeGet('user_profile', 'user_name', this.selectizeOptionsUpdate);
   }
 
   componentDidUpdate() {
+    console.log(this.props.fields.township_code.value)
+    console.log(this.props.fields.date_time.value)
     if (this.props.townshipUsersCreated.isLoading) {
       } else if (!this.props.townshipUsersCreated.isLoading) {
         this.handleSuccess();
@@ -119,40 +114,7 @@ class TownshipPanelUsersForm extends React.Component {
     this.props.handleSuccess();    
   }
 
-  tempInputsEdit(initialValues) {
-     const {
-      fields: { 
-        id,
-        township_name,
-        township_code, 
-        user_id,
-        user_name,
-        profile_name,
-        status,
-        email
-      },
-      resetForm,
-      submitting,
-      dispatch
-    } = this.props;
-
-    const fields = [
-    ]
-
-    return fields.map((data) => {
-      return( 
-        <div className="col s12 admin-form-input">
-          <div className="form-group">
-            <label>{data}</label>
-            <input type="text" placeholder={data} {...this.props.fields[data]}/>
-          </div>
-        </div>
-      );
-    }); 
-  }
-
   render() {
-
     const {
       resetForm,
       submitting,
@@ -181,15 +143,14 @@ class TownshipPanelUsersForm extends React.Component {
               </div>
 
               <div className="row">
-
 								<AdminSelectize 
+                  staticOptions={false}
 									options={this.state.selectizeOptions}
 									objectKey={'user_id'} 
+                  fieldName={'User ID'}
 									formName={'township-users-form'} 
-									fieldName={'User ID'}
-									defaultData={this.props.rowData}
+									fieldData={this.props.fields}
 									dispatch={dispatch} 
-                  updateRowData={this.props.updateRowData}
 									dispatchFunction={(value) => {
 										ajaxGet(`user_profile/${value.value}?id_field=user_id`, (userProfile) => {
 											dispatch(change('township-users-form', 'user_name', userProfile.data.user_name)); 
@@ -197,72 +158,30 @@ class TownshipPanelUsersForm extends React.Component {
 										});
 									}}
 								/>
-
-								<div className="col s12 admin-form-input">
-									<div className="form-group">
-										<div clasName="input-field col s12">
-											<SimpleSelect 
-												options = {[
-                          {label: "VehicleUser", value: "VehicleUser"},
-                          {label: "ApiAdmin", value: "ApiAdmin"},
-                          {label: "TwpAdmin", value: "TwpAdmin"},
-													{label: "TwpBursar", value: "TwpBursar"}, 
-													{label: "TwpInspector", value: "TwpInspector"},			
-												]} 
-												placeholder = "Profile Name"
-												theme = "default" 
-												style={{marginTop: 5}}
-												transitionEnter = {true} 
-                        value = {(() => {
-                          if (this.props.rowData !== null && this.props.rowData !== undefined) {
-                            let objectKey = "profile_name";
-                            let defaultValue = this.props.rowData[objectKey];
-                            if (defaultValue !== null && defaultValue !== "" && defaultValue !== undefined) {
-                              return {label: defaultValue, value: defaultValue}
-                            } else {
-                              return;
-                            }
-                          }
-                        })()}
-												onValueChange = {(value) => {
-                          this.props.updateRowData(value.value, "profile_name");
-													dispatch(change('township-users-form', 'profile_name', value.value)); 
-												}}/>
-										</div>
-									</div>
-								</div>
-
-								<div className="col s12 admin-form-input">
-									<div className="form-group">
-										<div clasName="input-field col s12">
-											<SimpleSelect 
-												options = {[{label: "ACTIVE", value: "ACTIVE"}, {label: "INACTIVE", value: "INACTIVE"}]} 
-												placeholder = "Status"
-												theme = "default" 
-												style={{marginTop: 5}}
-												transitionEnter = {true} 
-                        value = {(() => {
-                          //console.log(this.props.rowData)
-                          if (this.props.rowData !== null && this.props.rowData !== undefined) {
-                            let objectKey = "status";
-                            let defaultValue = this.props.rowData[objectKey];
-                            if (defaultValue !== null && defaultValue !== "" && defaultValue !== undefined) {
-                              return {label: defaultValue, value: defaultValue}
-                            } else {
-                              return;
-                            }
-                          }
-                        })()}
-												onValueChange = {(value) => {
-                          //console.log(this.props.rowData)
-                          this.props.updateRowData(value.value, "status");
-													dispatch(change('township-users-form', 'status', value.value)); 
-												}}
-                        />
-										</div>
-									</div>
-								</div>
-                  {this.tempInputsEdit(this.props.initialValues)}
+                <AdminSelectize 
+                  staticOptions={true}
+									options={[
+                    {label: "VehicleUser", value: "VehicleUser"},
+                    {label: "ApiAdmin", value: "ApiAdmin"},
+                    {label: "TwpAdmin", value: "TwpAdmin"},
+                    {label: "TwpBursar", value: "TwpBursar"}, 
+                    {label: "TwpInspector", value: "TwpInspector"},			
+                  ]}
+									objectKey={'profile_name'} 
+                  fieldName={'Profile Name'}
+									formName={'township-users-form'} 
+									fieldData={this.props.fields}
+									dispatch={dispatch}
+								/>
+                <AdminSelectize 
+                  staticOptions={true}
+									options = {[{label: "ACTIVE", value: "ACTIVE"}, {label: "INACTIVE", value: "INACTIVE"}]} 
+									objectKey={'status'} 
+                  fieldName={'Status'}
+									formName={'township-users-form'} 
+									fieldData={this.props.fields}
+									dispatch={dispatch}
+								/>
               </div>
             </div>
             
@@ -304,6 +223,5 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   form: 'township-users-form',
-  fields,
-  overwriteOnInitialValuesChange : false
+  fields
 })(TownshipPanelUsersForm));

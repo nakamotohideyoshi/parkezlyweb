@@ -49,9 +49,11 @@ export function createTownshipUsers(data) {
     .then(function(response) {
       dispatch(apiTownship.receiveData(response.data, types.TOWNSHIP_USERS_POST_SUCCESS));
       dispatch(reset('township-panel-users-edit'));
+      console.log(response);
     })
     .catch(function(response){
       dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_USERS_POST_ERROR));
+      console.log(response);
     })
   }
 }
@@ -525,7 +527,6 @@ export function createParkingRules(data) {
     })
   }
 }
-
 
 
 export function resetLoading() {

@@ -10,7 +10,8 @@ import {
   fetchTownshipUsers, 
   editTownshipUsers, 
   createTownshipUsers,  
-  resetLoading} from '../../../../actions/actions-township-panel.jsx'
+  resetLoading
+} from '../../../../actions/actions-township-panel.jsx'
 
 import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import Griddle from 'griddle-react'
@@ -73,7 +74,6 @@ class TownshipPanelUsers extends React.Component {
     this.state = {
       showEditDuplicateButtons: false,
       parkingLocationCode: null,
-      showEditModal: false,
       rowData: null,
       selectizeOptions: {}
     }
@@ -94,14 +94,13 @@ class TownshipPanelUsers extends React.Component {
     this.props.resetLoading();
     this.props.fetchTownshipUsers(this.props.townshipCode);
     this.setState({showEditDuplicateButtons: false});
-    $('#modal-hearing-place-create').closeModal();
     $('#modal-success').openModal();
   }
 
   updateRowData(newData, objectKey) {
-    //console.log(_.merge(this.state.rowData, {[objectKey]: newData}))
+    //console.log(_.assign(this.state.rowData, {[objectKey]: newData}))
     this.setState({
-      rowData: _.merge(this.state.rowData, {[objectKey]: newData})
+      rowData: _.assign(this.state.rowData, {[objectKey]: newData})
     });
   }
 
@@ -111,21 +110,16 @@ class TownshipPanelUsers extends React.Component {
         modalName="modal-township-users-create" 
         modalText="Create a User" 
         submitType="CREATE"
-        initialValues={null}
         editMode={false}
-        initialValues={this.state.rowData} 
-        rowData={this.state.rowData}
         handleSuccess={this.handleSuccess}
         townshipCode={this.props.townshipCode}
-        updateRowData={this.updateRowData}
       />
     );
   }
 
   renderEditModal(recordId, rowData) {
-    console.log(rowData)
     window.scrollTo(0, document.body.scrollHeight);
-    this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true, parkingLocationCode: recordId})
+    this.setState({showEditDuplicateButtons: true, rowData: rowData, parkingLocationCode: recordId})
   }
 
   renderUserTable() {
@@ -172,7 +166,7 @@ class TownshipPanelUsers extends React.Component {
             onClick={() => {
               window.scrollTo(0, 0);
               $('#modal-township-users-create').openModal()
-              this.setState({rowData: {}, showEditDuplicateButtons: false})
+              this.setState({showEditDuplicateButtons: false})
             }}
             style={{margin: 10}}>Add New User</a>
         </div>
@@ -223,7 +217,6 @@ class TownshipPanelUsers extends React.Component {
         style={{marginTop: 20}}
         onClick={() => {
 					window.scrollTo(0, 0);
-          this.setState({showEditModal: true})
           $('#modal-township-users-edit').openModal(); 
         }}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp blue-btn-admin">
@@ -234,7 +227,6 @@ class TownshipPanelUsers extends React.Component {
         <a
         onClick={() => {
 					window.scrollTo(0, 0);
-          this.setState({showEditModal: true})
           $('#modal-township-users-duplicate').openModal(); 
         }}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp blue-btn-admin">
@@ -315,34 +307,26 @@ class TownshipPanelUsers extends React.Component {
         { this.props.townshipUsersFetched.isLoading ? 
           <div> </div> : this.renderCreateModal()}
 
-        { 
-          !this.state.showEditModal ?
-          <div></div> : 
-          <div>
-            <TownshipPanelUsersForm
-              modalName="modal-township-users-edit" 
-              modalText="Edit a User" 
-              submitType="EDIT"
-              initialValues={this.state.rowData} 
-              rowData={this.state.rowData}
-              handleSuccess={this.handleSuccess}
-              townshipCode={this.props.townshipCode}
-              updateRowData={this.updateRowData}
-              />
-            <TownshipPanelUsersForm 
-              initialValues={this.state.rowData} 
-              handleSuccess={this.handleSuccess}
-              modalName="modal-township-users-duplicate" 
-              modalText="Duplicate a User" 
-              submitType="DUPLICATE"
-              initialValues={this.state.rowData} 
-              rowData={this.state.rowData}
-              handleSuccess={this.handleSuccess}
-              townshipCode={this.props.townshipCode}
-              updateRowData={this.updateRowData}
-              />
-          </div>
-        }
+        <div>
+          <TownshipPanelUsersForm
+            modalName="modal-township-users-edit" 
+            modalText="Edit a User" 
+            submitType="EDIT"
+            initialValues={this.state.rowData} 
+            handleSuccess={this.handleSuccess}
+            townshipCode={this.props.townshipCode}
+            updateRowData={this.updateRowData}
+          />
+          <TownshipPanelUsersForm 
+            modalName="modal-township-users-duplicate" 
+            modalText="Duplicate a User" 
+            submitType="DUPLICATE"
+            initialValues={this.state.rowData} 
+            handleSuccess={this.handleSuccess}
+            townshipCode={this.props.townshipCode}
+            updateRowData={this.updateRowData}
+          />
+        </div>
 
         <div id="modal-success" className="modal">
           <div className="modal-content">

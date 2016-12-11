@@ -4,12 +4,16 @@
   "description": "Park Ezly Web Application",
   "scripts": {
     "dev": "NODE_ENV=development && babel-node server.js",
-    "build": "rimraf dist && NODE_ENV=production webpack --config ./webpack.production.config.js --progress --profile --colors",
+    "build": "npm install && rimraf dist && NODE_ENV=production webpack --config ./webpack.production.config.js --progress --profile --colors && forever restartall",
+    "build-fast": "npm install && rimraf dist && NODE_ENV=production webpack --config ./webpack.production-fast.config.js --progress --profile --colors && forever restartall",
+    "build-old": "rimraf dist && NODE_ENV=production webpack --config ./webpack.production.config.js --progress --profile --colors",
     "start": "NODE_ENV=production PORT=80 babel-node server.js",
     "lint": "eslint src; exit 0",
     "clean": "rimraf dist",
     "dev-win": "SET NODE_ENV=development&&babel-node server.js",
-    "build-win": "rimraf dist && SET NODE_ENV=production&& webpack --config ./webpack.production.config.js --progress --profile --colors",
+    "build-win": "npm install && rimraf dist && SET NODE_ENV=production && webpack --config ./webpack.production.config.js --progress --profile --colors && forever restartall",
+    "build-win-fast": "npm install && rimraf dist && SET NODE_ENV=production && webpack --config ./webpack.production-fast.config.js --progress --profile --colors && forever restartall",
+    "build-win-old": "rimraf dist && SET NODE_ENV=production&& webpack --config ./webpack.production.config.js --progress --profile --colors",
     "start-win": "SET NODE_ENV=production&&SET PORT=80&&babel-node server.js"
   },
   "repository": {

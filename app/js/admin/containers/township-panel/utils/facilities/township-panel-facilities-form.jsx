@@ -68,11 +68,10 @@ class TownshipPanelFacilitiesForm extends React.Component {
   }
 
   handleSubmit(data) {
-    
+    console.log(data);
     $('#' + this.props.modalName).closeModal();
     $('#modal-success').openModal();
     this.props.dispatch(change('facilities-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
-    console.log(data)
     switch(this.props.submitType) {
       case "CREATE":
         this.props.createTownshipLocations(data);
@@ -232,7 +231,9 @@ class TownshipPanelFacilitiesForm extends React.Component {
                         transitionEnter = {true} 
                         onValueChange = {(value) => {
                           dispatch(change('facilities-form', 'country', value.value)); 
-                        }}/>
+                        }}
+                        value={{label: this.props.fields['country'].value, value: this.props.fields['country'].value}}
+                        />
                     </div>
                   </div>
                 </div>
