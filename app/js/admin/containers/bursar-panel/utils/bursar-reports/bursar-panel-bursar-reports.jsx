@@ -6,9 +6,9 @@ import Griddle from 'griddle-react'
 import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import { ajaxGet, ajaxDelete } from '../../../../common/components/ajax-selectize.js';
 import { Column, Table, AutoSizer } from 'react-virtualized';
-import moment from 'moment'
-import momentLocalizer from 'react-widgets/lib/localizers/moment'
-
+import moment from 'moment';
+import momentLocalizer from 'react-widgets/lib/localizers/moment';
+import _ from 'lodash';
 const DateTimePicker = require('react-widgets').DateTimePicker
 const currentDate = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
 
@@ -47,7 +47,7 @@ class BursarPanelBursarReports extends Component {
 			},
 			{
 				label: `Wallet Payments`, 
-				value: `pay_for_wallet?order=date_time DESC&filter=((pay_method=CASH)OR(pay_method=CHEQUE))`
+				value: `pay_for_wallet?order=date_time DESC&filter=((pay_method=CASH)OR(pay_method=CHEQUE))&related=township_users_by_user_id`
 			},
 		]
   }
@@ -57,7 +57,13 @@ class BursarPanelBursarReports extends Component {
   }
 
   ajaxGet(activeTableData) {
-    this.setState({activeTableData: activeTableData.data.resource, tableLoading: false});
+    if(this.state.paymentType === "Wallet Payments") {
+      let filteredTableData = _.filter(activeTableData.data.resource, {township_users_by_user_id: {township_code: 'FDV'}})
+      this.setState({activeTableData: filteredTableData, tableLoading: false});
+      console.log(this.state.activeTableData)
+    } else {
+      this.setState({activeTableData: activeTableData.data.resource, tableLoading: false});
+    }
   }
 
   renderTicketPayments() {
@@ -430,7 +436,6 @@ class BursarPanelBursarReports extends Component {
                       break;
                   }
                   let filterQuery = `${this.state.paymentOption}AND(${dateType}>=${this.state.startDate})AND(${dateType}<=${this.state.endDate})`;
-                  console.log(filterQuery);
                   ajaxGet(filterQuery, this.ajaxGet);
                 }}>
                   <i className="material-icons left">access_time</i>Go

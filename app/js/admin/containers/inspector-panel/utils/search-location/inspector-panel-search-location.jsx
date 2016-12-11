@@ -166,13 +166,13 @@ export default class InspectorPanelSearchLocation extends React.Component {
 					<div className="row marginless-row animated fadeInUp center-align" style={{ marginTop: 20 }}>
 						<h4 style={{ color: "#FFF", fontWeight: "bold", marginTop: 10, marginBottom: 20 }}> Search Location </h4>
 						<div className="filter-container col s12 center-align">
-							<div className="search-wrapper card col s6 offset-s3" style={{ marginBottom: 10, marginTop: 10 }}>
+							<div className="search-wrapper card col s4" style={{ marginBottom: 10, marginTop: 16, marginLeft: 20, minWidth: 300}}>
 								<div className="row marginless-row valign-wrapper">
 									<input
 										type="text"
 										name="search"
 										placeholder="Search..."
-										className="search search-input col s11"
+										className="search search-input col s12"
 										value={this.state.searchInput}
 										onChange={(event) => {
 											this.setState({ searchInput: event.target.value });
@@ -187,20 +187,18 @@ export default class InspectorPanelSearchLocation extends React.Component {
 								</div>
 							</div>
 							{this.state.locationData !== null ?
-								<div className="col s6 offset-s3">
-									<label style={{ color: "white" }}>Select Location</label>
-									<div clasName="input-field search-wrapper card">
+								<div className="col s3 offset-s4 right" style={{minWidth: 300}}>
+									<label style={{ color: "white" }}>Or Select Location</label>
 										<SimpleSelect
 											options={locationData}
 											placeholder={"Select Location"}
 											theme="default"
-											style={{ marginTop: 5 }}
+											style={{ marginTop: 0 }}
 											onValueChange={(data) => {
 												this.setState({listLoading: true});
 												this.ajaxSelect(data.value);
 											}}
 											/>
-									</div>
 								</div>
 								:
 								<div className="col s6 offset-s3">

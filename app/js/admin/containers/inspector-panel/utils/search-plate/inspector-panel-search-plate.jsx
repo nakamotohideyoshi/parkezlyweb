@@ -145,7 +145,9 @@ export default class InspectorPanelSearchPlate extends React.Component {
             {parkingData.plate_no}
           </div>
           <div className={styles.index}>
-            <strong>ID:</strong> {parkingData.id}, <strong>Ticket Status:</strong> {parkingData.ticket_status}
+            <strong>ID:</strong> {parkingData.id},
+						<strong> Ticket Status:</strong> {parkingData.ticket_status},
+						<strong> Location:</strong> {parkingData.location_code}
           </div>
         </div>
       </div>

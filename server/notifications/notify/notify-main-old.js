@@ -177,79 +177,79 @@ function newPermitNotify(app) {
 function meterExpiredNotify() {
 
     function getParkedCars() {
-        return AXIOS_INSTANCE.get('parked_cars?filter=(notified_status=NO)AND(township_code!="")&related=township_users_by_township_code')
+        return AXIOS_INSTANCE.get('parked_cars?filter=(notified_status=NO)AND(user_id_ref!=0)&related=*')
     }
 
-    AXIOS_INSTANCE.get('parked_cars?filter=(notified_status=NO)AND(user_id_ref!=0)&related=*')
-    .then((parkedCars) => {
+      AXIOS_INSTANCE.get('parked_cars?filter=(notified_status=NO)AND(user_id_ref!=0)&related=*')
+      .then((parkedCars) => {
 
-      let emailHtml;
-      let emailAddrList; 
-      let emailTemplate = {
-          "html" : emailHtml,
-          "text" : "Text",
-          "subject" : "ParkEZly Notification: Meter Expired Users",
-          "from" : {
-              "name" : "ParkEZly Notification Bot",
-              "email" : "blsbox17@gmail.com"
-          },
-          "to" : emailAddrList
-      };
-
-      emailHtml = "<h1>ParkEzly Meter Expired Users</h1>";
-      emailAddrList = [];
-      let filteredEmails = emailMap
-      
-      
-      let emailMap = parkedCars.data.resource.map((parkedCarsData) => {
-      let currentTime = moment().utc().diff(moment(parkedCarsData.expiry_time), 'hours');
-
-      if(currentTime < -1) {
-        iconUrl = require('../../../../../../images/car_green@3x.png')
-      } else if (currentTime > 0) {
-        iconUrl = require('../../../../../../images/car_red@3x.png')
-      } else if (currentTime >= -1 && currentTime <= 0) {
-        iconUrl = require('../../../../../../images/car_yellow@3x.png')
-      } else {
-        renderMarker = false;
-      }
-
-      if (parkedCarsData.township_users_by_user_id !== null) {
-        let userProfileFilter = _.filter(userProfileList.data.resource, {'user_id': user.user_id});
-        let userProfile = userProfileFilter[0];
-
-        if (userProfile !== null & userProfile !== undefined) {
-
-            emailHtml += `<p><h3>Plate: ${parkedCar.plate}</h3></p>
-            <p><strong>Database Id:</strong> ${parkedCar.id} </p>
-            <p><strong>Township:</strong> ${parkedCar.township_code} </p>
-            <p><strong>Expired Time:</strong> ${parkedCar.expiry_time} </p>
-            <hr>`;
-            emailTemplate.html = emailHtml;
-
-            AXIOS_INSTANCE.put("parked_cars?ids=" + parkedCar.id, {"notified": "YES"})
-            return {"name": "ParkEZly Admin", "email": userProfile.email}
-        }
-
-        return {
-          id: parkedCarsData.id, 
-          user_id: parkedCarsData.user_id, 
-          plate: parkedCarsData.plate_no, 
-          expiry_time: parkedCarsData.expiry_time, 
-          township_code: parkedCarsData.township_code,
-          township_user: parkedCarsData.township_users_by_user_id,
-          township_profile: parkedCarsData.user_profile_by_user_id_ref
+        let emailHtml;
+        let emailAddrList; 
+        let emailTemplate = {
+            "html" : emailHtml,
+            "text" : "Text",
+            "subject" : "ParkEZly Notification: Meter Expired Users",
+            "from" : {
+                "name" : "ParkEZly Notification Bot",
+                "email" : "blsbox17@gmail.com"
+            },
+            "to" : emailAddrList
         };
 
-      }
+        emailHtml = "<h1>ParkEzly Meter Expired Users</h1>";
+        emailAddrList = [];
+        let filteredEmails = emailMap
+        
+        
+        let emailMap = parkedCars.data.resource.map((parkedCarsData) => {
+            let currentTime = moment().utc().diff(moment(parkedCarsData.expiry_time), 'hours');
 
-      emailTemplate.to = filteredEmails;
-      if (emailTemplate.html !== undefined && emailTemplate.html !== null && emailAddrList !== []) {
-          sendpulse.smtpSendMail(emailLogger, emailTemplate);  
-      }
+            if(currentTime < -1) {
+              iconUrl = require('../../../../../../images/car_green@3x.png')
+            } else if (currentTime > 0) {
+              iconUrl = require('../../../../../../images/car_red@3x.png')
+            } else if (currentTime >= -1 && currentTime <= 0) {
+              iconUrl = require('../../../../../../images/car_yellow@3x.png')
+            } else {
+              renderMarker = false;
+            }
 
+            if (parkedCarsData.township_users_by_user_id !== null) {
+              let userProfileFilter = _.filter(userProfileList.data.resource, {'user_id': user.user_id});
+              let userProfile = userProfileFilter[0];
+
+              if (userProfile !== null & userProfile !== undefined) {
+
+                  emailHtml += `<p><h3>Plate: ${parkedCar.plate}</h3></p>
+                  <p><strong>Database Id:</strong> ${parkedCar.id} </p>
+                  <p><strong>Township:</strong> ${parkedCar.township_code} </p>
+                  <p><strong>Expired Time:</strong> ${parkedCar.expiry_time} </p>
+                  <hr>`;
+                  emailTemplate.html = emailHtml;
+
+                  AXIOS_INSTANCE.put("parked_cars?ids=" + parkedCar.id, {"notified": "YES"})
+                  return {"name": "ParkEZly Admin", "email": userProfile.email}
+              }
+
+              return {
+                id: parkedCarsData.id, 
+                user_id: parkedCarsData.user_id, 
+                plate: parkedCarsData.plate_no, 
+                expiry_time: parkedCarsData.expiry_time, 
+                township_code: parkedCarsData.township_code,
+                township_user: parkedCarsData.township_users_by_user_id,
+                township_profile: parkedCarsData.user_profile_by_user_id_ref
+              };
+
+            }
+
+            emailTemplate.to = filteredEmails;
+            if (emailTemplate.html !== undefined && emailTemplate.html !== null && emailAddrList !== []) {
+                sendpulse.smtpSendMail(emailLogger, emailTemplate);  
+            }
+
+        });
     });
-  });
 }
 
 

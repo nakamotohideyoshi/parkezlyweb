@@ -143,6 +143,14 @@ a {
       background: #DFDFDF !important;
     }
   }
+	&.blue-btn-admin {
+    background: $blue !important;
+    color: $white; 
+
+    &.disabled {
+      background: #DFDFDF !important;
+    }
+  }
 
   &.red-btn {
     background: $red !important;

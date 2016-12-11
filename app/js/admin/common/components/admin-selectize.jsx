@@ -5,32 +5,37 @@ import { reduxForm, change } from 'redux-form'
 export default class AdminSelectize extends React.Component {
   constructor(props) {
     super(props);
-
     this.renderSelectize = this.renderSelectize.bind(this);
+    this.renderSelectizePreset = this.renderSelectizePreset.bind(this);
   }
 
   renderSelectize(){
-    const {dispatch} = this.props
-    let defaultValue;
+    const {dispatch} = this.props;
+    let fieldData = this.props.fieldData[this.props.objectKey].value;
+    let fieldValue;
 
-    if (this.props.defaultData !== null && this.props.defaultData !== undefined) {
-      defaultValue = this.props.defaultData[this.props.fieldName];
+    if (fieldData !== "" && fieldData !== null && fieldData !== undefined) {
+      fieldValue = {label: fieldData, value: fieldData};
+    } else {
+      fieldValue = null;
     }
 
     if(this.props.options[this.props.objectKey] !== undefined) {
       return (
-        <div className="col s6 admin-form-input">
+        <div className="col s12 admin-form-input">
           <div className="form-group">
-            <label>{this.props.fieldName}</label>
             <div clasName="input-field col s12">
               <SimpleSelect 
               options = {this.props.options[this.props.objectKey]} 
               placeholder = {this.props.fieldName}
-              theme = "material" 
+              theme = "default" 
               style={{marginTop: 5}}
-              defaultValue = {{label: defaultValue, value: defaultValue}}
+              value = {fieldValue}
               onValueChange = {(value) => {
-                dispatch(change(this.props.formName, this.props.fieldName, value.value)); 
+                dispatch(change(this.props.formName, this.props.objectKey, value.value)); 
+                if(this.props.dispatchFunction) {
+                  this.props.dispatchFunction(value);
+                }
                 if(this.props.onChange !== null && this.props.onChange !== undefined) {
                   this.props.onChange(value.value);
                 }
@@ -41,15 +46,14 @@ export default class AdminSelectize extends React.Component {
       );
     } else {
       return (
-        <div className="col s6 admin-form-input">
+        <div className="col s12 admin-form-input">
           <div className="form-group">
-            <label>{this.props.objectKey}</label>
             <div clasName="input-field col s12">
               <SimpleSelect 
               options = {this.props.options} 
-              defaultValue = {{label: defaultValue, value: defaultValue}}
+              value = {fieldValue}
               placeholder = "Select Scheme Type" 
-              theme = "material" 
+              theme = "default" 
               style={{marginTop: 5}}
               onValueChange = {(value) => {
                 if(this.props.onChange !== null && this.props.onChange !== undefined) {
@@ -63,19 +67,49 @@ export default class AdminSelectize extends React.Component {
     }
   }
 
-  render() {
-    if (this.props.options[this.props.objectKey] === undefined) {
-      //console.log(this.props.options[this.props.objectKey]);
+  renderSelectizePreset() {
+    const {dispatch} = this.props
+    let fieldData = this.props.fieldData[this.props.objectKey].value;
+    let fieldValue;
+
+    if (fieldData !== "" && fieldData !== null && fieldData !== undefined) {
+      fieldValue = {label: fieldData, value: fieldData};
     } else {
-      //console.log(this.props.options[this.props.objectKey]);
+      fieldValue = null;
     }
-    
+
+    return(
+      <div className="col s12 admin-form-input">
+        <div className="form-group">
+          <div clasName="input-field col s12">
+            <SimpleSelect 
+            options = {this.props.options} 
+            placeholder = {this.props.fieldName}
+            theme = "default" 
+            style={{marginTop: 5}}
+            value = {fieldValue}
+            onValueChange = {(value) => {
+              dispatch(change(this.props.formName, this.props.objectKey, value.value)); 
+              if(this.props.dispatchFunction) {
+                this.props.dispatchFunction(value);
+              }
+              if(this.props.onChange !== null && this.props.onChange !== undefined) {
+                this.props.onChange(value.value);
+              }
+            }}></SimpleSelect>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  render() {
     return(
       <div>
-        {this.renderSelectize()}
+        {this.props.staticOptions ? this.renderSelectizePreset() : this.renderSelectize()}
       </div>
     );
   }
 }
 
-
+// <label>{this.props.fieldName}</label>

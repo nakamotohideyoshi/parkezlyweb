@@ -166,7 +166,7 @@ export default class InspectorPanelSearchCategory extends React.Component {
 					<div className="row marginless-row animated fadeInUp center-align" style={{ marginTop: 20 }}>
 						<h4 style={{ color: "#FFF", fontWeight: "bold", marginTop: 10, marginBottom: 20 }}> Search Category </h4>
 						<div className="filter-container col s12 center-align">
-							<div className="search-wrapper card col s6 offset-s3" style={{ marginBottom: 10, marginTop: 10 }}>
+							<div className="search-wrapper card col s4" style={{ marginBottom: 10, marginTop: 16, marginLeft: 20, minWidth: 300}}>
 								<div className="row marginless-row valign-wrapper">
 									<input
 										type="text"
@@ -187,11 +187,16 @@ export default class InspectorPanelSearchCategory extends React.Component {
 								</div>
 							</div>
 							{this.state.locationData !== null ?
-								<div className="col s6 offset-s3">
+								<div className="col s3 offset-s4 right" style={{minWidth: 300}}>
 									<label style={{ color: "white" }}>Select Category</label>
 									<div clasName="input-field search-wrapper card">
 										<SimpleSelect
-											options={locationData}
+											options={[
+                        {label: 'Expired', value: "expired"},
+                        {label: 'Expiring', value: "expiring"},
+                        {label: 'Valid', value: "valid"},
+                        {label: 'Non-Validated', value: "non-validated"},
+                      ]}
 											placeholder={"Select Category"}
 											theme="default"
 											style={{ marginTop: 5 }}

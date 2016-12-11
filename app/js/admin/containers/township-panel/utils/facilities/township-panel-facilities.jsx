@@ -23,7 +23,6 @@ import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import Griddle from 'griddle-react'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 import { Link } from 'react-router';
-import TownshipPanelFacilitiesEdit from './township-panel-facilities-edit.jsx';
 import TownshipPanelFacilitiesForm from './township-panel-facilities-form.jsx';
 import {ajaxSelectizeGet, ajaxDelete} from '../../../../common/components/ajax-selectize.js'
 
@@ -151,8 +150,7 @@ class TownshipPanelFacilities extends React.Component {
 
     return(
       <TownshipPanelFacilitiesForm
-        initialValues={this.state.rowData} 
-        handleSuccess={this.handleSuccess}
+
         modalName="modal-township-facilities-create" 
         modalText="Create a Facility" 
         submitType="CREATE"
@@ -336,19 +334,14 @@ class TownshipPanelFacilities extends React.Component {
           <div></div> : 
           <div>
             <TownshipPanelFacilitiesForm
-              initialValues={this.state.rowData} 
-              handleSuccess={this.handleSuccess}
               modalName="modal-township-facilities-edit" 
               modalText="Edit a Facility" 
               submitType="EDIT"
               initialValues={this.state.rowData} 
-              rowData={this.state.rowData}
               handleSuccess={this.handleSuccess}
               townshipCode={this.props.townshipCode}
             />
             <TownshipPanelFacilitiesForm
-              initialValues={this.state.rowData} 
-              handleSuccess={this.handleSuccess}
               modalName="modal-township-facilities-duplicate" 
               modalText="Duplicate a Facility" 
               submitType="DUPLICATE"

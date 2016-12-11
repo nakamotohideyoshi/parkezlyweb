@@ -8,7 +8,7 @@ import {API_CONFIG} from '../config/api.js';
 const AXIOS_INSTANCE = axios.create(API_CONFIG);
 
 export function fetchTownshipUsers(townshipCode) {
-  const URL = 'township_users?filter=township_code' + '%3D%22' + townshipCode + '%22';
+  const URL = `township_users?filter=(township_code=${townshipCode})&include_schema=true`;
 
   return function(dispatch) {
     dispatch(apiTownship.requestData(types.TOWNSHIP_USERS_GET_REQ));
@@ -49,9 +49,11 @@ export function createTownshipUsers(data) {
     .then(function(response) {
       dispatch(apiTownship.receiveData(response.data, types.TOWNSHIP_USERS_POST_SUCCESS));
       dispatch(reset('township-panel-users-edit'));
+      console.log(response);
     })
     .catch(function(response){
       dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_USERS_POST_ERROR));
+      console.log(response);
     })
   }
 }
@@ -525,7 +527,6 @@ export function createParkingRules(data) {
     })
   }
 }
-
 
 
 export function resetLoading() {

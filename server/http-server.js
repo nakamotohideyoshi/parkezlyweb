@@ -6,6 +6,7 @@ import webpackConfig from '../webpack.config';
 import express from 'express';
 import path from 'path';
 import http from 'http';
+import fs from 'fs-extra';
 
 // Production bool
 const isProduction = process.env.NODE_ENV === 'production';
@@ -15,6 +16,7 @@ const port = isProduction ? (process.env.PORT || 80) : 3000;
 export default function connect(app) {
   // Webpack dev server
   if (isDeveloping) {
+    fs.copySync(path.resolve(__dirname,'../app/index.html'), path.resolve(__dirname,'../dist/index.html'));
     const WEBPACK_PORT = 3001;
     const compiler = webpack(webpackConfig);
 

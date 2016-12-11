@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Router, Route, Link, hashHistory, browserHistory } from "react-router";
-
+import { Router, Route, Link, hashHistory, browserHistory, useRouterHistory } from "react-router";
+import { createHistory } from 'history'
 import ClientIndex from './client/index.js';
 import AdminIndex from './admin/index.js';
 
@@ -15,8 +15,12 @@ require('script-loader!../js/admin/common/lib/bootstrap-material-datetimepicker/
 require('script-loader!materialize-css/dist/js/materialize.js');
 require('file?name=[name].[ext]!../index.html');
 
+const history = useRouterHistory(createHistory)({
+  basename: '/'
+})
+
 ReactDOM.render((
-    <Router history={browserHistory}>
+    <Router history={history}>
       {AdminIndex()}
       {ClientIndex()}
     </Router>

@@ -4,16 +4,14 @@ import {bindActionCreators} from 'redux';
 
 import Body from "../../../../../common/components/body/body.jsx";
 import SearchInput, {createFilter} from 'react-search-input';
-
-import TownshipPanelUsersEdit from './township-panel-users-edit.jsx';
-import TownshipPanelUsersCreate from './township-panel-users-create.jsx';
 import Spinner from '../../../../common/components/spinner.jsx';
 
 import {
   fetchTownshipUsers, 
   editTownshipUsers, 
   createTownshipUsers,  
-  resetLoading} from '../../../../actions/actions-township-panel.jsx'
+  resetLoading
+} from '../../../../actions/actions-township-panel.jsx'
 
 import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import Griddle from 'griddle-react'
@@ -23,6 +21,7 @@ import { Link } from 'react-router';
 
 import TownshipPanelUsersForm from './township-panel-users-form.jsx'
 import {ajaxSelectizeGet, ajaxDelete} from '../../../../common/components/ajax-selectize.js'
+import _ from 'lodash';
 
 const KEYS_TO_FILTERS = [
   'id',
@@ -54,8 +53,9 @@ class customColumnComponent extends React.Component {
   render() {
     return (
       <div onClick={() => this.props.metadata.customComponentMetadata.renderEditModal(
-        this.props.rowData.id, 
-        this.props.rowData)}>
+          this.props.rowData.id, 
+          this.props.rowData
+        )}>
         {this.props.data}
       </div>
     );
@@ -74,13 +74,13 @@ class TownshipPanelUsers extends React.Component {
     this.state = {
       showEditDuplicateButtons: false,
       parkingLocationCode: null,
-      showEditModal: false,
       rowData: null,
       selectizeOptions: {}
     }
 
     this.renderUserTable = this.renderUserTable.bind(this);
     this.renderUserList = this.renderUserList.bind(this);
+    this.updateRowData = this.updateRowData.bind(this);
 
     this.renderEditModal = this.renderEditModal.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
@@ -93,9 +93,15 @@ class TownshipPanelUsers extends React.Component {
   handleSuccess(){
     this.props.resetLoading();
     this.props.fetchTownshipUsers(this.props.townshipCode);
-    this.setState({rowData: {}, showEditDuplicateButtons: false});
-    $('#modal-hearing-place-create').closeModal();
+    this.setState({showEditDuplicateButtons: false});
     $('#modal-success').openModal();
+  }
+
+  updateRowData(newData, objectKey) {
+    //console.log(_.assign(this.state.rowData, {[objectKey]: newData}))
+    this.setState({
+      rowData: _.assign(this.state.rowData, {[objectKey]: newData})
+    });
   }
 
   renderCreateModal() {
@@ -104,7 +110,6 @@ class TownshipPanelUsers extends React.Component {
         modalName="modal-township-users-create" 
         modalText="Create a User" 
         submitType="CREATE"
-        initialValues={null}
         editMode={false}
         handleSuccess={this.handleSuccess}
         townshipCode={this.props.townshipCode}
@@ -114,12 +119,11 @@ class TownshipPanelUsers extends React.Component {
 
   renderEditModal(recordId, rowData) {
     window.scrollTo(0, document.body.scrollHeight);
-    this.setState({showEditDuplicateButtons: true, rowData: rowData, showEditModal: true, parkingLocationCode: recordId})
+    this.setState({showEditDuplicateButtons: true, rowData: rowData, parkingLocationCode: recordId})
   }
 
   renderUserTable() {
     let parkingData = this.props.townshipUsersFetched.data.resource;
-
     var renderEditModal = this.renderEditModal;
     var metaDataFunction = () =>  {
       return fields.map((data) => {
@@ -145,7 +149,7 @@ class TownshipPanelUsers extends React.Component {
           results={parkingData}
           showFilter={true}
           showSettings={true}
-          settingsToggleClassName='btn btn-default'
+          settingsToggleClassName='btn'
           useCustomPagerComponent={true}
           customPagerComponent={ BootstrapPager }
           useCustomFilterComponent={true} customFilterComponent={customFilterComponent}
@@ -158,8 +162,12 @@ class TownshipPanelUsers extends React.Component {
         <div className="center-align">
 
           <a
-            className="modal-trigger waves-effect waves-light btn valign" 
-            onClick={() => $('#modal-township-users-create').openModal()}
+            className="modal-trigger waves-effect waves-light btn valign blue-btn-admin"
+            onClick={() => {
+              window.scrollTo(0, 0);
+              $('#modal-township-users-create').openModal()
+              this.setState({showEditDuplicateButtons: false})
+            }}
             style={{margin: 10}}>Add New User</a>
         </div>
       </div>
@@ -184,9 +192,8 @@ class TownshipPanelUsers extends React.Component {
         }
 
         <div className="card">
-            {this.props.townshipUsersFetched.isLoading ? <div className="center-align"> <Spinner /> </div> : this.renderUserTable()}
           <div className="divider" />
-
+					{this.props.townshipUsersFetched.isLoading ? <div className="center-align"> <Spinner /> </div> : this.renderUserTable()}
           {this.state.editMode ? 
           null
           :
@@ -209,27 +216,30 @@ class TownshipPanelUsers extends React.Component {
         <a
         style={{marginTop: 20}}
         onClick={() => {
-          this.setState({showEditModal: true})
+					window.scrollTo(0, 0);
           $('#modal-township-users-edit').openModal(); 
         }}
-        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp blue-btn-admin">
           <i className="material-icons valign">edit</i>
           <h4> Edit - User ID: {recordId} </h4>
         </a>
 
         <a
         onClick={() => {
-          this.setState({showEditModal: true})
+					window.scrollTo(0, 0);
           $('#modal-township-users-duplicate').openModal(); 
         }}
-        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp blue-btn-admin">
           <i className="material-icons valign">content_copy</i>
           <h4> Duplicate - User ID: {recordId} </h4>
         </a>
 
         <a
-        onClick={() => $('#modal-delete').openModal() }
-        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
+        onClick={() => {
+					window.scrollTo(0, 0);
+					$('#modal-delete').openModal() 
+				}}
+        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp blue-btn-admin">
           <i className="material-icons valign">delete</i>
           <h4> Delete - User ID: {recordId} </h4>
         </a>
@@ -297,34 +307,26 @@ class TownshipPanelUsers extends React.Component {
         { this.props.townshipUsersFetched.isLoading ? 
           <div> </div> : this.renderCreateModal()}
 
-        { 
-          !this.state.showEditModal ?
-          <div></div> : 
-          <div>
-            <TownshipPanelUsersForm
-              initialValues={this.state.rowData} 
-              handleSuccess={this.handleSuccess}
-              modalName="modal-township-users-edit" 
-              modalText="Edit a User" 
-              submitType="EDIT"
-              initialValues={this.state.rowData} 
-              rowData={this.state.rowData}
-              handleSuccess={this.handleSuccess}
-              townshipCode={this.props.townshipCode}
-              />
-            <TownshipPanelUsersForm 
-              initialValues={this.state.rowData} 
-              handleSuccess={this.handleSuccess}
-              modalName="modal-township-users-duplicate" 
-              modalText="Duplicate a User" 
-              submitType="DUPLICATE"
-              initialValues={this.state.rowData} 
-              rowData={this.state.rowData}
-              handleSuccess={this.handleSuccess}
-              townshipCode={this.props.townshipCode}
-              />
-          </div>
-        }
+        <div>
+          <TownshipPanelUsersForm
+            modalName="modal-township-users-edit" 
+            modalText="Edit a User" 
+            submitType="EDIT"
+            initialValues={this.state.rowData} 
+            handleSuccess={this.handleSuccess}
+            townshipCode={this.props.townshipCode}
+            updateRowData={this.updateRowData}
+          />
+          <TownshipPanelUsersForm 
+            modalName="modal-township-users-duplicate" 
+            modalText="Duplicate a User" 
+            submitType="DUPLICATE"
+            initialValues={this.state.rowData} 
+            handleSuccess={this.handleSuccess}
+            townshipCode={this.props.townshipCode}
+            updateRowData={this.updateRowData}
+          />
+        </div>
 
         <div id="modal-success" className="modal">
           <div className="modal-content">
@@ -357,6 +359,4 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TownshipPanelUsers);
-
-
 
