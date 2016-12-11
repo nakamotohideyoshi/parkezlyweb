@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {reset} from 'redux-form';
+import {reset, change} from 'redux-form';
 
 import * as types from '../constants/actionTypes.js';
 import * as apiTownship from '../api/api-township.js';
@@ -533,4 +533,10 @@ export function resetLoading() {
   return {
     type: types.RESET_LOADING
   };
+}
+
+export function resetReduxForm(fields) {
+  return (dispatch) => {
+    Object.keys(fields).forEach(field => dispatch(change('township-users-form', fields[field], null)));
+  }
 }
