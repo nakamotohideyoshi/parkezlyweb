@@ -149,9 +149,9 @@ class TownshipPermitsForm extends React.Component {
 
     return fields.map((data) => {
       return( 
-        <div key={data.id} className="col s6 admin-form-input">
+        <div key={data.id} className="col s12 admin-form-input">
           <div className="form-group">
-            <label>{data}</label>
+            <div></div>
             <input type="text" placeholder={data} {...this.props.fields[data]}/>
           </div>
         </div>
@@ -170,9 +170,19 @@ class TownshipPermitsForm extends React.Component {
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-          <div id={this.props.modalName} className="modal modal-fixed-footer">
+          <div id={this.props.modalName} className="modal modal-fixed-footer managed-parking-modal">
+            <nav>
+							<div className="nav-wrapper nav-admin">
+								<a className="brand-logo center">{this.props.modalText}</a>
+								<i 
+								className="material-icons right right-align clickable" 
+								style={{marginRight: 15, lineHeight: "55px"}}
+								onClick={() => {
+									$('#' + this.props.modalName).closeModal();
+								}}>close</i>
+							</div>
+						</nav>
             <div className="modal-content">
-
               <div className="row">
                 <div className="center-align">
                   <h4>{this.props.modalText}</h4>
@@ -181,8 +191,9 @@ class TownshipPermitsForm extends React.Component {
               </div>
 
               <div className="row"> 
-
                 <AdminSelectize 
+                  staticOptions={false}
+                  fieldData={this.props.fields}
                   options={this.state.selectizeOptions}
                   objectKey={'user_name'} 
                   formName={'township-permits-form'} 
@@ -191,6 +202,8 @@ class TownshipPermitsForm extends React.Component {
                   dispatch={dispatch} 
                 />
                 <AdminSelectize 
+                  staticOptions={false}
+                  fieldData={this.props.fields}
                   options={this.state.selectizeOptions}
                   objectKey={'user_id'} 
                   formName={'township-permits-form'} 
@@ -199,6 +212,8 @@ class TownshipPermitsForm extends React.Component {
                   dispatch={dispatch} 
                 />
                 <AdminSelectize 
+                  staticOptions={false}
+                  fieldData={this.props.fields}
                   options={this.state.selectizeOptions}
                   objectKey={'permit_name'} 
                   formName={'township-permits-form'} 

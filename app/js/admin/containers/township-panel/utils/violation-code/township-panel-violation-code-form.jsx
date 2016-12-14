@@ -59,8 +59,6 @@ class InspectorSearchTicketForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
     this.selectizeOptionsUpdate = this.selectizeOptionsUpdate.bind(this);
-
-    this.props.dispatch(change('violation-code-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
   }
 
   handleSubmit(data) {
@@ -93,6 +91,7 @@ class InspectorSearchTicketForm extends React.Component {
 
   componentWillMount() {
     this.props.dispatch(change('violation-code-form', 'township_code', this.props.townshipCode));
+     this.props.dispatch(change('violation-code-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
   }
 
   componentDidMount() {
@@ -156,9 +155,9 @@ class InspectorSearchTicketForm extends React.Component {
 
     return fields.map((data) => {
       return( 
-        <div className="col s6 admin-form-input">
+        <div className="col s12 admin-form-input">
           <div className="form-group">
-            <label>{data}</label>
+            <div></div>
             <input type="text" placeholder={data} {...this.props.fields[data]}/>
           </div>
         </div>
@@ -187,7 +186,18 @@ class InspectorSearchTicketForm extends React.Component {
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-          <div id={this.props.modalName} className="modal modal-fixed-footer">
+          <div id={this.props.modalName} className="modal modal-fixed-footer managed-parking-modal">
+            <nav>
+							<div className="nav-wrapper nav-admin">
+								<a className="brand-logo center">{this.props.modalText}</a>
+								<i 
+								className="material-icons right right-align clickable" 
+								style={{marginRight: 15, lineHeight: "55px"}}
+								onClick={() => {
+									$('#' + this.props.modalName).closeModal();
+								}}>close</i>
+							</div>
+						</nav>
             <div className="modal-content">
 
               <div className="row">
@@ -199,31 +209,17 @@ class InspectorSearchTicketForm extends React.Component {
 
               <div className="row">
 
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label htmlFor="date_time">date_time</label>
-                    <input id="date_time" className="date_time" type="text"/>
-                  </div>
-                </div>
+                <AdminSelectize 
+                  staticOptions={true}
+									options={statesList}
+									objectKey={'state'} 
+                  fieldName={'State'}
+									formName={'violation-code-form'} 
+									fieldData={this.props.fields}
+									dispatch={dispatch}
+								/>
+
                 {this.tempInputsEdit(this.props.initialValues)}
-
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label>State</label>
-                    <div clasName="input-field col s12">
-                      <SimpleSelect 
-                        options = {statesList} 
-                        placeholder = "State"
-                        theme = "material"
-                        style={{marginTop: 5}}
-                        transitionEnter = {true} 
-                        onValueChange = {(value) => {
-                          dispatch(change('violation-code-form', 'state', value.value)); 
-                        }}/>
-                    </div>
-                  </div>
-                </div>
-
               </div>
             </div>
             

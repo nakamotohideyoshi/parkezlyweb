@@ -273,7 +273,7 @@ class TownshipPanelPermitRequests extends React.Component {
 
           <a
             className="modal-trigger waves-effect waves-light btn valign" 
-            onClick={() => $('#modal-township-permit-requests-create').openModal()}
+            onClick={() => {$('#modal-township-permit-requests-create').openModal(); window.scrollTo(0, 0);}}
             style={{margin: 10}}>Add New Permit Request</a>
 
         </div>

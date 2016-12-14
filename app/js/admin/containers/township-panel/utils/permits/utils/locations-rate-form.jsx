@@ -179,9 +179,9 @@ class LocationsRateForm extends React.Component {
 
     return fields.map((data) => {
       return( 
-        <div className="col s6 admin-form-input">
+        <div className="col s12 admin-form-input">
           <div className="form-group">
-            <label>{data}</label>
+            <div></div>
             <input type="text" placeholder={data} {...this.props.fields[data]}/>
           </div>
         </div>
@@ -200,7 +200,18 @@ class LocationsRateForm extends React.Component {
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-          <div id={this.props.modalName} className="modal modal-fixed-footer">
+          <div id={this.props.modalName} className="modal modal-fixed-footer managed-parking-modal">
+            <nav>
+							<div className="nav-wrapper nav-admin">
+								<a className="brand-logo center">{this.props.modalText}</a>
+								<i 
+								className="material-icons right right-align clickable" 
+								style={{marginRight: 15, lineHeight: "55px"}}
+								onClick={() => {
+									$('#' + this.props.modalName).closeModal();
+								}}>close</i>
+							</div>
+						</nav>
             <div className="modal-content">
 
               <div className="row">
@@ -212,12 +223,7 @@ class LocationsRateForm extends React.Component {
 
               <div className="row"> 
                 
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label htmlFor="date_time">date_time</label>
-                    <input id="date_time" className="date_time" type="text"/>
-                  </div>
-                </div>
+                
                 {this.tempInputsEdit(this.props.initialValues)}
                 
               </div>

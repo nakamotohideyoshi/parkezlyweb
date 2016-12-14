@@ -104,7 +104,6 @@ class TownshipPanelParkingRulesForm extends React.Component {
   }
 
   componentWillMount() {
-    ajaxSelectizeGet('townships_manager', 'manager_id', this.selectizeOptionsUpdate);
     ajaxSelectizeGet('locations_rate', 'rate', this.selectizeOptionsUpdate);
     ajaxSelectizeGet('manage_locations', 'location_code', this.selectizeOptionsUpdate);
     ajaxSelectizeGet('manage_locations', 'location_name', this.selectizeOptionsUpdate);
@@ -224,9 +223,9 @@ class TownshipPanelParkingRulesForm extends React.Component {
 
     return fields.map((data) => {
       return( 
-        <div className="col s6 admin-form-input">
+        <div className="col s12 admin-form-input">
           <div className="form-group">
-            <label>{data}</label>
+            <div></div>
             <input type="text" placeholder={data} {...this.props.fields[data]}/>
           </div>
         </div>
@@ -252,7 +251,18 @@ class TownshipPanelParkingRulesForm extends React.Component {
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-          <div id={this.props.modalName} className="modal modal-fixed-footer">
+          <div id={this.props.modalName} className="modal modal-fixed-footer managed-parking-modal">
+            <nav>
+							<div className="nav-wrapper nav-admin">
+								<a className="brand-logo center">{this.props.modalText}</a>
+								<i 
+								className="material-icons right right-align clickable" 
+								style={{marginRight: 15, lineHeight: "55px"}}
+								onClick={() => {
+									$('#' + this.props.modalName).closeModal();
+								}}>close</i>
+							</div>
+						</nav>
             <div className="modal-content">
 
               <div className="row">
@@ -263,88 +273,35 @@ class TownshipPanelParkingRulesForm extends React.Component {
               </div>
 
               <div className="row"> 
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label>State</label>
-                    <div clasName="input-field col s12">
-                      <SimpleSelect 
-                        options = {statesList} 
-                        placeholder = "State"
-                        theme = "material"
-                        style={{marginTop: 5}}
-                        transitionEnter = {true} 
-                        onValueChange = {(value) => {
-                          dispatch(change('parking-rules-form', 'state', value.value)); 
-                        }}/>
-                    </div>
-                  </div>
-                </div>
-                
                 <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'manager_id'} 
+                staticOptions={true}
+                options={statesList}
+                objectKey={'state'} 
+                fieldName={'State'}
                 formName={'parking-rules-form'} 
-                fieldName={'township_code'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-                
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'rate'} 
-                formName={'parking-rules-form'} 
-                fieldName={'parking_rate'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
+                fieldData={this.props.fields}
+                dispatch={dispatch}
+              />
 
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'location_code'} 
-                formName={'parking-rules-form'} 
-                fieldName={'location_code'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
-                <AdminSelectize 
-                  options={this.state.selectizeOptions}
-                  objectKey={'location_name'} 
-                  formName={'parking-rules-form'} 
-                  fieldName={'location_name'}
-                  defaultData={this.props.rowData}
-                  dispatch={dispatch} 
-                />
-
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label htmlFor="date_time">date_time</label>
-                    <input id="date_time" className="date_time" type="text"/>
-                  </div>
+              <div className="col s12 admin-form-input">
+                <div className="form-group">
+                  <input id="date" className="date" placeholder="Date" type="text"/>
                 </div>
+              </div>
 
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label htmlFor="date">date</label>
-                    <input id="date" className="date" type="text"/>
-                  </div>
+              {this.tempInputsEdit(this.props.initialValues)}
+
+              <div className="col s12 admin-form-input">
+                <div className="form-group">
+                  <input id="start_time" className="start_time" placeholder="Start Time" type="text"/>
                 </div>
+              </div>
 
-                {this.tempInputsEdit(this.props.initialValues)}
-
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label htmlFor="start_time">start_time</label>
-                    <input id="start_time" className="start_time" type="text"/>
-                  </div>
+              <div className="col s12 admin-form-input">
+                <div className="form-group">
+                  <input id="end_time" className="end_time" placeholder="End Time" type="text"/>
                 </div>
-
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label htmlFor="end_time">end_time</label>
-                    <input id="end_time" className="end_time" type="text"/>
-                  </div>
-                </div>
+              </div>
 
               </div>
             </div>

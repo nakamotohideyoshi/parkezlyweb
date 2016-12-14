@@ -122,6 +122,7 @@ class InspectorPanelParkingFieldEdit extends React.Component {
   }
 
   componentWillMount() {
+    ajaxSelectizeGet('payment_type', 'pay_method', this.selectizeOptionsUpdate);
     this.props.dispatch(change('parking-field-form', 'township_code', this.props.townshipCode));
   }
 
@@ -232,9 +233,9 @@ class InspectorPanelParkingFieldEdit extends React.Component {
 
     return fields.map((data) => {
       return( 
-        <div className="col s6 admin-form-input">
+        <div className="col s12 admin-form-input">
           <div className="form-group">
-            <label>{data}</label>
+            <div></div>
             <input type="text" placeholder={data} {...this.props.fields[data]}/>
           </div>
         </div>
@@ -260,7 +261,18 @@ class InspectorPanelParkingFieldEdit extends React.Component {
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-          <div id={this.props.modalName} className="modal modal-fixed-footer">
+          <div id={this.props.modalName} className="modal modal-fixed-footer managed-parking-modal">
+            <nav>
+							<div className="nav-wrapper nav-admin">
+								<a className="brand-logo center">{this.props.modalText}</a>
+								<i 
+								className="material-icons right right-align clickable" 
+								style={{marginRight: 15, lineHeight: "55px"}}
+								onClick={() => {
+									$('#' + this.props.modalName).closeModal();
+								}}>close</i>
+							</div>
+						</nav>
             <div className="modal-content">
 
               <div className="row">
@@ -271,40 +283,24 @@ class InspectorPanelParkingFieldEdit extends React.Component {
               </div>
 
               <div className="row">
-
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label>Country</label>
-                    <div clasName="input-field col s12">
-                      <SimpleSelect 
-                        options = {countriesList} 
-                        placeholder = "Country"
-                        theme = "material"
-                        style={{marginTop: 5}}
-                        transitionEnter = {true} 
-                        onValueChange = {(value) => {
-                          dispatch(change('parking-field-form', 'country', value.value)); 
-                        }}/>
-                    </div>
-                  </div>
-                </div>
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label>State</label>
-                    <div clasName="input-field col s12">
-                      <SimpleSelect 
-                        options = {statesList} 
-                        placeholder = "State"
-                        theme = "material"
-                        style={{marginTop: 5}}
-                        transitionEnter = {true} 
-                        onValueChange = {(value) => {
-                          dispatch(change('parking-field-form', 'state', value.value)); 
-                        }}/>
-                    </div>
-                  </div>
-                </div>
-
+                <AdminSelectize 
+                  staticOptions={true}
+									options={countriesList}
+									objectKey={'country'} 
+                  fieldName={'Country'}
+									formName={'parking-field-form'} 
+									fieldData={this.props.fields}
+									dispatch={dispatch}
+								/>
+                <AdminSelectize 
+                  staticOptions={true}
+									options={statesList}
+									objectKey={'state'} 
+                  fieldName={'State'}
+									formName={'parking-field-form'} 
+									fieldData={this.props.fields}
+									dispatch={dispatch}
+								/>
                 {this.tempInputsEdit(this.props.initialValues)}
               </div>
             </div>

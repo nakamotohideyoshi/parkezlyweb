@@ -390,6 +390,7 @@ export function fetchHearingPlace(locationCode) {
       dispatch(apiTownship.receiveData(response.data, types.TOWNSHIP_HEARING_PLACE_GET_SUCCESS));
     })
     .catch(function(response){
+      console.log(response);
       dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_HEARING_PLACE_GET_ERROR));
     })
   }
@@ -425,6 +426,7 @@ export function createHearingPlace(data) {
     })
     .catch(function(response){
       dispatch(apiTownship.receiveError(response.data, types.TOWNSHIP_HEARING_PLACE_POST_ERROR));
+      console.log(response);
     })
   }
 }

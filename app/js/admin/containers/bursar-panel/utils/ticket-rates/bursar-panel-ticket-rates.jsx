@@ -87,9 +87,9 @@ class BursarPanelTicketRates extends React.Component {
 
     return fields.map((data) => {
       return( 
-        <div className="col s6 admin-form-input">
+        <div className="col s12 admin-form-input">
           <div className="form-group">
-            <label>{data}</label>
+            <div></div>
             <input type="text" placeholder={data} onChange={(event) => 
               dispatch(change('ticket-rates', data, event.target.value))
             }/>
@@ -161,7 +161,7 @@ class BursarPanelTicketRates extends React.Component {
         <div className="center-align">
           <a
             className="modal-trigger waves-effect waves-light btn valign" 
-            onClick={() => $('#modal-bursar-ticket-rates-create').openModal()}
+            onClick={() => {$('#modal-bursar-ticket-rates-create').openModal(); window.scrollTo(0, 0);}}
             style={{margin: 10}}>Add New Ticket Rate</a>
         </div>
       </div>
@@ -176,7 +176,7 @@ class BursarPanelTicketRates extends React.Component {
         onClick={() => {
           this.setState({showEditModal: true})
           $('#modal-bursar-ticket-rates-edit').openModal(); 
-        }}
+        window.scrollTo(0, 0);}}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">edit</i>
           <h4> Edit - Ticket Rates ID: {recordId} </h4>
@@ -186,7 +186,7 @@ class BursarPanelTicketRates extends React.Component {
         onClick={() => {
           this.setState({showEditModal: true})
           $('#modal-bursar-ticket-rates-duplicate').openModal(); 
-        }}
+        window.scrollTo(0, 0);}}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">content_copy</i>
           <h4> Duplicate - Ticket Rates ID: {recordId} </h4>
@@ -223,6 +223,7 @@ class BursarPanelTicketRates extends React.Component {
                   $('#modal-delete').closeModal()
                   ajaxDelete('parking_violations', recordId, this.handleSuccess);
                   this.setState({showEditDuplicateButtons: false});
+                  window.scrollTo(0, 0);
                   window.scrollTo(0, 0);
                 }}>Yes</a>
               </div>

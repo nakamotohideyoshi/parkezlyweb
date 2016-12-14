@@ -94,9 +94,9 @@ class BursarPanelPermitPayment extends React.Component {
 
     return fields.map((data) => {
       return( 
-        <div className="col s6 admin-form-input">
+        <div className="col s12 admin-form-input">
           <div className="form-group">
-            <label>{data}</label>
+            <div></div>
             <input type="text" placeholder={data} onChange={(event) => 
               dispatch(change('permit-payment', data, event.target.value))
             }/>
@@ -211,7 +211,7 @@ class BursarPanelPermitPayment extends React.Component {
         onClick={() => {
           this.setState({showEditModal: true})
           $('#modal-bursar-permit-edit').openModal(); 
-        }}
+        window.scrollTo(0, 0);}}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">edit</i>
           <h4> Edit - Permit Payment ID: {recordId} </h4>
@@ -221,7 +221,7 @@ class BursarPanelPermitPayment extends React.Component {
         onClick={() => {
           this.setState({showEditModal: true})
           $('#modal-bursar-permit-duplicate').openModal(); 
-        }}
+        window.scrollTo(0, 0);}}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">content_copy</i>
           <h4> Duplicate - Permit Payment ID: {recordId} </h4>
@@ -258,6 +258,7 @@ class BursarPanelPermitPayment extends React.Component {
                   $('#modal-delete').closeModal()
                   ajaxDelete('pay_for_permit', recordId, this.handleSuccess);
                   this.setState({showEditDuplicateButtons: false});
+                  window.scrollTo(0, 0);
                   window.scrollTo(0, 0);
                 }}>Yes</a>
               </div>

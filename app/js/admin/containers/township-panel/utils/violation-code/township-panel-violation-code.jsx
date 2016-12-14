@@ -88,9 +88,9 @@ class TownshipPanelViolationCode extends React.Component {
 
     return fields.map((data) => {
       return( 
-        <div className="col s6 admin-form-input">
+        <div className="col s12 admin-form-input">
           <div className="form-group">
-            <label>{data}</label>
+            <div></div>
             <input type="text" placeholder={data} onChange={(event) => 
               dispatch(change('create-ticket', data, event.target.value))
             }/>
@@ -107,7 +107,6 @@ class TownshipPanelViolationCode extends React.Component {
         modalName="modal-violation-code-create" 
         modalText="Create a Violation Type" 
         submitType="CREATE"
-        initialValues={null}
         editMode={false}
         handleSuccess={this.handleSuccess}
         townshipCode={this.props.townshipCode}
@@ -159,7 +158,7 @@ class TownshipPanelViolationCode extends React.Component {
 
           <a
             className="modal-trigger waves-effect waves-light btn valign" 
-            onClick={() => $('#modal-violation-code-create').openModal()}
+            onClick={() => {$('#modal-violation-code-create').openModal(); window.scrollTo(0, 0);}}
             style={{margin: 10}}>Add New Violation Type</a>
         </div>
       </div>
@@ -179,7 +178,7 @@ class TownshipPanelViolationCode extends React.Component {
         onClick={() => {
           this.setState({showEditModal: true})
           $('#modal-violation-code-edit').openModal(); 
-        }}
+        window.scrollTo(0, 0);}}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">edit</i>
           <h4> Edit - Violation Type ID: {recordId} </h4>
@@ -189,7 +188,7 @@ class TownshipPanelViolationCode extends React.Component {
         onClick={() => {
           this.setState({showEditModal: true})
           $('#modal-violation-code-duplicate').openModal(); 
-        }}
+        window.scrollTo(0, 0);}}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">content_copy</i>
           <h4> Duplicate - Violation Type ID: {recordId} </h4>
@@ -259,34 +258,23 @@ class TownshipPanelViolationCode extends React.Component {
             </div>
           </div>
         </Body>
-        { this.props.townshipViolationCodeFetched.isLoading ? 
-          <div> </div> : this.renderCreateModal()}
-
-
-        { 
-          !this.state.showEditModal ?
-          <div></div> : 
-          <div>
-            <TownshipPanelViolationCodeForm
-              modalName="modal-violation-code-edit" 
-              modalText="Edit a Violation Type" 
-              submitType="EDIT"
-              initialValues={this.state.rowData} 
-              rowData={this.state.rowData}
-              handleSuccess={this.handleSuccess}
-              townshipCode={this.props.townshipCode}
-              />
-            <TownshipPanelViolationCodeForm 
-              modalName="modal-violation-code-duplicate" 
-              modalText="Duplicate a Violation Type" 
-              submitType="DUPLICATE"
-              initialValues={this.state.rowData} 
-              rowData={this.state.rowData}
-              handleSuccess={this.handleSuccess}
-              townshipCode={this.props.townshipCode}
-              />
-          </div>
-        }
+        {this.renderCreateModal()}
+        <TownshipPanelViolationCodeForm
+          modalName="modal-violation-code-edit" 
+          modalText="Edit a Violation Type" 
+          submitType="EDIT"
+          initialValues={this.state.rowData} 
+        handleSuccess={this.handleSuccess}
+        townshipCode={this.props.townshipCode}
+          />
+        <TownshipPanelViolationCodeForm 
+          modalName="modal-violation-code-duplicate" 
+          modalText="Duplicate a Violation Type" 
+          submitType="DUPLICATE"
+          initialValues={this.state.rowData} 
+        handleSuccess={this.handleSuccess}
+        townshipCode={this.props.townshipCode}
+          />
 
         <div id="modal-success" className="modal">
           <div className="modal-content">

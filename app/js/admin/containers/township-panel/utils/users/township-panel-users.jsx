@@ -92,6 +92,7 @@ class TownshipPanelUsers extends React.Component {
     this.props.resetLoading();
     this.props.fetchTownshipUsers(this.props.townshipCode);
     this.setState({showEditDuplicateButtons: false});
+                  window.scrollTo(0, 0);
     $('#modal-success').openModal();
   }
 
@@ -181,7 +182,7 @@ class TownshipPanelUsers extends React.Component {
         onClick={() => {
 					window.scrollTo(0, 0);
           $('#modal-township-users-edit').openModal(); 
-        }}
+        window.scrollTo(0, 0);}}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp blue-btn-admin">
           <i className="material-icons valign">edit</i>
           <h4> Edit - User ID: {recordId} </h4>
@@ -191,7 +192,7 @@ class TownshipPanelUsers extends React.Component {
         onClick={() => {
 					window.scrollTo(0, 0);
           $('#modal-township-users-duplicate').openModal(); 
-        }}
+        window.scrollTo(0, 0);}}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp blue-btn-admin">
           <i className="material-icons valign">content_copy</i>
           <h4> Duplicate - User ID: {recordId} </h4>
@@ -278,7 +279,6 @@ class TownshipPanelUsers extends React.Component {
             initialValues={this.state.rowData} 
             handleSuccess={this.handleSuccess}
             townshipCode={this.props.townshipCode}
-            updateRowData={this.updateRowData}
           />
           <TownshipPanelUsersForm 
             modalName="modal-township-users-duplicate" 
@@ -287,7 +287,6 @@ class TownshipPanelUsers extends React.Component {
             initialValues={this.state.rowData} 
             handleSuccess={this.handleSuccess}
             townshipCode={this.props.townshipCode}
-            updateRowData={this.updateRowData}
           />
         </div>
 

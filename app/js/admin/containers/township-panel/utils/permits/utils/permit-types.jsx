@@ -102,7 +102,6 @@ class PermitTypes extends React.Component {
       resetForm,
       submitting
     } = this.props
-
     return(
       <PermitTypesForm
         initialValues={this.state.rowData} 
@@ -116,6 +115,7 @@ class PermitTypes extends React.Component {
       />
     );
 
+
   }
 
   renderEditDuplicateButtons(locationCode) {
@@ -125,7 +125,7 @@ class PermitTypes extends React.Component {
         onClick={() => {
           this.setState({showEditModal: true})
           $('#modal-permit-types-edit').openModal(); 
-        }}
+        window.scrollTo(0, 0);}}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">edit</i>
           <h4> Edit Permit Type: {locationCode} </h4>
@@ -134,7 +134,7 @@ class PermitTypes extends React.Component {
         onClick={() => {
           this.setState({showEditModal: true})
           $('#modal-permit-types-duplicate').openModal(); 
-        }}
+        window.scrollTo(0, 0);}}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">content_copy</i>
           <h4> Duplicate Permit Type: {locationCode} </h4>
@@ -176,33 +176,26 @@ class PermitTypes extends React.Component {
             </div>
           </div>
         </div>
-
-        { 
-          !this.state.showEditModal ?
-          <div></div> : 
-          <div>
-            <PermitTypesForm
-              initialValues={this.state.rowData} 
-              handleSuccess={this.handleSuccess}
-              modalName="modal-permit-types-edit" 
-              modalText="Edit a Permit Type" 
-              submitType="EDIT"
-              initialValues={this.state.rowData} 
-              rowData={this.state.rowData}
-              handleSuccess={this.handleSuccess}
-            />
-            <PermitTypesForm
-              initialValues={this.state.rowData} 
-              handleSuccess={this.handleSuccess}
-              modalName="modal-permit-types-duplicate" 
-              modalText="Duplicate a Permit Type" 
-              submitType="DUPLICATE"
-              initialValues={this.state.rowData} 
-              rowData={this.state.rowData}
-              handleSuccess={this.handleSuccess}
-            />
-          </div>
-        }
+        <PermitTypesForm
+          initialValues={this.state.rowData} 
+          handleSuccess={this.handleSuccess}
+          modalName="modal-permit-types-edit" 
+          modalText="Edit a Permit Type" 
+          submitType="EDIT"
+          initialValues={this.state.rowData} 
+          rowData={this.state.rowData}
+          handleSuccess={this.handleSuccess}
+        />
+        <PermitTypesForm
+          initialValues={this.state.rowData} 
+          handleSuccess={this.handleSuccess}
+          modalName="modal-permit-types-duplicate" 
+          modalText="Duplicate a Permit Type" 
+          submitType="DUPLICATE"
+          initialValues={this.state.rowData} 
+          rowData={this.state.rowData}
+          handleSuccess={this.handleSuccess}
+        />
 
       </div>
     );

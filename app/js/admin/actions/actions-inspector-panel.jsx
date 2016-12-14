@@ -51,6 +51,7 @@ export function createInspectorParkingField(data) {
       dispatch(reset(`parking-payment`));
     })
     .catch(function(response){
+      console.log(response);
       dispatch(apiTownship.receiveError(response.data, types.INSPECTOR_PARKING_FIELD_POST_ERROR));
     })
   }

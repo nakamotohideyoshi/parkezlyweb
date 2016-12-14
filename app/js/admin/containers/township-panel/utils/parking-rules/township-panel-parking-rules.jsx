@@ -11,7 +11,6 @@ import Body from "../../../../../common/components/body/body.jsx"
 import Spinner from '../../../../common/components/spinner.jsx'
 import {optionsSelectize} from '../../../../common/components/options-selectize.js'
 
-import TownshipPanelParkingRulesEdit from './township-panel-parking-rules-edit.jsx'
 import TownshipPanelParkingRulesForm from './township-panel-parking-rules-form.jsx'
 
 import {
@@ -103,7 +102,6 @@ class TownshipPanelParkingRules extends React.Component {
   componentWillMount() {
     this.props.fetchParkingRules(this.props.locationCode);
     this.props.fetchTownshipSchemeTypes();
-    //this.props.fetchTownshipLocations(this.props.townshipCode);
   }
 
   componentDidUpdate() {
@@ -131,9 +129,9 @@ class TownshipPanelParkingRules extends React.Component {
 
     return fields.map((data) => {
       return( 
-        <div className="col s6 admin-form-input">
+        <div className="col s12 admin-form-input">
           <div className="form-group">
-            <label>{data}</label>
+            <div></div>
             <input type="text" placeholder={data} onChange={(event) => 
               dispatch(change('parking-rules', data, event.target.value))
             }/>
@@ -259,7 +257,7 @@ class TownshipPanelParkingRules extends React.Component {
 
           <a
             className="modal-trigger waves-effect waves-light btn valign" 
-            onClick={() => $('#modal-township-parking-rules-create').openModal()}
+            onClick={() => {$('#modal-township-parking-rules-create').openModal(); window.scrollTo(0, 0);}}
             style={{margin: 10}}>Add New Parking Rule</a>
 
         </div>
@@ -319,6 +317,7 @@ class TownshipPanelParkingRules extends React.Component {
                   ajaxDelete('parking_rules', this.state.rowData.id, this.handleSuccess);
                   this.setState({showEditDuplicateButtons: false});
                   window.scrollTo(0, 0);
+                  window.scrollTo(0, 0);
                 }}>Yes</a>
               </div>
             </div>
@@ -353,33 +352,23 @@ class TownshipPanelParkingRules extends React.Component {
             </div>
           </div>
         </Body>
-        { this.props.townshipParkingRulesFetched.isLoading ? 
-          <div> </div> : 
-          <div>
-            {this.renderCreateModal()}
-            <TownshipPanelParkingRulesForm
-              initialValues={this.state.rowData} 
-              handleSuccess={this.handleSuccess}
-              modalName="modal-township-parking-rules-edit" 
-              modalText="Edit a Parking Rule" 
-              submitType="EDIT"
-              initialValues={this.state.rowData} 
-              rowData={this.state.rowData}
-              handleSuccess={this.handleSuccess}
-            />
-            <TownshipPanelParkingRulesForm
-              initialValues={this.state.rowData} 
-              handleSuccess={this.handleSuccess}
-              modalName="modal-township-parking-rules-duplicate" 
-              modalText="Duplicate a Parking Rule" 
-              submitType="DUPLICATE"
-              initialValues={this.state.rowData} 
-              rowData={this.state.rowData}
-              handleSuccess={this.handleSuccess}
-            />
-          </div>
-          }
-
+        {this.renderCreateModal()}
+        <TownshipPanelParkingRulesForm
+          modalName="modal-township-parking-rules-edit" 
+          modalText="Edit a Parking Rule" 
+          submitType="EDIT"
+          initialValues={this.state.rowData} 
+          rowData={this.state.rowData}
+          handleSuccess={this.handleSuccess}
+        />
+        <TownshipPanelParkingRulesForm
+          modalName="modal-township-parking-rules-duplicate" 
+          modalText="Duplicate a Parking Rule" 
+          submitType="DUPLICATE"
+          initialValues={this.state.rowData} 
+          rowData={this.state.rowData}
+          handleSuccess={this.handleSuccess}
+        />
         <div id="modal-success" className="modal">
           <div className="modal-content">
             <h4>Success!</h4>

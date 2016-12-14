@@ -173,6 +173,7 @@ class TownshipPermits extends React.Component {
           onClick={() => {
             this.setState({ showEditModal: true })
             $('#modal-township-permits-edit').openModal();
+             window.scrollTo(0, 0)
           } }
           className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">edit</i>
@@ -181,6 +182,7 @@ class TownshipPermits extends React.Component {
         <a
           onClick={() => {
             this.setState({ showEditModal: true })
+             window.scrollTo(0, 0)
             $('#modal-township-permits-duplicate').openModal();
           } }
           className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
@@ -273,7 +275,10 @@ class TownshipPermits extends React.Component {
           <div className="center-align">
             <a
               className="modal-trigger waves-effect waves-light btn valign"
-              onClick={() => $('#modal-township-permits-create').openModal() }
+              onClick={() => {
+              window.scrollTo(0, 0);
+              $('#modal-township-permits-create').openModal(); 
+              }}
               style={{ margin: 10 }}>Add New Township Permit</a>
           </div>
           {this.props.townshipUsersFetched.isLoading ? <div> </div> : this.renderCreateModal() }

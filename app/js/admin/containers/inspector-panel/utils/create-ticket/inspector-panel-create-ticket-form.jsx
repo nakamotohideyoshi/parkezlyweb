@@ -64,6 +64,7 @@ export const fields = [
   'twp_payment', 
   'paid_amount', 
   'paid_date',
+  'parked_location_address'
 ]
 
 class InspectorSearchTicketForm extends React.Component {
@@ -132,18 +133,7 @@ class InspectorSearchTicketForm extends React.Component {
   }
 
   componentWillMount() {
-    ajaxGet('user_profile', (table) => {
-      console.log(table.data.resource)
-      this.setState({userData: table.data.resource});
-    });
-    ajaxGet(`violation_code?filter=(township_code=${this.props.townshipCode})`, (table) => {
-      console.log(table.data.resource)
-      this.setState({violationData: table.data.resource});
-    });
-    ajaxGet(`hearing_place_info?filter=(township_code=${this.props.townshipCode})`, (table) => {
-      console.log(table.data.resource)
-      this.setState({hearingData: table.data.resource});
-    });
+    this.props.dispatch(change('create-ticket-form', 'township_code', this.props.townshipCode));
   }
 
   componentDidUpdate() {
@@ -242,7 +232,6 @@ class InspectorSearchTicketForm extends React.Component {
       'violation_location',  
       'court_id',  
       'hearing_address', 
-      'township_code', 
       'v_user_id', 
       'tkt_status',  
       'signature', 
@@ -253,13 +242,14 @@ class InspectorSearchTicketForm extends React.Component {
       'am_pm', 
       'twp_payment', 
       'paid_amount', 
+      'parked_location_address'
     ]
 
     return fields.map((data) => {
       return( 
-        <div className="col s6 admin-form-input">
+        <div className="col s12 admin-form-input">
           <div className="form-group">
-            <label>{data}</label>
+            <div></div>
             <input type="text" placeholder={data} {...this.props.fields[data]}/>
           </div>
         </div>
@@ -268,40 +258,27 @@ class InspectorSearchTicketForm extends React.Component {
   }
 
   render() {
-
     const {
       resetForm,
       submitting,
       dispatch
     } = this.props
-
-    let hearingData;
-    let violationData;
-    let userData;
-
-    if(this.state.hearingData != null) {
-      hearingData = this.state.hearingData.map((data)=> {
-          return {label: _.truncate(data.hearing_location, {'length': 20}), value: data};
-      })
-    }
-
-    if(this.state.violationData != null) {
-      violationData = this.state.violationData.map((data)=> {
-          return {label: data.violation_code, value: data};
-      })
-    }
-
-    if(this.state.userData != null) {
-      userData = this.state.userData.map((data)=> {
-          console.log(data)
-          return {label: String(data.user_id), value: data};
-      })
-    }
-   
+    
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-          <div id={this.props.modalName} className="modal modal-fixed-footer">
+          <div id={this.props.modalName} className="modal modal-fixed-footer managed-parking-modal">
+            <nav>
+							<div className="nav-wrapper nav-admin">
+								<a className="brand-logo center">{this.props.modalText}</a>
+								<i 
+								className="material-icons right right-align clickable" 
+								style={{marginRight: 15, lineHeight: "55px"}}
+								onClick={() => {
+									$('#' + this.props.modalName).closeModal();
+								}}>close</i>
+							</div>
+						</nav>
             <div className="modal-content">
 
               <div className="row">
@@ -312,109 +289,10 @@ class InspectorSearchTicketForm extends React.Component {
               </div>
 
               <div className="row">
-                { this.state.violationData === null ? 
-                <div> Loading... </div>
-                :
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label>Violation Code</label>
-                    <div clasName="input-field col s12">
-                      <SimpleSelect 
-                        options = {violationData} 
-                        placeholder = "Violation Code"
-                        theme = "material"
-                        style={{marginTop: 5}}
-                        transitionEnter = {true} 
-                        createFromSearch={function(options, search){
-                            // only create an option from search if the length of the search string is > 0 and
-                            // it does no match the label property of an existing option
-                            if (search.length == 0 || (options.map(function(option){
-                                return option.label;
-                            })).indexOf(search) > -1)
-                                return null;
-                            else
-                                return {label: search, value: search};
-                        }}
-                        onValueChange = {(value) => {
-                          let violationObject = value.value
-                          if (!!value && !!value.newOption) {
-                              self.state.options.unshift({label: value.label, value: value.value});
-                              self.setState({options: self.state.options});
-                          }
-                          dispatch(change('create-ticket-form', 'violation_code', violationObject.violation_code)); 
-                          dispatch(change('create-ticket-form', 'violation_fee', violationObject.violation_fee)); 
-                          dispatch(change('create-ticket-form', 'violation_detail', violationObject.violation_detail)); 
-                          dispatch(change('create-ticket-form', 'violation_description', violationObject.violation_description)); 
-                        }}/>
-                    </div>
-                  </div>
-                </div>
-                }
-                { this.state.hearingData === null ? 
-                <div> Loading... </div>
-                :
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label>Hearing Location</label>
-                    <div clasName="input-field col s12">
-                      <SimpleSelect 
-                        options = {hearingData} 
-                        placeholder = "Violation Code"
-                        theme = "material"
-                        style={{marginTop: 5}}
-                        transitionEnter = {true} 
-                        createFromSearch={function(options, search){
-                            // only create an option from search if the length of the search string is > 0 and
-                            // it does no match the label property of an existing option
-                            if (search.length == 0 || (options.map(function(option){
-                                return option.label;
-                            })).indexOf(search) > -1)
-                                return null;
-                            else
-                                return {label: search, value: search};
-                        }}
-                        onValueChange = {(value) => {
-                          if (!!value && !!value.newOption) {
-                              self.state.options.unshift({label: value.label, value: value.value});
-                              self.setState({options: self.state.options});
-                          }
-                          let hearingObject = value.value
-                          dispatch(change('create-ticket-form', 'hearing_location', hearingObject.hearing_location)); 
-                          dispatch(change('create-ticket-form', 'court_id', hearingObject.court_id)); 
-                          dispatch(change('create-ticket-form', 'hearing_address', hearingObject.hearing_address)); 
-                        }}/>
-                    </div>
-                  </div>
-                </div>
-                }
-
-                { this.state.userData === null ? 
-                <div> Loading... </div>
-                :
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label>User Profile</label>
-                    <div clasName="input-field col s12">
-                      <SimpleSelect 
-                        options = {userData} 
-                        placeholder = "Violation Code"
-                        theme = "material"
-                        style={{marginTop: 5}}
-                        transitionEnter = {true} 
-                        onValueChange = {(value) => {
-                          let userObject = value.value
-                          dispatch(change('create-ticket-form', 'address', userObject.address)); 
-                          dispatch(change('create-ticket-form', 'phone', userObject.phone)); 
-                          dispatch(change('create-ticket-form', 'user_address', userObject.user_address)); 
-                        }}/>
-                    </div>
-                  </div>
-                </div>
-                }
                 
                 {this.tempInputsEdit(this.props.initialValues)}
 
-                <div className="col s6 admin-form-input">
+                <div className="col s12 admin-form-input">
                   <div className="form-group">
                     <label htmlFor="paid_date">paid_date</label>
                     <input id="paid_date" className="paid_date" type="text"/>

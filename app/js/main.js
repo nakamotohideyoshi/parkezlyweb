@@ -20,7 +20,7 @@ const history = useRouterHistory(createHistory)({
 })
 
 ReactDOM.render((
-    <Router history={history}>
+    <Router history={browserHistory}>
       {AdminIndex()}
       {ClientIndex()}
     </Router>
