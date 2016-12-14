@@ -193,7 +193,6 @@ class PermitTypes extends React.Component {
           rowData={this.state.rowData}
           handleSuccess={this.handleSuccess}
         />
-
       </div>
     );
   }

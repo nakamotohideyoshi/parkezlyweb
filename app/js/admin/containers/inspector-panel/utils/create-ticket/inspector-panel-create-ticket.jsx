@@ -101,6 +101,7 @@ class InspectorCreateTicket extends React.Component {
   }
 
   componentWillMount() {
+    window.scrollTo(0, 0);
     this.props.fetchInspectorTicket(this.props.townshipCode);
     this.props.fetchTownshipSchemeTypes();
     this.props.fetchTownshipLocations(this.props.townshipCode);

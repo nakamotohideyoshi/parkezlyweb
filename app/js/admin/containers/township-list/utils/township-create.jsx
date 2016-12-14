@@ -79,7 +79,7 @@ class TownshipCreate extends React.Component {
         
 
           <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
-            <div id="modal-township-create" className="modal modal-fixed-footer managed-parking-modal">
+            <div id="modal-township-create" className="modal modal-fixed-footer admin-parking-modal">
             <nav>
 							<div className="nav-wrapper nav-admin">
 								<a className="brand-logo center">Create A Township</a>

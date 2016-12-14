@@ -251,7 +251,7 @@ class LocationsRate extends React.Component {
           <div className="center-align">
             <a
               className="modal-trigger waves-effect waves-light btn valign" 
-              onClick={() => $('#modal-locations-rate-create').openModal()}
+              onClick={() => {$('#modal-locations-rate-create').openModal();  window.scrollTo(0, 0);}}
               style={{margin: 10}}>Add New Location Rate</a>
           </div>
           

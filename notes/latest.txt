@@ -1,11 +1,9 @@
 Township Panel:
 
 Parking Rules - Total remake;
-Township permits new modal size?
-Parking Permits Filter 
 
 Inspector Panel:
-Redux to "find vehicle
+Redux to "find vehicle"
 Recheck expiry color
 
 Bursar Panel:

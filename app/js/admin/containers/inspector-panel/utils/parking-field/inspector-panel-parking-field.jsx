@@ -109,10 +109,10 @@ class InspectorParkingField extends React.Component {
   }
 
   componentWillMount() {
+    window.scrollTo(0, 0);
     this.props.fetchInspectorParkingField(this.props.townshipCode);
     this.props.fetchTownshipSchemeTypes();
     this.props.fetchTownshipLocations(this.props.townshipCode);
-
   }
 
   componentDidUpdate() {
