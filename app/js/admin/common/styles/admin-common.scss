@@ -3,6 +3,122 @@
   min-height: 120%;
 }
 
+.admin-parking-modal {
+  width: 500px;
+  left: 0;
+  right: 0;
+  top: 60px;
+  margin: 0 auto;
+  z-index: 999;
+  background: $white;
+  padding: 20px 20px 15px 20px;
+  border: 1px solid $black;
+  border-radius: 8px;
+  text-align: center;
+
+  .heading {
+    border-bottom: 1px solid $black;
+    padding: 0 0 10px;
+    text-align: center;
+  }
+
+  h4 {
+    font-size: 20px;
+    padding: 0;
+    margin: 0;
+  }
+
+  .parking-details {
+    text-align: left;
+    font-size: 16px;
+    > div {
+      padding: 0 0 5px 0;
+    }
+    .link {
+      text-align: center;
+      margin: 15px 0;
+
+      a {
+        color: $link;
+        font-size: 18px;
+      }
+    }
+    .lot-link {
+      margin: 5px 0;
+      text-align: center;
+
+      a {
+        color: $link;
+        font-size: 18px;
+      }
+    }
+  }
+
+  .close-btn {
+    cursor: pointer;
+    background: url('../images/cross-black.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: block;
+    width: 25px;
+    height: 25px;
+  }
+  .car-list {
+    min-height: 240px;
+    padding: 0 20px;
+    .car {
+      width: 80px;
+      float: left;
+      margin-bottom: 10px;
+    }
+  }
+  .car-icon {
+    &.occupied {
+      background-image: url('../images/ride@3x.png');
+    }
+    &.available {
+      background-image: url('../images/popup_car_red@3x.png');
+    }
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    height: 30px;
+  }
+  .lot-number {
+    font-size: 14px;
+    text-align: center;
+  }
+  .park-here-btn {
+    margin: 15px 0;
+  }
+
+  .plate-list {
+    max-height: 315px;
+    overflow-y: auto;
+
+    .plate {
+      border-bottom: 1px solid $light-grey;
+      padding: 5px 0;
+
+      &.even {
+        background: $lighter-grey;
+      }
+    }
+  }
+
+  .react-selectize {
+    &.root-node {
+      width: 100%;
+    }
+  }
+
+  .react-selectize {
+    &.root-node {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+  }
+}
 
 .search {
   border: none !important;

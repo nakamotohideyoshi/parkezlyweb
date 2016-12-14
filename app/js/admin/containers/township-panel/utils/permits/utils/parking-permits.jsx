@@ -168,6 +168,7 @@ class ParkingPermits extends React.Component {
           onClick={() => {
             this.setState({ showEditModal: true })
             $('#modal-parking-permits-edit').openModal();
+             window.scrollTo(0, 0);
           } }
           className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">edit</i>
@@ -177,6 +178,7 @@ class ParkingPermits extends React.Component {
           onClick={() => {
             this.setState({ showEditModal: true })
             $('#modal-parking-permits-duplicate').openModal();
+             window.scrollTo(0, 0);
           } }
           className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">content_copy</i>
@@ -268,6 +270,7 @@ class ParkingPermits extends React.Component {
               onClick={() => {
                   this.setState({showEditDuplicateButtons: false, rowData: null})
                   $('#modal-parking-permits-create').openModal();
+                   window.scrollTo(0, 0);
                 }
               }
               style={{ margin: 10 }}>Add New Parking Permit</a>

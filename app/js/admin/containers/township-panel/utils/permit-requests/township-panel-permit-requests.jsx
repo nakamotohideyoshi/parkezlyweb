@@ -15,7 +15,7 @@ import {
 import TownshipPanelPermitRequestsForm from './township-panel-permit-requests-form'
 
 import {Tabbordion, Panel} from 'react-tabbordion'
-
+import Spinner from '../../../../common/components/spinner.jsx';
 import {ajaxSelectizeGet, ajaxDelete, ajaxPut} from '../../../../common/components/ajax-selectize.js'
 import Griddle from 'griddle-react'
 import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
@@ -476,7 +476,7 @@ class TownshipPanelPermitRequests extends React.Component {
                     </nav>
                     <div className="card">
                       {this.props.townshipPermitRequestsFetched.isLoading ? 
-                        <div>Loading...</div> : this.renderPendingTable() }
+                        <div className="center-align"> <Spinner /> </div> : this.renderPendingTable() }
                     </div>
                   </div>  
                 </Panel>
@@ -489,7 +489,7 @@ class TownshipPanelPermitRequests extends React.Component {
                     </nav>
                     <div className="card">
                       {this.props.townshipPermitRequestsFetched.isLoading ? 
-                        <div>Loading...</div> : this.renderApprovedTable() }
+                        <div className="center-align"> <Spinner /> </div> : this.renderApprovedTable() }
                     </div>
                   </div>
                 </Panel>
@@ -502,7 +502,7 @@ class TownshipPanelPermitRequests extends React.Component {
                     </nav>
                     <div className="card">
                       {this.props.townshipPermitRequestsFetched.isLoading ? 
-                        <div>Loading...</div> : this.renderRejectedTable() }
+                        <div className="center-align"> <Spinner /> </div> : this.renderRejectedTable() }
                     </div>
                   </div>
                 </Panel>

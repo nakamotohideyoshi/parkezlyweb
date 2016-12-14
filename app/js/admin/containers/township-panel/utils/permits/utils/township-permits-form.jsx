@@ -170,7 +170,7 @@ class TownshipPermitsForm extends React.Component {
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-          <div id={this.props.modalName} className="modal modal-fixed-footer managed-parking-modal">
+          <div id={this.props.modalName} className="modal modal-fixed-footer admin-parking-modal">
             <nav>
 							<div className="nav-wrapper nav-admin">
 								<a className="brand-logo center">{this.props.modalText}</a>

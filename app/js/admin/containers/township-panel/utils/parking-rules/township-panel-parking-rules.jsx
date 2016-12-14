@@ -270,7 +270,7 @@ class TownshipPanelParkingRules extends React.Component {
     return (
       <div className="container">
         <a 
-        onClick={() => {$('#modal-township-parking-rules-edit').openModal(); this.setState({showEditModal: true, duplicateModal: false})}}
+        onClick={() => {$('#modal-township-parking-rules-edit').openModal(); window.scrollTo(0, 0); this.setState({showEditModal: true, duplicateModal: false})}}
         style={{marginTop: 20}}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">edit</i>
@@ -278,7 +278,7 @@ class TownshipPanelParkingRules extends React.Component {
         </a>
 
         <a 
-        onClick={() => {$('#modal-township-parking-rules-duplicate').openModal(); this.setState({showEditModal: true, duplicateModal: true})}}
+        onClick={() => {$('#modal-township-parking-rules-duplicate').openModal(); window.scrollTo(0, 0); this.setState({showEditModal: true, duplicateModal: true})}}
         style={{marginTop: 20 }}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">content_copy</i>
@@ -343,7 +343,7 @@ class TownshipPanelParkingRules extends React.Component {
                <div className="card">
                   <div className="township-userlist-container">
                     { this.props.townshipParkingRulesFetched.isLoading ? 
-                      <div> </div> : this.renderTable()}
+                      <div className="center-align"> <Spinner /> </div> : this.renderTable()}
                   </div>
                </div>
 
