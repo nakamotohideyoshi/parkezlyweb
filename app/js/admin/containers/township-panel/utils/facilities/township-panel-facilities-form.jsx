@@ -95,7 +95,7 @@ class TownshipPanelFacilitiesForm extends React.Component {
   }
 
   componentWillMount() {
-    ajaxSelectizeGet('location_lot', 'location_code', this.selectizeOptionsUpdate);
+    ajaxSelectizeGet(`manage_locations?filter=(township_code=${this.props.townshipCode})`, 'location_code', this.selectizeOptionsUpdate);
     this.props.dispatch(change('facilities-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
     this.props.dispatch(change('facilities-form', 'township_code', this.props.townshipCode));
   }
@@ -161,7 +161,8 @@ class TownshipPanelFacilitiesForm extends React.Component {
       dispatch
     } = this.props;
 
-    const fields = [     
+    const fields = [ 
+      'location_code',    
       'dd',   
       'location_type', 
       'full_address',  
@@ -178,7 +179,7 @@ class TownshipPanelFacilitiesForm extends React.Component {
       return( 
         <div className="col s12 admin-form-input">
           <div className="form-group">
-            <label>{data}</label>
+            <div></div>
             <input type="text" placeholder={data} {...this.props.fields[data]}/>
           </div>
         </div>
@@ -225,17 +226,6 @@ class TownshipPanelFacilitiesForm extends React.Component {
               </div>
 
               <div className="row"> 
-
-                <AdminSelectize 
-                  staticOptions={false}
-                  options={this.state.selectizeOptions}
-                  objectKey={'location_code'} 
-                  formName={'facilities-form'} 
-                  fieldName={'Location Code'}
-                  fieldData={this.props.fields}
-                  dispatch={dispatch} 
-                />
-                
                 {this.tempInputsEdit(this.props.initialValues)}
                 
               </div>

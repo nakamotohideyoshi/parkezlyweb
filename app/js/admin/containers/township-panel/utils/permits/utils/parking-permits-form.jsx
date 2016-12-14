@@ -165,7 +165,7 @@ class ParkingPermitsForm extends React.Component {
       return( 
         <div key={data.id} className="col s12 admin-form-input">
           <div className="form-group">
-            <label>{data}</label>
+            <div></div>
             <input type="text" {...this.props.fields[data]}/>
           </div>
         </div>
@@ -185,6 +185,17 @@ class ParkingPermitsForm extends React.Component {
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
           <div id={this.props.modalName} className="modal modal-fixed-footer managed-parking-modal">
+            <nav>
+							<div className="nav-wrapper nav-admin">
+								<a className="brand-logo center">{this.props.modalText}</a>
+								<i 
+								className="material-icons right right-align clickable" 
+								style={{marginRight: 15, lineHeight: "55px"}}
+								onClick={() => {
+									$('#' + this.props.modalName).closeModal();
+								}}>close</i>
+							</div>
+						</nav>
             <div className="modal-content">
 
               <div className="row">
@@ -197,7 +208,9 @@ class ParkingPermitsForm extends React.Component {
               <div className="row"> 
 
                  <AdminSelectize 
-                  options={this.state.selectizeOptions}
+              staticOptions={false}
+              fieldData={this.props.fields}
+              options={this.state.selectizeOptions}
                   objectKey={'permit_type'} 
                   formName={'parking-permits-form'} 
                   fieldName={'permit_type'}
@@ -205,7 +218,9 @@ class ParkingPermitsForm extends React.Component {
                   dispatch={dispatch} 
                 />
                 <AdminSelectize 
-                  options={this.state.selectizeOptions}
+              staticOptions={false}
+              fieldData={this.props.fields}
+              options={this.state.selectizeOptions}
                   objectKey={'scheme_type'} 
                   formName={'parking-permits-form'} 
                   fieldName={'scheme_type'}
@@ -213,7 +228,9 @@ class ParkingPermitsForm extends React.Component {
                   dispatch={dispatch} 
                 />
                 <AdminSelectize 
-                  options={this.state.selectizeOptions}
+              staticOptions={false}
+              fieldData={this.props.fields}
+              options={this.state.selectizeOptions}
                   objectKey={'permit_name'} 
                   formName={'parking-permits-form'} 
                   fieldName={'permit_name'}
@@ -221,7 +238,9 @@ class ParkingPermitsForm extends React.Component {
                   dispatch={dispatch} 
                 />
                 <AdminSelectize 
-                  options={this.state.selectizeOptions}
+              staticOptions={false}
+              fieldData={this.props.fields}
+              options={this.state.selectizeOptions}
                   objectKey={'full_address'} 
                   formName={'parking-permits-form'} 
                   fieldName={'location_address'}
@@ -229,7 +248,9 @@ class ParkingPermitsForm extends React.Component {
                   dispatch={dispatch} 
                 />
                 <AdminSelectize 
-                  options={this.state.selectizeOptions}
+              staticOptions={false}
+              fieldData={this.props.fields}
+              options={this.state.selectizeOptions}
                   objectKey={'location_name'} 
                   formName={'parking-permits-form'} 
                   fieldName={'covered_locations'}

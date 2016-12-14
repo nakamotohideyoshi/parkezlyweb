@@ -1,7 +1,7 @@
 import React, {PropTypes, Component}  from 'react';
 import Body from "../../../../../common/components/body/body.jsx"
 import Spinner from '../../../../common/components/spinner.jsx'
-import { browserHistory } from 'react-router'
+import { browserHistory, Link } from 'react-router'
 import moment from 'moment'
 
 import { ajaxGet, ajaxDelete } from '../../../../common/components/ajax-selectize.js';
@@ -62,12 +62,12 @@ class InspectorMapView extends React.Component {
       onCloseclick={this.handleMarkerClose.bind(this, marker)}
       className="center-align"
       >
-        <div 
-        onClick={() => browserHistory.push(`admin/inspector/vehicle-info/${plate_id}`)} 
+        <Link 
+        to={`admin/inspector/vehicle-info/${plate_id}`} 
         className="center-align">
           {plateNull ? "Plate # N/A" : plate_no} 
           <div> - Click Here - </div>
-        </div>
+        </Link>
       </InfoWindow>
     );
   }

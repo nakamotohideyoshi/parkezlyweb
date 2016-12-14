@@ -37,11 +37,6 @@ export default class TownshipPanelPermits extends React.Component {
                       <TownshipPermits className="col s12" townshipCode={this.props.townshipCode} />
                     </div>
                 </Panel>
-                <Panel title={<span>Parking Permits</span>}>
-                    <div className="row marginless-row" style={{marginTop: 40}}>
-                      <ParkingPermits className="col s12" townshipCode={this.props.townshipCode} />
-                    </div>
-                </Panel>
                 <Panel title={<span>Locations Permit Rate</span>}>
                     <div className="row marginless-row" style={{marginTop: 40}}>
                       <LocationsRate className="col s12" townshipCode={this.props.townshipCode} />
@@ -51,6 +46,11 @@ export default class TownshipPanelPermits extends React.Component {
                   <div className="row marginless-row" style={{marginTop: 40}}>
                     <PermitTypes className="col s12" townshipCode={this.props.townshipCode} />
                   </div>  
+                </Panel>
+                <Panel title={<span>Parking Permits</span>}>
+                    <div className="row marginless-row" style={{marginTop: 40}}>
+                      <ParkingPermits className="col s12" townshipCode={this.props.townshipCode} />
+                    </div>
                 </Panel>
               </Tabbordion>
             </div>

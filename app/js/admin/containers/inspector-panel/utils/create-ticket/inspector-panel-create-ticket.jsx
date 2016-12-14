@@ -56,6 +56,7 @@ export const fields = [
   'twp_payment', 
   'paid_amount', 
   'paid_date',
+  'parked_location_address'
 ]
 
 class customColumnComponent extends React.Component {
@@ -115,7 +116,7 @@ class InspectorCreateTicket extends React.Component {
   handleSuccess() {
     this.props.resetLoading();
     $('#modal-inspector-ticket-create').closeModal();
-    this.props.fetchInspectorTicket();
+    this.props.fetchInspectorTicket(this.props.townshipCode);
     this.setState({rowData: {}, showEditDuplicateButtons: false});
     $('#modal-success').openModal();
   }
@@ -131,7 +132,7 @@ class InspectorCreateTicket extends React.Component {
       return( 
         <div className="col s12 admin-form-input">
           <div className="form-group">
-            <label>{data}</label>
+            <div></div>
             <input type="text" placeholder={data} onChange={(event) => 
               dispatch(change('create-ticket', data, event.target.value))
             }/>
@@ -147,8 +148,6 @@ class InspectorCreateTicket extends React.Component {
         modalName="modal-inspector-ticket-create" 
         modalText="Create a Ticket" 
         submitType="CREATE"
-        initialValues={null}
-        editMode={false}
         handleSuccess={this.handleSuccess}
         townshipCode={this.props.townshipCode}
       />
@@ -156,7 +155,6 @@ class InspectorCreateTicket extends React.Component {
   }
 
   renderTable() {
-    console.log(this.props.inspectorTicketFetched)
     let parkingData = this.props.inspectorTicketFetched.data.resource;
 
     var renderEditModal = this.renderEditModal;
@@ -209,7 +207,7 @@ class InspectorCreateTicket extends React.Component {
 
           <a
             className="modal-trigger waves-effect waves-light btn valign" 
-            onClick={() => $('#modal-inspector-ticket-create').openModal()}
+            onClick={() => {$('#modal-inspector-ticket-create').openModal(); window.scrollTo(0, 0);}}
             style={{margin: 10}}>Add New Ticket</a>
 
         </div>
@@ -230,7 +228,7 @@ class InspectorCreateTicket extends React.Component {
         onClick={() => {
           this.setState({showEditModal: true})
           $('#modal-inspector-ticket-edit').openModal(); 
-        }}
+        window.scrollTo(0, 0);}}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">edit</i>
           <h4> Edit - Parking Ticket ID: {recordId} </h4>
@@ -240,7 +238,7 @@ class InspectorCreateTicket extends React.Component {
         onClick={() => {
           this.setState({showEditModal: true})
           $('#modal-inspector-ticket-duplicate').openModal(); 
-        }}
+        window.scrollTo(0, 0);}}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">content_copy</i>
           <h4> Duplicate - Parking Ticket ID: {recordId} </h4>
@@ -278,6 +276,7 @@ class InspectorCreateTicket extends React.Component {
                   ajaxDelete('user_vehicles', recordId, this.handleSuccess);
                   this.setState({showEditDuplicateButtons: false});
                   window.scrollTo(0, 0);
+                  window.scrollTo(0, 0);
                 }}>Yes</a>
               </div>
             </div>
@@ -311,39 +310,30 @@ class InspectorCreateTicket extends React.Component {
             </div>
           </div>
         </Body>
+        {this.renderCreateModal()}
 
-        { 
-          this.props.inspectorTicketFetched.isLoading ? 
-          <div>  </div> : this.renderCreateModal()}
-
-        { 
-          !this.state.showEditModal ?
-          <div></div> : 
-          <div>
-            <InspectorPanelCreateTicketForm
-              initialValues={this.state.rowData} 
-              handleSuccess={this.handleSuccess}
-              modalName="modal-inspector-ticket-edit" 
-              modalText="Edit a Ticket" 
-              submitType="EDIT"
-              initialValues={this.state.rowData} 
-              rowData={this.state.rowData}
-              handleSuccess={this.handleSuccess}
-              townshipCode={this.props.townshipCode}
-              />
-            <InspectorPanelCreateTicketForm 
-              initialValues={this.state.rowData} 
-              handleSuccess={this.handleSuccess}
-              modalName="modal-inspector-ticket-duplicate" 
-              modalText="Duplicate a Ticket" 
-              submitType="DUPLICATE"
-              initialValues={this.state.rowData} 
-              rowData={this.state.rowData}
-              handleSuccess={this.handleSuccess}
-              townshipCode={this.props.townshipCode}
-              />
-          </div>
-        }
+        <InspectorPanelCreateTicketForm
+          initialValues={this.state.rowData} 
+          handleSuccess={this.handleSuccess}
+          modalName="modal-inspector-ticket-edit" 
+          modalText="Edit a Ticket" 
+          submitType="EDIT"
+          initialValues={this.state.rowData} 
+          rowData={this.state.rowData}
+          handleSuccess={this.handleSuccess}
+          townshipCode={this.props.townshipCode}
+          />
+        <InspectorPanelCreateTicketForm 
+          initialValues={this.state.rowData} 
+          handleSuccess={this.handleSuccess}
+          modalName="modal-inspector-ticket-duplicate" 
+          modalText="Duplicate a Ticket" 
+          submitType="DUPLICATE"
+          initialValues={this.state.rowData} 
+          rowData={this.state.rowData}
+          handleSuccess={this.handleSuccess}
+          townshipCode={this.props.townshipCode}
+          />
 
         <div id="modal-success" className="modal">
           <div className="modal-content">

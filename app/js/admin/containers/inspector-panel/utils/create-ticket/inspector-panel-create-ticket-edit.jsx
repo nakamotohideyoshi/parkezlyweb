@@ -150,7 +150,7 @@ export default class InspectorPanelCreateTicketEdit extends React.Component {
       return( 
         <div className="col s12 admin-form-input">
           <div className="form-group">
-            <label>{data}</label>
+            <div></div>
             <input type="text" placeholder={data} {...this.props.fields[data]}/>
           </div>
         </div>
@@ -207,7 +207,7 @@ export default class InspectorPanelCreateTicketEdit extends React.Component {
       return( 
         <div className="col s12 admin-form-input">
           <div className="form-group">
-            <label>{data}</label>
+            <div></div>
             <input type="text" placeholder={data} {...this.props.fields[data]}/>
           </div>
         </div>

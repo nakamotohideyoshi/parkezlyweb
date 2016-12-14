@@ -39,10 +39,11 @@ export default function notifyMain(app) {
     newTicketNotify(app)
 
     /* Notifications (Every 60 seconds) */
+    /*
     setInterval(() => {
         meterExpiredNotify(app);
     }, 60*1000); //3600000 = 1 hour
-    
+    */
     /*
     let cronj = schedule.scheduleJob('0 * * * *', function(){
         console.log('Execute cron job every hour!');

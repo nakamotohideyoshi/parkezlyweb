@@ -131,7 +131,7 @@ class TownshipPanelParkingRules extends React.Component {
       return( 
         <div className="col s12 admin-form-input">
           <div className="form-group">
-            <label>{data}</label>
+            <div></div>
             <input type="text" placeholder={data} onChange={(event) => 
               dispatch(change('parking-rules', data, event.target.value))
             }/>
@@ -257,7 +257,7 @@ class TownshipPanelParkingRules extends React.Component {
 
           <a
             className="modal-trigger waves-effect waves-light btn valign" 
-            onClick={() => $('#modal-township-parking-rules-create').openModal()}
+            onClick={() => {$('#modal-township-parking-rules-create').openModal(); window.scrollTo(0, 0);}}
             style={{margin: 10}}>Add New Parking Rule</a>
 
         </div>
@@ -316,6 +316,7 @@ class TownshipPanelParkingRules extends React.Component {
                   $('#modal-delete').closeModal()
                   ajaxDelete('parking_rules', this.state.rowData.id, this.handleSuccess);
                   this.setState({showEditDuplicateButtons: false});
+                  window.scrollTo(0, 0);
                   window.scrollTo(0, 0);
                 }}>Yes</a>
               </div>

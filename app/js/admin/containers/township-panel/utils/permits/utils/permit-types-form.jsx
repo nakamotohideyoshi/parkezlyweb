@@ -47,7 +47,6 @@ class PermitTypesForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
     this.selectizeOptionsUpdate = this.selectizeOptionsUpdate.bind(this);
-    this.props.dispatch(change('permit-types-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
   }
 
   handleSubmit(data) {
@@ -150,7 +149,7 @@ class PermitTypesForm extends React.Component {
       return( 
         <div key={data.id} className="col s12 admin-form-input">
           <div className="form-group">
-            <label>{data}</label>
+            <div></div>
             <input type="text" placeholder={data} {...this.props.fields[data]}/>
           </div>
         </div>
@@ -170,6 +169,17 @@ class PermitTypesForm extends React.Component {
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
           <div id={this.props.modalName} className="modal modal-fixed-footer managed-parking-modal">
+            <nav>
+							<div className="nav-wrapper nav-admin">
+								<a className="brand-logo center">{this.props.modalText}</a>
+								<i 
+								className="material-icons right right-align clickable" 
+								style={{marginRight: 15, lineHeight: "55px"}}
+								onClick={() => {
+									$('#' + this.props.modalName).closeModal();
+								}}>close</i>
+							</div>
+						</nav>
             <div className="modal-content">
 
               <div className="row">

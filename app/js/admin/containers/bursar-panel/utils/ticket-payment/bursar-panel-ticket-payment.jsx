@@ -231,7 +231,7 @@ class BursarPanelTicketPayment extends React.Component {
       return( 
         <div className="col s12 admin-form-input">
           <div className="form-group">
-            <label>{data}</label>
+            <div></div>
             <input type="text" placeholder={data} onChange={(event) => 
               dispatch(change('ticket-payment', data, event.target.value))
             }/>
@@ -370,7 +370,7 @@ class BursarPanelTicketPayment extends React.Component {
             style={{margin: 10}}> Add New Card Payment</button>
           <a
             className="modal-trigger waves-effect waves-light btn valign" 
-            onClick={() => $('#modal-bursar-payment-create').openModal()}
+            onClick={() => {$('#modal-bursar-payment-create').openModal()}}
             style={{margin: 10}}> Add New Payment Record</a>
         </div>
       </div>
@@ -385,7 +385,7 @@ class BursarPanelTicketPayment extends React.Component {
         onClick={() => {
           this.setState({showEditModal: true})
           $('#modal-bursar-ticket-edit').openModal(); 
-        }}
+        window.scrollTo(0, 0);}}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">edit</i>
           <h4> Edit - Ticket Payment ID: {recordId} </h4>
@@ -395,7 +395,7 @@ class BursarPanelTicketPayment extends React.Component {
         onClick={() => {
           this.setState({showEditModal: true})
           $('#modal-bursar-ticket-duplicate').openModal(); 
-        }}
+        window.scrollTo(0, 0);}}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">content_copy</i>
           <h4> Duplicate - Ticket Payment ID: {recordId} </h4>
@@ -432,6 +432,7 @@ class BursarPanelTicketPayment extends React.Component {
                   $('#modal-delete').closeModal()
                   ajaxDelete('ticket_payments', recordId, this.handleSuccess);
                   this.setState({showEditDuplicateButtons: false});
+                  window.scrollTo(0, 0);
                   window.scrollTo(0, 0);
                 }}>Yes</a>
               </div>

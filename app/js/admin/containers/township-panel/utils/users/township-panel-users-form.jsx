@@ -3,7 +3,7 @@ import { reduxForm, change } from 'redux-form'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import datetime from 'node-datetime'
-import { browserHistory } from 'react-router'
+import { browserHistory, Link } from 'react-router'
 import {createFilter} from 'react-search-input';
 
 import Body from "../../../../../common/components/body/body.jsx"
@@ -172,11 +172,11 @@ class TownshipPanelUsersForm extends React.Component {
 								/>
                 <AdminSelectize 
                   staticOptions={true}
+                  fieldData={this.props.fields}
 									options = {[{label: "ACTIVE", value: "ACTIVE"}, {label: "INACTIVE", value: "INACTIVE"}]} 
 									objectKey={'status'} 
                   fieldName={'Status'}
 									formName={'township-users-form'} 
-									fieldData={this.props.fields}
 									dispatch={dispatch}
 								/>
               </div>

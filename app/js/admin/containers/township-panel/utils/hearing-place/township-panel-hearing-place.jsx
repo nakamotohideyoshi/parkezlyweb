@@ -87,7 +87,7 @@ class TownshipPanelHearingPlace extends React.Component {
       return( 
         <div className="col s12 admin-form-input">
           <div className="form-group">
-            <label>{data}</label>
+            <div></div>
             <input type="text" placeholder={data} onChange={(event) => 
               dispatch(change('create-ticket', data, event.target.value))
             }/>
@@ -126,6 +126,7 @@ class TownshipPanelHearingPlace extends React.Component {
         initialValues={null}
         editMode={false}
         handleSuccess={this.handleSuccess}
+        townshipCode={this.props.townshipCode}
       />
     );
 
@@ -176,7 +177,7 @@ class TownshipPanelHearingPlace extends React.Component {
 
           <a
             className="modal-trigger waves-effect waves-light btn valign" 
-            onClick={() => $('#modal-hearing-place-create').openModal()}
+            onClick={() => {$('#modal-hearing-place-create').openModal(); window.scrollTo(0, 0);}}
             style={{margin: 10}}>Add New Hearing Place</a>
 
         </div>
@@ -199,7 +200,7 @@ class TownshipPanelHearingPlace extends React.Component {
         onClick={() => {
           this.setState({showEditModal: true})
           $('#modal-hearing-place-edit').openModal(); 
-        }}
+        window.scrollTo(0, 0);}}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">edit</i>
           <h4> Edit - Hearing Place ID: {recordId} </h4>
@@ -209,7 +210,7 @@ class TownshipPanelHearingPlace extends React.Component {
         onClick={() => {
           this.setState({showEditModal: true})
           $('#modal-hearing-place-duplicate').openModal(); 
-        }}
+        window.scrollTo(0, 0);}}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">content_copy</i>
           <h4> Duplicate - Hearing Place ID: {recordId} </h4>
@@ -246,6 +247,7 @@ class TownshipPanelHearingPlace extends React.Component {
                   $('#modal-delete').closeModal()
                   ajaxDelete('hearing_place_info', recordId, this.handleSuccess);
                   this.setState({showEditDuplicateButtons: false});
+                  window.scrollTo(0, 0);
                   window.scrollTo(0, 0);
                 }}>Yes</a>
               </div>
@@ -297,6 +299,7 @@ class TownshipPanelHearingPlace extends React.Component {
               initialValues={this.state.rowData} 
               rowData={this.state.rowData}
               handleSuccess={this.handleSuccess}
+              townshipCode={this.props.townshipCode}
               />
             <TownshipPanelHearingPlaceForm 
               initialValues={this.state.rowData} 
@@ -307,6 +310,7 @@ class TownshipPanelHearingPlace extends React.Component {
               initialValues={this.state.rowData} 
               rowData={this.state.rowData}
               handleSuccess={this.handleSuccess}
+              townshipCode={this.props.townshipCode}
               />
           </div>
         }

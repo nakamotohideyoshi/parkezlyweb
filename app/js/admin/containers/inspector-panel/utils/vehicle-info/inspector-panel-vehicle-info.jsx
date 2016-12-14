@@ -144,7 +144,7 @@ export default class InspectorVehicleInfo extends React.Component {
             :
             <div>
               <Link 
-                to={{pathname: `/admin/inspector/search-plate/${this.state.parkedCarData.id}`}} 
+                to={{pathname: `/admin/inspector/map-view/${this.props.vehicleCode}`}} 
                 className="card waves-effect waves-light center-align" 
                 style={{
                 backgroundColor: "#0d53cf", 

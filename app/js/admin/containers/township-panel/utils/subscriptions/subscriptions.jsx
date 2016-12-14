@@ -188,7 +188,7 @@ class Subscriptions extends React.Component {
         onClick={() => {
           this.setState({showEditModal: true})
           $('#modal-subscriptions-edit').openModal(); 
-        }}
+        window.scrollTo(0, 0);}}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">edit</i>
           <h4> Edit Subscription: {locationCode} </h4>
@@ -197,7 +197,7 @@ class Subscriptions extends React.Component {
         onClick={() => {
           this.setState({showEditModal: true})
           $('#modal-subscriptions-duplicate').openModal(); 
-        }}
+        window.scrollTo(0, 0);}}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">content_copy</i>
           <h4> Duplicate Subscription: {locationCode} </h4>
@@ -234,6 +234,7 @@ class Subscriptions extends React.Component {
                   ajaxDelete('subscriptions', this.state.rowData.id, this.handleSuccess);
                   ajaxGet('subscriptions', this.handleSuccess())
                   this.setState({showEditDuplicateButtons: false});
+                  window.scrollTo(0, 0);
                   window.scrollTo(0, 0);
                 }}>Yes</a>
               </div>

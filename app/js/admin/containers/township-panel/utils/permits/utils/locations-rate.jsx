@@ -176,6 +176,7 @@ class LocationsRate extends React.Component {
       <div className="container" style={{marginTop: 40}}>
         <a
         onClick={() => {
+          window.scrollTo(0, 0);
           this.setState({showEditModal: true})
           $('#modal-locations-rate-edit').openModal(); 
         }}
@@ -185,6 +186,7 @@ class LocationsRate extends React.Component {
         </a>
         <a
         onClick={() => {
+          window.scrollTo(0, 0)
           this.setState({showEditModal: true})
           $('#modal-locations-rate-duplicate').openModal(); 
         }}
@@ -223,6 +225,7 @@ class LocationsRate extends React.Component {
                   $('#modal-delete').closeModal()
                   ajaxDelete('locations_rate', this.state.rowData.id, this.handleSuccess);
                   this.setState({showEditDuplicateButtons: false});
+                  window.scrollTo(0, 0);
                   window.scrollTo(0, 0);
                 }}>Yes</a>
               </div>

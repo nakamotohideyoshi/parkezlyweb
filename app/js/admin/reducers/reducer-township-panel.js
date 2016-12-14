@@ -423,6 +423,8 @@ export function townshipViolationCodeEdited(state = initialState, action) {
       return _.assign({}, state, {isLoading: false, data: action.data, error: false });
     case types.TOWNSHIP_VIOLATION_CODE_PUT_REQ:
       return _.assign({}, state, {isLoading: true, error: false });
+    case types.RESET_LOADING:
+      return _.assign({}, state, initialState);
     default:
       return state;
   }
