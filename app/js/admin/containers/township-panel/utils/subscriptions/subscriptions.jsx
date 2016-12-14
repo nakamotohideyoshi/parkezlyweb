@@ -77,7 +77,7 @@ class Subscriptions extends React.Component {
     this.renderEditModal = this.renderEditModal.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
     this.renderCreateModal = this.renderCreateModal.bind(this);
-
+    window.scrollTo(0, 0);
     this.state = {
       showEditDuplicateButtons: false,
       parkingLocationCode: null,
@@ -93,6 +93,7 @@ class Subscriptions extends React.Component {
   }
 
   componentWillMount() {
+    window.scrollTo(0, 0);
     ajaxGet('subscriptions', (table) => {
       this.setState({subscriptionData: table.data.resource});
     });

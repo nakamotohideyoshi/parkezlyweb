@@ -75,13 +75,22 @@ class TownshipCreate extends React.Component {
     } = this.props
 
     return (
-      <div className="valign-wrapper">
-        <a 
-        className="modal-trigger waves-effect waves-light btn valign"
-        onClick={() => $('#modal-township-create').openModal()}>Create</a>
+      <div>
+        
 
           <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
-            <div id="modal-township-create" className="modal modal-fixed-footer">
+            <div id="modal-township-create" className="modal modal-fixed-footer managed-parking-modal">
+            <nav>
+							<div className="nav-wrapper nav-admin">
+								<a className="brand-logo center">Create A Township</a>
+								<i 
+								className="material-icons right right-align clickable" 
+								style={{marginRight: 15, lineHeight: "55px"}}
+								onClick={() => {
+									$('#modal-township-create').closeModal();
+								}}>close</i>
+							</div>
+						</nav>
               <div className="modal-content">
                 <div className="row">
                   <div className="center-align">
@@ -93,93 +102,79 @@ class TownshipCreate extends React.Component {
                 <div className="row">
                   <div className="col s12 admin-form-input">
                     <div className="form-group">
-                      <label>Manager ID</label>
-                      <input type="text" placeholder="Manager ID" {...manager_id}/>
-                    </div>
-                    {manager_id.touched && manager_id.error && <div className="form-required">{manager_id.error}</div>}
-                  </div>
-                  <div className="col s12 admin-form-input">
-                    <div className="form-group">
-                      <label>Manager Type</label>
-                      <input type="text" placeholder="Manager Type" {...manager_type}/>
-                    </div>
-                  </div>
-                  <div className="col s12 admin-form-input">
-                    <div className="form-group">
-                      <label>Lot Manager</label>
-                      <input type="text" placeholder="Lot Manager" {...lot_manager}/>
-                    </div>
-                  </div>
-                  <div className="col s12 admin-form-input">
-                    <div className="form-group">
-                      <label>Address</label>
-                      <input type="text" placeholder="Address" {...address}/>
-                    </div>
-                  </div>
-                  <div className="col s12 admin-form-input">
-                    <div className="form-group">
-                      <label>City</label>
-                      <input type="text" placeholder="City" {...city}/>
-                    </div>
-                  </div>
-                  <div className="col s12 admin-form-input">
-                    <div className="form-group">
-                      <label>State</label>
-                      <input type="text" placeholder="State" {...state}/>
-                    </div>
-                  </div>
-                  <div className="col s12 admin-form-input">
-                    <div className="form-group">
-                      <label>Country</label>
                       <input type="text" placeholder="Country" {...country}/>
                     </div>
                   </div>
                   <div className="col s12 admin-form-input">
                     <div className="form-group">
-                      <label>Zip</label>
+                      <input type="text" placeholder="City" {...city}/>
+                    </div>
+                  </div>
+                  <div className="col s12 admin-form-input">
+                    <div className="form-group">
+                      <input type="text" placeholder="State" {...state}/>
+                    </div>
+                  </div>
+                  <div className="col s12 admin-form-input">
+                    <div className="form-group">
                       <input type="number" placeholder="Zip" {...zip}/>
                     </div>
                   </div>
                   <div className="col s12 admin-form-input">
                     <div className="form-group">
-                      <label>Contact Person</label>
-                      <input type="text" placeholder="Contact Person" {...contact_person}/>
+                      <input type="text" placeholder="Manager Type" {...manager_type}/>
                     </div>
                   </div>
                   <div className="col s12 admin-form-input">
                     <div className="form-group">
-                      <label>Contact Title</label>
-                      <input type="text" placeholder="Contact Title" {...contact_title}/>
+                      <input type="text" placeholder="Lot Manager" {...lot_manager}/>
                     </div>
                   </div>
                   <div className="col s12 admin-form-input">
                     <div className="form-group">
-                      <label>Contact Number</label>
-                      <input type="text" placeholder="Contact Number" {...contact_number}/>
+                      <input type="text" placeholder="Address" {...address}/>
                     </div>
                   </div>
                   <div className="col s12 admin-form-input">
                     <div className="form-group">
-                      <label>Contact Email</label>
-                      <input type="email" placeholder="Contact Email" {...contact_email}/>
+                      <input type="text" placeholder="Phone" {...contact_number}/>
                     </div>
+                  </div>
+                  <div className="col s12 admin-form-input">
+                    <div className="form-group">
+                      <input type="email" placeholder="Email" {...contact_email}/>
+                    </div>
+                  </div>
+                  <div className="col s12 admin-form-input">
+                    <div className="form-group">
+                      <input type="text" placeholder="Owner Name" {...contact_person}/>
+                    </div>
+                  </div>
+                  <div className="col s12 admin-form-input">
+                    <div className="form-group">
+                      <input type="text" placeholder="Owner Type" {...contact_title}/>
+                    </div>
+                  </div>
+                  <div className="col s12 admin-form-input">
+                    <div className="form-group">
+                      <input type="text" placeholder="FacilityMgr Code" {...manager_id}/>
+                    </div>
+                    {manager_id.touched && manager_id.error && <div className="form-required">{manager_id.error}</div>}
                   </div>
                 </div>
               </div>
 
               <div className="modal-footer">
                 <div className="row marginless-row">
-								  <div className="col s4 right">
+                  <div className="col s6 left">
+                    <button className="modal-action modal-close waves-effect waves-light btn btn-yellow" onClick={resetForm}>Cancel</button>
+                  </div>
+
+                  <div className="col s6 center-align">
                     <button 
                     type="submit" 
                     disabled={submitting} 
                     className="waves-effect waves-light btn">Create Township</button>
-                  </div>
-                  <div className="col s3 right">
-                    <button className="modal-action modal-close waves-effect waves-light btn btn-yellow" onClick={resetForm}>Cancel</button>
-                  </div>
-                  <div className="col s4 center-align">
-                    <button className="waves-effect waves-light btn btn-green" disabled={submitting} onClick={resetForm}>Clear Values</button>
                   </div>
                 </div>
               </div>
@@ -210,3 +205,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   fields,
   validate
 })(TownshipCreate))
+
+/*
+<div className="col s4 center-align">
+  <button className="waves-effect waves-light btn btn-green" disabled={submitting} onClick={resetForm}>Clear Values</button>
+</div>
+*/
