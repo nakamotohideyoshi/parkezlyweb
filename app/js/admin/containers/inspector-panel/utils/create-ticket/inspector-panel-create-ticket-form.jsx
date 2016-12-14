@@ -257,7 +257,7 @@ class InspectorSearchTicketForm extends React.Component {
 
     return fields.map((data) => {
       return( 
-        <div className="col s6 admin-form-input">
+        <div className="col s12 admin-form-input">
           <div className="form-group">
             <label>{data}</label>
             <input type="text" placeholder={data} {...this.props.fields[data]}/>
@@ -301,7 +301,7 @@ class InspectorSearchTicketForm extends React.Component {
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-          <div id={this.props.modalName} className="modal modal-fixed-footer">
+          <div id={this.props.modalName} className="modal modal-fixed-footer managed-parking-modal">
             <div className="modal-content">
 
               <div className="row">
@@ -315,7 +315,7 @@ class InspectorSearchTicketForm extends React.Component {
                 { this.state.violationData === null ? 
                 <div> Loading... </div>
                 :
-                <div className="col s6 admin-form-input">
+                <div className="col s12 admin-form-input">
                   <div className="form-group">
                     <label>Violation Code</label>
                     <div clasName="input-field col s12">
@@ -353,7 +353,7 @@ class InspectorSearchTicketForm extends React.Component {
                 { this.state.hearingData === null ? 
                 <div> Loading... </div>
                 :
-                <div className="col s6 admin-form-input">
+                <div className="col s12 admin-form-input">
                   <div className="form-group">
                     <label>Hearing Location</label>
                     <div clasName="input-field col s12">
@@ -391,7 +391,7 @@ class InspectorSearchTicketForm extends React.Component {
                 { this.state.userData === null ? 
                 <div> Loading... </div>
                 :
-                <div className="col s6 admin-form-input">
+                <div className="col s12 admin-form-input">
                   <div className="form-group">
                     <label>User Profile</label>
                     <div clasName="input-field col s12">
@@ -414,7 +414,7 @@ class InspectorSearchTicketForm extends React.Component {
                 
                 {this.tempInputsEdit(this.props.initialValues)}
 
-                <div className="col s6 admin-form-input">
+                <div className="col s12 admin-form-input">
                   <div className="form-group">
                     <label htmlFor="paid_date">paid_date</label>
                     <input id="paid_date" className="paid_date" type="text"/>

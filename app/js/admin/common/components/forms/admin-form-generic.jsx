@@ -123,7 +123,7 @@ class AdminFormGeneric extends React.Component {
 
     return fields.map((data) => {
       return( 
-        <div className="col s6 admin-form-input">
+        <div className="col s12 admin-form-input">
           <div className="form-group">
             <label>{data}</label>
             <input type="text" placeholder={data} {...this.props.fields[data]}/>
@@ -144,7 +144,7 @@ class AdminFormGeneric extends React.Component {
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-          <div id={this.props.modalName} className="modal modal-fixed-footer">
+          <div id={this.props.modalName} className="modal modal-fixed-footer managed-parking-modal">
             <div className="modal-content">
 
               <div className="row">

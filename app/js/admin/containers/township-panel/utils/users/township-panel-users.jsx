@@ -278,7 +278,6 @@ class TownshipPanelUsers extends React.Component {
             initialValues={this.state.rowData} 
             handleSuccess={this.handleSuccess}
             townshipCode={this.props.townshipCode}
-            updateRowData={this.updateRowData}
           />
           <TownshipPanelUsersForm 
             modalName="modal-township-users-duplicate" 
@@ -287,7 +286,6 @@ class TownshipPanelUsers extends React.Component {
             initialValues={this.state.rowData} 
             handleSuccess={this.handleSuccess}
             townshipCode={this.props.townshipCode}
-            updateRowData={this.updateRowData}
           />
         </div>
 

@@ -156,7 +156,7 @@ class InspectorSearchTicketForm extends React.Component {
 
     return fields.map((data) => {
       return( 
-        <div className="col s6 admin-form-input">
+        <div className="col s12 admin-form-input">
           <div className="form-group">
             <label>{data}</label>
             <input type="text" placeholder={data} {...this.props.fields[data]}/>
@@ -187,7 +187,7 @@ class InspectorSearchTicketForm extends React.Component {
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-          <div id={this.props.modalName} className="modal modal-fixed-footer">
+          <div id={this.props.modalName} className="modal modal-fixed-footer managed-parking-modal">
             <div className="modal-content">
 
               <div className="row">
@@ -199,7 +199,7 @@ class InspectorSearchTicketForm extends React.Component {
 
               <div className="row">
 
-                <div className="col s6 admin-form-input">
+                <div className="col s12 admin-form-input">
                   <div className="form-group">
                     <label htmlFor="date_time">date_time</label>
                     <input id="date_time" className="date_time" type="text"/>
@@ -207,7 +207,7 @@ class InspectorSearchTicketForm extends React.Component {
                 </div>
                 {this.tempInputsEdit(this.props.initialValues)}
 
-                <div className="col s6 admin-form-input">
+                <div className="col s12 admin-form-input">
                   <div className="form-group">
                     <label>State</label>
                     <div clasName="input-field col s12">

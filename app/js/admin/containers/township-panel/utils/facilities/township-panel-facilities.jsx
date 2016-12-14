@@ -116,7 +116,7 @@ class TownshipPanelFacilities extends React.Component {
 
     return fields.map((data) => {
       return( 
-        <div className="col s6 admin-form-input">
+        <div className="col s12 admin-form-input">
           <div className="form-group">
             <label>{data}</label>
             <input type="text" placeholder={data} onChange={(event) => 
@@ -150,7 +150,6 @@ class TownshipPanelFacilities extends React.Component {
 
     return(
       <TownshipPanelFacilitiesForm
-
         modalName="modal-township-facilities-create" 
         modalText="Create a Facility" 
         submitType="CREATE"
@@ -313,7 +312,9 @@ class TownshipPanelFacilities extends React.Component {
                   <div className="township-userlist-container">
                     { this.props.townshipFacilitiesFetched.isLoading ||
                       this.props.townshipLocationsFetched.isLoading ? 
-                      <div> </div> : this.renderTable()}
+                       <div className="card-content center-align">
+                        <div className="center-align"> <Spinner /> </div> 
+                      </div> : this.renderTable()}
                   </div>
                </div>
                {this.state.showEditDuplicateButtons ? 
@@ -328,30 +329,25 @@ class TownshipPanelFacilities extends React.Component {
           this.props.townshipSchemeTypesFetched.isLoading ?
           <div> </div> : this.renderCreateModal()
         }
+        
+        <TownshipPanelFacilitiesForm
+          modalName="modal-township-facilities-edit" 
+          modalText="Edit a Facility" 
+          submitType="EDIT"
+          initialValues={this.state.rowData} 
+          handleSuccess={this.handleSuccess}
+          townshipCode={this.props.townshipCode}
+        />
+        <TownshipPanelFacilitiesForm
+          modalName="modal-township-facilities-duplicate" 
+          modalText="Duplicate a Facility" 
+          submitType="DUPLICATE"
+          initialValues={this.state.rowData} 
+          rowData={this.state.rowData}
+          handleSuccess={this.handleSuccess}
+          townshipCode={this.props.townshipCode}
+        />
 
-        { 
-          !this.state.showEditModal ?
-          <div></div> : 
-          <div>
-            <TownshipPanelFacilitiesForm
-              modalName="modal-township-facilities-edit" 
-              modalText="Edit a Facility" 
-              submitType="EDIT"
-              initialValues={this.state.rowData} 
-              handleSuccess={this.handleSuccess}
-              townshipCode={this.props.townshipCode}
-            />
-            <TownshipPanelFacilitiesForm
-              modalName="modal-township-facilities-duplicate" 
-              modalText="Duplicate a Facility" 
-              submitType="DUPLICATE"
-              initialValues={this.state.rowData} 
-              rowData={this.state.rowData}
-              handleSuccess={this.handleSuccess}
-              townshipCode={this.props.townshipCode}
-            />
-          </div>
-        }
 
         <div id="modal-success" className="modal">
           <div className="modal-content">

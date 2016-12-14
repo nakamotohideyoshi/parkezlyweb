@@ -56,7 +56,6 @@ class TownshipPanelUsersForm extends React.Component {
   }
 
   handleSubmit(data) {
-    console.log(data);
     $('#' + this.props.modalName).closeModal();
     switch(this.props.submitType) {
       case "CREATE":

@@ -68,7 +68,6 @@ class TownshipPanelFacilitiesForm extends React.Component {
   }
 
   handleSubmit(data) {
-    console.log(data);
     $('#' + this.props.modalName).closeModal();
     $('#modal-success').openModal();
     this.props.dispatch(change('facilities-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
@@ -96,9 +95,7 @@ class TownshipPanelFacilitiesForm extends React.Component {
   }
 
   componentWillMount() {
-    ajaxSelectizeGet('locations_rate', 'rate', this.selectizeOptionsUpdate);
     ajaxSelectizeGet('location_lot', 'location_code', this.selectizeOptionsUpdate);
-
     this.props.dispatch(change('facilities-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
     this.props.dispatch(change('facilities-form', 'township_code', this.props.townshipCode));
   }
@@ -109,7 +106,6 @@ class TownshipPanelFacilitiesForm extends React.Component {
       submitting,
       dispatch
     } = this.props
-
     $('.date_time')
     .bootstrapMaterialDatePicker({ time: true, format : 'YYYY-MM-DD HH:mm:ss' })
     .on('change', function(event) {
@@ -180,7 +176,7 @@ class TownshipPanelFacilitiesForm extends React.Component {
 
     return fields.map((data) => {
       return( 
-        <div className="col s6 admin-form-input">
+        <div className="col s12 admin-form-input">
           <div className="form-group">
             <label>{data}</label>
             <input type="text" placeholder={data} {...this.props.fields[data]}/>
@@ -208,9 +204,19 @@ class TownshipPanelFacilitiesForm extends React.Component {
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-          <div id={this.props.modalName} className="modal modal-fixed-footer">
+          <div id={this.props.modalName} className="modal modal-fixed-footer managed-parking-modal">
+            <nav>
+							<div className="nav-wrapper nav-admin">
+								<a className="brand-logo center">{this.props.modalText}</a>
+								<i 
+								className="material-icons right right-align clickable" 
+								style={{marginRight: 15, lineHeight: "55px"}}
+								onClick={() => {
+									$('#' + this.props.modalName).closeModal();
+								}}>close</i>
+							</div>
+						</nav>
             <div className="modal-content">
-
               <div className="row">
                 <div className="center-align">
                   <h4>{this.props.modalText}</h4>
@@ -219,56 +225,15 @@ class TownshipPanelFacilitiesForm extends React.Component {
               </div>
 
               <div className="row"> 
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label>Country</label>
-                    <div clasName="input-field col s12">
-                      <SimpleSelect 
-                        options = {countriesList} 
-                        placeholder = "Country"
-                        theme = "material"
-                        style={{marginTop: 5}}
-                        transitionEnter = {true} 
-                        onValueChange = {(value) => {
-                          dispatch(change('facilities-form', 'country', value.value)); 
-                        }}
-                        value={{label: this.props.fields['country'].value, value: this.props.fields['country'].value}}
-                        />
-                    </div>
-                  </div>
-                </div>
-                <div className="col s6 admin-form-input">
-                  <div className="form-group">
-                    <label>State</label>
-                    <div clasName="input-field col s12">
-                      <SimpleSelect 
-                        options = {statesList} 
-                        placeholder = "State"
-                        theme = "material"
-                        style={{marginTop: 5}}
-                        transitionEnter = {true} 
-                        onValueChange = {(value) => {
-                          dispatch(change('facilities-form', 'state', value.value)); 
-                        }}/>
-                    </div>
-                  </div>
-                </div>
 
                 <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'rate'} 
-                formName={'facilities-form'} 
-                fieldName={'parking_rate'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-                <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'location_code'} 
-                formName={'parking-rules-form'} 
-                fieldName={'location_code'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
+                  staticOptions={false}
+                  options={this.state.selectizeOptions}
+                  objectKey={'location_code'} 
+                  formName={'facilities-form'} 
+                  fieldName={'Location Code'}
+                  fieldData={this.props.fields}
+                  dispatch={dispatch} 
                 />
                 
                 {this.tempInputsEdit(this.props.initialValues)}

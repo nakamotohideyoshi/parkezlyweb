@@ -224,7 +224,7 @@ class TownshipPanelParkingRulesForm extends React.Component {
 
     return fields.map((data) => {
       return( 
-        <div className="col s6 admin-form-input">
+        <div className="col s12 admin-form-input">
           <div className="form-group">
             <label>{data}</label>
             <input type="text" placeholder={data} {...this.props.fields[data]}/>
@@ -252,7 +252,7 @@ class TownshipPanelParkingRulesForm extends React.Component {
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)} style={{margin: 0}}>
-          <div id={this.props.modalName} className="modal modal-fixed-footer">
+          <div id={this.props.modalName} className="modal modal-fixed-footer managed-parking-modal">
             <div className="modal-content">
 
               <div className="row">
@@ -263,7 +263,7 @@ class TownshipPanelParkingRulesForm extends React.Component {
               </div>
 
               <div className="row"> 
-                <div className="col s6 admin-form-input">
+                <div className="col s12 admin-form-input">
                   <div className="form-group">
                     <label>State</label>
                     <div clasName="input-field col s12">
@@ -281,49 +281,52 @@ class TownshipPanelParkingRulesForm extends React.Component {
                 </div>
                 
                 <AdminSelectize 
+                staticOptions={false}
+                fieldData={this.props.fields}
                 options={this.state.selectizeOptions}
                 objectKey={'manager_id'} 
                 formName={'parking-rules-form'} 
-                fieldName={'township_code'}
-                defaultData={this.props.rowData}
+                fieldName={'Township Code'}
                 dispatch={dispatch} 
                 />
                 
                 <AdminSelectize 
+                staticOptions={false}
+                fieldData={this.props.fields}
                 options={this.state.selectizeOptions}
                 objectKey={'rate'} 
                 formName={'parking-rules-form'} 
-                fieldName={'parking_rate'}
-                defaultData={this.props.rowData}
+                fieldName={'Parking Rate'}
                 dispatch={dispatch} 
                 />
 
                 <AdminSelectize 
+                staticOptions={false}
+                fieldData={this.props.fields}
                 options={this.state.selectizeOptions}
                 objectKey={'location_code'} 
                 formName={'parking-rules-form'} 
-                fieldName={'location_code'}
-                defaultData={this.props.rowData}
+                fieldName={'Location Code'}
                 dispatch={dispatch} 
                 />
 
                 <AdminSelectize 
+                  staticOptions={false}
+                  fieldData={this.props.fields}
                   options={this.state.selectizeOptions}
                   objectKey={'location_name'} 
                   formName={'parking-rules-form'} 
                   fieldName={'location_name'}
-                  defaultData={this.props.rowData}
                   dispatch={dispatch} 
                 />
-
-                <div className="col s6 admin-form-input">
+                <div className="col s12 admin-form-input">
                   <div className="form-group">
                     <label htmlFor="date_time">date_time</label>
                     <input id="date_time" className="date_time" type="text"/>
                   </div>
                 </div>
 
-                <div className="col s6 admin-form-input">
+                <div className="col s12 admin-form-input">
                   <div className="form-group">
                     <label htmlFor="date">date</label>
                     <input id="date" className="date" type="text"/>
@@ -332,19 +335,21 @@ class TownshipPanelParkingRulesForm extends React.Component {
 
                 {this.tempInputsEdit(this.props.initialValues)}
 
-                <div className="col s6 admin-form-input">
+                <div className="col s12 admin-form-input">
                   <div className="form-group">
                     <label htmlFor="start_time">start_time</label>
                     <input id="start_time" className="start_time" type="text"/>
                   </div>
                 </div>
 
-                <div className="col s6 admin-form-input">
+                <div className="col s12 admin-form-input">
                   <div className="form-group">
                     <label htmlFor="end_time">end_time</label>
                     <input id="end_time" className="end_time" type="text"/>
                   </div>
                 </div>
+
+  
 
               </div>
             </div>
