@@ -63,7 +63,6 @@ class ParkingPermitsForm extends React.Component {
     
     $('#' + this.props.modalName).closeModal();
     this.props.dispatch(change('parking-permits-form', 'date_time', moment().format('YYYY-MM-DD HH:mm:ss')));
-
     switch(this.props.submitType) {
       case "CREATE":
         this.props.createTownshipParkingPermits(data);
@@ -154,7 +153,6 @@ class ParkingPermitsForm extends React.Component {
     } = this.props;
 
     const fields = [
-      'date_time',
       'covered_locations',
       'cost',
       'year',
@@ -166,7 +164,7 @@ class ParkingPermitsForm extends React.Component {
         <div key={data.id} className="col s12 admin-form-input">
           <div className="form-group">
             <div></div>
-            <input type="text" {...this.props.fields[data]}/>
+            <input type="text" placeholder={data} {...this.props.fields[data]}/>
           </div>
         </div>
       );
@@ -206,11 +204,10 @@ class ParkingPermitsForm extends React.Component {
               </div>
 
               <div className="row"> 
-
-                 <AdminSelectize 
-              staticOptions={false}
-              fieldData={this.props.fields}
-              options={this.state.selectizeOptions}
+                <AdminSelectize 
+                  staticOptions={false}
+                  fieldData={this.props.fields}
+                  options={this.state.selectizeOptions}
                   objectKey={'permit_type'} 
                   formName={'parking-permits-form'} 
                   fieldName={'permit_type'}
@@ -218,9 +215,9 @@ class ParkingPermitsForm extends React.Component {
                   dispatch={dispatch} 
                 />
                 <AdminSelectize 
-              staticOptions={false}
-              fieldData={this.props.fields}
-              options={this.state.selectizeOptions}
+                  staticOptions={false}
+                  fieldData={this.props.fields}
+                  options={this.state.selectizeOptions}
                   objectKey={'scheme_type'} 
                   formName={'parking-permits-form'} 
                   fieldName={'scheme_type'}
@@ -228,35 +225,17 @@ class ParkingPermitsForm extends React.Component {
                   dispatch={dispatch} 
                 />
                 <AdminSelectize 
-              staticOptions={false}
-              fieldData={this.props.fields}
-              options={this.state.selectizeOptions}
+                  staticOptions={false}
+                  fieldData={this.props.fields}
+                  options={this.state.selectizeOptions}
                   objectKey={'permit_name'} 
                   formName={'parking-permits-form'} 
                   fieldName={'permit_name'}
                   defaultData={this.props.rowData}
                   dispatch={dispatch} 
                 />
-                <AdminSelectize 
-              staticOptions={false}
-              fieldData={this.props.fields}
-              options={this.state.selectizeOptions}
-                  objectKey={'full_address'} 
-                  formName={'parking-permits-form'} 
-                  fieldName={'location_address'}
-                  defaultData={this.props.rowData}
-                  dispatch={dispatch} 
-                />
-                <AdminSelectize 
-              staticOptions={false}
-              fieldData={this.props.fields}
-              options={this.state.selectizeOptions}
-                  objectKey={'location_name'} 
-                  formName={'parking-permits-form'} 
-                  fieldName={'covered_locations'}
-                  defaultData={this.props.rowData}
-                  dispatch={dispatch} 
-                />
+
+            
                 {this.tempInputsEdit(this.props.initialValues)}
                 
               </div>
@@ -302,3 +281,27 @@ export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   fields,
 })(ParkingPermitsForm));
 //    TownshipParkingPermitsEdited: state.TownshipParkingPermitsEdited,
+
+/*
+
+                <AdminSelectize 
+                  staticOptions={false}
+                  fieldData={this.props.fields}
+                  options={this.state.selectizeOptions}
+                  objectKey={'full_address'} 
+                  formName={'parking-permits-form'} 
+                  fieldName={'location_address'}
+                  defaultData={this.props.rowData}
+                  dispatch={dispatch} 
+                />
+                <AdminSelectize 
+                  staticOptions={false}
+                  fieldData={this.props.fields}
+                  options={this.state.selectizeOptions}
+                  objectKey={'location_name'} 
+                  formName={'parking-permits-form'} 
+                  fieldName={'covered_locations'}
+                  defaultData={this.props.rowData}
+                  dispatch={dispatch} 
+                />
+                */

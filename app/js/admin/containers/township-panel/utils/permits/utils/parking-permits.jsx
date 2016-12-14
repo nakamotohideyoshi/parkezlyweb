@@ -107,8 +107,6 @@ class ParkingPermits extends React.Component {
   renderCreateModal() {
     return (
       <ParkingPermitsForm
-        initialValues={this.state.rowData}
-        handleSuccess={this.handleSuccess}
         modalName="modal-parking-permits-create"
         modalText="Create a Parking Permit"
         submitType="CREATE"
@@ -275,8 +273,7 @@ class ParkingPermits extends React.Component {
               style={{ margin: 10 }}>Add New Parking Permit</a>
           </div>
         </div>
-        {this.props.townshipParkingPermitsFetched.isLoading ?
-          <div> </div> : this.renderCreateModal()}
+        
         {this.state.showEditDuplicateButtons ?
           this.renderEditDuplicateButtons(this.state.rowData.id) : <div> </div>}
 
@@ -291,7 +288,7 @@ class ParkingPermits extends React.Component {
             className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
           </div>
         </div>
-
+        {this.renderCreateModal()}
       </div>
     );
   }

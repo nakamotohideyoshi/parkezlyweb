@@ -65,7 +65,9 @@ class TownshipListRoot extends React.Component {
     return (
       <div className="blue-body">
         <Body showHeader={true}>
+        
           <div className="content-container">
+          <TownshipCreate />
             <div className="row">
               <div className="col s12 m12 l6 township-content-width">
                 <nav>
@@ -77,8 +79,11 @@ class TownshipListRoot extends React.Component {
                 <div className="card">
                   <div className="row marginless-row valign-wrapper">
                     <div className="col s1"/>
+                    
                     <div className="col s3">
-                      <TownshipCreate />
+                      <a 
+                      className="modal-trigger waves-effect waves-light btn valign"
+                      onClick={() => $('#modal-township-create').openModal()}>Create</a>
                     </div>
                     <div className="search-wrapper card col s7" style={{marginBottom:10, marginTop: 10}}>
                       <div className="row marginless-row valign-wrapper">

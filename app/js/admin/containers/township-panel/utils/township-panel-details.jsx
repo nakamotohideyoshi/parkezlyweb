@@ -160,7 +160,6 @@ class TownshipDetails extends React.Component {
                     <input value={townshipData.zip} onChange={() => this.setState({townshipData: townshipData})}/>
                   </div>
                 </div>
-                <div className="row">
                   <div className="col s12 admin-form-input">
                     <div className="form-group">
                       <label>Address</label>
@@ -209,7 +208,6 @@ class TownshipDetails extends React.Component {
                       <input value={townshipData.manager_id} onChange={() => this.setState({townshipData: townshipData})}/>
                     </div>
                   </div>
-                </div>
               </div>
             </div>
             <div className="card-action">
@@ -245,61 +243,61 @@ class TownshipDetails extends React.Component {
                 </div>
                 
                 <div className="row">
-                  <div className="col s6">
+                  <div className="col s12">
                     <div className="form-group">
                       <label>Country</label>
                       <input type="text" placeholder="Country" {...country}/>
                     </div>
                   </div>
-                  <div className="col s6">
+                  <div className="col s12">
                     <div className="form-group">
                       <label>State</label>
                       <input type="text" placeholder="State" {...state}/>
                     </div>
                   </div>
-                  <div className="col s6">
+                  <div className="col s12">
                     <div className="form-group">
                       <label>City</label>
                       <input type="text" placeholder="City" {...city}/>
                     </div>
                   </div>
-                  <div className="col s6">
+                  <div className="col s12">
                     <div className="form-group">
                       <label>Zip</label>
                       <input type="number" placeholder="Zip" {...zip}/>
                     </div>
                   </div>
-                  <div className="col s6">
+                  <div className="col s12">
                     <div className="form-group">
                       <label>Address</label>
                       <input type="text" placeholder="Address" {...address}/>
                     </div>
                   </div>
-                  <div className="col s6">
+                  <div className="col s12">
                     <div className="form-group">
                       <label>Phone</label>
                       <input type="text" placeholder="Contact Number" {...contact_number}/>
                     </div>
                   </div>
-                  <div className="col s6">
+                  <div className="col s12">
                     <div className="form-group">
                       <label>Email</label>
                       <input type="email" placeholder="Contact Email" {...contact_email}/>
                     </div>
                   </div>
-                  <div className="col s6">
+                  <div className="col s12">
                     <div className="form-group">
                       <label>Contact Person</label>
                       <input type="text" placeholder="Contact Person" {...contact_person}/>
                     </div>
                   </div>
-                  <div className="col s6">
+                  <div className="col s12">
                     <div className="form-group">
                       <label>Contact Title</label>
                       <input type="text" placeholder="Contact Title" {...contact_title}/>
                     </div>
                   </div>
-                  <div className="col s6" style={{paddingBottom: 15}}>
+                  <div className="col s12" style={{paddingBottom: 15}}>
                     <div className="form-group">
                       <label>Owner Type</label>
                       <div clasName="input-field col s12">
@@ -315,7 +313,7 @@ class TownshipDetails extends React.Component {
                           {label: "Commercial", value: "COMMERCIAL"},
                         ]} 
                         placeholder = "Owner Type"
-                        theme = "material" 
+                        theme = "default" 
                         defaultValue = {{label: townshipData.manager_type, value: townshipData.manager_type}}
                         onValueChange = {(value) => {
                           dispatch(change("township-panel-details", "manager_type", value.value)); 
@@ -323,13 +321,13 @@ class TownshipDetails extends React.Component {
                       </div>
                     </div>
                   </div>
-                  <div className="col s6">
+                  <div className="col s12">
                     <div className="form-group">
                       <label>Owner Name</label>
                       <input type="text" placeholder="Lot Manager" {...lot_manager}/>
                     </div>
                   </div>  
-                  <div className="col s6">
+                  <div className="col s12">
                     <div className="form-group">
                       <label>FacilityMgr Code</label>
                       <input type="text" placeholder="Manager ID" {...manager_id}/>

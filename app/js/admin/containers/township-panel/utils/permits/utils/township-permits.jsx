@@ -115,12 +115,9 @@ class TownshipPermits extends React.Component {
 
     return (
       <TownshipPermitsForm
-        initialValues={this.state.rowData}
-        handleSuccess={this.handleSuccess}
         modalName="modal-township-permits-create"
         modalText="Create a Township Permit"
         submitType="CREATE"
-        initialValues={this.state.rowData}
         rowData={this.state.rowData}
         handleSuccess={this.handleSuccess}
         townshipCode={this.props.townshipCode}
@@ -226,34 +223,29 @@ class TownshipPermits extends React.Component {
             </div>
           </div>
         </div>
-        {
-          !this.state.showEditModal ?
-            <div></div> :
-            <div>
-              <TownshipPermitsForm
-                initialValues={this.state.rowData}
-                handleSuccess={this.handleSuccess}
-                modalName="modal-township-permits-edit"
-                modalText="Edit a Township Permit"
-                submitType="EDIT"
-                initialValues={this.state.rowData}
-                rowData={this.state.rowData}
-                handleSuccess={this.handleSuccess}
-                townshipCode={this.props.townshipCode}
-                />
-              <TownshipPermitsForm
-                initialValues={this.state.rowData}
-                handleSuccess={this.handleSuccess}
-                modalName="modal-township-permits-duplicate"
-                modalText="Duplicate a Township Permit"
-                submitType="DUPLICATE"
-                initialValues={this.state.rowData}
-                rowData={this.state.rowData}
-                handleSuccess={this.handleSuccess}
-                townshipCode={this.props.townshipCode}
-                />
-            </div>
-        }
+
+        <TownshipPermitsForm
+          initialValues={this.state.rowData}
+          handleSuccess={this.handleSuccess}
+          modalName="modal-township-permits-edit"
+          modalText="Edit a Township Permit"
+          submitType="EDIT"
+          initialValues={this.state.rowData}
+          rowData={this.state.rowData}
+          handleSuccess={this.handleSuccess}
+          townshipCode={this.props.townshipCode}
+          />
+        <TownshipPermitsForm
+          initialValues={this.state.rowData}
+          handleSuccess={this.handleSuccess}
+          modalName="modal-township-permits-duplicate"
+          modalText="Duplicate a Township Permit"
+          submitType="DUPLICATE"
+          initialValues={this.state.rowData}
+          rowData={this.state.rowData}
+          handleSuccess={this.handleSuccess}
+          townshipCode={this.props.townshipCode}
+          />
       </div>
     );
   }
@@ -281,8 +273,9 @@ class TownshipPermits extends React.Component {
               }}
               style={{ margin: 10 }}>Add New Township Permit</a>
           </div>
-          {this.props.townshipUsersFetched.isLoading ? <div> </div> : this.renderCreateModal() }
+          
         </div>
+        {this.renderCreateModal()}
         {this.state.showEditDuplicateButtons ?
           this.renderEditDuplicateButtons(this.state.rowData.id) : <div> </div>}
 

@@ -106,12 +106,9 @@ class LocationsRate extends React.Component {
   renderCreateModal() {
     return(
       <LocationsRateForm
-        initialValues={this.state.rowData} 
-        handleSuccess={this.handleSuccess}
         modalName="modal-locations-rate-create" 
         modalText="Create a Location Rate" 
         submitType="CREATE"
-        initialValues={this.state.rowData} 
         rowData={this.state.rowData}
         handleSuccess={this.handleSuccess}
         townshipCode={this.props.townshipCode}
@@ -270,8 +267,6 @@ class LocationsRate extends React.Component {
           <div></div> : 
           <div>
             <LocationsRateForm
-              initialValues={this.state.rowData} 
-              handleSuccess={this.handleSuccess}
               modalName="modal-locations-rate-edit" 
               modalText="Edit a Location Rate" 
               submitType="EDIT"
@@ -281,8 +276,6 @@ class LocationsRate extends React.Component {
               townshipCode={this.props.townshipCode}
             />
             <LocationsRateForm
-              initialValues={this.state.rowData} 
-              handleSuccess={this.handleSuccess}
               modalName="modal-locations-rate-duplicate" 
               modalText="Duplicate a Location Rate" 
               submitType="DUPLICATE"

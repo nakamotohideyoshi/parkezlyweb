@@ -104,12 +104,9 @@ class PermitTypes extends React.Component {
     } = this.props
     return(
       <PermitTypesForm
-        initialValues={this.state.rowData} 
-        handleSuccess={this.handleSuccess}
         modalName="modal-permit-types-create" 
         modalText="Create a Permit Type" 
         submitType="CREATE"
-        initialValues={this.state.rowData} 
         rowData={this.state.rowData}
         handleSuccess={this.handleSuccess}
       />
@@ -268,11 +265,8 @@ class PermitTypes extends React.Component {
               onClick={() => $('#modal-permit-types-create').openModal()}
               style={{margin: 10}}>Add New Permit Type</a>
           </div>
-            {
-              this.props.townshipPermitTypesFetched.isLoading ?
-              <div> </div> : this.renderCreateModal()
-            }
         </div>
+        {this.renderCreateModal()}
         {this.state.showEditDuplicateButtons ? 
                 this.renderEditDuplicateButtons(this.state.rowData.id) : <div> </div>}
                 
