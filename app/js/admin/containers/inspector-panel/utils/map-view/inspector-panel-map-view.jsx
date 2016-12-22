@@ -12,6 +12,7 @@ import { fitBounds } from 'google-map-react/utils';
 import MapMarker from './utils/marker'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
+import {updateMapView} from '../../../../actions/actions-inspector-panel.jsx'
 
 class InspectorMapView extends React.Component {
 
@@ -26,8 +27,11 @@ class InspectorMapView extends React.Component {
       redOff: false,
       greenOff: false,
       zoom: 10,
-			lat: 59.955413,
-			lng: 30.337844,
+			lat: 40.7128,
+			lng: -73.935242,
+      zoom: 10,
+			lat: 40.7128,
+			lng: -73.935242,
     }
 
     this.ajaxGet = this.ajaxGet.bind(this);
@@ -35,6 +39,11 @@ class InspectorMapView extends React.Component {
   }
 
   componentWillMount() {
+    if(this.props.mapViewUpdated.isLoading == false) {
+      this.setState({zoom: 15, lat: parseFloat(this.props.mapViewUpdated.data.lat), lng: parseFloat(this.props.mapViewUpdated.data.lng)})
+    } else {
+      //ajaxGet()
+    }
     ajaxGet(`parked_cars?filter=(township_code=${this.props.townshipCode})`, this.ajaxGet);
   }
 
@@ -90,7 +99,6 @@ class InspectorMapView extends React.Component {
       let iconUrl;
       let renderMarker = true;
       let currentTime = moment.utc().diff(moment.utc(data.expiry_time), 'hours');
-      console.log(currentTime)
       if(currentTime < -1 && this.state.greenOff == false) {
         iconUrl = require('../../../../../../images/car_green@3x.png')
       } else if (currentTime > 0 && this.state.redOff == false) {
@@ -208,8 +216,8 @@ class InspectorMapView extends React.Component {
               <section style={{height: "calc(100% - 165px)"}}>
                 <GoogleMap
                   onClick={null}
-                  zoom={10}
-                  center={{ lat: 40.7128, lng: -73.935242 }}
+                  zoom={this.state.zoom}
+                  center={{ lat: this.state.lat, lng: this.state.lng }}
                   bootstrapURLKeys={{
                     key: "AIzaSyDysQZjtU9j2dMZ5D2drY40hH-KKRR-x3k",
                     language: 'en',
@@ -230,5 +238,16 @@ class InspectorMapView extends React.Component {
   }   
 }
 
+function mapStateToProps(state) {
+  return {
+    mapViewUpdated: state.mapViewUpdated
+  }
+}
 
-export default InspectorMapView;
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    updateMapView
+  }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(InspectorMapView);

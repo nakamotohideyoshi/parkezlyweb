@@ -155,6 +155,19 @@ export function createInspectorTicket(data) {
   }
 }
 
+export function updateMapView(data) {
+  /*
+  return function(dispatch) {
+    dispatch(apiTownship.requestData(types.INSPECTOR_TICKET_POST_REQ));
+  }
+  */
+
+  return {
+    type: 'UPDATE_MAP_VIEW',
+    data: data
+  }
+}
+
 
 export function resetLoading() {
   return {

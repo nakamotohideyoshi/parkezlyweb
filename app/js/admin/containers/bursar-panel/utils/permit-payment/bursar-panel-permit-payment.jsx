@@ -259,7 +259,6 @@ class BursarPanelPermitPayment extends React.Component {
                   ajaxDelete('pay_for_permit', recordId, this.handleSuccess);
                   this.setState({showEditDuplicateButtons: false});
                   window.scrollTo(0, 0);
-                  window.scrollTo(0, 0);
                 }}>Yes</a>
               </div>
             </div>
@@ -270,7 +269,6 @@ class BursarPanelPermitPayment extends React.Component {
   }
 
   render() {
-    console.log(this.props.bursarPermitPaymentFetched)
     return (
       <div className="blue-body marginless-row">
         <Body showHeader={true}>

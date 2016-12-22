@@ -111,6 +111,32 @@ class TownshipPanelUsersForm extends React.Component {
     this.props.handleSuccess();    
   }
 
+  tempInputsEdit(initialValues) {
+     const {
+      fields: {   
+        email,
+      },
+      resetForm,
+      submitting,
+      dispatch
+    } = this.props;
+
+    const fields = [ 
+      'email' 
+    ]
+
+    return fields.map((data) => {
+      return( 
+        <div className="col s12">
+          <div className="form-group">
+            <div></div>
+            <input type="text" placeholder={data} {...this.props.fields[data]}/>
+          </div>
+        </div>
+      );
+    }); 
+  }
+
   render() {
     const {
       resetForm,
@@ -179,6 +205,7 @@ class TownshipPanelUsersForm extends React.Component {
 									formName={'township-users-form'} 
 									dispatch={dispatch}
 								/>
+                {this.tempInputsEdit(this.props.initialValues)}
               </div>
             </div>
             

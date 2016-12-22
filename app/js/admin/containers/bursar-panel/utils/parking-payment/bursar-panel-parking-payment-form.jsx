@@ -63,67 +63,74 @@ class BursarPanelParkingPaymentForm extends React.Component {
             <div className="row">
 
               <AdminSelectize 
-staticOptions={false}
-fieldData={this.props.fields}
-options={this.state.selectizeOptions}
-              objectKey={'location_code'} 
-              formName={'parking-payment'} 
-              fieldName={'location_id'}
-              dispatch={dispatch} />
+                staticOptions={false}
+                fieldData={this.props.fields}
+                options={this.state.selectizeOptions}
+                objectKey={'location_code'} 
+                formName={'parking-payment'} 
+                fieldName={'location_id'}
+                dispatch={dispatch} 
+              />
 
               <AdminSelectize 
-staticOptions={false}
-fieldData={this.props.fields}
-options={this.state.selectizeOptions}
-              objectKey={'scheme_type'} 
-              formName={'parking-payment'} 
-              fieldName={'scheme_type'}
-              dispatch={dispatch} />
+                staticOptions={false}
+                fieldData={this.props.fields}
+                options={this.state.selectizeOptions}
+                objectKey={'scheme_type'} 
+                formName={'parking-payment'} 
+                fieldName={'scheme_type'}
+                dispatch={dispatch} 
+              />
 
               <AdminSelectize 
-staticOptions={false}
-fieldData={this.props.fields}
-options={this.state.selectizeOptions}
-              objectKey={'pay_method'} 
-              formName={'parking-payment'} 
-              fieldName={'pay_method'}
-              dispatch={dispatch} />
+                staticOptions={false}
+                fieldData={this.props.fields}
+                options={this.state.selectizeOptions}
+                objectKey={'pay_method'} 
+                formName={'parking-payment'} 
+                fieldName={'pay_method'}
+                dispatch={dispatch} 
+              />
 
               <AdminSelectize 
-staticOptions={false}
-fieldData={this.props.fields}
-options={this.state.selectizeOptions}
-              objectKey={'user_id'} 
-              formName={'parking-payment'} 
-              fieldName={'user_id'}
-              dispatch={dispatch} />
+                staticOptions={false}
+                fieldData={this.props.fields}
+                options={this.state.selectizeOptions}
+                objectKey={'user_id'} 
+                formName={'parking-payment'} 
+                fieldName={'user_id'}
+                dispatch={dispatch} 
+              />
 
               <AdminSelectize 
-staticOptions={false}
-fieldData={this.props.fields}
-options={this.state.selectizeOptions}
-              objectKey={'user_name'} 
-              formName={'parking-payment'} 
-              fieldName={'user_name'}
-              dispatch={dispatch} />
+                staticOptions={false}
+                fieldData={this.props.fields}
+                options={this.state.selectizeOptions}
+                objectKey={'user_name'} 
+                formName={'parking-payment'} 
+                fieldName={'user_name'}
+                dispatch={dispatch} 
+              />
 
               <AdminSelectize 
-staticOptions={false}
-fieldData={this.props.fields}
-options={this.state.selectizeOptions}
-              objectKey={'plate_no'} 
-              formName={'parking-payment'} 
-              fieldName={'vehicle_id'}
-              dispatch={dispatch} />
+                staticOptions={false}
+                fieldData={this.props.fields}
+                options={this.state.selectizeOptions}
+                objectKey={'plate_no'} 
+                formName={'parking-payment'} 
+                fieldName={'vehicle_id'}
+                dispatch={dispatch} 
+              />
 
               <AdminSelectize 
-staticOptions={false}
-fieldData={this.props.fields}
-options={this.state.selectizeOptions}
-              objectKey={'rate'} 
-              formName={'parking-payment'} 
-              fieldName={'rate'}
-              dispatch={dispatch} />
+                staticOptions={false}
+                fieldData={this.props.fields}
+                options={this.state.selectizeOptions}
+                objectKey={'rate'} 
+                formName={'parking-payment'} 
+                fieldName={'rate'}
+                dispatch={dispatch} 
+              />
 
               {this.tempInputs()}
 

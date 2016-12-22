@@ -93,6 +93,7 @@ import {
   inspectorTicketCreated,
   inspectorTicketFetched,
   inspectorTicketEdited,
+  mapViewUpdated
 } from './reducer-inspector-panel.js';
 
 // Super Admin Panel
@@ -188,6 +189,7 @@ var inspectorPanelReducers = {
   inspectorTicketCreated: inspectorTicketCreated,
   inspectorTicketFetched: inspectorTicketFetched,
   inspectorTicketEdited: inspectorTicketEdited,
+  mapViewUpdated: mapViewUpdated,
 }
 
 // Common / Shared between township stuff.

@@ -17,10 +17,10 @@ export class BursarPanelTiles extends Component {
       <div className="row marginless-row">
         <div className="col s12 m12 l12 animated fadeInDown">
               <button 
-              //onClick={() => this.setState({view: "payment"})}
+            onClick={() => this.setState({view: "payment"})}
               className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12">
                   <i className="material-icons valign">local_atm</i>
-                  <h4> Receive Payments (Under Construction)</h4>
+                  <h4> Receive Payments</h4>
               </button>
           </div>
           <div className="col s12 m12 l6 animated fadeInLeft">

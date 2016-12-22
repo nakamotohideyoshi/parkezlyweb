@@ -31,7 +31,6 @@ let emailLogger = function emailLogger(data){
 }
 
 export default function notifyMain(app) {
-
     sendpulse.init(API_USER_ID, API_SECRET, TOKEN_STORAGE);
     
     /* Notifications on ajax request*/
@@ -41,9 +40,10 @@ export default function notifyMain(app) {
     /* Notifications (Every 60 seconds) */
     /*
     setInterval(() => {
-        meterExpiredNotify(app);
-    }, 60*1000); //3600000 = 1 hour
+        
+    }, 60); //3600000 = 1 hour
     */
+    meterExpiredNotify(app);
     /*
     let cronj = schedule.scheduleJob('0 * * * *', function(){
         console.log('Execute cron job every hour!');
@@ -105,7 +105,7 @@ function newTicketNotify(app) {
                 emailTemplate.to = filteredEmails;
                 console.log(emailTemplate.to)
                 
-                if (emailTemplate.html !== undefined && emailTemplate.html !== null && emailAddrList !== []) {
+                if (emailTemplate.html !== undefined && emailTemplate.html !== null && emailAddrList.length > 0) {
                         sendpulse.smtpSendMail(emailLogger, emailTemplate);  
                 }
                 res.send(emailTemplate)
@@ -121,7 +121,6 @@ function newPermitNotify(app) {
     app.post('/api/notify-parking-permit', function (req, res) {
 
         let newPermit = req.body;
-        //console.log(req.body)
 
         function getUserList() {
             return AXIOS_INSTANCE.get(`township_users?filter=(township_code=${newPermit.township_code})`)
@@ -164,7 +163,7 @@ function newPermitNotify(app) {
             emailTemplate.to = filteredEmails;
             console.log(emailTemplate.to)
             
-            if (emailTemplate.html !== undefined && emailTemplate.html !== null && emailAddrList !== []) {
+            if (emailTemplate.html !== undefined && emailTemplate.html !== null && emailAddrList.length > 0) {
                     sendpulse.smtpSendMail(emailLogger, emailTemplate);  
             }
             res.send(emailTemplate)
@@ -176,120 +175,153 @@ function newPermitNotify(app) {
 }
 
 function meterExpiredNotify() {
-
-    function getParkedCars() {
-        return AXIOS_INSTANCE.get('parked_cars?filter=(notified_status=NO)AND(township_code!="")&related=township_users_by_township_code')
-    }
-
-    AXIOS_INSTANCE.get('parked_cars?filter=(notified_status=NO)AND(user_id_ref!=0)&related=*')
+    AXIOS_INSTANCE.get('parked_cars?filter=(township_code!="")AND(expiry_status!=EXPIRED)&related=township_users_by_township_code')
     .then((parkedCars) => {
+      
+      let emailHtmlList = {}
+      let emailList = {};
 
-      let emailHtml;
-      let emailAddrList; 
+      let emailHtml = "<h1>ParkEzly Meter Expired/Expiring Users</h1>";
       let emailTemplate = {
-          "html" : emailHtml,
+          "html": "",
+          "to": [],
           "text" : "Text",
           "subject" : "ParkEZly Notification: Meter Expired Users",
           "from" : {
               "name" : "ParkEZly Notification Bot",
               "email" : "blsbox17@gmail.com"
           },
-          "to" : emailAddrList
       };
-
-      emailHtml = "<h1>ParkEzly Meter Expired Users</h1>";
-      emailAddrList = [];
-      let filteredEmails = emailMap
       
-      
-      let emailMap = parkedCars.data.resource.map((parkedCarsData) => {
-      let currentTime = moment().utc().diff(moment(parkedCarsData.expiry_time), 'hours');
-
-      if(currentTime < -1) {
-        iconUrl = require('../../../../../../images/car_green@3x.png')
-      } else if (currentTime > 0) {
-        iconUrl = require('../../../../../../images/car_red@3x.png')
-      } else if (currentTime >= -1 && currentTime <= 0) {
-        iconUrl = require('../../../../../../images/car_yellow@3x.png')
-      } else {
-        renderMarker = false;
-      }
-
-      if (parkedCarsData.township_users_by_user_id !== null) {
-        let userProfileFilter = _.filter(userProfileList.data.resource, {'user_id': user.user_id});
-        let userProfile = userProfileFilter[0];
-
-        if (userProfile !== null & userProfile !== undefined) {
-
-            emailHtml += `<p><h3>Plate: ${parkedCar.plate}</h3></p>
-            <p><strong>Database Id:</strong> ${parkedCar.id} </p>
-            <p><strong>Township:</strong> ${parkedCar.township_code} </p>
-            <p><strong>Expired Time:</strong> ${parkedCar.expiry_time} </p>
-            <hr>`;
-            emailTemplate.html = emailHtml;
-
-            AXIOS_INSTANCE.put("parked_cars?ids=" + parkedCar.id, {"notified": "YES"})
-            return {"name": "ParkEZly Admin", "email": userProfile.email}
+      parkedCars.data.resource.map((parkedCarsData) => {
+        let timeDiff = moment.utc(new Date()).diff(moment.utc(parkedCarsData.expiry_time), 'minutes');
+        console.log(timeDiff);
+        let expired = false;
+        let expiring = false;
+        if(timeDiff < -60) {
+          // Valid
+          expired = false;
+          expiring = false;
+        } else if (timeDiff >= -60 && timeDiff <= 0) {
+          // Expiring
+          expiring = true;
+        } else if (timeDiff > 0) {
+          // Expired
+          expired = true;
+        } else {
+          expired = false;
+          expiring = false;
         }
+        // Check if the related email data of township admins exists for parked user's township.
+        if (parkedCarsData.township_users_by_township_code.length > 0 && (expiring === true || expired === true)) { 
+            if (emailHtmlList[parkedCarsData.township_code]) {
+              emailHtmlList[parkedCarsData.township_code] += `
+              <p><h3>Plate: ${parkedCarsData.plate_no}</h3></p>
+              <p><strong>Database Id:</strong> ${parkedCarsData.id} </p>
+              <p><strong>Township:</strong> ${parkedCarsData.township_code} </p>`; 
 
-        return {
-          id: parkedCarsData.id, 
-          user_id: parkedCarsData.user_id, 
-          plate: parkedCarsData.plate_no, 
-          expiry_time: parkedCarsData.expiry_time, 
-          township_code: parkedCarsData.township_code,
-          township_user: parkedCarsData.township_users_by_user_id,
-          township_profile: parkedCarsData.user_profile_by_user_id_ref
-        };
+              if(expiring === true && expired === false) {  
+                  AXIOS_INSTANCE.patch("parked_cars/" + parkedCarsData.id, {"expiry_status": "EXPIRING"}).catch((response) => {
+                      console.log(response);
+                  });
+                  emailHtmlList[parkedCarsData.township_code] += `<p><strong>Status:</strong> Expiring </p>
+                  <p><strong>Expiry Time:</strong> ${parkedCarsData.expiry_time} </p>
+                  <hr>`
+              } else if (expiring === false && expired === true) {    
+                  AXIOS_INSTANCE.patch("parked_cars/" + parkedCarsData.id, {"expiry_status": "EXPIRED"}).catch((response) => {
+                      console.log(response);
+                  });
+                  emailHtmlList[parkedCarsData.township_code] += `<p><strong>Status:</strong> Expired </p>
+                  <p><strong>Expiry Time:</strong> ${parkedCarsData.expiry_time} </p>
+                  <hr>`
+              } /* else if(expiring === false && expired === false) {
+                console.log("valid")
+                AXIOS_INSTANCE.patch("parked_cars/" + parkedCarsData.id, {"expiry_status": "VALID"}).catch((response) => {
+                      console.log(response);
+                });
+              } */
+            } else {
+              emailHtmlList[parkedCarsData.township_code] = "<h1>ParkEzly Meter Expired/Expiring Users</h1>"
+              emailHtmlList[parkedCarsData.township_code] += `
+              <p><h3>Plate: ${parkedCarsData.plate_no}</h3></p>
+              <p><strong>Database Id:</strong> ${parkedCarsData.id} </p>
+              <p><strong>Township:</strong> ${parkedCarsData.township_code} </p>`; 
 
-      }
+              if (expiring === true && expired === false) {  
+                  AXIOS_INSTANCE.patch("parked_cars/" + parkedCarsData.id, {"expiry_status": "EXPIRING"}).catch((response) => {
+                      console.log(response);
+                  });
+                  emailHtmlList[parkedCarsData.township_code] += `<p><strong>Status:</strong> Expiring </p>
+                  <p><strong>Expiry Time:</strong> ${parkedCarsData.expiry_time} </p>
+                  <hr>`
+              } else if (expiring === false && expired === true) {    
+                  AXIOS_INSTANCE.patch("parked_cars/" + parkedCarsData.id, {"expiry_status": "EXPIRED"}).catch((response) => {
+                      console.log(response);
+                  });
+                  emailHtmlList[parkedCarsData.township_code] += `<p><strong>Status:</strong> Expired </p>
+                  <p><strong>Expiry Time:</strong> ${parkedCarsData.expiry_time} </p>
+                  <hr>`
+              } /* else if (expiring === false && expired === false) {
+                AXIOS_INSTANCE.patch("parked_cars/" + parkedCarsData.id, {"expiry_status": "VALID"}).catch((response) => {
+                      console.log(response);
+                });
+              } */
+            }
 
-      emailTemplate.to = filteredEmails;
-      if (emailTemplate.html !== undefined && emailTemplate.html !== null && emailAddrList !== []) {
-          sendpulse.smtpSendMail(emailLogger, emailTemplate);  
-      }
-
+            if (emailList[parkedCarsData.township_code]) {  
+              
+            } else {
+              emailList[parkedCarsData.township_code] = []
+              parkedCarsData.township_users_by_township_code.map((townshipUser) => {  
+                emailList[parkedCarsData.township_code].push({"name": `ParkEZly Admin: ${townshipUser.user_name}`, "email":  townshipUser.email});
+              })   
+            }
+        }
     });
+    if(_.isEmpty(emailHtmlList) === false) {
+      for (let emailTwpKey in emailHtmlList) {
+        emailTemplate.html = emailHtmlList[emailTwpKey];
+        emailTemplate.to = emailList[emailTwpKey];
+        sendpulse.smtpSendMail(emailLogger, emailTemplate);  
+      }
+    }
   });
 }
-
-
     
-    
-    /*
-    sendpulse.createAddressBook(emailLogger,'My Book');
-    sendpulse.editAddressBook(emailLogger, 123456, 'My new book');
-    sendpulse.removeAddressBook(emailLogger, 123456);
-    sendpulse.getBookInfo(emailLogger,123456);
-    sendpulse.getEmailsFromBook(emailLogger,123456);
-    sendpulse.addEmails(emailLogger, 123456, [{email:'some@domain.com',variables:{}}]);
-    sendpulse.removeEmails(emailLogger, 123456, ['some@domain.com']);
-    sendpulse.getEmailInfo(emailLogger,123456,'some@domain.com');
-    sendpulse.campaignCost(emailLogger,123456);
-    sendpulse.listCampaigns(emailLogger,10,20);
-    sendpulse.getCampaignInfo(emailLogger,123456);
-    sendpulse.campaignStatByCountries(emailLogger,123456);
-    sendpulse.campaignStatByReferrals(emailLogger,123456);
-    sendpulse.createCampaign(emailLogger,'Alex','some@domain.com','Example subject','<h1>Example text</h1>',123456);
-    sendpulse.cancelCampaign(emailLogger,123456);
-    sendpulse.listSenders(emailLogger);
-    sendpulse.addSender(emailLogger,'Alex','some@domain.com');
-    sendpulse.removeSender(emailLogger,'some@domain.com');
-    sendpulse.activateSender(emailLogger,'some@domain.com','q1q1q1q1q1q1q1q1q1q1q1');
-    sendpulse.getSenderActivationMail(emailLogger,'some@domain.com');
-    sendpulse.getEmailGlobalInfo(emailLogger,'some@domain.com');
-    sendpulse.removeEmailFromAllBooks(emailLogger,'some@domain.com');
-    sendpulse.emailStatByCampaigns(emailLogger,'some@domain.com');
-    sendpulse.getBlackList(emailLogger);
-    sendpulse.addToBlackList(emailLogger,'some@domain.com','Comment');
-    sendpulse.removeFromBlackList(emailLogger,'some@domain.com');
-    sendpulse.getBalance(emailLogger,'USD');
-    sendpulse.smtpListEmails(emailLogger,10,20,undefined,undefined,undefined,'some@domain.com');
-    sendpulse.smtpGetEmailInfoById(emailLogger,'a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1');
-    sendpulse.smtpUnsubscribeEmails(emailLogger,[{email:'some@domain.com',comment:'Comment'}]);
-    sendpulse.smtpRemoveFromUnsubscribe(emailLogger, ['some@domain.com']);
-    sendpulse.smtpListIP(emailLogger);
-    sendpulse.smtpListAllowedDomains(emailLogger);
-    sendpulse.smtpAddDomain(emailLogger,'some@domain.com');
-    sendpulse.smtpVerifyDomain(emailLogger,'some@domain.com');
-    */
+/*
+  sendpulse.createAddressBook(emailLogger,'My Book');
+  sendpulse.editAddressBook(emailLogger, 123456, 'My new book');
+  sendpulse.removeAddressBook(emailLogger, 123456);
+  sendpulse.getBookInfo(emailLogger,123456);
+  sendpulse.getEmailsFromBook(emailLogger,123456);
+  sendpulse.addEmails(emailLogger, 123456, [{email:'some@domain.com',variables:{}}]);
+  sendpulse.removeEmails(emailLogger, 123456, ['some@domain.com']);
+  sendpulse.getEmailInfo(emailLogger,123456,'some@domain.com');
+  sendpulse.campaignCost(emailLogger,123456);
+  sendpulse.listCampaigns(emailLogger,10,20);
+  sendpulse.getCampaignInfo(emailLogger,123456);
+  sendpulse.campaignStatByCountries(emailLogger,123456);
+  sendpulse.campaignStatByReferrals(emailLogger,123456);
+  sendpulse.createCampaign(emailLogger,'Alex','some@domain.com','Example subject','<h1>Example text</h1>',123456);
+  sendpulse.cancelCampaign(emailLogger,123456);
+  sendpulse.listSenders(emailLogger);
+  sendpulse.addSender(emailLogger,'Alex','some@domain.com');
+  sendpulse.removeSender(emailLogger,'some@domain.com');
+  sendpulse.activateSender(emailLogger,'some@domain.com','q1q1q1q1q1q1q1q1q1q1q1');
+  sendpulse.getSenderActivationMail(emailLogger,'some@domain.com');
+  sendpulse.getEmailGlobalInfo(emailLogger,'some@domain.com');
+  sendpulse.removeEmailFromAllBooks(emailLogger,'some@domain.com');
+  sendpulse.emailStatByCampaigns(emailLogger,'some@domain.com');
+  sendpulse.getBlackList(emailLogger);
+  sendpulse.addToBlackList(emailLogger,'some@domain.com','Comment');
+  sendpulse.removeFromBlackList(emailLogger,'some@domain.com');
+  sendpulse.getBalance(emailLogger,'USD');
+  sendpulse.smtpListEmails(emailLogger,10,20,undefined,undefined,undefined,'some@domain.com');
+  sendpulse.smtpGetEmailInfoById(emailLogger,'a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1');
+  sendpulse.smtpUnsubscribeEmails(emailLogger,[{email:'some@domain.com',comment:'Comment'}]);
+  sendpulse.smtpRemoveFromUnsubscribe(emailLogger, ['some@domain.com']);
+  sendpulse.smtpListIP(emailLogger);
+  sendpulse.smtpListAllowedDomains(emailLogger);
+  sendpulse.smtpAddDomain(emailLogger,'some@domain.com');
+  sendpulse.smtpVerifyDomain(emailLogger,'some@domain.com');
+*/

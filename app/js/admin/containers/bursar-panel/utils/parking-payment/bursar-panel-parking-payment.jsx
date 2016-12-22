@@ -103,7 +103,7 @@ class BursarPanelParkingPayment extends React.Component {
     }
   };
 
-  handleSuccess(){
+  handleSuccess() {
     this.props.resetLoading();
     $('#modal-bursar-payment-create').closeModal();
     this.props.fetchBursarParkingPayment();
@@ -173,53 +173,60 @@ class BursarPanelParkingPayment extends React.Component {
             <div className="row">
 
               <AdminSelectize 
-              options={this.state.selectizeOptions}
-              objectKey={'location_code'} 
-              formName={'parking-payment'} 
-              fieldName={'location_id'}
-              dispatch={dispatch} />
+                options={this.state.selectizeOptions}
+                objectKey={'location_code'} 
+                formName={'parking-payment'} 
+                fieldName={'location_id'}
+                dispatch={dispatch} 
+              />
 
               <AdminSelectize 
-              options={this.state.selectizeOptions}
-              objectKey={'scheme_type'} 
-              formName={'parking-payment'} 
-              fieldName={'scheme_type'}
-              dispatch={dispatch} />
+                options={this.state.selectizeOptions}
+                objectKey={'scheme_type'} 
+                formName={'parking-payment'} 
+                fieldName={'scheme_type'}
+                dispatch={dispatch} 
+              />
 
               <AdminSelectize 
-              options={this.state.selectizeOptions}
-              objectKey={'pay_method'} 
-              formName={'parking-payment'} 
-              fieldName={'pay_method'}
-              dispatch={dispatch} />
+                options={this.state.selectizeOptions}
+                objectKey={'pay_method'} 
+                formName={'parking-payment'} 
+                fieldName={'pay_method'}
+                dispatch={dispatch} 
+              />
 
               <AdminSelectize 
-              options={this.state.selectizeOptions}
-              objectKey={'user_id'} 
-              formName={'parking-payment'} 
-              fieldName={'user_id'}
-              dispatch={dispatch} />
+                options={this.state.selectizeOptions}
+                objectKey={'user_id'} 
+                formName={'parking-payment'} 
+                fieldName={'user_id'}
+                dispatch={dispatch} 
+              />
 
               <AdminSelectize 
               options={this.state.selectizeOptions}
               objectKey={'user_name'} 
               formName={'parking-payment'} 
               fieldName={'user_name'}
-              dispatch={dispatch} />
+              dispatch={dispatch} 
+              />
 
               <AdminSelectize 
               options={this.state.selectizeOptions}
               objectKey={'plate_no'} 
               formName={'parking-payment'} 
               fieldName={'vehicle_id'}
-              dispatch={dispatch} />
+              dispatch={dispatch} 
+              />
 
               <AdminSelectize 
               options={this.state.selectizeOptions}
               objectKey={'rate'} 
               formName={'parking-payment'} 
               fieldName={'rate'}
-              dispatch={dispatch} />
+              dispatch={dispatch} 
+              />
 
               {this.tempInputs()}
 
@@ -357,7 +364,6 @@ class BursarPanelParkingPayment extends React.Component {
                   ajaxDelete('pay_for_parking', recordId, this.handleSuccess);
                   this.setState({showEditDuplicateButtons: false});
                   window.scrollTo(0, 0);
-                  window.scrollTo(0, 0);
                 }}>Yes</a>
               </div>
             </div>
@@ -386,19 +392,11 @@ class BursarPanelParkingPayment extends React.Component {
                       <div className="center-align"> <Spinner /> </div> : this.renderTable()}
                   </div>
                </div>
-               {this.state.showEditDuplicateButtons ? 
-                this.renderEditDuplicateButtons(this.state.parkingLocationCode) : <div> </div>}
-
-                { 
-                  !this.state.showEditModal ?
-                  <div></div> : <BursarPanelParkingPaymentEdit initialValues={this.state.rowData} rowData={this.state.rowData} handleSuccess={this.handleSuccess}/>
-                }
 
             </div>
           </div>
         </Body>
-        { this.props.bursarParkingPaymentFetched.isLoading ? 
-          <div> </div> : this.renderCreateModal()}
+
         <div id="modal-success" className="modal">
           <div className="modal-content">
             <h4>Success!</h4>
@@ -418,7 +416,8 @@ class BursarPanelParkingPayment extends React.Component {
 function mapStateToProps(state) {
   return {
     bursarParkingPaymentFetched: state.bursarParkingPaymentFetched,
-    bursarParkingPaymentCreated: state.bursarParkingPaymentCreated
+    bursarParkingPaymentCreated: state.bursarParkingPaymentCreated,
+    mapViewUpdated: state.mapViewUpdated
   }
 }
 
@@ -428,7 +427,8 @@ function mapDispatchToProps(dispatch) {
     fetchTownshipLocations,
     resetLoading,
     fetchTownshipSchemeTypes,
-    createBursarParkingPayment
+    createBursarParkingPayment,
+    
   }, dispatch);
 }
 
