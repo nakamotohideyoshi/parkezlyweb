@@ -98,12 +98,12 @@ class InspectorMapView extends React.Component {
       const ref = `marker_${index}`;
       let iconUrl;
       let renderMarker = true;
-      let currentTime = moment.utc().diff(moment.utc(data.expiry_time), 'hours');
-      if(currentTime < -1 && this.state.greenOff == false) {
+      let currentTime = moment.utc(new Date()).diff(moment.utc(data.expiry_time), 'minutes');
+      if(currentTime < -60 && this.state.greenOff == false) {
         iconUrl = require('../../../../../../images/car_green@3x.png')
       } else if (currentTime > 0 && this.state.redOff == false) {
         iconUrl = require('../../../../../../images/car_red@3x.png')
-      } else if (currentTime >= -1 && currentTime <= 0 && this.state.yellowOff == false) {
+      } else if (currentTime >= -60 && currentTime <= 0 && this.state.yellowOff == false) {
         iconUrl = require('../../../../../../images/car_yellow@3x.png')
       } else {
         renderMarker = false;

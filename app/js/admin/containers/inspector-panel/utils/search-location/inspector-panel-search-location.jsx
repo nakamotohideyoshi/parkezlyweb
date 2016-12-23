@@ -133,7 +133,7 @@ export default class InspectorPanelSearchLocation extends React.Component {
 					style={{
 						backgroundColor: colors[Math.floor(Math.random() * colors.length)]
 					}}>
-					{parkingData.plate_no.charAt ?
+					{parkingData.plate_no ?
 						<div> {parkingData.plate_no.charAt(0)} </div>
 						:
 						<div>?</div>
@@ -146,6 +146,7 @@ export default class InspectorPanelSearchLocation extends React.Component {
 					</div>
 					<div className={styles.index}>
 						<strong>ID:</strong> {parkingData.id},
+            <strong> Expiry Status:</strong> {parkingData.expiry_status},
 						<strong> Ticket Status:</strong> {parkingData.ticket_status},
 						<strong> Location:</strong> {parkingData.location_code}
 					</div>

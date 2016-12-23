@@ -154,6 +154,7 @@ class BursarPanelTicketCardForm extends React.Component {
       'jcb',
       'discover'
     ]
+    
     const cardTypeList = cardTypes.map((data) => {
       return {label: data, value: data}
     })
@@ -183,25 +184,15 @@ class BursarPanelTicketCardForm extends React.Component {
               </div>
 
               <div className="row">
-
-                <div className="col s12 admin-form-input">
-                  <div className="form-group">
-                    <label>Card Type</label>
-                    <div clasName="input-field col s12">
-                      <SimpleSelect 
-                        options = {cardTypeList} 
-                        placeholder = "Card Type"
-                        theme = "material"
-                        style = {{marginTop: 5}}
-                        transitionEnter = {true} 
-                        defaultValue = {{label: this.props.fields.type.initialValue, value: this.props.fields.type.initialValue}}
-                        onValueChange = {(object) => {
-                          dispatch(change('card-form', 'type', object.value)); 
-                          console.log(fields)
-                        }}/>
-                    </div>
-                  </div>
-                </div>
+                <AdminSelectize 
+                  staticOptions={true}
+									options={cardTypeList}
+									objectKey={'type'} 
+                  fieldName={'Card Type'}
+									formName={'card-form'} 
+									fieldData={this.props.fields}
+									dispatch={dispatch} 
+								/>
                 {this.tempInputsEdit(this.props.initialValues)}
               </div>
             </div>
@@ -239,3 +230,25 @@ export default connect()(reduxForm({
   fields,
   overwriteOnInitialValuesChange : true
 })(BursarPanelTicketCardForm));
+
+/*
+                <div className="col s12 admin-form-input">
+                  <div className="form-group">
+                    <label>Card Type</label>
+                    <div clasName="input-field col s12">
+                    
+                      <SimpleSelect 
+                        options = {cardTypeList} 
+                        placeholder = "Card Type"
+                        theme = "material"
+                        style = {{marginTop: 5}}
+                        transitionEnter = {true} 
+                        defaultValue = {{label: this.props.fields.type.initialValue, value: this.props.fields.type.initialValue}}
+                        onValueChange = {(object) => {
+                          dispatch(change('card-form', 'type', object.value)); 
+                          console.log(fields)
+                        }}/>
+                    </div>
+                  </div>
+                </div>
+                */

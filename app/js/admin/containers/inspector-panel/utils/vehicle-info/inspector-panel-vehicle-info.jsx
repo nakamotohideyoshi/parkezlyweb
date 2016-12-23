@@ -47,15 +47,15 @@ class InspectorVehicleInfo extends React.Component {
                         <div className="center-align"> <Spinner /> </div>
                         :
                         (() => {
-                          let currentTime = moment().diff(moment(this.state.parkedCarData.expiry_time), 'hours');
+                          let currentTime =moment.utc(new Date()).diff(moment.utc(this.state.parkedCarData.expiry_time), 'minutes');
                           if(currentTime > 0) {
                             return <img src={require('../../../../../../images/car_red@3x.png')} className="animated bounceIn"/>
-                          } else if (currentTime < -1) {
+                          } else if (currentTime < -60) {
                             return <img src={require('../../../../../../images/car_green@3x.png')} className="animated bounceIn"/>
-                          } else if (currentTime >= -1 && currentTime <= 0) {
+                          } else if (currentTime >= -60 && currentTime <= 0) {
                             return <img src={require('../../../../../../images/car_yellow@3x.png')} className="animated bounceIn"/>
                           } else {
-                            {alert("test")}
+                            {alert("Expiry calc error.")}
                             return <img src={require('../../../../../../images/car_green@3x.png')} className="animated bounceIn"/>
                           }
                         })()

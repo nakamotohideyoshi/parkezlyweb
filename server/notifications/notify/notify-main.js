@@ -38,12 +38,10 @@ export default function notifyMain(app) {
     newTicketNotify(app)
 
     /* Notifications (Every 60 seconds) */
-    /*
     setInterval(() => {
-        
-    }, 60); //3600000 = 1 hour
-    */
-    meterExpiredNotify(app);
+      meterExpiredNotify(app);
+    }, 3600000); //3600000 = 1 hour
+    
     /*
     let cronj = schedule.scheduleJob('0 * * * *', function(){
         console.log('Execute cron job every hour!');
@@ -195,9 +193,9 @@ function meterExpiredNotify() {
       
       parkedCars.data.resource.map((parkedCarsData) => {
         let timeDiff = moment.utc(new Date()).diff(moment.utc(parkedCarsData.expiry_time), 'minutes');
-        console.log(timeDiff);
         let expired = false;
         let expiring = false;
+
         if(timeDiff < -60) {
           // Valid
           expired = false;

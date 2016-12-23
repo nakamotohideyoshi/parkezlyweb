@@ -227,7 +227,6 @@ class TownshipPanelFacilities extends React.Component {
                   ajaxDelete('manage_locations', this.state.rowData.id, this.handleSuccess);
                   this.setState({showEditDuplicateButtons: false});
                   window.scrollTo(0, 0);
-                  window.scrollTo(0, 0);
                 }}>Yes</a>
               </div>
             </div>
