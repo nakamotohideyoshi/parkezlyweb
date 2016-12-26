@@ -131,7 +131,7 @@ export default class InspectorPanelSearchCategory extends React.Component {
 				<div
 					className={styles.letter}
 					style={{
-						backgroundColor: colors[Math.floor(Math.random() * colors.length)]
+						backgroundColor: colors[index % colors.length] 
 					}}>
 					{parkingData.plate_no ?
 						<div> {parkingData.plate_no.charAt(0)} </div>

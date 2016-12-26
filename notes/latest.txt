@@ -9,3 +9,6 @@ Receive Payments
 
 Registration:
 Registered users need session authentication after finishing registration otherwise it won't have the role_id.
+
+Menu:
+Back to parkezly sets to registeredusers

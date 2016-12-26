@@ -18,10 +18,11 @@ import { BootstrapPager, GriddleBootstrap } from 'griddle-react-bootstrap'
 import Griddle from 'griddle-react'
 import {customFilterComponent, customFilterFunction} from '../../../../common/components/griddle-custom-filter.jsx'
 
+import { AutoSizer, InfiniteLoader, List } from 'react-virtualized';
 import { Link } from 'react-router';
-
 import TownshipPanelUsersForm from './township-panel-users-form.jsx'
-import {ajaxSelectizeGet, ajaxDelete} from '../../../../common/components/ajax-selectize.js'
+import {ajaxSelectizeGet, ajaxGet, ajaxDelete} from '../../../../common/components/ajax-selectize.js'
+import styles from '../../../../common/styles/react-virtualized-list.module.css'
 import _ from 'lodash';
 
 const KEYS_TO_FILTERS = [
@@ -43,26 +44,24 @@ const fields = [
   'status'
 ]
 
-class customColumnComponent extends React.Component {
-
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <div onClick={() => this.props.metadata.customComponentMetadata.renderEditModal(
-          this.props.rowData.id, 
-          this.props.rowData
-        )}>
-        {this.props.data}
-      </div>
-    );
-  }
-}
-
-customColumnComponent.defaultProps = { "data": {}, "renderEditModal": null};
-
+const colors = 
+[
+  '#f44336',
+  '#3f51b5',
+  '#4caf50',
+  '#ff9800',
+  '#2196f3',
+  '#374046',
+  '#cddc39',
+  '#2196f3',
+  '#9c27b0',
+  '#ffc107',
+  '#009688',
+  '#673ab7',
+  '#ffeb3b',
+  '#cddc39', 
+  '#795548'
+ ]
 
 class TownshipPanelUsers extends React.Component {
   constructor(props) {
@@ -71,36 +70,39 @@ class TownshipPanelUsers extends React.Component {
     window.scrollTo(0, 0);
 
     this.state = {
-      showEditDuplicateButtons: false,
-      parkingLocationCode: null,
       rowData: null,
-      selectizeOptions: {}
+      rowId: null,
+      listLoading: true,
+      ajaxLoading: true,
+      ajaxData: null,
+      tableWidth: 500,
+      scrollToIndex: 0,
+      currentIndex: 0,
+      fetchCount: 0
     }
 
     this.renderUserTable = this.renderUserTable.bind(this);
-    this.updateRowData = this.updateRowData.bind(this);
-
-    this.renderEditModal = this.renderEditModal.bind(this);
+    this.rowRenderer = this.rowRenderer.bind(this);
+    this.isRowLoaded = this.isRowLoaded.bind(this);
+    this.loadMoreRows = this.loadMoreRows.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
   }
 
   componentWillMount() {
-    this.props.fetchTownshipUsers(this.props.townshipCode);
+    ajaxGet(`township_users?limit=10&offset=0&filter=(township_code=${this.props.townshipCode})`, (response) => {
+      this.setState({ajaxData: response.data.resource, ajaxLoading: false, listLoading: false})
+    })
   }
 
   handleSuccess(){
     this.props.resetLoading();
-    this.props.fetchTownshipUsers(this.props.townshipCode);
+    this.setState({ajaxLoading: true});
+    ajaxGet(`township_users?limit=10&offset=0&filter=(township_code=${this.props.townshipCode})`, (response) => {
+      this.setState({ajaxData: response.data.resource, ajaxLoading: false, listLoading: false})
+    })
     this.setState({showEditDuplicateButtons: false});
-                  window.scrollTo(0, 0);
+    window.scrollTo(0, 0);
     $('#modal-success').openModal();
-  }
-
-  updateRowData(newData, objectKey) {
-    //console.log(_.assign(this.state.rowData, {[objectKey]: newData}))
-    this.setState({
-      rowData: _.assign(this.state.rowData, {[objectKey]: newData})
-    });
   }
 
   renderCreateModal() {
@@ -116,50 +118,164 @@ class TownshipPanelUsers extends React.Component {
     );
   }
 
-  renderEditModal(recordId, rowData) {
-    window.scrollTo(0, document.body.scrollHeight);
-    this.setState({showEditDuplicateButtons: true, rowData: rowData, parkingLocationCode: recordId})
+  isRowLoaded ({ index }) {
+    //console.log(!!this.state.ajaxData[index])
+    console.log(index);
+    //console.log(this.state.ajaxData.length);
+    //console.log(index < this.state.ajaxData.length)
+    let indexCheck = index + 1;
+    this.setState({currentIndex: indexCheck});
+    return indexCheck < this.state.ajaxData.length;
+    //&& indexCheck > this.state.ajaxData.length - 10;
+    //return !!this.state.ajaxData[index]
+  }
+
+  loadMoreRows ({ startIndex, stopIndex }) {
+    //console.log(startIndex);
+    //console.log(stopIndex);
+    
+    if (!this.state.ajaxLoading) {
+     
+      let loadRows;
+      /*
+      if(this.state.currentIndex < this.state.ajaxData.length - 10) {
+        console.log("Testing backwards")
+        loadRows = () => {
+          this.setState({listLoading: true});
+          ajaxGet(`township_users?limit=20&offset=${this.state.fetchCount}`, (response) => {
+              this.setState({ajaxData: response.data.resource, ajaxLoading: false, listLoading: false, scrollToIndex: startIndex, fetchCount: this.state.fetchCount - 10})
+          })
+        }
+      } else {
+        console.log("Testing forwards")
+        console.log(this.state.ajaxData.length);
+        loadRows = () => {
+          this.setState({listLoading: true});
+          ajaxGet(`township_users?limit=20&offset=${this.state.fetchCount}`, (response) => {
+              this.setState({ajaxData: response.data.resource, ajaxLoading: false, listLoading: false, scrollToIndex: startIndex, fetchCount: this.state.fetchCount + 10})
+          })
+        }
+      }
+      */
+      loadRows = () => {
+          this.setState({listLoading: true});
+           ajaxGet(`township_users?limit=${stopIndex + 11}`, (response) => {
+              this.setState({ajaxData: response.data.resource, ajaxLoading: false, listLoading: false})
+          })
+        }
+      
+      return loadRows();
+    }
+    
+  }
+
+  rowRenderer ({ index, isScrolling, key, style }) {
+    const {
+      showScrollingPlaceholder,
+      useDynamicRowHeight,
+    } = this.state
+    const listData = this.state.ajaxData[index];
+
+    if(this.state.listLoading && index + 1 >= this.state.ajaxData.length) {
+    return (
+      <div
+      key={key}
+      style={style}
+      onClick={() => {
+        this.setState({rowData: listData, rowId: listData.id})
+        $('#edit-buttons-modal').openModal();
+      }}
+      >
+        <div className="center-align">
+          <div className="center-align"> Loading Data... </div> 
+          <Spinner small={true}/> 
+        </div> 
+      </div>
+      )
+    } else {
+    return (
+        <div
+        className={styles.row + " clickable waves-effect flex-important"}
+        key={key}
+        style={style}
+        onClick={() => {
+          this.setState({rowData: listData, rowId: listData.id})
+          $('#edit-buttons-modal').openModal();
+        }}
+        >
+          <div
+          className={styles.letter}
+          //[Math.floor(Math.random()*colors.length)]
+          style={{
+            backgroundColor: colors[index % colors.length] 
+          }}>
+            {listData.user_name ? 
+              <div> {listData.user_name.charAt(0).toUpperCase()} </div>
+            :
+              <div>?</div>
+            }
+          </div>
+
+          <div>
+            <div className={styles.name}>
+              {listData.user_name}
+            </div>
+            {this.state.tableWidth > 600 ? 
+              <div className={styles.index}>
+                <strong>ID:</strong> {listData.id}
+                <strong> Township:</strong> {listData.township_code}
+                <strong> Profile Name:</strong> {listData.profile_name}
+                <strong> Status:</strong> {listData.status}
+              </div>
+              :
+              <div/>
+            }
+          </div>
+        </div>
+      )
+    }
   }
 
   renderUserTable() {
-    let parkingData = this.props.townshipUsersFetched.data.resource;
+    let listData = this.state.ajaxData;
     var renderEditModal = this.renderEditModal;
-    var metaDataFunction = () =>  {
-      return fields.map((data) => {
-        return(
-          {
-            "columnName": data,
-            "customComponent": customColumnComponent,
-            'customComponentMetadata': {
-                'renderEditModal': renderEditModal
-            }
-          }
-        );
-      });
-    }
-    var columnMeta = metaDataFunction()
-
+    
     return (
-      <div>
-        <Griddle
-          tableClassName={'table table-bordered table-striped table-hover'}
-          filterClassName={''}
-          useGriddleStyles={false}
-          results={parkingData}
-          showFilter={true}
-          showSettings={true}
-          settingsToggleClassName='btn'
-          useCustomPagerComponent={true}
-          customPagerComponent={ BootstrapPager }
-          useCustomFilterComponent={true} customFilterComponent={customFilterComponent}
-          useCustomFilterer={true} customFilterer={customFilterFunction}
-          columnMetadata={columnMeta}
-        />
-
+      <div className="row">
+        <div style={{height: 500}}>
+          <AutoSizer 
+          disableHeight={true}
+          onResize={({width}) => {
+            this.setState({tableWidth: width})
+          }}>
+            {({ width }) => (
+              <InfiniteLoader
+              isRowLoaded={this.isRowLoaded}
+              loadMoreRows={this.loadMoreRows}
+              rowCount={listData.length}
+              minimumBatchSize={1}
+              threshold={9}
+              >
+              {({ onRowsRendered, registerChild }) => (
+                <List
+                  className={styles.List}
+                  onRowsRendered={onRowsRendered}
+                  overscanRowCount={0}
+                  ref={registerChild}
+                  width={width}
+                  height={500}
+                  rowHeight={75}
+                  rowCount={listData.length}
+                  rowRenderer={this.rowRenderer}
+                />
+              )}
+              </InfiniteLoader>
+            )}
+          </AutoSizer>
+        </div>
         <div className="divider"/> 
 
         <div className="center-align">
-
           <a
             className="modal-trigger waves-effect waves-light btn valign blue-btn-admin"
             onClick={() => {
@@ -169,74 +285,6 @@ class TownshipPanelUsers extends React.Component {
               $('#modal-township-users-create').openModal()
             }}
             style={{margin: 10}}>Add New User</a>
-        </div>
-      </div>
-    );
-  }
-
-  renderEditDuplicateButtons(recordId) {
-    return (
-      <div className="container">
-        <a
-        style={{marginTop: 20}}
-        onClick={() => {
-					window.scrollTo(0, 0);
-          $('#modal-township-users-edit').openModal(); 
-        window.scrollTo(0, 0);}}
-        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp blue-btn-admin">
-          <i className="material-icons valign">edit</i>
-          <h4> Edit - User ID: {recordId} </h4>
-        </a>
-
-        <a
-        onClick={() => {
-					window.scrollTo(0, 0);
-          $('#modal-township-users-duplicate').openModal(); 
-        window.scrollTo(0, 0);}}
-        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp blue-btn-admin">
-          <i className="material-icons valign">content_copy</i>
-          <h4> Duplicate - User ID: {recordId} </h4>
-        </a>
-
-        <a
-        onClick={() => {
-					window.scrollTo(0, 0);
-					$('#modal-delete').openModal() 
-				}}
-        className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp blue-btn-admin">
-          <i className="material-icons valign">delete</i>
-          <h4> Delete - User ID: {recordId} </h4>
-        </a>
-
-        <div id="modal-delete" className="modal" style={{overflowX: "hidden"}}>
-          <div className="modal-content">
-            <h4>Delete</h4>
-            <p>Are you sure you want to delete this record?</p>
-          </div>
-          <div className="modal-footer">
-            <div className="row marginless-row">
-              <div className="col s6 left">
-                <button 
-                  href="#" 
-                  className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
-              </div>
-              <div className="col s3">
-                <a className="waves-effect waves-light btn btn-red" 
-                onClick={() => {
-                  $('#modal-delete').closeModal()
-                }}>No</a>
-              </div>
-              <div className="col s3">
-                <a className="waves-effect waves-light btn btn-green" 
-                onClick={() => {
-                  $('#modal-delete').closeModal()
-                  ajaxDelete('township_users', recordId, this.handleSuccess);
-                  this.setState({showEditDuplicateButtons: false});
-                  window.scrollTo(0, 0);
-                }}>Yes</a>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     );
@@ -254,8 +302,8 @@ class TownshipPanelUsers extends React.Component {
                 </div>
               </nav>
               <div className="card">
-                <div className="township-userlist-container">
-                  {this.props.townshipUsersFetched.isLoading ? 
+                <div>
+                  {this.state.ajaxLoading ? 
                     <div className="card-content center-align">
                       <div className="center-align"> <Spinner /> </div> 
                     </div>
@@ -267,8 +315,60 @@ class TownshipPanelUsers extends React.Component {
             </div>
           </div>
         </Body>
-
-        { this.props.townshipUsersFetched.isLoading ? 
+        <div id="edit-buttons-modal" className="modal modal-fixed-footer admin-parking-modal" style={{height: 350}}>
+          <nav>
+            <div className="nav-wrapper nav-admin">
+              <a className="brand-logo center">Options - User ID: {this.state.rowId}</a>
+              <i 
+              className="material-icons right right-align clickable" 
+              style={{marginRight: 15, lineHeight: "55px"}}
+              onClick={() => {
+                $("#edit-buttons-modal").closeModal();
+              }}>close</i>
+            </div>
+          </nav>
+          <div className="modal-content">
+            <div className="row">
+              <div className="col s12">
+                <a 
+                onClick={() => {
+                  window.scrollTo(0, 0);
+                  $('#modal-township-users-edit').openModal(); 
+                  $("#edit-buttons-modal").closeModal();
+                }}
+                className="waves-effect waves-light btn-large valign-wrapper animated fadeIn blue-btn-admin col s12" 
+                style={{marginTop: 20, borderRadius: "25px"}}>
+                  <span style={{marginRight: 30}}>Edit</span><i className="material-icons valign left">edit</i>
+                </a>
+              </div>
+              <div className="col s12">
+                <a 
+                onClick={() => {
+                  window.scrollTo(0, 0);
+                  $('#modal-township-users-duplicate').openModal(); 
+                  $("#edit-buttons-modal").closeModal();
+                }}
+                className="waves-effect waves-light btn-large valign-wrapper animated fadeIn blue-btn-admin col s12" 
+                style={{marginTop: 20, borderRadius: "25px"}}>
+                  <span style={{marginRight: 30}}>Duplicate</span><i className="material-icons valign left">content_copy</i>
+                </a>
+              </div>
+              <div className="col s12">
+                <a 
+                onClick={() => {
+                  window.scrollTo(0, 0);
+                  $('#modal-delete').openModal(); 
+                  $("#edit-buttons-modal").closeModal();
+                }}
+                className="waves-effect waves-light btn-large valign-wrapper animated fadeIn blue-btn-admin col s12" 
+                style={{marginTop: 20,  borderRadius: "25px"}}>
+                  <span style={{marginRight: 30}}>Delete</span><i className="material-icons valign left">delete</i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        { this.state.ajaxLoading ? 
           <div> </div> : this.renderCreateModal()}
 
         <div>
@@ -299,6 +399,36 @@ class TownshipPanelUsers extends React.Component {
             <button 
             href="#" 
             className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
+          </div>
+        </div>
+        <div id="modal-delete" className="modal" style={{overflowX: "hidden"}}>
+          <div className="modal-content">
+            <h4>Delete</h4>
+            <p>Are you sure you want to delete this record?</p>
+          </div>
+          <div className="modal-footer">
+            <div className="row marginless-row">
+              <div className="col s6 left">
+                <button 
+                  href="#" 
+                  className=" modal-action modal-close waves-effect waves-green btn-flat">Close</button>
+              </div>
+              <div className="col s3">
+                <a className="waves-effect waves-light btn btn-red" 
+                onClick={() => {
+                  $('#modal-delete').closeModal()
+                }}>No</a>
+              </div>
+              <div className="col s3">
+                <a className="waves-effect waves-light btn btn-green" 
+                onClick={() => {
+                  $('#modal-delete').closeModal()
+                  ajaxDelete('township_users', this.state.rowData.id, this.handleSuccess);
+                  this.setState({showEditDuplicateButtons: false});
+                  window.scrollTo(0, 0);
+                }}>Yes</a>
+              </div>
+            </div>
           </div>
         </div>
 

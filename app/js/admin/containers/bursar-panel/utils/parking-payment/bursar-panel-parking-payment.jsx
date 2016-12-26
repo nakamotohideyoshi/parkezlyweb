@@ -171,7 +171,6 @@ class BursarPanelParkingPayment extends React.Component {
             </div>
 
             <div className="row">
-
               <AdminSelectize 
                 options={this.state.selectizeOptions}
                 objectKey={'location_code'} 
@@ -179,7 +178,6 @@ class BursarPanelParkingPayment extends React.Component {
                 fieldName={'location_id'}
                 dispatch={dispatch} 
               />
-
               <AdminSelectize 
                 options={this.state.selectizeOptions}
                 objectKey={'scheme_type'} 
@@ -187,7 +185,6 @@ class BursarPanelParkingPayment extends React.Component {
                 fieldName={'scheme_type'}
                 dispatch={dispatch} 
               />
-
               <AdminSelectize 
                 options={this.state.selectizeOptions}
                 objectKey={'pay_method'} 
@@ -195,7 +192,6 @@ class BursarPanelParkingPayment extends React.Component {
                 fieldName={'pay_method'}
                 dispatch={dispatch} 
               />
-
               <AdminSelectize 
                 options={this.state.selectizeOptions}
                 objectKey={'user_id'} 
@@ -203,33 +199,28 @@ class BursarPanelParkingPayment extends React.Component {
                 fieldName={'user_id'}
                 dispatch={dispatch} 
               />
-
               <AdminSelectize 
-              options={this.state.selectizeOptions}
-              objectKey={'user_name'} 
-              formName={'parking-payment'} 
-              fieldName={'user_name'}
-              dispatch={dispatch} 
+                options={this.state.selectizeOptions}
+                objectKey={'user_name'} 
+                formName={'parking-payment'} 
+                fieldName={'user_name'}
+                dispatch={dispatch} 
               />
-
               <AdminSelectize 
-              options={this.state.selectizeOptions}
-              objectKey={'plate_no'} 
-              formName={'parking-payment'} 
-              fieldName={'vehicle_id'}
-              dispatch={dispatch} 
+                options={this.state.selectizeOptions}
+                objectKey={'plate_no'} 
+                formName={'parking-payment'} 
+                fieldName={'vehicle_id'}
+                dispatch={dispatch} 
               />
-
               <AdminSelectize 
-              options={this.state.selectizeOptions}
-              objectKey={'rate'} 
-              formName={'parking-payment'} 
-              fieldName={'rate'}
-              dispatch={dispatch} 
+                options={this.state.selectizeOptions}
+                objectKey={'rate'} 
+                formName={'parking-payment'} 
+                fieldName={'rate'}
+                dispatch={dispatch} 
               />
-
               {this.tempInputs()}
-
             </div>
           </div>
           
@@ -310,7 +301,6 @@ class BursarPanelParkingPayment extends React.Component {
 
     return (
       <div className="container">
-
         <a
         style={{marginTop: 20}}
         onClick={() => {
@@ -321,7 +311,6 @@ class BursarPanelParkingPayment extends React.Component {
           <i className="material-icons valign">edit</i>
           <h4> Edit - Parking Payment ID: {recordId} </h4>
         </a>
-
         <a
         onClick={() => {
           this.setState({showEditModal: true})
@@ -331,14 +320,12 @@ class BursarPanelParkingPayment extends React.Component {
           <i className="material-icons valign">content_copy</i>
           <h4> Duplicate - Parking Payment ID: {recordId} </h4>
         </a>
-
         <a
         onClick={() => $('#modal-delete').openModal() }
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">delete</i>
           <h4> Delete - Parking Payment ID: {recordId} </h4>
         </a>
-
         <div id="modal-delete" className="modal" style={{overflowX: "hidden"}}>
           <div className="modal-content">
             <h4>Delete</h4>
@@ -369,8 +356,6 @@ class BursarPanelParkingPayment extends React.Component {
             </div>
           </div>
         </div>
-
-
       </div>
     );
   }
@@ -392,11 +377,9 @@ class BursarPanelParkingPayment extends React.Component {
                       <div className="center-align"> <Spinner /> </div> : this.renderTable()}
                   </div>
                </div>
-
             </div>
           </div>
         </Body>
-
         <div id="modal-success" className="modal">
           <div className="modal-content">
             <h4>Success!</h4>

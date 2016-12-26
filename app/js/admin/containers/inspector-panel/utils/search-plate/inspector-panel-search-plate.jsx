@@ -130,8 +130,9 @@ export default class InspectorPanelSearchPlate extends React.Component {
       }>
         <div
         className={styles.letter}
+        //[Math.floor(Math.random()*colors.length)]
         style={{
-          backgroundColor: colors[Math.floor(Math.random()*colors.length)]
+          backgroundColor: colors[index % colors.length] 
         }}>
           {parkingData.plate_no ? 
             <div> {parkingData.plate_no.charAt(0)} </div>
