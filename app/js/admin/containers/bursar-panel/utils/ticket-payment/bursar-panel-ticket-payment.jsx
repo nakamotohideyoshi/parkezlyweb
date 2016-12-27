@@ -19,6 +19,7 @@ import {customFilterComponent, customFilterFunction} from '../../../../common/co
 
 import BursarPanelTicketPaymentForm from './bursar-panel-ticket-payment-form.jsx'
 import BursarPanelTicketCardForm from './bursar-panel-ticket-card-form.jsx'
+import BursarPanelTicketCashForm from './bursar-panel-ticket-cash-form.jsx'
 
 import customColumnComponent from '../../../../common/components/custom-column-component.jsx'
 import {ajaxSelectizeGet, ajaxDelete} from '../../../../common/components/ajax-selectize.js'
@@ -359,19 +360,21 @@ class BursarPanelTicketPayment extends React.Component {
         </div>
         <div className="divider"/> 
 
-        <div className="center-align">
+        <div className="row center-align">
         <button
             className="modal-trigger waves-effect waves-light btn valign" 
-            onClick={() => this.setState({paymentTypeClicked: true, paymentType: "card"})}
+            onClick={() => this.setState({paymentTypeClicked: true, paymentType: "cash"})}
             style={{margin: 10}}> Add New Cash Payment</button>
           <button
             className="modal-trigger waves-effect waves-light btn valign" 
             onClick={() => this.setState({paymentTypeClicked: true, paymentType: "card"})}
             style={{margin: 10}}> Add New Card Payment</button>
-          <a
+            {/*
+            <a
             className="modal-trigger waves-effect waves-light btn valign" 
             onClick={() => {$('#modal-bursar-payment-create').openModal()}}
-            style={{margin: 10}}> Add New Payment Record</a>
+            style={{margin: 10}}> Add General Payment Record</a>
+            */}
         </div>
       </div>
     );
@@ -385,7 +388,8 @@ class BursarPanelTicketPayment extends React.Component {
         onClick={() => {
           this.setState({showEditModal: true})
           $('#modal-bursar-ticket-edit').openModal(); 
-        window.scrollTo(0, 0);}}
+          window.scrollTo(0, 0);
+        }}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">edit</i>
           <h4> Edit - Ticket Payment ID: {recordId} </h4>
@@ -395,7 +399,8 @@ class BursarPanelTicketPayment extends React.Component {
         onClick={() => {
           this.setState({showEditModal: true})
           $('#modal-bursar-ticket-duplicate').openModal(); 
-        window.scrollTo(0, 0);}}
+          window.scrollTo(0, 0);
+        }}
         className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12 animated fadeInUp">
           <i className="material-icons valign">content_copy</i>
           <h4> Duplicate - Ticket Payment ID: {recordId} </h4>
@@ -477,31 +482,6 @@ class BursarPanelTicketPayment extends React.Component {
           this.props.bursarTicketPaymentFetched.isLoading ? 
           <div> </div> : this.renderCreateModal()
         }
-
-        { 
-          !this.state.showEditModal ?
-          <div></div> : 
-          <div>
-            <BursarPanelTicketPaymentForm  
-              modalName="modal-bursar-ticket-edit" 
-              modalText="Edit a Permit Payment" 
-              submitType="EDIT"
-              initialValues={this.state.rowData} 
-              rowData={this.state.rowData}
-              handleSuccess={this.handleSuccess}
-              townshipCode={this.props.townshipCode}
-              />
-            <BursarPanelTicketPaymentForm  
-              modalName="modal-bursar-ticket-duplicate" 
-              modalText="Duplicate a Permit Payment" 
-              submitType="DUPLICATE"
-              initialValues={this.state.rowData} 
-              rowData={this.state.rowData}
-              handleSuccess={this.handleSuccess}
-              townshipCode={this.props.townshipCode}
-              />
-          </div>
-        }
       </div>
     );
   }
@@ -519,17 +499,19 @@ class BursarPanelTicketPayment extends React.Component {
                 <h4> Credit Card / Paypal </h4>
               </button>
               <button 
-              onClick={() => this.setState({paymentTypeClicked: true, paymentType: "card"})}
+              onClick={() => this.setState({paymentTypeClicked: true, paymentType: "cash"})}
               className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12">
                 <i className="material-icons valign">attach_money</i>
                 <h4> Cash / Check / Other </h4>
               </button>
+              {/*
               <button 
               onClick={() => this.setState({paymentTypeClicked: true, paymentType: "record"})}
               className="waves-effect waves-light btn-large admin-tile valign-wrapper col s12 m12 l12">
                 <i className="material-icons valign">storage</i>
-                <h4> Payment Record </h4>
+                <h4> General Payment Record </h4>
               </button>
+              */}
             </div>
           </div>
         </Body>
@@ -586,21 +568,27 @@ class BursarPanelTicketPayment extends React.Component {
         </div>
 
         <BursarPanelTicketCardForm  
-        initialValues={{
-          "type": "visa",
-          "number": "4417119669820331",
-          "expire_month": "11",
-          "expire_year": "2018",
-          "cvv2": "874",
-          "first_name": "Joe",
-          "last_name": "Shopper",
-          "total": "67"
-        }} 
-        modalName="modal-card-payment" 
-        modalText="Create Card Payment" 
-        rowData={this.state.rowData}
-        handleSuccess={this.handleSuccessCard}
-        handleError={this.handleErrorCard}
+          initialValues={{
+            "type": "visa",
+            "number": "4417119669820331",
+            "expire_month": "11",
+            "expire_year": "2018",
+            "cvv2": "874",
+            "first_name": "Joe",
+            "last_name": "Shopper",
+            "total": "67"
+          }} 
+          modalName="modal-card-payment" 
+          modalText="Create Card Payment" 
+          rowData={this.state.rowData}
+          handleSuccess={this.handleSuccessCard}
+          handleError={this.handleErrorCard}
+        />
+        <BursarPanelTicketCashForm  
+          modalName="modal-cash-payment" 
+          modalText="Create Cash Payment" 
+          rowData={this.state.rowData}
+          handleSuccess={this.handleSuccess}
         />
       </div>
     );
@@ -611,6 +599,24 @@ class BursarPanelTicketPayment extends React.Component {
       <div>
         {this.renderPaymentModals()}
         {this.state.paymentTypeClicked ? this.renderPage() : this.renderButtonsPage()}
+        <BursarPanelTicketPaymentForm  
+          modalName="modal-bursar-ticket-edit" 
+          modalText="Edit a Permit Payment" 
+          submitType="EDIT"
+          initialValues={this.state.rowData} 
+          rowData={this.state.rowData}
+          handleSuccess={this.handleSuccess}
+          townshipCode={this.props.townshipCode}
+          />
+        <BursarPanelTicketPaymentForm  
+          modalName="modal-bursar-ticket-duplicate" 
+          modalText="Duplicate a Permit Payment" 
+          submitType="DUPLICATE"
+          initialValues={this.state.rowData} 
+          rowData={this.state.rowData}
+          handleSuccess={this.handleSuccess}
+          townshipCode={this.props.townshipCode}
+          />
       </div>
     );
   }

@@ -136,3 +136,14 @@ export function inspectorTicketCreated(state = initialState, action) {
       return state;
   }
 }
+
+export function mapViewUpdated(state = initialState, action) {
+  switch(action.type) {
+    case 'UPDATE_MAP_VIEW':
+      return _.assign({}, state, {isLoading: false, data: action.data, error: true});
+    case 'RESET_MAP_VIEW':
+      return state;
+    default:
+      return state;
+  }
+}

@@ -6,8 +6,11 @@ import moment from 'moment'
 import { Link, browserHistory } from 'react-router'
 import {createFilter} from 'react-search-input';
 import { ajaxGet, ajaxDelete } from '../../../../common/components/ajax-selectize.js';
+import {updateMapView} from '../../../../actions/actions-inspector-panel.jsx'
+import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
 
-export default class InspectorVehicleInfo extends React.Component {
+class InspectorVehicleInfo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,14 +47,15 @@ export default class InspectorVehicleInfo extends React.Component {
                         <div className="center-align"> <Spinner /> </div>
                         :
                         (() => {
-                          let currentTime = moment().diff(moment(this.state.parkedCarData.expiry_time), 'hours');
-                          if(currentTime > 0 && this.state.greenOff == false) {
+                          let currentTime =moment.utc(new Date()).diff(moment.utc(this.state.parkedCarData.expiry_time), 'minutes');
+                          if(currentTime > 0) {
                             return <img src={require('../../../../../../images/car_red@3x.png')} className="animated bounceIn"/>
-                          } else if (currentTime < 0 && this.state.redOff == false) {
+                          } else if (currentTime < -60) {
                             return <img src={require('../../../../../../images/car_green@3x.png')} className="animated bounceIn"/>
-                          } else if (currentTime == 0 && this.state.yellowOff == false) {
+                          } else if (currentTime >= -60 && currentTime <= 0) {
                             return <img src={require('../../../../../../images/car_yellow@3x.png')} className="animated bounceIn"/>
                           } else {
+                            {alert("Expiry calc error.")}
                             return <img src={require('../../../../../../images/car_green@3x.png')} className="animated bounceIn"/>
                           }
                         })()
@@ -144,7 +148,11 @@ export default class InspectorVehicleInfo extends React.Component {
             :
             <div>
               <Link 
-                to={{pathname: `/admin/inspector/map-view/${this.props.vehicleCode}`}} 
+                to={{pathname: `/admin/inspector/map-view/${this.state.parkedCarData.township_code}`}}
+                onClick={() => {
+                  this.props.updateMapView({lat: this.state.parkedCarData.lat, lng: this.state.parkedCarData.lng})
+                  console.log({lat: this.state.parkedCarData.lat, lng: this.state.parkedCarData.lng});
+                }}
                 className="card waves-effect waves-light center-align" 
                 style={{
                 backgroundColor: "#0d53cf", 
@@ -199,3 +207,17 @@ export default class InspectorVehicleInfo extends React.Component {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    mapViewUpdated: state.mapViewUpdated
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    updateMapView
+  }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(InspectorVehicleInfo);

@@ -130,8 +130,9 @@ export default class InspectorPanelSearchPlate extends React.Component {
       }>
         <div
         className={styles.letter}
+        //[Math.floor(Math.random()*colors.length)]
         style={{
-          backgroundColor: colors[Math.floor(Math.random()*colors.length)]
+          backgroundColor: colors[index % colors.length] 
         }}>
           {parkingData.plate_no ? 
             <div> {parkingData.plate_no.charAt(0)} </div>
@@ -146,6 +147,7 @@ export default class InspectorPanelSearchPlate extends React.Component {
           </div>
           <div className={styles.index}>
             <strong>ID:</strong> {parkingData.id},
+            <strong> Expiry Status:</strong> {parkingData.expiry_status},
 						<strong> Ticket Status:</strong> {parkingData.ticket_status},
 						<strong> Location:</strong> {parkingData.location_code}
           </div>

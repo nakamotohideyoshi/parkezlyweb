@@ -302,6 +302,35 @@
   text-transform: none;
 }
 
+.edit-tile {
+  height: 100px;
+  width: 300px;
+  background-color: #64b5f6;
+  margin-bottom: 30px;
+  border-radius: 25px !important;
+}
+
+.edit-tile:hover {
+  background-color: #64b5f6;
+}
+
+
+.edit-tile i {
+    margin-top: 25px;
+    margin-bottom: 20px;
+    margin-left: 0px;
+    margin-right: 20px;
+    font-size: 60px;
+}
+
+.edit-tile p {
+  margin-top: 25px;
+  padding-right: 60px !important;
+  font-size: 30px;
+  //font-weight: bold;
+  text-transform: none;
+}
+
 .collection a.collection-item{
   color: #3F3333;
 }

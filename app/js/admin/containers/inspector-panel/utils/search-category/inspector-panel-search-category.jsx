@@ -59,7 +59,7 @@ export default class InspectorPanelSearchCategory extends React.Component {
 
 	componentWillMount() {
 		this.debounce = _.debounce(this.ajaxSearch, 500, { 'maxWait': 2000 });
-		ajaxGet(`parked_cars?filter=(township_code=${this.props.townshipCode})AND(location_code CONTAINS ${this.props.townshipCode})`, this.ajaxGet);
+		ajaxGet(`parked_cars?filter=(township_code=${this.props.townshipCode})`, this.ajaxGet);
 		ajaxGet(`manage_locations?filter=(township_code=${this.props.townshipCode})`, this.locationGet);
 	}
 
@@ -89,8 +89,8 @@ export default class InspectorPanelSearchCategory extends React.Component {
 		}
 	}
 
-	ajaxSelect(locationCode) {
-		ajaxGet(`parked_cars?filter=(township_code=${this.props.townshipCode})AND(location_code=${locationCode})`, this.ajaxGet);
+	ajaxSelect(expiryStatus) {
+		ajaxGet(`parked_cars?filter=(township_code=${this.props.townshipCode})AND(expiry_status=${expiryStatus})`, this.ajaxGet);
 	}
 
 	handleEnterPress(target) {
@@ -131,9 +131,9 @@ export default class InspectorPanelSearchCategory extends React.Component {
 				<div
 					className={styles.letter}
 					style={{
-						backgroundColor: colors[Math.floor(Math.random() * colors.length)]
+						backgroundColor: colors[index % colors.length] 
 					}}>
-					{parkingData.plate_no.charAt ?
+					{parkingData.plate_no ?
 						<div> {parkingData.plate_no.charAt(0)} </div>
 						:
 						<div>?</div>
@@ -146,6 +146,7 @@ export default class InspectorPanelSearchCategory extends React.Component {
 					</div>
 					<div className={styles.index}>
 						<strong>ID:</strong> {parkingData.id},
+						<strong> Expiry Status:</strong> {parkingData.expiry_status},
 						<strong> Ticket Status:</strong> {parkingData.ticket_status},
 						<strong> Location:</strong> {parkingData.location_code}
 					</div>
@@ -166,36 +167,16 @@ export default class InspectorPanelSearchCategory extends React.Component {
 					<div className="row marginless-row animated fadeInUp center-align" style={{ marginTop: 20 }}>
 						<h4 style={{ color: "#FFF", fontWeight: "bold", marginTop: 10, marginBottom: 20 }}> Search Category </h4>
 						<div className="filter-container col s12 center-align">
-							<div className="search-wrapper card col s4" style={{ marginBottom: 10, marginTop: 16, marginLeft: 20, minWidth: 300}}>
-								<div className="row marginless-row valign-wrapper">
-									<input
-										type="text"
-										name="search"
-										placeholder="Search..."
-										className="search search-input col s11"
-										value={this.state.searchInput}
-										onChange={(event) => {
-											this.setState({ searchInput: event.target.value });
-											this.debounce();
-										} }
-										onKeyPress={this.handleEnterPress}
-										/>
-									<i
-										className="material-icons col s1 valign clickable"
-										onClick={() => this.ajaxSearch()}
-										>search</i>
-								</div>
-							</div>
 							{this.state.locationData !== null ?
-								<div className="col s3 offset-s4 right" style={{minWidth: 300}}>
+								<div className="col s6 offset-s3 center-align" style={{minWidth: 300}}>
 									<label style={{ color: "white" }}>Select Category</label>
 									<div clasName="input-field search-wrapper card">
 										<SimpleSelect
 											options={[
-                        {label: 'Expired', value: "expired"},
-                        {label: 'Expiring', value: "expiring"},
-                        {label: 'Valid', value: "valid"},
-                        {label: 'Non-Validated', value: "non-validated"},
+                        {label: 'Non-Validated', value: "NONVALIDATED"},
+                        {label: 'Valid', value: "VALID"},
+                        {label: 'Expiring', value: "EXPIRING"},
+                        {label: 'Expired', value: "EXPIRED"},    
                       ]}
 											placeholder={"Select Category"}
 											theme="default"

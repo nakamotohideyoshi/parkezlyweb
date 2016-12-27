@@ -1,13 +1,14 @@
 Township Panel:
 
-Parking Rules - Total remake;
-
 Inspector Panel:
-Redux to "find vehicle"
-Recheck expiry color
+When ticket submitted, show ticket data in a modal from return data.
+Ticket notification.
 
 Bursar Panel:
 Receive Payments
 
 Registration:
 Registered users need session authentication after finishing registration otherwise it won't have the role_id.
+
+Menu:
+Back to parkezly sets to registeredusers

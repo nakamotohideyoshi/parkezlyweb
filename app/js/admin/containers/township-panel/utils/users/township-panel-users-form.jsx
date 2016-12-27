@@ -25,6 +25,7 @@ import { ajaxSelectizeGet, ajaxDelete, ajaxGet} from '../../../../common/compone
 import AdminSelectize from '../../../../common/components/admin-selectize.jsx'
 import {SimpleSelect} from "react-selectize"
 import moment from 'moment'
+import axiosInstance from '../../../../common/components/ajax/api-axios.js'
 
 export const fields = [ 
   'id',
@@ -47,7 +48,8 @@ class TownshipPanelUsersForm extends React.Component {
       showEditDuplicateButtons: false,
       parkingLocationCode: null,
       showEditModal: false,
-      selectizeOptions: {}
+      selectizeOptions: {},
+      roleData: null
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -72,6 +74,58 @@ class TownshipPanelUsersForm extends React.Component {
       default:
         console.log("No valid submit type was provided.");
         break;
+    }
+    if(this.state.roleData !== null && this.props.fields.user_id.value) {
+      let user_id = this.props.fields.user_id.value;
+      let role_id;
+         
+      switch(this.state.roleData.value) {
+        case "SuperAdmin":
+          role_id = 1
+          break;
+        case "TwpBursar":
+          role_id = 2
+          break;
+        case "TwpAdmin":
+          role_id = 3
+          break;
+        case "TwpInspector":
+          role_id = 4
+          break;
+        default:
+          role_id = 3
+          break;
+      }
+
+      axiosInstance.patch(`system/user/${user_id}`, 
+      {
+        "user_to_app_to_role_by_user_id": [
+          {
+            "id": 1,
+            "user_id": user_id,
+            "app_id": 1,
+            "role_id": role_id
+          },
+          {
+            "id": 2,
+            "user_id": user_id,
+            "app_id": 2,
+            "role_id": role_id
+          },
+          {
+            "id": 3,
+            "user_id": user_id,
+            "app_id": 3,
+            "role_id": role_id
+          },
+          {
+            "id": 4,
+            "user_id": user_id,
+            "app_id": 4,
+            "role_id": role_id
+          }
+        ]
+      }).then((res) => {console.log(res)})
     }
   }
 
@@ -109,6 +163,32 @@ class TownshipPanelUsersForm extends React.Component {
   handleSuccess(){
     this.props.resetLoading();
     this.props.handleSuccess();    
+  }
+
+  tempInputsEdit(initialValues) {
+     const {
+      fields: {   
+        email,
+      },
+      resetForm,
+      submitting,
+      dispatch
+    } = this.props;
+
+    const fields = [ 
+      'email' 
+    ]
+
+    return fields.map((data) => {
+      return( 
+        <div className="col s12">
+          <div className="form-group">
+            <div></div>
+            <input type="text" placeholder={data} {...this.props.fields[data]}/>
+          </div>
+        </div>
+      );
+    }); 
   }
 
   render() {
@@ -158,8 +238,7 @@ class TownshipPanelUsersForm extends React.Component {
                 <AdminSelectize 
                   staticOptions={true}
 									options={[
-                    {label: "VehicleUser", value: "VehicleUser"},
-                    {label: "ApiAdmin", value: "ApiAdmin"},
+                    {label: "SuperAdmin", value: "SuperAdmin"},
                     {label: "TwpAdmin", value: "TwpAdmin"},
                     {label: "TwpBursar", value: "TwpBursar"}, 
                     {label: "TwpInspector", value: "TwpInspector"},			
@@ -169,6 +248,9 @@ class TownshipPanelUsersForm extends React.Component {
 									formName={'township-users-form'} 
 									fieldData={this.props.fields}
 									dispatch={dispatch}
+                  dispatchFunction={(data) => {
+                    this.setState({roleData: data});
+									}}
 								/>
                 <AdminSelectize 
                   staticOptions={true}
@@ -179,6 +261,7 @@ class TownshipPanelUsersForm extends React.Component {
 									formName={'township-users-form'} 
 									dispatch={dispatch}
 								/>
+                {this.tempInputsEdit(this.props.initialValues)}
               </div>
             </div>
             

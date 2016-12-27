@@ -250,16 +250,15 @@ class BursarPanelTicketPaymentForm extends React.Component {
               </div>
 
               <div className="row">
-
                 <AdminSelectize 
-                options={this.state.selectizeOptions}
-                objectKey={'user_id'} 
-                formName={'ticket-payment-form'} 
-                fieldName={'user_id'}
-                defaultData={this.props.rowData}
-                dispatch={dispatch} 
-                />
-
+                  staticOptions={false}
+									options={this.state.selectizeOptions}
+									objectKey={'user_id'} 
+                  fieldName={'User ID'}
+									formName={'ticket-payment-form'} 
+									fieldData={this.props.fields}
+									dispatch={dispatch} 
+								/>
                 {this.tempInputsEdit(this.props.initialValues)}
 
               </div>
