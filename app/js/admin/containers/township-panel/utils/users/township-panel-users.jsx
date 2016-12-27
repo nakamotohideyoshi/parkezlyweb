@@ -78,7 +78,8 @@ class TownshipPanelUsers extends React.Component {
       tableWidth: 500,
       scrollToIndex: 0,
       currentIndex: 0,
-      fetchCount: 0
+      fetchCount: 0,
+      searchInput: ""
     }
 
     this.renderUserTable = this.renderUserTable.bind(this);
@@ -86,12 +87,29 @@ class TownshipPanelUsers extends React.Component {
     this.isRowLoaded = this.isRowLoaded.bind(this);
     this.loadMoreRows = this.loadMoreRows.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
+    this.ajaxSearch = this.ajaxSearch.bind(this);
+    this.ajaxGet = this.ajaxGet.bind(this);
   }
 
   componentWillMount() {
+    this.debounce = _.debounce(this.ajaxSearch, 500, { 'maxWait': 2000 });
     ajaxGet(`township_users?limit=10&offset=0&filter=(township_code=${this.props.townshipCode})`, (response) => {
       this.setState({ajaxData: response.data.resource, ajaxLoading: false, listLoading: false})
     })
+  }
+  
+  ajaxSearch() {
+    if(this.state.searchInput === null || this.state.searchInput === undefined || this.state.searchInput === "") {
+      ajaxGet(`township_users?filter=(township_code=${this.props.townshipCode})`, this.ajaxGet);
+      this.setState({ajaxLoading: true})
+    } else {
+      ajaxGet(`township_users?filter=(township_code=${this.props.townshipCode})AND(user_name CONTAINS ${this.state.searchInput})`, this.ajaxGet);
+      this.setState({ajaxLoading: true})
+    }
+  }
+
+  ajaxGet(response) {
+    this.setState({ajaxData: response.data.resource, ajaxLoading: false});
   }
 
   handleSuccess(){
@@ -133,8 +151,8 @@ class TownshipPanelUsers extends React.Component {
   loadMoreRows ({ startIndex, stopIndex }) {
     //console.log(startIndex);
     //console.log(stopIndex);
-    
-    if (!this.state.ajaxLoading) {
+
+    if (!this.state.ajaxLoading && this.state.searchInput.length === 0) {
      
       let loadRows;
       /*
@@ -294,6 +312,7 @@ class TownshipPanelUsers extends React.Component {
     return (
       <div className="blue-body marginless-row">
         <Body showHeader={true}>
+
           <div className="row marginless-row" style={{marginTop: 40}}>
             <div className="col s12">
               <nav>
@@ -301,6 +320,30 @@ class TownshipPanelUsers extends React.Component {
                   <a className="brand-logo center">User List</a>
                 </div>
               </nav>
+              <div className="row marginless-row card">
+                <div className="search-wrapper card col s6 offset-s3" style={{marginBottom:10, marginTop: 10}}>
+                  <div className="filter-container col s12 center-align">
+                    <div className="row marginless-row valign-wrapper">
+                      <input 
+                        type="text"
+                        name="search"
+                        placeholder="Search..."
+                        className="search search-input col s11" 
+                        value={this.state.searchInput}
+                        onChange={(event) => {
+                          this.setState({searchInput: event.target.value});
+                          this.debounce();
+                        }} 
+                        onKeyPress={this.handleEnterPress}
+                        />
+                        <i 
+                        className="material-icons col s1 valign clickable"
+                        onClick={() => this.ajaxSearch()}
+                        >search</i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               <div className="card">
                 <div>
                   {this.state.ajaxLoading ? 
