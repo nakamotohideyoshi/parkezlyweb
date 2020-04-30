@@ -39,7 +39,7 @@
     "griddle-react-bootstrap": "^0.4.3",
     "hammerjs": "^2.0.8",
     "isomorphic-fetch": "^2.2.1",
-    "jquery": "^2.2.3",
+    "jquery": "^3.5.0",
     "jsonwebtoken": "^5.7.0",
     "jspdf": "git://github.com/MrRio/jsPDF/#76edb3387cda3d5292e212765134b06150030364",
     "jwt-decode": "^2.0.1",
